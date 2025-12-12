@@ -1,0 +1,73 @@
+services:
+  nginx:
+    image: nginx:1.29.4
+    container_name: nginx
+    ports:
+    - "8443:443"
+    volumes:
+    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+    - home
+    depends_on:
+    - web
+    secrets:
+    - source: nginx_cert
+      target: nginx.crt
+    - source: nginx_key
+      target: nginx.key
+    restart: always
+  
+  mysql:
+    image: mysql:9.5.0
+    container_name: mysql
+    restart: always
+    volumes:
+    - ./vol/db/data:/var/lib/mysql
+    - ./db/conf.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+    - home
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
+      MYSQL_ALLOW_EMPTY_PASSWORD: /run/secrets/data_pswd
+      MYSQL_RANDOM_ROOT_PASSWORD: /run/secrets/data_pswd
+    secrets:
+    - data_pswd
+
+  myadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: myadmin
+    depends_on:
+    - mysql
+    ports:
+    - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    networks:
+    - home
+    restart: always
+
+  web:
+    build: ./web/
+    container_name: web
+    depends_on:
+      - mysql
+    volumes:
+      - ./vol/www/data:/app
+    networks:
+      - home
+    restart: always
+
+
+
+secrets:
+  nginx_cert:
+    file: ./secrets/nginx.crt
+  nginx_key:
+    file: ./secrets/nginx.key
+  data_pswd:
+    file: ./secrets/data_pswd
+
+networks:
+  home:
+    driver: bridge
