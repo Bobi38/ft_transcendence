@@ -11,7 +11,7 @@ prune:
 
 volumes:
 	docker volume rm $$(docker volume ls -q) 2>/dev/null || true
-# 	rm -r vol
+	rm -r vol
 
 rmi:
 	docker container rm -f $$(docker ps -aq) 2>/dev/null || true
@@ -21,10 +21,10 @@ clean:	down
 	$(MAKE) prune
 	$(MAKE) rmi
 
-# creat:
-# 	mkdir -p vol/db/data
-#  	chown root:root vol/db/data
-# 	chmod 755 vol/db/data
+creat:
+	mkdir -p vol/db/data
+ 	chown root:root vol/db/data
+	chmod 755 vol/db/data
 
 secrets:
 	@mkdir -p secrets
