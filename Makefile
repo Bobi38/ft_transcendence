@@ -39,8 +39,20 @@ fclean: clean
 	docker network prune -f
 	rm -r secrets
 	$(MAKE) volumes
+# 	hosts_remove
 
 re: fclean all
 
+# hosts_add:
+# 	@echo "Ajout de ft_tr_dreamteam.fr dans /etc/hosts"
+# 	@if ! grep -q "127.0.0.1 ft_tr_dreamteam.fr" /etc/hosts; then \
+# 		sudo -- sh -c "echo '127.0.0.1 ft_tr_dreamteam.fr' >> /etc/hosts"; \
+# 	else \
+# 		echo "ft_tr_dreamteam.fr déjà présent"; \
+# 	fi
+
+# hosts_remove:
+# 	@echo "Suppression de ft_tr_dreamteam.fr du fichier hosts"
+# 	sed -i.bak '/127.0.0.1 ft_tr_dreamteam\.fr/d' /etc/hosts || true
 
 .PHONY: all compose down prune creat rmi volumes clean secrets fclean re

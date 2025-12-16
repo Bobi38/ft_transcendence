@@ -1,11 +1,11 @@
 {
-  "name": "ft_transcendence_web",
-  "version": "1.0.0",
-  "main": "server.js",
+  "name": "ft_transcendence_web", //nom du projet
+  "version": "1.0.0", // la version, stable
+  "main": "server.js", // point d'entrée de l'application
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js" // commande pour démarrer l'application via le CMD du docker
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2" // dépendance express pour créer le serveur web, librairie
   }
 }
