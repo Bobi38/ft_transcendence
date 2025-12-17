@@ -1,17 +1,17 @@
-all:	secrets compose creat
+all:	secrets creat compose
 
 compose: 
 	docker compose up -d
 
 down: 
-	docker compose down
+	docker compose down -v
 
 prune: 
 	docker system prune -af --volumes
 
 volumes:
 	docker volume rm $$(docker volume ls -q) 2>/dev/null || true
-	rm -r vol
+	rm -rf vol
 
 rmi:
 	docker container rm -f $$(docker ps -aq) 2>/dev/null || true
@@ -25,10 +25,12 @@ creat:
 	mkdir -p vol/db/data
  	chown root:root vol/db/data
 	chmod 755 vol/db/data
+	chmod +x myadmin/conff.sh
+	chmod +x db/conf.sh
 
 secrets:
 	@mkdir -p secrets
-	openssl rand -hex 4 > secrets/data_pswd
+	openssl rand -hex 2 > secrets/data_pswd
 # 	openssl rand -hex 4 > secrets/wordpress_db_password
 # 	openssl rand -hex 4 > secrets/wordpress_admin_password
 # 	openssl rand -hex 4 > secrets/wordpress_user_password

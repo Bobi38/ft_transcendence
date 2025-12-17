@@ -5,9 +5,12 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm install
+RUN npm install -g nodemon
+RUN npm install mysql2
+
 
 COPY . .
 
 EXPOSE 9000
 
-CMD ["npm", "start"]
+CMD ["nodemon", "start"]

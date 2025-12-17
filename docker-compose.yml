@@ -23,14 +23,16 @@ services:
     container_name: mysql
     restart: always
     volumes:
-    - ./vol/db/data:/var/lib/mysql
+    # - ./vol/db/data:/var/lib/mysql
     - ./db/conf.cnf:/etc/mysql/conf.d/my.cnf
+    - ./db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
     networks:
     - home
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
-      # MYSQL_ALLOW_EMPTY_PASSWORD: /run/secrets/data_pswd
-      # MYSQL_RANDOM_ROOT_PASSWORD: /run/secrets/data_pswd
+      MYSQL_DATABASE: TRANS
+      MYSQL_USER: bobi
+      MYSQL_PASSWORD: 123
     secrets:
     - data_pswd
 
@@ -40,10 +42,14 @@ services:
     depends_on:
     - mysql
     ports:
-    - "8080:80"
+    - "8081:80"
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
+      PMA_USER: bobi
+      PMA_PASSWORD: 123
+    # volumes:
+    # - ./myadmin/conff.sh:/docker-entrypoint.d/10-config.sh
     networks:
     - home
     restart: always
@@ -53,11 +59,9 @@ services:
     container_name: web
     depends_on:
       - mysql
-    # ports:
-    #   - "9000:9000"
     volumes:
-      - ./web:/popo
-      - /app
+      - ./web:/app:cached
+      - /app/node_modules
     networks:
       - home
     restart: always
