@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title>TRAN</title>
+		<script type="module" src="pieces.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>WELCOME TO TRANSCENDANCE</h1>
+		</header>
+		<main>
+			<!-- Menu de recherche -->
+			<h2>CONNECTEZ_VOUS</h2>
+			<form id="login">
+        		<div class="mb-3">
+            	<label for="email" class="form-label">Email</label>
+            	<input type="email" class="form-control" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com">
+            	<div id="email-help" class="form-text">L'email utilisé lors de la création de compte.</div>
+        	</div>
+        	<div class="mb-3">
+            	<label for="password" class="form-label">Mot de passe</label>
+            	<input type="password" class="form-control" id="password" name="password">
+        	</div>
+        	<button type="submit" class="btn btn-primary">Envoyer</button>
+        	<a href="register.html" class="btn btn-secondary">S'inscrire</a>
+    	</form>
+		<script type="module" src="scripts/register.js"></script>
+			<!-- Fiches produits -->
+			<section class="fiches">
+			</section>
+		</main>
+	</body>
+</html>
