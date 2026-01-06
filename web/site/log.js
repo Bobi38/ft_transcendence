@@ -16,17 +16,17 @@ form.addEventListener('submit', async (event) => {
     }
 
     try {
-        const reponse = await fetch('/login', {
+        const reponse = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         const result = await reponse.json();
-        console.log("ccc" + result);
 
         if (result.success) {
-            showAlert("Connexion réussie", "success");
+            sessionStorage.setItem('message', "Registration successful");
+            sessionStorage.setItem('type', "success");
             window.location.href = "welcome.html";
         } else {
             showAlert("Erreur : " + result.message, "danger");

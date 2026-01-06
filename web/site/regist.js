@@ -19,7 +19,7 @@ form.addEventListener('submit', async (event) => {
     }
     console.log(data.name + " " + data.email + " " + data.password);
     try {
-        const reponse = await fetch('/register', {
+        const reponse = await fetch('/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -30,9 +30,10 @@ form.addEventListener('submit', async (event) => {
         const result = await reponse.json();
         console.log("coucou");
         if (result.success) {
-            showAlert("Registration successful", "success");
-            // optionnel :
-            window.location.href = "index2.html";
+            sessionStorage.setItem('message', "Registration successful");
+            sessionStorage.setItem('type', "success");
+            console.log("Success =", result.message);
+            window.location.href = "welcome.html";
         } else {
             console.log("Error =", result.message);
         }

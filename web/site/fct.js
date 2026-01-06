@@ -1,5 +1,6 @@
 function showAlert(message, type = "danger") {
     const container = document.getElementById("alert-container");
+    console.log(container); 
 
     // Crée un div
     const alertDiv = document.createElement("div");
