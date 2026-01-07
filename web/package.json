@@ -1,12 +1,14 @@
 {
-  "name": "ft_transcendence_web", 
-  "version": "1.0.0", 
-  "main": "server.js", 
+  "name": "ft_transcendence_web",
+  "version": "1.0.0",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js" 
+    "start": "nodemon server.js"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^4.18.2",
+    "mysql2": "^3.16.0",
     "nodemon": "^3.0.2"
   }
 }

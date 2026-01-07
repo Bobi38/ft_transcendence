@@ -30,10 +30,7 @@ form.addEventListener('submit', async (event) => {
         const result = await reponse.json();
         console.log("coucou");
         if (result.success) {
-            sessionStorage.setItem('message', "Registration successful");
-            sessionStorage.setItem('type', "success");
-            console.log("Success =", result.message);
-            window.location.href = "welcome.html";
+            window.location.href = "index2.html";
         } else {
             console.log("Error =", result.message);
         }

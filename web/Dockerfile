@@ -10,7 +10,7 @@ RUN npm install mysql2
 RUN npm install bcrypt
 RUN npm install jsonwebtoken
 RUN npm install cookie-parser
-
+RUN npm install --save sequelize
 
 
 COPY . .

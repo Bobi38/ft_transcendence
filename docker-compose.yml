@@ -58,13 +58,21 @@ services:
     build: ./web/
     container_name: web
     depends_on:
-      - mysql
+    - mysql
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
     volumes:
       - ./web:/app:cached
       - /app/node_modules
     networks:
       - home
     restart: always
+    ports:
+      - "5555:5555"
 
 
 

@@ -3,6 +3,8 @@ const router = express.Router();
 const pool = require('./pool');
 const jwt = require('jsonwebtoken');
 const coockieParser = require('cookie-parser');
+const User  = require('./models/user.js');
+const Co  = require('./models/connect.js');
 
 router.use(coockieParser());
 const secret = 'bobi';
@@ -24,19 +26,14 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const [result] = await pool.execute(
-      'SELECT * FROM user_co WHERE mail = ?',
-      [email]
-    );
-
+    const result = User.findAll({ where: { mail: email } });
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'Email not find'});
-    // console.log("result[0] =", result[0].mail + " " + result[0].password);
-
     if (result[0].password != password)
         return res.status(500).json({success: false, message: 'Password not valid'});
     const token = jwt.sign(result[0], secret, {expiresIn: '12h'});
-    console.log("token =", token);
+    const re = await Co.create({token: token, userId: result[0].id});
+    await result[0].update({co: true});
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
   } catch (err) {
@@ -47,20 +44,13 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   console.log("je suis la ");
-//   console.log(req.body);
   const { name, password, email } = req.body;
   try {
-    const [find] = await pool.execute(
-      'SELECT * FROM user_co WHERE mail = ?',
-      [email]
-    );
+    const find = User.findAll({ where: { mail: email } });
     if (find.length > 0) {
       return res.status(500).json({success: false, message: 'Email already used'});
     }
-    const [result] = await pool.execute(
-      'INSERT INTO user_co (name, password, mail, win, total_part) VALUES (?, ?, ?, ?, ?)',
-      [name, password, email, 0, 0]
-    );
+    const result = await User.create({name: name, password: password, mail: email, co: true, win: 0, total_part: 0});
     const token = jwt.sign({id: result.insertId, name: name, mail: email}, secret, {expiresIn: '12h'});
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
