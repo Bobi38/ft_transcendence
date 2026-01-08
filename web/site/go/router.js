@@ -1,10 +1,13 @@
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcrypt';
 const router = express.Router();
-const pool = require('./pool');
-const jwt = require('jsonwebtoken');
-const coockieParser = require('cookie-parser');
-const User  = require('./models/user.js');
-const Co  = require('./models/connect.js');
+import pool from '../pool.js';
+import jwt from 'jsonwebtoken';
+import coockieParser from 'cookie-parser';
+import User  from '../models/user.js';
+import Co  from '../models/connect.js';
+import {majDb}  from '../fct.js';  
+
 
 router.use(coockieParser());
 const secret = 'bobi';
@@ -26,16 +29,24 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const result = User.findAll({ where: { mail: email } });
+    console.log("ccccc suis la ");
+    const result = await User.findAll({ where: { mail: email } });
+    console.log("rafter");
+    console.log(result.length);
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'Email not find'});
-    if (result[0].password != password)
+    const DecrypPass = await bcrypt.compare(password, result[0].password);
+    if (!DecrypPass)
         return res.status(500).json({success: false, message: 'Password not valid'});
-    const token = jwt.sign(result[0], secret, {expiresIn: '12h'});
+      console.log(result[0].id," avant token");
+    const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
+    console.log("apres token");
     const re = await Co.create({token: token, userId: result[0].id});
     await result[0].update({co: true});
+    console.log("Utilisateur connecté avec l'ID :", result[0].id);
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
+    majDb();
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Erreur MySQL' });
@@ -50,13 +61,34 @@ router.post('/register', async (req, res) => {
     if (find.length > 0) {
       return res.status(500).json({success: false, message: 'Email already used'});
     }
-    const result = await User.create({name: name, password: password, mail: email, co: true, win: 0, total_part: 0});
+    const CrypPass = await bcrypt.hash(password, 10);
+    const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
+    console.log("Utilisateur créé avec l'ID :", result.insertId);
     const token = jwt.sign({id: result.insertId, name: name, mail: email}, secret, {expiresIn: '12h'});
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
+    majDb();
   } catch (err) {
     console.error(err);
     res.status(500).json({success: false, message: 'Erreur MySQL' });
+  }
+});
+
+router.post('/logout', async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    if (result.length === 0)
+        return res.status(500).json({success: false, message: 'User not find'});
+    await result[0].update({co: false});
+    await Co.destroy({ where: { userId: decoded.id } });
+    res.clearCookie('token');
+    res.status(201).json({ success: true, message: 'Utilisateur deconnecte' });
+    majDb();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Erreur MySQL' });
   }
 });
 
@@ -66,4 +98,4 @@ router.post('/welcome', async (req, res) => {
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
-module.exports = router;
+export default router;

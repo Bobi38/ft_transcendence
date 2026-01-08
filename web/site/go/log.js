@@ -1,4 +1,4 @@
-import { showAlert } from './fct.js';
+import { showAlert } from '../fct1.js';
 
 const form = document.getElementById('login');
 
@@ -27,7 +27,7 @@ form.addEventListener('submit', async (event) => {
         if (result.success) {
             sessionStorage.setItem('message', "Registration successful");
             sessionStorage.setItem('type', "success");
-            window.location.href = "welcome.html";
+            window.location.href = "/go/welcome.html";
         } else {
             showAlert("Erreur : " + result.message, "danger");
         }

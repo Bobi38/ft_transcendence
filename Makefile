@@ -28,6 +28,9 @@ creat:
 	chmod +x myadmin/conff.sh
 	chmod +x db/conf.sh
 
+logs:
+	docker logs web -f
+
 secrets:
 	@mkdir -p secrets
 	openssl rand -hex 2 > secrets/data_pswd
@@ -57,4 +60,4 @@ re: fclean all
 # 	@echo "Suppression de ft_tr_dreamteam.fr du fichier hosts"
 # 	sed -i.bak '/127.0.0.1 ft_tr_dreamteam\.fr/d' /etc/hosts || true
 
-.PHONY: all compose down prune creat rmi volumes clean secrets fclean re
+.PHONY: all compose down prune creat rmi volumes logs clean secrets fclean re

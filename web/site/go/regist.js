@@ -1,4 +1,4 @@
-import { showAlert } from './fct.js';
+import { showAlert } from '../fct1.js';
 
 const form = document.getElementById('regist');
 
@@ -30,7 +30,7 @@ form.addEventListener('submit', async (event) => {
         const result = await reponse.json();
         console.log("coucou");
         if (result.success) {
-            window.location.href = "index2.html";
+            window.location.href = "/go/index2.html";
         } else {
             console.log("Error =", result.message);
         }

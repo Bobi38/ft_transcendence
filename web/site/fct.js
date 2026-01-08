@@ -1,19 +1,17 @@
-function showAlert(message, type = "danger") {
-    const container = document.getElementById("alert-container");
-    console.log(container); 
+import sequelize from './models/index.js';
 
-    // Crée un div
-    const alertDiv = document.createElement("div");
-    alertDiv.className = type === "danger" ? "alert-n-danger" : "alert-n-success";
-    alertDiv.textContent = message;
 
-    // Ajoute le div dans le container
-    container.appendChild(alertDiv);
-
-    // Supprime l'alerte après 5 secondes
-    setTimeout(() => {
-        container.removeChild(alertDiv);
-    }, 5000);
+async function majDb() {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection good.');
+    await sequelize.sync({ altert: true });
+    // await sequelize.sync({ alert: true }); A REMETTRE POUR LA PROD
+    console.log('la table a ete mise a jour avec succes.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
 }
 
-export { showAlert };
+export { majDb };
+

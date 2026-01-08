@@ -14,7 +14,7 @@ const Connect = sequelize.define('Connect', {
   },
 }, {
   tableName: 'connect_co',
-  timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas
+  timestamps: false,
 });
 
 User.hasMany(Connect, { foreignKey: 'userId', oneDelete: 'CASCADE' });

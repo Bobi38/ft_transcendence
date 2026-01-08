@@ -2,7 +2,7 @@
 <html lang="fr">
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="tool.css">
+		<link rel="stylesheet" href="../tool.css">
 		<title>TRAN</title>
 	</head>
 	<body>
@@ -18,6 +18,14 @@
 			<label for="prix-max">value : <span id="valeur-prix">0</span></label>
 			<input type="text" class="form-control" id="numb" >
     		<script type="module" src="wel.js"></script>
+			<button type="click" class="btn-logout" > LOGOUT </button>
+			<script type="module" src="logout.js"></script>
+			<!-- message form -->
+		<form name="publish">
+  			<input type="text" name="message">
+  			<input type="submit" value="Send">
+		</form>
+		<div id="messages"></div>
 		</main>
 	</body>
 

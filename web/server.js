@@ -1,15 +1,25 @@
-const express = require('express');
-require('dotenv').config();
+import express  from 'express';
 const app = express();
-const path = require("path");
+import path from "path";
 const PORT = process.env.PORT || 9000;
-const stuffRoutes = require('./site/router');
-const pool = require('./site/pool');
-const sequelize = require('./site/models/index.js');
-require('./site/models/user');
-require('./site/models/connect');
+import stuffRoutes from './site/go/router.js';
+import  pool  from './site/pool.js';
+import sequelize from './site/models/index.js';
+import './site/models/user.js';
+import './site/models/connect.js';
+import dotenv from 'dotenv';
+dotenv.config();
 app.use(express.json());
 app.use('/api', stuffRoutes);
+import {majDb} from './site/fct.js';
+import { fileURLToPath } from 'url';
+import { initWebSocket } from './site/go/wsserver.js';
+import ws from 'ws';
+import http from 'http';
+import wss from 'ws';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use((req, res, next) => {
   // console.log('Fichier demandé :', req.url);
@@ -17,31 +27,20 @@ app.use((req, res, next) => {
   next();
 });
 
+majDb();
 
-async function testDBConnection() {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-    await sequelize.sync({ force: true });
-    // await sequelize.sync({ alert: true }); A REMETTRE POUR LA PROD
-    console.log('The table for the User model was just (re)created!');
-    // You can also sync models here if needed
-    // await sequelize.sync();
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-}
+const server = http.createServer(app);
 
-testDBConnection();
-
-
+// Initialise le WebSocket depuis un module séparé
+initWebSocket(server);
 
 // autorise l'accès aux fichiers statiques
 app.use(express.static(path.join(__dirname, 'site')));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "site",  "index2.html"));
+  res.sendFile(path.join(__dirname, "site",  "./go/index2.html"));
 });
+
 
 app.listen(PORT, () => {
   console.log("Server running on http://localhost:9000");

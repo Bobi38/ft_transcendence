@@ -1,4 +1,4 @@
-import { showAlert } from './fct.js';
+import { showAlert } from '../fct1.js';
 
 console.log("wel.js loaded");
 console.log(sessionStorage.getItem('alertMessage'));
