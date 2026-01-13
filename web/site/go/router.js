@@ -17,7 +17,7 @@ const secret = location.address;
 // function checktok()
 
 router.use((req, res, next) => {
-  console.log('Vérification du token');
+  console.log('check token');
   if (req.path === '/login' || req.path === '/register') {
     return next();
   }
@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
     console.log("apres token");
     const re = await Co.create({token: token, userId: result[0].id});
     await result[0].update({co: true});
-    console.log("Utilisateur connecté avec l'ID :", result[0].id);
+    console.log("ID", result[0].id);
     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
     majDb();
@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
     }
     const CrypPass = await bcrypt.hash(password, 10);
     const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
-    console.log("Utilisateur créé avec l'ID :", result.insertId);
+    console.log("ID", result.insertId);
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
     majDb();
   } catch (err) {
@@ -127,7 +127,7 @@ router.get('/nclick', async (req, res) => {
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const instantclicks = result[0].total_part;
-    console.log("instantclicks GET :", instantclicks);
+    console.log("init CLICK", instantclicks);
     res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks });
   }
   catch (err) {

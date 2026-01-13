@@ -35,12 +35,7 @@ majDb();
 
 app.use(cookieParser());
 
-const options = {
-  key: fs.readFileSync('/run/secrets/nginx.key'),     // ta clé privée
-  cert: fs.readFileSync('/run/secrets/nginx.crt')    // ton certificat
-};
-
-const server = https.createServer(options, app);
+const server = https.createServer(app);
 
 // Initialise le WebSocket depuis un module séparé
 initWebSocket(server);
@@ -51,7 +46,6 @@ app.use(express.static(path.join(__dirname, 'site')));
 app.get("/", (req, res) => {
   console.log('coooooo', req.cookies.token);
   if (req.cookies.token){
-    const token = 
     res.sendFile(path.join(__dirname, "site",  "./go/welcome.html"));
   }
   else{
