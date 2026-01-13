@@ -1,10 +1,12 @@
 import ws from 'ws';
+import { WebSocketServer } from 'ws';
 
 export function initWebSocket(server) {
-  const wss = new ws.Server({ server });
+  const wss = new WebSocketServer({ server });
 
   const clients = [];
 
+  console.log('WebSocket server initialized');
   wss.on('connection', (socket) => {
     console.log('Nouvelle connexion WebSocket');
     clients.push(socket);

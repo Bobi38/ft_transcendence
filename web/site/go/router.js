@@ -6,14 +6,21 @@ import jwt from 'jsonwebtoken';
 import coockieParser from 'cookie-parser';
 import User  from '../models/user.js';
 import Co  from '../models/connect.js';
-import {majDb}  from '../fct.js';  
+import {majDb}  from '../fct.js';
+import os from 'os';
 
 
 router.use(coockieParser());
-const secret = 'bobi';
+const location = os.networkInterfaces().eth0 ? os.networkInterfaces().eth0.find(details => details.family === 'IPv4') : {hostname: 'localhost'};
+const secret = location.address;
+
+// function checktok()
 
 router.use((req, res, next) => {
   console.log('Vérification du token');
+  if (req.path === '/login' || req.path === '/register') {
+    return next();
+  }
   try {
     const token = req.cookies.token;
     if (token)
@@ -44,7 +51,7 @@ router.post('/login', async (req, res) => {
     const re = await Co.create({token: token, userId: result[0].id});
     await result[0].update({co: true});
     console.log("Utilisateur connecté avec l'ID :", result[0].id);
-    res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 12 * 60 * 60 * 1000 });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
     majDb();
   } catch (err) {
@@ -64,8 +71,6 @@ router.post('/register', async (req, res) => {
     const CrypPass = await bcrypt.hash(password, 10);
     const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
     console.log("Utilisateur créé avec l'ID :", result.insertId);
-    const token = jwt.sign({id: result.insertId, name: name, mail: email}, secret, {expiresIn: '12h'});
-    res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
     majDb();
   } catch (err) {
@@ -91,6 +96,46 @@ router.post('/logout', async (req, res) => {
     res.status(500).json({ success: false, message: 'Erreur MySQL' });
   }
 });
+
+router.post('/click', async (req, res) => {
+  try {
+    console.log("dans click");
+    console.log(req.body);
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    if (result.length === 0)
+        return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+    const instantclicks = result[0].total_part;
+    console.log("instantclicks :", instantclicks);
+    await result[0].update({total_part: instantclicks + 1});
+    majDb();
+    res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks + 1 });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Erreur MySQL' });
+  }
+});
+
+router.get('/nclick', async (req, res) => {
+  try {
+    console.log("dans nclick");
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    if (result.length === 0)
+        return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+    const instantclicks = result[0].total_part;
+    console.log("instantclicks GET :", instantclicks);
+    res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Erreur MySQL' });
+  }
+});
+
 
 router.post('/welcome', async (req, res) => {
   console.log("dans welcome");
