@@ -15,7 +15,7 @@ import {majDb} from './site/fct.js';
 import { fileURLToPath } from 'url';
 import { initWebSocket } from './site/go/wsserver.js';
 import ws from 'ws';
-import https from 'https';
+import http from 'http';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
 
@@ -32,14 +32,14 @@ app.use((req, res, next) => {
 });
 
 majDb();
-
 app.use(cookieParser());
 
-const server = https.createServer(app);
-
-// Initialise le WebSocket depuis un module séparé
+const server = http.createServer(app);
 initWebSocket(server);
-
+server.on('upgrade', (request, socket, head) => {
+  console.log('Upgrade request received for:', request.url);
+  console.log('Headers:', request.headers);
+});
 // autorise l'accès aux fichiers statiques
 app.use(express.static(path.join(__dirname, 'site')));
 

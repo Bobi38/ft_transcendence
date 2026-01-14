@@ -6,23 +6,24 @@ console.log("wel.js loaded");
 console.log(sessionStorage.getItem('alertMessage'));
 const plus = document.querySelector('.btn-click');
 const send = document.querySelector('.btn-send');
+const socket = new WebSocket("wss://localhost:9000/ws");
 
 send.addEventListener('click', async function (){
     const mess = document.querySelector('.message');
     console.log("Button SEND pressed, message:", mess.value);
-    const socket = new WebSocket("wss://localhost:9000/ws");
-    socket.onopen = function() {
-        socket.send(mess.value);
-        alert("Message sent via WebSocket");
-    };
-    socket.onclose = function() {
-        alert("WebSocket connection closed");
-    }
-    socket.onerror = function(error) {
-        console.error("WebSocket Error: ", error);
-        alert("WebSocket Error occurred");
-    }
-    alert("after WebSocket");
+    socket.send(mess.value);
+    // socket.onopen = function() {
+    //     socket.send(mess.value);
+    //     alert("Message sent via WebSocket");
+    // };
+    // socket.onclose = function() {
+    //     alert("WebSocket connection closed");
+    // }
+    // socket.onerror = function(error) {
+    //     console.error("WebSocket Error: ", error);
+    //     alert("WebSocket Error occurred");
+    // }
+    // alert("after WebSocket");
 
 });
 

@@ -2,11 +2,12 @@ import ws from 'ws';
 import { WebSocketServer } from 'ws';
 
 export function initWebSocket(server) {
-  const wss = new WebSocketServer({ server });
+  const wss = new WebSocketServer({ server, path: '/ws' });
 
   const clients = [];
 
   console.log('WebSocket server initialized');
+  console.log(wss.readyState);
   wss.on('connection', (socket) => {
     console.log('Nouvelle connexion WebSocket');
     clients.push(socket);
@@ -27,3 +28,6 @@ export function initWebSocket(server) {
     });
   });
 }
+
+//socket.io
+//express-ws
