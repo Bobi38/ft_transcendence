@@ -30,7 +30,7 @@ form.addEventListener('submit', async (event) => {
         const result = await reponse.json();
         console.log("coucou");
         if (result.success) {
-            window.location.href = "/go/index2.html";
+            window.location.href = "/";
         } else {
             console.log("Error =", result.message);
         }

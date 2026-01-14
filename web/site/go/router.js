@@ -8,27 +8,52 @@ import User  from '../models/user.js';
 import Co  from '../models/connect.js';
 import {majDb}  from '../fct.js';
 import os from 'os';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 router.use(coockieParser());
 const location = os.networkInterfaces().eth0 ? os.networkInterfaces().eth0.find(details => details.family === 'IPv4') : {hostname: 'localhost'};
 const secret = location.address;
 
-// function checktok()
+async function checktok(tokenn) {
+  if (!tokenn) {       // <-- vérifie d’abord si le token existe
+    console.log("no token provided");
+    return 1;          // 1 = invalide
+  }
 
-router.use((req, res, next) => {
-  console.log('check token');
-  if (req.path === '/login' || req.path === '/register') {
-    return next();
-  }
   try {
-    const token = req.cookies.token;
-    if (token)
-      jwt.verify(token, secret);
-    next();
-  }catch (err) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const decoded = jwt.verify(tokenn, secret); // ok, token existe
+    const co = await Co.findAll({ where: { id: decoded.id } });
+    console.log("check tok", co.length);
+    return co.length === 0 ? 1 : 0;
+  } catch (err) {
+    console.log("token error:", err.message);
+    return 1;
   }
+}
+
+
+router.use(async (req, res, next) => {
+  const token = req.cookies.token;
+  console.log("Middleware auth for path:", req.path);
+  if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' ) {
+    return res.status(401).json({ success: false, redirect: true});
+  }
+  if (!token && (req.path === '/' || req.path === '/login' || req.path === '/register')) {
+    return next() ;
+  }
+  const valid = await checktok(token);
+  if (valid === 1) {           
+    console.log("token not valid");
+    res.clearCookie('token');  
+    return res.status(401).json({ success: false, redirect: true});
+  }
+
+  console.log("token valid");
+  next();                  
 });
 
 
@@ -127,7 +152,7 @@ router.get('/nclick', async (req, res) => {
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const instantclicks = result[0].total_part;
-    console.log("init CLICK", instantclicks);
+    // console.log("init CLICK", instantclicks);
     res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks });
   }
   catch (err) {
@@ -138,9 +163,9 @@ router.get('/nclick', async (req, res) => {
 
 
 router.post('/welcome', async (req, res) => {
-  console.log("dans welcome");
-  console.log(req.cookies);
+  console.log("COOOOUUUUUUU_________________");
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
+export { checktok };
 export default router;

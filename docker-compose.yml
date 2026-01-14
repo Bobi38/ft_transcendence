@@ -34,6 +34,11 @@ services:
       MYSQL_PASSWORD: 123
     secrets:
     - data_pswd
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   myadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -57,7 +62,8 @@ services:
     build: ./web/
     container_name: web
     depends_on:
-    - mysql
+      mysql:
+        condition: service_healthy
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123

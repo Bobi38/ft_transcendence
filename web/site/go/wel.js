@@ -7,15 +7,28 @@ console.log(sessionStorage.getItem('alertMessage'));
 const plus = document.querySelector('.btn-click');
 const send = document.querySelector('.btn-send');
 const socket = new WebSocket("wss://localhost:9000/ws");
+socket.onopen = () => {
+    console.log("WebSocket connection established");
+};
+
+socket.onmessage = (event) => {
+    console.log("Message received via WebSocket:", event.data);
+    alert("Message reçu : " + event.data);
+};
 
 send.addEventListener('click', async function (){
     const mess = document.querySelector('.message');
     console.log("Button SEND pressed, message:", mess.value);
-    socket.send(mess.value);
-    // socket.onopen = function() {
-    //     socket.send(mess.value);
-    //     alert("Message sent via WebSocket");
+    alert("Button SEND pressed, message:" + mess.value);
+    const token = document.cookie.token;
+    socket.send(token + " " + mess.value);
+        // alert("Message sent via WebSocket");
+
+        // let messageElem = document.createElement('div');
+        // messageElem.textContent = message;
+        // document.getElementById('messages').prepend(messageElem);
     // };
+    // alert("before WebSocket");
     // socket.onclose = function() {
     //     alert("WebSocket connection closed");
     // }
@@ -37,6 +50,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         sessionStorage.removeItem('message');
         sessionStorage.removeItem('type');
     }
+    const reponse = await fetch('/api/welcome', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    });
     try {
         const rep = await fetch('/api/nclick', {
             method: 'GET',
@@ -47,8 +67,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
         const res = await rep.json();
-        console.log('Response from /api/click GET:', res.clicks);
-
+        if (!res.success) {
+            console.error('Error from /api/click GET:', rep.status);
+            if (rep.status === 401) {
+                window.location.href = '/';
+                return;
+            }
+            return;
+        }
         document.querySelector('#valeur-prix').textContent = res.clicks;
     } catch (err) {
         console.error('Erreur fetch /api/click:', err);
@@ -84,7 +110,7 @@ plus.addEventListener('click', async function () {
 //         },
 //         credentials: 'include'
 //     });
-//     const result = await reponse.json();
+    // const result = await reponse.json();
 //     console.log("Response from /api/welcome:", result);
 // const range = document.querySelector("#prix-max");
 // const affichage = document.querySelector("#valeur-prix");

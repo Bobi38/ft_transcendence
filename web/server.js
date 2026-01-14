@@ -1,52 +1,47 @@
-import express  from 'express';
-const app = express();
-import path from "path";
-const PORT = process.env.PORT || 9000;
-import stuffRoutes from './site/go/router.js';
-import  pool  from './site/pool.js';
-import sequelize from './site/models/index.js';
+import express from 'express';
+import http from 'http';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+
+import router, { checktok } from './site/go/router.js';
+import { majDb } from './site/fct.js';
+import { initWebSocket } from './site/go/wsserver.js';
+
+// Models
+import './site/models/index.js';
 import './site/models/user.js';
 import './site/models/connect.js';
-import dotenv from 'dotenv';
+
 dotenv.config();
-app.use(express.json());
-app.use('/api', stuffRoutes);
-import {majDb} from './site/fct.js';
-import { fileURLToPath } from 'url';
-import { initWebSocket } from './site/go/wsserver.js';
-import ws from 'ws';
-import http from 'http';
-import cookieParser from 'cookie-parser';
-import fs from 'fs';
-
-
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PORT = process.env.PORT || 9000;
 
-app.use((req, res, next) => {
-  // console.log('Fichier demandé :', req.url);
-  // console.log('Méthode HTTP :', req.method);
-  next();
-});
+const app = express();
 
-majDb();
+
+app.use(express.json());
 app.use(cookieParser());
+app.use('/api', router);
 
-const server = http.createServer(app);
-initWebSocket(server);
-server.on('upgrade', (request, socket, head) => {
-  console.log('Upgrade request received for:', request.url);
-  console.log('Headers:', request.headers);
-});
-// autorise l'accès aux fichiers statiques
-app.use(express.static(path.join(__dirname, 'site')));
 
-app.get("/", (req, res) => {
-  console.log('coooooo', req.cookies.token);
+
+
+app.get("/", async (req, res) => {
   if (req.cookies.token){
-    res.sendFile(path.join(__dirname, "site",  "./go/welcome.html"));
+    const valid = await checktok(req.cookies.token);
+    if (valid === 0){
+      console.log("token valid in /");
+      return  res.sendFile(path.join(__dirname, "site",  "./go/welcome.html"));
+    }
+    else{
+      res.clearCookie('token');
+      console.log("token invalid in /");
+      return res.sendFile(path.join(__dirname, "site",  "./go/index2.html"));
+    }
   }
   else{
     console.log("no token");
@@ -54,9 +49,33 @@ app.get("/", (req, res) => {
   }
 });
 
+app.use(express.static(path.join(__dirname, 'site')));
 
-app.listen(PORT, () => {
-  console.log("Server running on http://localhost:9000");
-});
+
+
+(async () => {
+  try {
+    console.log("Mise à jour de la DB...");
+    await majDb();
+    console.log("DB mise à jour avec succès");
+
+    const server = http.createServer(app);
+    initWebSocket(server);
+
+    server.on('upgrade', (request, socket, head) => {
+      // console.log('Upgrade request pour:', request.url);
+      // console.log('Headers:', request.headers);
+    });
+
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+
+  } catch (err) {
+    console.error("Erreur lors de l'initialisation du serveur :", err);
+    process.exit(1);
+  }
+})();
+
 
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY4MjIzMzQ5LCJleHAiOjE3NjgyNjY1NDl9.f1a8N3asudEaMpCbr0hgYuLiaZC5xliCQ0AZNbK-sSk

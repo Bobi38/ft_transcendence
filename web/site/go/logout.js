@@ -10,7 +10,7 @@ form.addEventListener('click', async (event) => {
         const result = await reponse.json();
 
         if (result.success) {
-            window.location.href = "../go/index2.html";
+            window.location.href = "/";
         } else {
             showAlert("Erreur : " + result.message, "danger");
         }
