@@ -17,7 +17,7 @@ const Connect = sequelize.define('Connect', {
   timestamps: false,
 });
 
-User.hasMany(Connect, { foreignKey: 'userId', oneDelete: 'CASCADE' });
+User.hasMany(Connect, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Connect.belongsTo(User, { foreignKey: 'userId' });
 
 export default Connect;

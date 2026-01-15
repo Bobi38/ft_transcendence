@@ -10,13 +10,17 @@ import {majDb}  from '../fct.js';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {Chat} from "../fct.js";
+
+const chatt = new Chat();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 router.use(coockieParser());
-const location = os.networkInterfaces().eth0 ? os.networkInterfaces().eth0.find(details => details.family === 'IPv4') : {hostname: 'localhost'};
-const secret = location.address;
+// const location = os.networkInterfaces().eth0 ? os.networkInterfaces().eth0.find(details => details.family === 'IPv4') : {hostname: 'localhost'};
+// const secret = location.address;
+const secret = 'toto';
 
 async function checktok(tokenn) {
   if (!tokenn) {       // <-- vérifie d’abord si le token existe
@@ -26,7 +30,9 @@ async function checktok(tokenn) {
 
   try {
     const decoded = jwt.verify(tokenn, secret); // ok, token existe
-    const co = await Co.findAll({ where: { id: decoded.id } });
+    const count = await Co.count();
+    console.log("taille table", count, "userId =", decoded.id);
+    const co = await Co.findAll({ where: { userId: decoded.id } });
     console.log("check tok", co.length);
     return co.length === 0 ? 1 : 0;
   } catch (err) {
@@ -70,13 +76,20 @@ router.post('/login', async (req, res) => {
     const DecrypPass = await bcrypt.compare(password, result[0].password);
     if (!DecrypPass)
         return res.status(500).json({success: false, message: 'Password not valid'});
+    const iid = await Co.findAll({where: { userId: result[0].id}})
+    if (iid.length != 0)
+        return res.status(500).json({success:false, message: 'User already log'});
       console.log(result[0].id," avant token");
     const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
     console.log("apres token");
     const re = await Co.create({token: token, userId: result[0].id});
+    console.log ("TAILLE= " , Co.length);
     await result[0].update({co: true});
     console.log("ID", result[0].id);
     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+    if (chatt.finduser(token) === null)
+      chatt.addtok(token);
+    console.log(chatt.countUser);
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
     majDb();
   } catch (err) {
@@ -111,12 +124,19 @@ router.post('/logout', async (req, res) => {
     const result = await User.findAll({ where: { id: decoded.id } });
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'User not find'});
+    chatt.removetok(token);
     await result[0].update({co: false});
     await Co.destroy({ where: { userId: decoded.id } });
     res.clearCookie('token');
     res.status(201).json({ success: true, message: 'Utilisateur deconnecte' });
+    
     majDb();
-  } catch (err) {
+  } catch (err) {function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
     console.error(err);
     res.status(500).json({ success: false, message: 'Erreur MySQL' });
   }
@@ -167,5 +187,7 @@ router.post('/welcome', async (req, res) => {
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
+export {secret}
 export { checktok };
+export {chatt};
 export default router;

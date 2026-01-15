@@ -1,5 +1,32 @@
 import sequelize from './models/index.js';
+import jwt from 'jsonwebtoken';
+import {secret} from './go/router.js' 
 
+class Chat {
+  constructor() {
+    this.sessions = new Map();
+  }
+  addtok(token) {
+    try {
+      const decoded = jwt.verify(token, secret);
+      this.sessions.set(token, {userId: decoded.id,socket});
+      console.log("WS enregistré user", decoded.id);
+      return decoded.id;
+    } catch (err) {
+      console.log("Token invalide:", err.message);
+      return null;
+    }
+  }
+  finduser(token) {
+    return this.sessions.get(token) || null;
+  }
+  removetok(token) {
+    this.sessions.delete(token);
+  }
+  countUser(){
+    return this.sessions.size;
+  }
+}
 
 async function majDb(retry = 5) {
   while (retry > 0) {
@@ -19,5 +46,6 @@ async function majDb(retry = 5) {
   }
 }
 
+export {Chat};
 export { majDb };
 
