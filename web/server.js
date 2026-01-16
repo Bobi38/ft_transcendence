@@ -1,8 +1,9 @@
 import express from 'express';
-import https from 'https';
+import http from 'http';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 
 import router, { checktok } from './site/go/router.js';
@@ -11,7 +12,7 @@ import { initWebSocket } from './site/go/wsserver.js';
 
 // Models
 import './site/models/index.js';
-import './site/models/user.js';
+import User from './site/models/user.js';
 import './site/models/connect.js';
 
 
@@ -34,11 +35,13 @@ app.use('/api', router);
 
 app.get("/", async (req, res) => {
   console.log ("iiiii");
-  // if (User.count() === 0){
-  //   const CrypPass = await bcrypt.hash('tt', 10);
-  //   await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 0});
-  //   await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
-  // }
+  const count = await User.count();
+  if (count === 0){
+    const CrypPass = await bcrypt.hash('tt', 10);
+    await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 100});
+    await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
+    majDb();
+  }
   if (req.cookies.token){
     const valid = await checktok(req.cookies.token);
     if (valid === 0){
@@ -67,7 +70,7 @@ app.use(express.static(path.join(__dirname, 'site')));
     await majDb();
     console.log("DB mise à jour avec succès");
 
-    const server = https.createServer(app);
+    const server = http.createServer(app);
     initWebSocket(server);
 
     server.on('upgrade', (request, socket, head) => {
