@@ -10,9 +10,7 @@ import {majDb}  from '../fct.js';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {Chat} from "../fct.js";
 
-const chatt = new Chat();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,9 +85,6 @@ router.post('/login', async (req, res) => {
     await result[0].update({co: true});
     console.log("ID", result[0].id);
     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
-    if (chatt.finduser(token) === null)
-      chatt.addtok(token);
-    console.log(chatt.countUser);
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
     majDb();
   } catch (err) {
@@ -124,7 +119,6 @@ router.post('/logout', async (req, res) => {
     const result = await User.findAll({ where: { id: decoded.id } });
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'User not find'});
-    chatt.removetok(token);
     await result[0].update({co: false});
     await Co.destroy({ where: { userId: decoded.id } });
     res.clearCookie('token');
@@ -189,5 +183,4 @@ router.post('/welcome', async (req, res) => {
 
 export {secret}
 export { checktok };
-export {chatt};
 export default router;

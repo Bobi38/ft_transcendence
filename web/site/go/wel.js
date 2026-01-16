@@ -20,9 +20,8 @@ send.addEventListener('click', async function (){
     const mess = document.querySelector('.message');
     console.log("Button SEND pressed, message:", mess.value);
     alert("Button SEND pressed, message:" + mess.value);
-    const token = document.cookie.token;
     socket.send(token + " " + mess.value);
-        // alert("Message sent via WebSocket");
+    alert("Message sent via WebSocket");
 
         // let messageElem = document.createElement('div');
         // messageElem.textContent = message;

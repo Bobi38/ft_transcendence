@@ -1,5 +1,5 @@
 import express from 'express';
-import http from 'http';
+import https from 'https';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -13,6 +13,8 @@ import { initWebSocket } from './site/go/wsserver.js';
 import './site/models/index.js';
 import './site/models/user.js';
 import './site/models/connect.js';
+
+
 
 dotenv.config();
 
@@ -31,6 +33,12 @@ app.use('/api', router);
 
 
 app.get("/", async (req, res) => {
+  console.log ("iiiii");
+  // if (User.count() === 0){
+  //   const CrypPass = await bcrypt.hash('tt', 10);
+  //   await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 0});
+  //   await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
+  // }
   if (req.cookies.token){
     const valid = await checktok(req.cookies.token);
     if (valid === 0){
@@ -59,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'site')));
     await majDb();
     console.log("DB mise à jour avec succès");
 
-    const server = http.createServer(app);
+    const server = https.createServer(app);
     initWebSocket(server);
 
     server.on('upgrade', (request, socket, head) => {
