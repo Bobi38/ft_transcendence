@@ -10,16 +10,25 @@ export function initWebSocket(server) {
 
   const clients = [];
 
-  console.log('WebSocket server initialized');
-  // console.log('WebSocket server initialized');
-  console.log(wss.readyState);
+  console.log('WebSocket server initialized on path /ws');
+  
   wss.on('connection', (socket, req) => {
-    console.log('Nouvelle connexion WebSocket ', req.socket.remoteAddress);
+    console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
+    console.log('URL:', req.url);
+    console.log('Headers upgrade:', req.headers.upgrade);
+    
     clients.push(socket);
-
     console.log('Nombre de clients connectés :', clients.length);
+    
+    // Test: envoie un message de bienvenue
+    socket.send("Connexion établie!");
+    
     socket.on('message', (message) => {
-      console.log('Message reçu :', message.toString());
+      console.log('=== MESSAGE REÇU ===');
+      console.log('Type:', typeof message);
+      console.log('Contenu:', message.toString());
+      console.log('===================');
+      
       clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {
           client.send("JE SUIS LE SERVER " + message.toString());
@@ -31,14 +40,18 @@ export function initWebSocket(server) {
       console.log('Client déconnecté');
       const index = clients.indexOf(socket);
       if (index !== -1) clients.splice(index, 1);
+      console.log('Nombre de clients connectés :', clients.length);
     });
-    // socket.on('close', () => {
-    //   console.log('Client déconnecté');
-    //   const index = clients.indexOf(socket);
-    //   if (index !== -1) clients.splice(index, 1);
-    // });
+
+    socket.on('error', (error) => {
+      console.error('Erreur WebSocket:', error);
+    });
   });
-  }
+  
+  wss.on('error', (error) => {
+    console.error('Erreur WebSocketServer:', error);
+  });
+}
 
 
 

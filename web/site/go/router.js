@@ -29,9 +29,9 @@ async function checktok(tokenn) {
   try {
     const decoded = jwt.verify(tokenn, secret); // ok, token existe
     const count = await Co.count();
-    console.log("taille table", count, "userId =", decoded.id);
+    // console.log("taille table", count, "userId =", decoded.id);
     const co = await Co.findAll({ where: { userId: decoded.id } });
-    console.log("check tok", co.length);
+    // console.log("check tok", co.length);
     return co.length === 0 ? 1 : 0;
   } catch (err) {
     console.log("token error:", err.message);
@@ -42,7 +42,7 @@ async function checktok(tokenn) {
 
 router.use(async (req, res, next) => {
   const token = req.cookies.token;
-  console.log("Middleware auth for path:", req.path);
+  // console.log("Middleware auth for path:", req.path);
   if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' ) {
     return res.status(401).json({ success: false, redirect: true});
   }
@@ -56,7 +56,7 @@ router.use(async (req, res, next) => {
     return res.status(401).json({ success: false, redirect: true});
   }
 
-  console.log("token valid");
+  // console.log("token valid");
   next();                  
 });
 
@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
     await result[0].update({co: true});
     console.log("ID", result[0].id);
     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
-    res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id});
+    res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id, tooken: token});
     majDb();
   } catch (err) {
     console.error(err);
@@ -146,7 +146,7 @@ router.post('/click', async (req, res) => {
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const instantclicks = result[0].total_part;
-    console.log("instantclicks :", instantclicks);
+    // console.log("instantclicks :", instantclicks);
     await result[0].update({total_part: instantclicks + 1});
     majDb();
     res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks + 1 });
@@ -159,7 +159,7 @@ router.post('/click', async (req, res) => {
 
 router.get('/nclick', async (req, res) => {
   try {
-    console.log("dans nclick");
+    // console.log("dans nclick");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
@@ -177,7 +177,7 @@ router.get('/nclick', async (req, res) => {
 
 
 router.post('/welcome', async (req, res) => {
-  console.log("COOOOUUUUUUU_________________");
+  // console.log("COOOOUUUUUUU_________________");
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 

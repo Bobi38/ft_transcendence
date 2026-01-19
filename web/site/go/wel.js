@@ -1,14 +1,23 @@
 
 // import { WebSocket } from 'ws';
 import { showAlert } from '../fct1.js';
+import {SocketM} from './SocetManag.js'
 
 console.log("wel.js loaded");
-console.log(sessionStorage.getItem('alertMessage'));
 const plus = document.querySelector('.btn-click');
 const send = document.querySelector('.btn-send');
-const socket = new WebSocket("wss://localhost:9000/ws");
+// Détecte automatiquement le bon protocole et host
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+const host = window.location.host; // Inclut le port si présent
+console.log(`${protocol}//${host}/ws`);
+const socket = new WebSocket(`wss://localhost:9000/ws`);
+socket.onopen = () => {
+    console.log("WeeeeeeeeeeebSocket connection established");
+};
+
 socket.onopen = () => {
     console.log("WebSocket connection established");
+    console.log("ReadyState:", socket.readyState);
 };
 
 socket.onmessage = (event) => {
@@ -16,12 +25,27 @@ socket.onmessage = (event) => {
     alert("Message reçu : " + event.data);
 };
 
+socket.onerror = (error) => {
+    console.error("WebSocket Error:", error);
+    alert("WebSocket Error occurred");
+};
+
+socket.onclose = (event) => {
+    console.log("WebSocket closed:", event.code, event.reason);
+    alert("WebSocket closed");
+};
+
 send.addEventListener('click', async function (){
     const mess = document.querySelector('.message');
     console.log("Button SEND pressed, message:", mess.value);
-    alert("Button SEND pressed, message:" + mess.value);
-    socket.send(token + " " + mess.value);
-    alert("Message sent via WebSocket");
+    console.log("WS readyState:", socket.readyState); // 1 = OPEN
+    
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(mess.value); // J'ai enlevé 'token +' qui n'est pas défini
+        console.log("Message envoyé!");
+    } else {
+        console.error("WebSocket not open, readyState:", socket.readyState);
+    }
 
         // let messageElem = document.createElement('div');
         // messageElem.textContent = message;
@@ -49,13 +73,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         sessionStorage.removeItem('message');
         sessionStorage.removeItem('type');
     }
-    const reponse = await fetch('/api/welcome', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    });
+    if (SocketM.nb = 0)
+        SocketM.conect(sessionStorage.getItem('token'));
     try {
         const rep = await fetch('/api/nclick', {
             method: 'GET',
