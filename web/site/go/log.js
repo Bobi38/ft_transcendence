@@ -25,6 +25,7 @@ form.addEventListener('submit', async (event) => {
         const result = await reponse.json();
 
         if (result.success) {
+            alert(result.tooken);
             sessionStorage.setItem('token', result.tooken);
             sessionStorage.setItem('message', "Registration successful");
             sessionStorage.setItem('type', "success");

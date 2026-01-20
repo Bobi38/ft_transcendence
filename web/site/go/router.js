@@ -98,10 +98,12 @@ router.post('/register', async (req, res) => {
   const { name, password, email } = req.body;
   try {
     const find = User.findAll({ where: { mail: email } });
-    if (find.length > 0) {
+    if (find.length != 0) {
       return res.status(500).json({success: false, message: 'Email already used'});
     }
+    console.log("av");
     const CrypPass = await bcrypt.hash(password, 10);
+
     const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
     console.log("ID", result.insertId);
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});

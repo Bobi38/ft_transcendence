@@ -1,80 +1,82 @@
 
 // import { WebSocket } from 'ws';
 import { showAlert } from '../fct1.js';
-import {SocketM} from './SocetManag.js'
+import {SocketM} from './SocketManag.js'
 
 console.log("wel.js loaded");
 const plus = document.querySelector('.btn-click');
 const send = document.querySelector('.btn-send');
+const display = document.querySelector('chat-display');
+const to = sessionStorage.getItem('token');
 // Détecte automatiquement le bon protocole et host
-const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const host = window.location.host; // Inclut le port si présent
-console.log(`${protocol}//${host}/ws`);
-const socket = new WebSocket(`wss://localhost:9000/ws`);
-socket.onopen = () => {
-    console.log("WeeeeeeeeeeebSocket connection established");
-};
+// const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+// const host = window.location.host; // Inclut le port si présent
+// console.log(`${protocol}//${host}/ws`);
+// const socket = new WebSocket(`wss://localhost:9000/ws`);
+// socket.onopen = () => {
+//     console.log("WeeeeeeeeeeebSocket connection established");
+// };
+// const id = sessionStorage('token');
+// console.log(id);
 
-socket.onopen = () => {
-    console.log("WebSocket connection established");
-    console.log("ReadyState:", socket.readyState);
-};
+// socket.onopen = () => {
+//     console.log("WebSocket connection established");
+//     console.log("ReadyState:", socket.readyState);
+// };
 
-socket.onmessage = (event) => {
-    console.log("Message received via WebSocket:", event.data);
-    alert("Message reçu : " + event.data);
-};
+// socket.onmessage = (event) => {
+//     console.log("Message received via WebSocket:", event.data);
+//     alert("Message reçu : " + event.data);
+// };
 
-socket.onerror = (error) => {
-    console.error("WebSocket Error:", error);
-    alert("WebSocket Error occurred");
-};
+// socket.onerror = (error) => {
+//     console.error("WebSocket Error:", error);
+//     alert("WebSocket Error occurred");
+// };
 
-socket.onclose = (event) => {
-    console.log("WebSocket closed:", event.code, event.reason);
-    alert("WebSocket closed");
-};
+// socket.onclose = (event) => {
+//     console.log("WebSocket closed:", event.code, event.reason);
+//     alert("WebSocket closed");
+// };
+
+function addmess(text){
+    console.log("-----" , display);
+    display.value += text + "\n";
+    display.scrollTop = display.scrollHeight;
+
+}
 
 send.addEventListener('click', async function (){
     const mess = document.querySelector('.message');
-    console.log("Button SEND pressed, message:", mess.value);
-    console.log("WS readyState:", socket.readyState); // 1 = OPEN
     
-    if (socket.readyState === WebSocket.OPEN) {
-        socket.send(mess.value); // J'ai enlevé 'token +' qui n'est pas défini
-        console.log("Message envoyé!");
-    } else {
-        console.error("WebSocket not open, readyState:", socket.readyState);
+    console.log("Button SEND pressed, message:", mess.value);
+    // console.log("WS readyState:", socket.readyState); // 1 = OPEN
+    const data = {
+        type: "mess",
+        mess: mess.value,
+        id: to
     }
-
-        // let messageElem = document.createElement('div');
-        // messageElem.textContent = message;
-        // document.getElementById('messages').prepend(messageElem);
-    // };
-    // alert("before WebSocket");
-    // socket.onclose = function() {
-    //     alert("WebSocket connection closed");
-    // }
-    // socket.onerror = function(error) {
-    //     console.error("WebSocket Error: ", error);
-    //     alert("WebSocket Error occurred");
-    // }
-    // alert("after WebSocket");
-
+    SocketM.sendd(data);
+    addmess(data.mess);
 });
+
+
 
 document.addEventListener('DOMContentLoaded', async function () {
     const message = sessionStorage.getItem('message');
     const type = sessionStorage.getItem('type');
-    console.log("HEEERREEEEEEEEEEEEEEEEEE");
     if (message) {
         console.log("Message:", message);
         showAlert(message, type);
         sessionStorage.removeItem('message');
         sessionStorage.removeItem('type');
     }
-    if (SocketM.nb = 0)
-        SocketM.conect(sessionStorage.getItem('token'));
+    const n = SocketM.nbco;
+    console.log(n);
+    // alert(sessionStorage.getItem('token'));
+    if (SocketM.nb() === 0){
+        SocketM.connect(to);
+    }
     try {
         const rep = await fetch('/api/nclick', {
             method: 'GET',
@@ -139,3 +141,4 @@ plus.addEventListener('click', async function () {
 // range.addEventListener("input", () => {
 //   affichage.innerText = range.value;
 // });
+export {addmess};

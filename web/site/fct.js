@@ -28,6 +28,15 @@ class Chat {
   countUser(){
     return this.sessions.size;
   }
+  decoded(token){
+    try{
+      const decodeded = jwt.verify(token, secrett);
+      return decodeded;
+    }catch(err){
+      console.log("err "  + err);
+      return null;
+    }
+  }
 }
 
 async function majDb(retry = 5) {
@@ -48,6 +57,5 @@ async function majDb(retry = 5) {
   }
 }
 
-export {Chat};
+export const chat = new Chat();
 export { majDb };
-

@@ -7,7 +7,7 @@ function showAlert(message, type = "danger") {
     container.appendChild(alertDiv);
     setTimeout(() => {
         container.removeChild(alertDiv);
-    }, 5000);
+    }, 1000);
 }
 
 export { showAlert };

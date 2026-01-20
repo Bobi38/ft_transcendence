@@ -14,7 +14,7 @@ form.addEventListener('submit', async (event) => {
     };
 
     if (!data.name || !data.email || !data.password) {
-        alert("Missing value");
+        showAlert("Missing value", 'danger');
         return;
     }
     console.log(data.name + " " + data.email + " " + data.password);
@@ -32,7 +32,7 @@ form.addEventListener('submit', async (event) => {
         if (result.success) {
             window.location.href = "/";
         } else {
-            console.log("Error =", result.message);
+            showAlert(result.message, 'danger');
         }
     } catch (error) {
         console.error("Server error", error);

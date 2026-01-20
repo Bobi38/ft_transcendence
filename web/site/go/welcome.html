@@ -16,16 +16,19 @@
     <!-- Conteneur pour l'alerte -->
 			<button type="button" class="btn-click">CLICK</button>
 			<label>value : <span id="valeur-prix">0</span></label>
-    		<script type="module" src="/go/wel.js"></script>
+    		
 			<button type="click" class="btn-logout" > LOGOUT </button>
 			<script type="module" src="/go/logout.js"></script>
 			<!-- message form -->
 		<form name="publish">
+			<textarea id="chat-display" rows="10" cols="60" readonly></textarea>
+			<br>
   			<input type="text" class="message">
   			<input type="submit" class="btn-send" value="Send">
 		</form>
 		<div id="messages"></div>
 		</main>
+		<script type="module" src="/go/wel.js"></script>
 	</body>
 
 </html>
