@@ -6,7 +6,7 @@ import {SocketM} from './SocketManag.js'
 console.log("wel.js loaded");
 const plus = document.querySelector('.btn-click');
 const send = document.querySelector('.btn-send');
-const display = document.querySelector('chat-display');
+const chatDisplay = document.querySelector('#chat-display');
 const to = sessionStorage.getItem('token');
 // Détecte automatiquement le bon protocole et host
 // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -57,7 +57,10 @@ send.addEventListener('click', async function (){
         id: to
     }
     SocketM.sendd(data);
-    addmess(data.mess);
+    const message = "me : " + mess.value;
+
+    chatDisplay.value += message + "\n";
+    chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
 
 

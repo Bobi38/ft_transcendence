@@ -20,19 +20,24 @@ class SocketManag{
             if (this.id)
                 this.sendd({type: "auth", id: this.id,  mess: null})
         }
-        this.socket.onmessage = (event) => {
-            const dataa = JSON.parse(event.data)
-            // alert("Message reçu : " + dataa.mess);
-            if (dataa.type === 'message'){
-                alert("Message reçu : " + dataa.mess + " from " + dataa.id);
-                addmess(dataa.id + " : " + dataa.mess);
-            }
-        }
+
+    const chatDisplay = document.getElementById("chat-display");
+
+    this.socket.onmessage = (event) => {
+        const dataa = JSON.parse(event.data);
+
+        if (dataa.type === 'message') {
+          const message = dataa.id + " : " + dataa.mess;
+
+            chatDisplay.value += message + "\n";
+            chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    }
+};
         this.socket.onerror = (error) => {
             console.log("errr socket" + error);
         }
         this.socket.onclose = () => {
-            alert ('deco');
+            // alert ('deco');
             if (this.reco)
                 this.nbco++;
                 setTimeout(() => this.connect(), 50);
