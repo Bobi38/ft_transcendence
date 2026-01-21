@@ -1,4 +1,5 @@
 import { addmess } from "./wel.js";
+import { HistoryC } from '../fct1.js';  
 
 class SocketManag{
     constructor(){
@@ -30,6 +31,7 @@ class SocketManag{
           const message = dataa.id + " : " + dataa.mess;
 
             chatDisplay.value += message + "\n";
+            HistoryC.setHisto(chatDisplay.value);
             chatDisplay.scrollTop = chatDisplay.scrollHeight;
     }
 };

@@ -1,7 +1,8 @@
 
 // import { WebSocket } from 'ws';
 import { showAlert } from '../fct1.js';
-import {SocketM} from './SocketManag.js'
+import {SocketM} from './SocketManag.js';
+import { HistoryC } from '../fct1.js';  
 
 console.log("wel.js loaded");
 const plus = document.querySelector('.btn-click');
@@ -18,7 +19,6 @@ const to = sessionStorage.getItem('token');
 // };
 // const id = sessionStorage('token');
 // console.log(id);
-
 // socket.onopen = () => {
 //     console.log("WebSocket connection established");
 //     console.log("ReadyState:", socket.readyState);
@@ -58,8 +58,9 @@ send.addEventListener('click', async function (){
     }
     SocketM.sendd(data);
     const message = "me : " + mess.value;
-
+    
     chatDisplay.value += message + "\n";
+    HistoryC.setHisto(chatDisplay.value);
     chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
 
@@ -102,6 +103,28 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (err) {
         console.error('Erreur fetch /api/click:', err);
     }
+    // try{
+    //     const rep1 = await fetch ('/api/getchat', {
+    //         method: 'GET',
+    //         headers :{
+    //             'Content-Type': 'application/json'
+    //         },
+    //         credentials: 'include'
+    //     });
+    //     const rest1 = await rep1.json();
+    //     if (rest1.success){
+    //         chatDisplay.value = rest1.message;
+    //         chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    //     }
+    //     else{
+    //         throw new Error("error chatjson" , rest1.message);
+    //     }
+    // }catch(err){
+    //     alert("error from getchat = ", err);
+    // }
+    if (chatDisplay.value.length == 0 && HistoryC.getHisto().length != 0)
+        chatDisplay.value = HistoryC.getHisto();
+    chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
 
 
