@@ -103,25 +103,25 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (err) {
         console.error('Erreur fetch /api/click:', err);
     }
-    // try{
-    //     const rep1 = await fetch ('/api/getchat', {
-    //         method: 'GET',
-    //         headers :{
-    //             'Content-Type': 'application/json'
-    //         },
-    //         credentials: 'include'
-    //     });
-    //     const rest1 = await rep1.json();
-    //     if (rest1.success){
-    //         chatDisplay.value = rest1.message;
-    //         chatDisplay.scrollTop = chatDisplay.scrollHeight;
-    //     }
-    //     else{
-    //         throw new Error("error chatjson" , rest1.message);
-    //     }
-    // }catch(err){
-    //     alert("error from getchat = ", err);
-    // }
+    try{
+        const rep1 = await fetch ('/api/getchat', {
+            method: 'GET',
+            headers :{
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        const rest1 = await rep1.json();
+        if (rest1.success){
+            chatDisplay.value = rest1.message;
+            chatDisplay.scrollTop = chatDisplay.scrollHeight;
+        }
+        else{
+            throw new Error("error chatjson" , rest1.message);
+        }
+    }catch(err){
+        alert("error from getchat = ", err);
+    }
     if (chatDisplay.value.length == 0 && HistoryC.getHisto().length != 0)
         chatDisplay.value = HistoryC.getHisto();
     chatDisplay.scrollTop = chatDisplay.scrollHeight;

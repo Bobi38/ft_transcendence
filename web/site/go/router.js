@@ -6,6 +6,9 @@ import jwt from 'jsonwebtoken';
 import coockieParser from 'cookie-parser';
 import User  from '../models/user.js';
 import Co  from '../models/connect.js';
+import ChatG from '../models/test.js';
+import PrivMess from '../models/privmess.js';
+import PrivChat from '../models/privchat.js';
 import {majDb}  from '../fct.js';
 import os from 'os';
 import path from 'path';
@@ -177,6 +180,47 @@ router.get('/nclick', async (req, res) => {
   }
 });
 
+
+router.post('/addpriv', async (req, res) => {
+  try{
+    const {tok2 , mess} = req.body;
+    const tok1 = req.cookies.token;
+    const id1 = jwt.verify(tok1, secret);
+    const id2 = jwt.verify(tok2, secret);
+    const res1 = await User.findOne({ where: {id: id1.id}});
+    const res2 = await User.findOne({ where: { id: id2.id}});
+    if (res1 === 0 || res2 === 0)
+      return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+    const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
+    if (findchat === 0)
+        findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
+    await PrivMess.create({idSend: id1.id, conv: mess, ChatId: findchat.id});
+    res.status(201).json({success: true});
+  }catch(err){
+    res.status(500).json({success: false, message: err});
+  }
+});
+
+// une route get pour recuperer une conversation a 2
+// une route post pour metre a jour la conversation generale
+
+router.get('/getchat', async (req, res) => {
+  try {
+    // console.log("dans nclick");
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    if (result.length === 0)
+        return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+    const conv = await ChatG.findByPk(1);
+    const ret = conv.contenu;
+    res.status(201).json({ success: true, message: ret});
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Erreur MySQL' });
+  }
+});
 
 router.post('/welcome', async (req, res) => {
   // console.log("COOOOUUUUUUU_________________");

@@ -14,6 +14,9 @@ import { initWebSocket } from './site/go/wsserver.js';
 import './site/models/index.js';
 import User from './site/models/user.js';
 import './site/models/connect.js';
+import ChatG from './site/models/test.js';
+import './site/models/privchat.js';
+import './site/models/privmess.js';
 
 
 
@@ -42,6 +45,7 @@ app.get("/", async (req, res) => {
     await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 100});
     await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
     await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
+    await ChatG.create({contenu: ""});
     majDb();
   }
   if (req.cookies.token){
