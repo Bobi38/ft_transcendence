@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
-import { PrivChat } from './privchat.js'
+import  PrivChat  from './privchat.js'
 
 const PrivMess = sequelize.define('PrivMess', {
   id: {

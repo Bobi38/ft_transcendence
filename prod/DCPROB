@@ -1,22 +1,39 @@
-version: '3.9'
-
 services:
+  nginx:
+    image: nginx:1.29.4
+    container_name: nginx
+    ports:
+    - "9443:443"
+    volumes:
+    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+    - home
+    depends_on:
+    - web
+    secrets:
+    - source: nginx_cert
+      target: nginx.crt
+    - source: nginx_key
+      target: nginx.key
+    restart: always
+  
   mysql:
     image: mysql:8.4
     container_name: mysql
     restart: always
     volumes:
-      - ./db/conf.cnf:/etc/mysql/conf.d/my.cnf
-      - ./db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
+    # - ./vol/db/data:/var/lib/mysql
+    - ./db/conf.cnf:/etc/mysql/conf.d/my.cnf
+    - ./db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
     networks:
-      - home
+    - home
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
       MYSQL_DATABASE: TRANS
       MYSQL_USER: bobi
       MYSQL_PASSWORD: 123
     secrets:
-      - data_pswd
+    - data_pswd
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -27,16 +44,18 @@ services:
     image: phpmyadmin/phpmyadmin:latest
     container_name: myadmin
     depends_on:
-      - mysql
+    - mysql
     ports:
-      - "8081:80"
+    - "8081:80"
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
       PMA_USER: bobi
       PMA_PASSWORD: 123
+    # volumes:
+    # - ./myadmin/conff.sh:/docker-entrypoint.d/10-config.sh
     networks:
-      - home
+    - home
     restart: always
 
   web:
@@ -56,12 +75,23 @@ services:
       - /app/node_modules
     networks:
       - home
+    secrets:
+    - source: nginx_cert
+      target: nginx.crt
+    - source: nginx_key
+      target: nginx.key
     restart: always
     ports:
-      - "9000:9000"   # backend Node
-      - "5173:5173"   # Vite frontend
+      - "9000:9000"
+      - "5173:5173"
+
+
 
 secrets:
+  nginx_cert:
+    file: ./secrets/nginx.crt
+  nginx_key:
+    file: ./secrets/nginx.key
   data_pswd:
     file: ./secrets/data_pswd
 

@@ -189,10 +189,10 @@ router.post('/addpriv', async (req, res) => {
     const id2 = jwt.verify(tok2, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
     const res2 = await User.findOne({ where: { id: id2.id}});
-    if (res1 === 0 || res2 === 0)
+    if (res1 == 0 || res2 == 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
-    if (findchat === 0)
+    if (findchat == 0)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
     await PrivMess.create({idSend: id1.id, conv: mess, ChatId: findchat.id});
     res.status(201).json({success: true});

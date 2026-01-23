@@ -37,7 +37,7 @@ secrets:
 # 	openssl rand -hex 4 > secrets/wordpress_db_password
 # 	openssl rand -hex 4 > secrets/wordpress_admin_password
 # 	openssl rand -hex 4 > secrets/wordpress_user_password
-	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout secrets/nginx.key -out secrets/nginx.crt -subj "/CN=tvoisin.42.fr"
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout secrets/nginx.key -out secrets/nginx.crt -subj "/CN=localhost:9000"
 
 fclean: clean
 	docker volume prune -f
