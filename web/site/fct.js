@@ -1,7 +1,7 @@
 import sequelize from './models/index.js';
 import jwt from 'jsonwebtoken';
 import {secret} from './go/router.js' 
-const secrett = 'toto';
+
 
 
 class Chat {
@@ -10,7 +10,7 @@ class Chat {
   }
   addtok(token, socket) {
     try {
-      const decoded = jwt.verify(token, secrett);
+      const decoded = jwt.verify(token, secret);
       this.sessions.set(token, {userId: decoded.id,socket});
       console.log("WS enregistré user", decoded.id);
       return decoded.id;
@@ -30,10 +30,10 @@ class Chat {
   }
   decoded(token){
     try{
-      const decodeded = jwt.verify(token, secrett);
+      const decodeded = jwt.verify(token, secret);
       return decodeded;
     }catch(err){
-      console.log("err "  + err);
+      console.log("err decoded "  + err);
       return null;
     }
   }

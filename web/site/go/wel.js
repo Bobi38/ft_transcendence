@@ -62,6 +62,26 @@ send.addEventListener('click', async function (){
     chatDisplay.value += message + "\n";
     HistoryC.setHisto(chatDisplay.value);
     chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    try{
+        const rep = await fetch('/api/addchat',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({message}),
+            credentials: 'include'
+        });
+        const res = await rep.json();
+        if (res.success){
+            console.log('message add');
+            console.log(res.mess);
+        }
+        else{
+            console.log('errrrr ', res.message);
+        }
+    }catch(err){
+        console.log('error addchat' , err.message);
+    }
 });
 
 

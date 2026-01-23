@@ -1,5 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import fs from 'fs';
 const router = express.Router();
 import pool from '../pool.js';
 import jwt from 'jsonwebtoken';
@@ -21,7 +22,9 @@ const __dirname = path.dirname(__filename);
 router.use(coockieParser());
 // const location = os.networkInterfaces().eth0 ? os.networkInterfaces().eth0.find(details => details.family === 'IPv4') : {hostname: 'localhost'};
 // const secret = location.address;
-const secret = 'toto';
+const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
+const secret_chat = fs.readFileSync('/run/secrets/cle_chat', 'utf-8').trim();
+
 
 async function checktok(tokenn) {
   if (!tokenn) {       // <-- vérifie d’abord si le token existe
@@ -202,11 +205,30 @@ router.post('/addpriv', async (req, res) => {
 });
 
 // une route get pour recuperer une conversation a 2
-// une route post pour metre a jour la conversation generale
+
+router.post('/addchat', async (req, res) => {
+  try{
+    console.log("JE SUIS DANS ADDDDCHAT");
+    const chat = req.body;
+    console.log('chat= ', chat);
+    const achat = await ChatG.findByPk(1);
+    console.log('before----' , achat.contenu);
+    let n = achat.contenu || '';
+    n += chat.message + '\n';
+    achat.contenu = n;
+    await achat.save();
+    console.log('mise a jour good');
+    const bchat = await ChatG.findByPk(1);
+    console.log('after----', bchat.contenu);
+    return res.status(201).json({success: true});
+  }catch(err){
+    return res.status(501).json({success: false, message: err});
+  }
+})
 
 router.get('/getchat', async (req, res) => {
   try {
-    // console.log("dans nclick");
+    console.log("dans GETCHAT-----");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
@@ -227,6 +249,7 @@ router.post('/welcome', async (req, res) => {
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
-export {secret}
+export {secret_chat};
+export {secret};
 export { checktok };
 export default router;
