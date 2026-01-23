@@ -76,6 +76,8 @@ services:
     networks:
       - home
     secrets:
+    - cle_pswd
+    - cle_chat
     - source: nginx_cert
       target: nginx.crt
     - source: nginx_key
@@ -91,6 +93,10 @@ secrets:
     file: ./secrets/nginx.key
   data_pswd:
     file: ./secrets/data_pswd
+  cle_chat:
+    file: ./secrets/cle_chat
+  cle_pswd:
+    file: ./secrets/cle_pswd
 
 networks:
   home:

@@ -34,6 +34,8 @@ logs:
 secrets:
 	@mkdir -p secrets
 	openssl rand -hex 2 > secrets/data_pswd
+	openssl rand -hex 2 > secrets/cle_pswd
+	openssl rand -hex 2 > secrets/cle_chat
 # 	openssl rand -hex 4 > secrets/wordpress_db_password
 # 	openssl rand -hex 4 > secrets/wordpress_admin_password
 # 	openssl rand -hex 4 > secrets/wordpress_user_password
