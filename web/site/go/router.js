@@ -14,6 +14,7 @@ import {majDb}  from '../fct.js';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import session from 'express-session';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -45,10 +46,21 @@ async function checktok(tokenn) {
   }
 }
 
+function maj_conv(id, conv){
+  let newconv = "";
+
+  for (let i = conv.length - 1; i >= 0; i--) {
+    if (conv[i].SenderId == id)
+      newconv += `me : ${conv[i].contenu}\n`;
+    else
+      newconv += `${conv[i].SenderId} : ${conv[i].contenu}\n`;
+  }
+  return newconv;
+};
 
 router.use(async (req, res, next) => {
   const token = req.cookies.token;
-  // console.log("Middleware auth for path:", req.path);
+  console.log("Middleware auth for path:", req.path);
   if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' ) {
     return res.status(401).json({ success: false, redirect: true});
   }
@@ -66,6 +78,25 @@ router.use(async (req, res, next) => {
   next();                  
 });
 
+function CheckName(req, res, next){
+  console.log("je suis dan middel checkname");
+  if (req.session.nameNeedUpdate)
+      return res.status(201).json({success: true, message: req.session.username});
+  next();
+}
+
+router.get('/getname', CheckName, async(req, res) =>{
+  try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    result[0].name = req.session.username;
+    req.session.nameNeedUpdate = false;
+    res.status(201).json({success: true, name: result[0].name});
+  }catch(err){
+    res.status(501).json({success: false, message: 'Err mysql getname'});
+  }
+});
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -90,6 +121,8 @@ router.post('/login', async (req, res) => {
     console.log ("TAILLE= " , Co.length);
     await result[0].update({co: true});
     console.log("ID", result[0].id);
+    req.session.username = result[0].name;
+    req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id, tooken: token});
     majDb();
@@ -204,27 +237,72 @@ router.post('/addpriv', async (req, res) => {
   }
 });
 
-// une route get pour recuperer une conversation a 2
+router.get('/getpriv', async (req, res) => {
+  try{
+    const {tok2} = req.body;
+    const tok1 = req.cookies.token;
+    const id1 = jwt.verify(tok1, secret);
+    const id2 = jwt.verify(tok2, secret);
+    const res2 = await User.findOne({ where: { id: id2.id}});
+    if (res2 === 0)
+      return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+    const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
+    if (findchat === 0)
+        return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
+    const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
+    const ret = maj_conv(id1.id, conv);
+    res.status(201).json({success: true, message: ret});
+  }catch(err){
+    res.status(500).json({success: false, message: err});
+  }
+})
 
 router.post('/addchat', async (req, res) => {
   try{
     console.log("JE SUIS DANS ADDDDCHAT");
     const chat = req.body;
-    console.log('chat= ', chat);
-    const achat = await ChatG.findByPk(1);
-    console.log('before----' , achat.contenu);
-    let n = achat.contenu || '';
-    n += chat.message + '\n';
-    achat.contenu = n;
-    await achat.save();
-    console.log('mise a jour good');
-    const bchat = await ChatG.findByPk(1);
-    console.log('after----', bchat.contenu);
+    if (chat.send == "")
+      res.status(201)({success: true});
+    const tok = req.cookies.token
+    const id = jwt.verify(tok, secret);
+    console.log (id.id, " " , chat.send);
+    await ChatG.create({contenu: chat.send, SenderId: id.id });
+    console.log("buuuuug");
+    // console.log('chat= ', chat);
+    // const achat = await ChatG.findByPk(1);
+    // console.log('before----' , achat.contenu);
+    // let n = achat.contenu || '';
+    // n += chat.message + '\n';
+    // achat.contenu = n;
+    // await achat.save();
+    // console.log('mise a jour good');
+    // const bchat = await ChatG.findByPk(1);
+    // console.log('after----', bchat.contenu);
     return res.status(201).json({success: true});
   }catch(err){
     return res.status(501).json({success: false, message: err});
   }
 })
+
+// router.get('/getchat', async (req, res) => {
+//   try {
+//     console.log("dans GETCHAT-----");
+//     const token = req.cookies.token;
+//     const decoded = jwt.verify(token, secret);
+//     const result = await User.findAll({ where: { id: decoded.id } });
+//     if (result.length === 0)
+//         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+//     const conv = await ChatG.findByPk(1);
+//     const ret = conv.contenu;
+//     res.status(201).json({ success: true, message: ret});
+//   }
+//   catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, message: 'Erreur MySQL' });
+//   }
+// });
+
+
 
 router.get('/getchat', async (req, res) => {
   try {
@@ -234,8 +312,11 @@ router.get('/getchat', async (req, res) => {
     const result = await User.findAll({ where: { id: decoded.id } });
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const conv = await ChatG.findByPk(1);
-    const ret = conv.contenu;
+    const conv = await ChatG.findAll({order:[['id', 'DESC']], limit: 30});
+    let ret = "";
+    if (conv.length - 1 != 0)
+      ret = maj_conv(result[0].id, conv);
+    console.log ("ret ", ret);
     res.status(201).json({ success: true, message: ret});
   }
   catch (err) {

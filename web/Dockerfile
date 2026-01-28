@@ -12,7 +12,8 @@ RUN npm install jsonwebtoken
 RUN npm install cookie-parser
 RUN npm install --save sequelize
 RUN npm install ws
-
+RUN npm install googleapis
+RUN npm install express-session
 
 COPY . .
 

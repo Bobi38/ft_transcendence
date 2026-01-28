@@ -1,4 +1,5 @@
 import express from 'express';
+import session from "express-session";
 import http from 'http';
 import path from 'path';
 import cookieParser from 'cookie-parser';
@@ -31,6 +32,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(session({
+  secret:'coucou',
+  resave: false,
+  saveUninitialized: true
+}))
 app.use('/api', router);
 
 

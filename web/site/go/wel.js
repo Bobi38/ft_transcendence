@@ -57,18 +57,16 @@ send.addEventListener('click', async function (){
         id: to
     }
     SocketM.sendd(data);
-    const message = "me : " + mess.value;
+    const send = mess.value;
     
-    chatDisplay.value += message + "\n";
-    HistoryC.setHisto(chatDisplay.value);
-    chatDisplay.scrollTop = chatDisplay.scrollHeight;
+ 
     try{
         const rep = await fetch('/api/addchat',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({message}),
+            body: JSON.stringify({send}),
             credentials: 'include'
         });
         const res = await rep.json();
@@ -82,6 +80,10 @@ send.addEventListener('click', async function (){
     }catch(err){
         console.log('error addchat' , err.message);
     }
+    const message = "me : " + mess.value;
+    chatDisplay.value += message + "\n";
+    // HistoryC.setHisto(chatDisplay.value);
+    chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
 
 
@@ -142,9 +144,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     }catch(err){
         alert("error from getchat = ", err);
     }
-    if (chatDisplay.value.length == 0 && HistoryC.getHisto().length != 0)
-        chatDisplay.value = HistoryC.getHisto();
-    chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    // if (chatDisplay.value.length == 0 && HistoryC.getHisto().length != 0)
+    //     chatDisplay.value = HistoryC.getHisto();
+    // chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
 
 

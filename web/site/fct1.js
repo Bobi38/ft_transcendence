@@ -10,6 +10,7 @@ function showAlert(message, type = "danger") {
     }, 1000);
 }
 
+
 class HistoryChat{
     constructor(){
         this.History = "";
