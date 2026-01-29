@@ -6,21 +6,20 @@
 
 
 .grid_fr1_fr2_fr1{
-    background: radial-gradient(circle, rgb(42, 83, 116), rgb(132, 134, 235));
-    display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
-    border-radius: 20px;
-    margin: 0em 1em 1em 1em;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  height: 100%; /* S'assure que le footer prend la hauteur du parent */
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  margin: 0em 1em 1em 1em;
+  border-radius: 20px;
+  background: radial-gradient(circle, rgb(42, 83, 116), rgb(132, 134, 235));
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  align-items: center;
+  text-align: center;
 }
 
 
 .grid_icone {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     border-radius: 1em;
-    padding: 1em;
-    margin: 1em;
 }
 
