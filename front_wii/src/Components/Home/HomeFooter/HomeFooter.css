@@ -2,24 +2,27 @@
 .grid_footer{
   grid-column: 1 / 4;
   grid-row: 2;
+  display: flex;
 }
 
 
 .grid_fr1_fr2_fr1{
-  height: 100%; /* S'assure que le footer prend la hauteur du parent */
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   margin: 0em 1em 1em 1em;
   border-radius: 20px;
   background: radial-gradient(circle, rgb(42, 83, 116), rgb(132, 134, 235));
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-  align-items: center;
+  align-items: stretch; /* Les enfants remplissent toute la hauteur */
   text-align: center;
 }
 
 
 .grid_icone {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border-radius: 1em;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 1em;
+  justify-content: center;
+  align-content: center;
+  margin: 0.5em;
 }
 
