@@ -52,8 +52,11 @@ services:
       DB_HOST: "mysql"
       DB_PORT:  3306
     volumes:
-      - ./web:/app:cached
-      - /app/node_modules
+  # Montre seulement le code frontend pour le live reload
+      - ./web/site/go/src:/app/site/go/src:cached
+      - ./web/site/go/index.html:/app/site/go/index.html
+  # Garde node_modules de l'image
+      - /app/site/go/node_modules
     networks:
       - home
     restart: always

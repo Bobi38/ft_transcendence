@@ -37,8 +37,9 @@ RUN npm install vite http-proxy-middleware
 
 
 # Frontend
-COPY site/go/package*.json ./site/go/
-WORKDIR site/go 
+
+WORKDIR /app/site/go
+COPY site/go/package*.json ./
 RUN npm install
 WORKDIR /app
 
