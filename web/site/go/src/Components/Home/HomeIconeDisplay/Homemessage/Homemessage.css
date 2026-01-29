@@ -1,0 +1,7 @@
+.grid-pos-4-3{
+  grid-column: 5;
+  grid-row: 1/4;
+  margin: 0.7em;
+  border-radius: 15px;
+  padding: 0.5em;
+}
