@@ -1,7 +1,7 @@
-import "./Homemessage.css";
+import "./HomeMessage.css";
 import "../../Home.css"
 
-export default function Homemessage({message}) {
+export default function HomeMessage({message}) {
     return (
         <>
             <div className="grid-pos-4-3 iconecolor">
