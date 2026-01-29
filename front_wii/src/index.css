@@ -1,0 +1,30 @@
+
+:root{
+  background-color: cadetblue;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Assurer que les parents de base prennent tout l'écran */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Forcer la div React à prendre tout l'espace disponible */
+#root {
+  min-height: 100%;
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+    cursor: default;
+}
