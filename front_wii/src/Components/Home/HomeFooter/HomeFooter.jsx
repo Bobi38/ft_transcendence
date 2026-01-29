@@ -5,8 +5,7 @@ export default function HomeFooter() {
     
     
     return (
-        <div className="grid_footer">
-            <div className="grid_fr1_fr2_fr1">
+        <div className="grid_footer grid_fr1_fr2_fr1">
 
                 <div className="grid_icone iconecolor" style={{gridColumnStart: 1,gridColumnEnd: 2,}}>
                     contact (notre github)
@@ -21,7 +20,6 @@ export default function HomeFooter() {
                     
                 </div>
 
-            </div>
         </div>
     );
 }
