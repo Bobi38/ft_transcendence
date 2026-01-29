@@ -99,8 +99,10 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   console.log("je suis la ");
   const { name, password, email } = req.body;
+  console.log("cooucoucouocu");
   try {
-    const find = User.findAll({ where: { mail: email } });
+    console.log("je suisnnnn");
+    const find = await User.findAll({ where: { mail: email } });
     if (find.length != 0) {
       return res.status(500).json({success: false, message: 'Email already used'});
     }
