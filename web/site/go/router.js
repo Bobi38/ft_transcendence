@@ -98,6 +98,17 @@ router.get('/getname', CheckName, async(req, res) =>{
   }
 });
 
+router.get('/getprofile', async(req, res) =>{
+  try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    res.status(201).json({success: true, name: result[0].name, nbvi: result[0].win, nbplay: result[0].total_part});
+  }catch(err){
+    res.status(501).json({success: false, message: 'Err mysql getname'});
+  }
+});
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
