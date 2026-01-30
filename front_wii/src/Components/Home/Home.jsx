@@ -11,27 +11,27 @@ export default function Home(){
         <>
             <div className='Homewii'>
                 <>
-                    <HomeIcone grid_style="iconedisplay iconecolor div1" text="jeu"/>
-                    <HomeIcone grid_style="iconedisplay iconecolor div2" text="intra" link="https://meta.intra.42.fr/clusters"/>
-                    <HomeIcone grid_style="iconedisplay iconecolor div3" text="general message"/>      {/* on garde */}
+                    <HomeIcone grid_style="div1 iconedisplay iconecolor" text="jeu"/>
+                    <HomeIcone grid_style="div2 iconedisplay iconecolor" text="intra" link="https://meta.intra.42.fr/clusters"/>
+                    <HomeIcone grid_style="div3 iconedisplay iconecolor" text="general message"/>      {/* on garde */}
                 </>
                 
                 <>
-                    <HomeIcone grid_style="iconedisplay iconecolor div4" />
-                    <HomeIcone grid_style="iconedisplay iconecolor div5" text="weather"/>
-                    <HomeIcone grid_style="iconedisplay iconecolor div6" text="private message"/>      {/* on garde */}
+                    <HomeIcone grid_style="div4 iconedisplay iconecolor" />
+                    <HomeIcone grid_style="div5 iconedisplay iconecolor" text="weather"/>
+                    <HomeIcone grid_style="div6 iconedisplay iconecolor" text="private message"/>      {/* on garde */}
                 </>
 
-                <HomeArrow grid_style="iconedisplay div12"/>
+                <HomeArrow grid_style="div12 iconedisplay"/>
 
                 <>
-                    <HomeIcone grid_style="iconedisplay iconecolor div7" text="stat"/>
-                    <HomeIcone grid_style="iconedisplay iconecolor div8" />
-                    <HomeIcone grid_style="iconedisplay iconecolor div9" text="contact friend"/>      {/* on garde */}
+                    <HomeIcone grid_style="div7 iconedisplay iconecolor" text="stat"/>
+                    <HomeIcone grid_style="div8 iconedisplay iconecolor" />
+                    <HomeIcone grid_style="div9 iconedisplay iconecolor" text="contact friend"/>      {/* on garde */}
                 </>
 
 
-                <HomeMessage grid_style="iconedisplay iconecolor div10"/>
+                <HomeMessage grid_style="div10 iconedisplay iconecolor"/>
                 
                 <HomeFooter grid_style="div11"/>
 
