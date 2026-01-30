@@ -2,20 +2,17 @@ import "./HomeIcone.css";
 import "../Home.css"
 
 
-export default function HomeIcone({text, link, grid_style}) {
+export default function HomeIcone({grid_style, changePage, arg, text, link}) {
 
 
     return (
         <>
-        <a  href={link} 
-            target="_blank" 
-            className={`${grid_style}`}>
-            
-            
+        <button className={`${grid_style}`} 
+                onClick={() => changePage(arg)}>
             <p>
                 {text ?? "nothing for moment"}
             </p>
-        </a>
+        </button>
         </>
     )
 }

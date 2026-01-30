@@ -3,20 +3,21 @@
   display: flex;
   flex-direction: column;
   padding: 10px;
+  /* height: 67%; */
 }
 
 .display-message {
-  flex: 1;
   overflow: hidden auto;
+  scrollbar-width: thin;
   width: 100%;
-  height: 100%;
-  justify-content: right;
+  /* height: 69vh; */
+  /* flex: 1; */
 }
 
 
 .display-message p {
   margin: 0;
-  margin-top: 0.5em;
+  margin-top: 0.5rem;
   border-radius: 3px;
 
   white-space: pre-wrap;
@@ -33,12 +34,13 @@
 
 
 form {
-  height: 50px;
   width: 100%;
-  padding: 0em;
-  margin: 0em;
-  margin-top: 0.5em;
+  margin: 0rem;
+  padding: 0rem;
+  margin-top: 0.5rem;
   gap: 5px;
+  height: 50px;
+
   display: flex;
   flex-direction: column;
 }

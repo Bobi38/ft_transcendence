@@ -1,16 +1,17 @@
 import "./HomeFooter.css"
 import "../Home.css"
 
-export default function HomeFooter({grid_style}) {
+export default function HomeFooter({grid_style, changePage}) {
     
     return (
         <div className={`${grid_style} homefooter-grid stretch`}>
 
-                <div className="homefooter1 iconecolor center">
+                <button onClick={() => changePage('ContactUs')} 
+                        className="homefooter1 iconecolor center">
                     <a href="">
                         contact (notre github)
                     </a>
-                </div>
+                </button>
 
 
                 <div className="homefooter2 center">
@@ -18,11 +19,12 @@ export default function HomeFooter({grid_style}) {
                 </div>
                 
 
-                <div className="homefooter3 iconecolor center">
+                <button onClick={() => changePage('Profile')}
+                        className="homefooter3 iconecolor center">
                     <a href="">
                         Profile
                     </a>
-                </div>
+                </button>
 
         </div>
     );

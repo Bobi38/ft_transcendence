@@ -3,7 +3,7 @@
     grid-template-columns: 1fr 4fr 1fr;
 
     border-radius: 20px;
-    margin: 1em;
+    margin: 1rem;
   
     background: radial-gradient(circle, rgb(42, 83, 116), rgb(132, 134, 235));
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.651);
@@ -12,6 +12,7 @@
 .homefooter1{ grid-column-start: 1; grid-column-end: 2; }
 .homefooter2{ grid-column-start: 2; grid-column-end: 3; }
 .homefooter3{ grid-column-start: 3; grid-column-end: 4; }
+
 
 .center{
   justify-content: center;
