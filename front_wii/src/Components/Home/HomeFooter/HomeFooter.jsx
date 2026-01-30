@@ -1,13 +1,14 @@
 import "./HomeFooter.css"
 import "../Home.css"
 
-export default function HomeFooter() {
+export default function HomeFooter({grid_style}) {
     
     
     return (
-        <div className="grid_footer grid_fr1_fr2_fr1">
+        // iconecolor div10
+        <div className={`${grid_style} homefooter-grid stretch`}>
 
-                <div className="grid_icone iconecolor" style={{gridColumnStart: 1,gridColumnEnd: 2}}>
+                <div className="iconecolor homefooter1 ">
                     <a href="">
                         contact (notre github)
                     </a>
@@ -19,7 +20,7 @@ export default function HomeFooter() {
                 </div>
                 
 
-                <div className="grid_icone iconecolor" style={{gridColumnStart: 3,gridColumnEnd: 4}}>
+                <div className="iconecolor homefooter3 ">
                     <a href="">
                         Profile
                     </a>

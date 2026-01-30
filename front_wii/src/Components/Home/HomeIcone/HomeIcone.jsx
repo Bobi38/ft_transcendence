@@ -1,15 +1,15 @@
 import "./HomeIcone.css";
-import "../../Home.css"
+import "../Home.css"
 
 
-export default function HomeIcone({text, link}) {
+export default function HomeIcone({text, link, grid_style}) {
 
 
     return (
         <>
         <a  href={link} 
             target="_blank" 
-            className="iconedisplay iconecolor">
+            className={`${grid_style}`}>
             
             
             <p>
