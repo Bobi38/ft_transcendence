@@ -1,18 +1,10 @@
-.pos-grid-arrow {
-    grid-column: 3;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-}
-
 
 .arrow-right {
-	border-top: 30px solid transparent;
+	border-top: 40px solid transparent;
 	border-left: 40px solid #555;
-	border-bottom: 30px solid transparent;
+	border-bottom: 40px solid transparent;
 }
 
-
-.pos-grid-arrow a:hover div{
+.arrow-right:hover{
 	border-left: 40px solid #727272;
 }

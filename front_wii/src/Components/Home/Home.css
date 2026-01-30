@@ -1,10 +1,11 @@
+/*------------------------------- grid ----------------------------------*/
 
 .Homewii {
-display: grid;
-grid-template-columns: 1fr 1fr 1fr 1fr 40px;
-grid-template-rows: 1fr 1fr 1fr 1fr;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 40px;
+    grid-template-rows: 1fr 1fr 1fr 0.8fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 .div1  { grid-area: 1 / 1 / 2 / 2; } /* HomeIcone */
@@ -21,7 +22,7 @@ grid-row-gap: 0px;
 .div12 { grid-area: 2 / 5 / 3 / 6; } /* HomeArrow */
 
 
-
+/*-----------------------------------------------------------------------*/
 
 .iconecolor{
     border-radius: 20px;

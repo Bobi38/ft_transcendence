@@ -3,24 +3,22 @@ import "../Home.css"
 
 export default function HomeFooter({grid_style}) {
     
-    
     return (
-        // iconecolor div10
         <div className={`${grid_style} homefooter-grid stretch`}>
 
-                <div className="iconecolor homefooter1 ">
+                <div className="homefooter1 iconecolor center">
                     <a href="">
                         contact (notre github)
                     </a>
                 </div>
 
 
-                <div>
+                <div className="homefooter2 center">
                     <p>8:42</p>
                 </div>
                 
 
-                <div className="iconecolor homefooter3 ">
+                <div className="homefooter3 iconecolor center">
                     <a href="">
                         Profile
                     </a>

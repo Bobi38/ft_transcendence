@@ -11,78 +11,43 @@ export default function HomeMessage({message, grid_style}) {
 
                     <div className="display-message">
 
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
                         <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        {/* <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p>
-                        <p>{message??"wqer"}</p> */}
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        
                         
                     </div>
 

@@ -2,22 +2,30 @@
 .message{
   display: flex;
   flex-direction: column;
+  padding: 10px;
 }
 
-.display-message{
+.display-message {
   flex: 1;
   overflow: hidden auto;
+  width: 100%;
+  height: 100%;
+  justify-content: right;
 }
+
 
 .display-message p {
+  margin: 0;
+  margin-top: 0.5em;
+  border-radius: 3px;
+
   white-space: pre-wrap;
   overflow-wrap: break-word;
-
-  padding: 2px;
-  margin: 2px;
-  border-radius: 2px;
+  
+  text-align: center;
   background-color: rgb(89, 189, 189);
 }
+
 .display-message p:hover {
   background-color: rgb(79, 179, 179);
 }
@@ -26,9 +34,11 @@
 
 form {
   height: 50px;
-  padding: 0.1em;
-  margin: 0.15em;
+  width: 100%;
+  padding: 0em;
+  margin: 0em;
+  margin-top: 0.5em;
+  gap: 5px;
   display: flex;
   flex-direction: column;
-  gap: 2px;            /* Espace entre l'input et le bouton */
 }
