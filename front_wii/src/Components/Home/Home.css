@@ -1,6 +1,8 @@
 /*------------------------------- grid ----------------------------------*/
 
 .Homewii {
+    height: 100%;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 40px;
     grid-template-rows: 1fr 1fr 1fr 0.8fr;

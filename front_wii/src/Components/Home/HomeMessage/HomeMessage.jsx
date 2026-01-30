@@ -19,7 +19,52 @@ export default function HomeMessage({message, grid_style}) {
                     <div className="display-message ">
                         
                         {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
+                        {displayedMessage && <p>{displayedMessage}</p>}
                         <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
+                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
                         <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
                         <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
                         <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>

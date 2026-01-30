@@ -7,20 +7,13 @@ a {
   text-decoration: none;
 }
 
-/* Assurer que les parents de base prennent tout l'écran */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+/* html, body {
+} */
 
 /* Forcer la div React à prendre tout l'espace disponible */
 #root {
-  min-height: 100%;
-  min-width: 100%;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(1, 1fr);
+  height: 100vh;
+  width: 100vw;
 }
 
 a{
@@ -31,4 +24,10 @@ a{
 
 button{
   border: none;
+}
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
