@@ -22,14 +22,14 @@
 # CMD ["npm", "start"]
 # DOCKER POUR LA PRODDDDDDDDDDDDD
 
-FROM node:25-bullseye
+FROM node:20-bullseye
 
 WORKDIR /app
 
 # Backend
 COPY package*.json ./
 RUN npm install
-RUN npm install -g nodemon
+# RUN npm install -g nodemon
 RUN npm install -g concurrently
 RUN npm install vite http-proxy-middleware
 

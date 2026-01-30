@@ -103,7 +103,7 @@ router.get('/getprofile', async(req, res) =>{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
-    res.status(201).json({success: true, name: result[0].name, nbvi: result[0].win, nbplay: result[0].total_part});
+    res.status(201).json({success: true, name: result[0].name, nbvic: result[0].win, nbplay: result[0].total_part});
   }catch(err){
     res.status(501).json({success: false, message: 'Err mysql getname'});
   }

@@ -99,6 +99,7 @@
 // })();
 
 import express from 'express';
+import session from "express-session";
 import http from 'http';
 import path from 'path';
 import cookieParser from 'cookie-parser';
@@ -110,6 +111,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import router, { checktok } from './site/go/router.js';
 import { majDb } from './site/fct.js';
 import { initWebSocket } from './site/go/wsserver.js';
+import {addDb} from './site/fct.js';
 
 // Models
 import './site/models/index.js';
@@ -130,19 +132,20 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(session({
+  secret:'coucou',
+  resave: false,
+  saveUninitialized: true
+}))
 app.use('/api', router);
 
 if (isDev) {
-  // 🔹 En dev : proxy vers Vite
-  app.use(
-    '/',
-    createProxyMiddleware({
-      target: 'http://localhost:5173', // port du serveur Vite
-      changeOrigin: true,
-      ws: true, // websocket pour HMR
-    })
-  );
+  
+  console.log("JE SUIS DEVVVVVVVVVv")
+  app.use('/', async (req,res) => createProxyMiddleware({target: 'http://localhost:5173',changeOrigin: true, ws: true,})
+    );
 } else {
+  console.log("JE SUIS PROOOOOOOOOODDDDDDDDDDDd")
   // 🔹 En prod : servir le dist
   app.use(express.static(path.join(__dirname, 'site/go/dist')));
   app.get('*', (req, res) => {
@@ -158,7 +161,7 @@ if (isDev) {
 
     const server = http.createServer(app);
     initWebSocket(server);
-
+    addDb();
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log(`Proxying front to Vite at http://localhost:5173`);

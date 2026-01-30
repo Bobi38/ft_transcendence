@@ -63,10 +63,18 @@ services:
     ports:
       - "9000:9000"   # backend Node
       - "5173:5173"   # Vite frontend
+    secrets:
+    - cle_pswd
+    - cle_chat
 
 secrets:
   data_pswd:
     file: ./secrets/data_pswd
+  cle_chat:
+    file: ./secrets/cle_chat
+  cle_pswd:
+    file: ./secrets/cle_pswd
+  
 
 networks:
   home:

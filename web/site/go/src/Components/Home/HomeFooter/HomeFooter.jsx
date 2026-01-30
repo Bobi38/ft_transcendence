@@ -18,8 +18,7 @@ export default function HomeFooter() {
                 </div>
                 
                 <div className="grid_icone iconecolor" style={{gridColumnStart: 3,gridColumnEnd: 4,}}>
-                    <a href="">Profile</a>
-                    <button type="button" onClick={() => navigate("/Profil")}>Profil</button> 
+                    <button type="button" onClick={() => navigate("profil")}>Profil</button> 
                     
                 </div>
 

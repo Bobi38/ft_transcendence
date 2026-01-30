@@ -33,7 +33,7 @@ export default function Log() {
                 sessionStorage.setItem('token', result.tooken);
                 sessionStorage.setItem('message', "Registration successful");
                 sessionStorage.setItem('type', "success");
-                navigate("/home");
+                navigate("/home");onclick
             } else {
                 showAlert("Erreur : " + result.message, "danger");
             }
