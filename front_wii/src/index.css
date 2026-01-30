@@ -28,3 +28,7 @@ a{
     color: inherit;
     cursor: default;
 }
+
+button{
+  border: none;
+}
