@@ -1,19 +1,18 @@
-
 import './App.css'
+
 import { useState } from 'react'
 import Home from './Components/Home/Home.jsx'
-import ContactUs from './Components/ContactUs/ContactUs.jsx'
-// import Profile from './Components/Profile/Profile.jsx'
+import Navigation from './Components/Navigation/Navigation.jsx'
 
 export default function App() {
   const [screen, setScreen] = useState('Home')
 
   const renderScreen = () => {
     switch(screen) {
-      case 'ContactUs':
-        return <ContactUs changePage={setScreen} />
+      case 'Home':
+        return <Home changePage={setScreen}/>
       default:
-        return <Home changePage={setScreen} />
+        return <Navigation changePage={setScreen} screen={screen} />
     }
   }
 
