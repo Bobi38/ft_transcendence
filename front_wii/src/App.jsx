@@ -7,18 +7,20 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Home */}
-        <Route path="/" element={<Home />} />
+    <>
+      <BrowserRouter>
+        <Routes>
+          {/* Home */}
+          <Route path="/" element={<Home />} />
 
-        {/* Navigation/page/{sreen} */}
-        <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
-        <Route path="/Nothing" element={<Navigation screen="Nothing"/>} />
+          {/* Navigation/page/{sreen} */}
+          <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
 
 
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

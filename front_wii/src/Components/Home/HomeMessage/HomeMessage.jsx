@@ -1,7 +1,8 @@
 /* Css */
-import "../Home.css"
+import "../../../index.css"
 import "./HomeMessage.css";
 
+/* Components */
 import { useState } from "react";
 
 export default function HomeMessage({message, grid_style}) {
@@ -14,6 +15,7 @@ export default function HomeMessage({message, grid_style}) {
         setDisplayedMessage(input);
         setInput(""); // optionnel : reset le champ
     };
+    
     return (
         <>
             <div className={`${grid_style} message center`}>

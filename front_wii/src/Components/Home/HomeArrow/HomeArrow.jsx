@@ -1,6 +1,8 @@
+/* Css */
 import "./HomeArrow.css";
 import "../Home.css";
-    
+
+
 export default function HomeArrow({grid_style}) {
     return (
         <>

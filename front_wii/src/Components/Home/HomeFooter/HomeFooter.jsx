@@ -1,7 +1,8 @@
 /* Css */
-import "../Home.css"
 import "./HomeFooter.css"
+import "../../../index.css"
 
+/* Components */
 import { Link } from "react-router-dom"; 
 
 export default function HomeFooter({grid_style}) {
@@ -11,8 +12,7 @@ export default function HomeFooter({grid_style}) {
             <div className={`${grid_style} HomeFooter-grid stretch`}>
 
                     <Link   to='/ContactUs'
-                            className="HomeFooter1 Home-iconemargin
-iconecolor center">
+                            className="HomeFooter1 Home-iconemargin iconecolor center">
 
                         <a href="">
                             Contact us
@@ -27,8 +27,7 @@ iconecolor center">
                     
 
                     <Link   to='/Profile'
-                            className="HomeFooter3 Home-iconemargin
-iconecolor center">
+                            className="HomeFooter3 Home-iconemargin iconecolor center">
 
                         <a href="">
                             Profile

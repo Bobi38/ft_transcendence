@@ -1,15 +1,13 @@
 /* Css */
 import "./Navigation.css";
 
-/* Nav */
+/* Components */
 import NavBar from "./NavBar/NavBar.jsx";
-
-/* Page */
 import ContactUs from "./Page/ContactUs/ContactUs.jsx";
 import Nothing from "./Page/Nothing/Nothing.jsx";
 
     
-export default function Navigation({screen}) {
+export default function Navigation({ screen }) {
 
     const renderScreenNav = () => {
         switch(screen) {

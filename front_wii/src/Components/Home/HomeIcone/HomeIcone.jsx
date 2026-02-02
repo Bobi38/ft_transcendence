@@ -1,7 +1,7 @@
 /* Css */
-import "../Home.css"
 import "./HomeIcone.css";
 
+/* Components */
 import { Link } from "react-router-dom"; 
 
 export default function HomeIcone({grid_style, arg, text, link}) {
