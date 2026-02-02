@@ -8,6 +8,10 @@ const chatG = sequelize.define('chat', {
     type: DataTypes.STRING(512),
     Allownull: false,
   },
+  time:{
+    type: DataTypes.TIME,
+    allowNull: false
+  },
 }, {
   tableName: 'chat_G',
   timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas

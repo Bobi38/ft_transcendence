@@ -46,16 +46,24 @@ async function checktok(tokenn) {
   }
 }
 
-function maj_conv(id, conv){
-  let newconv = "";
+async function maj_conv(id, conv, namelst){
+  const  tableau = [];
 
   for (let i = conv.length - 1; i >= 0; i--) {
-    if (conv[i].SenderId == id)
-      newconv += `me : ${conv[i].contenu}\n`;
-    else
-      newconv += `${conv[i].SenderId} : ${conv[i].contenu}\n`;
+    let name;
+    let monMs; 
+    if (conv[i].SenderId == id){
+      name = "me";
+      monMs = true;
+    }
+    else{
+      const user = namelst.find(u => u.id === conv[i].SenderId);
+      name = user ? user.name : "unknown";
+      monMs = false;
+    }
+    tableau.push({monMsg: monMs, message: conv[i].contenu, login: name, timestamp: conv[i].time})
   }
-  return newconv;
+  return tableau;
 };
 
 router.use(async (req, res, next) => {
@@ -277,7 +285,7 @@ router.post('/addchat', async (req, res) => {
     const tok = req.cookies.token
     const id = jwt.verify(tok, secret);
     console.log (id.id, " " , chat.send);
-    await ChatG.create({contenu: chat.send, SenderId: id.id });
+    await ChatG.create({contenu: chat.send, SenderId: id.id, time: new Date() });
     console.log("buuuuug");
     // console.log('chat= ', chat);
     // const achat = await ChatG.findByPk(1);
@@ -324,9 +332,10 @@ router.get('/getchat', async (req, res) => {
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const conv = await ChatG.findAll({order:[['id', 'DESC']], limit: 30});
+    const name = await User.findAll({attributes: ['id', 'name'], where: {co: true}});
     let ret = "";
     if (conv.length - 1 != 0)
-      ret = maj_conv(result[0].id, conv);
+      ret = maj_conv(result[0].id, conv, name);
     console.log ("ret ", ret);
     res.status(201).json({ success: true, message: ret});
   }
