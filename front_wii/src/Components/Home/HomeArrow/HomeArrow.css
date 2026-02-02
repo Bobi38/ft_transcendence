@@ -1,10 +1,10 @@
 
 .arrow-right {
-	border-top: 40px solid transparent;
-	border-left: 40px solid #555;
-	border-bottom: 40px solid transparent;
+	border-top: 2rem solid transparent;
+	border-left: 2rem solid #555;
+	border-bottom: 2rem solid transparent;
 }
 
 .arrow-right:hover{
-	border-left: 40px solid #727272;
+	border-left: 2rem solid #727272;
 }

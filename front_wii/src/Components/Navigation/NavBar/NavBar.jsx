@@ -1,19 +1,28 @@
+/* Css */
+import "../../../index.css";
 import "./NavBar.css";
-    
-export default function NavBar({changePage}) {
+
+/* Components */
+import { Link } from "react-router-dom"; 
+
+export default function NavBar({ grid_style }) { 
     return (
         <>
-            <button onClick={() => changePage("Home")}>
-            home
-            </button>
-            
-            <button onClick={() => changePage("Home")}>
-            oui
-            </button>
-            
-            <button onClick={() => changePage("Home")}>
-non
-            </button>
+            <div className={`${grid_style} NavBar-grid`}>
+                
+                <Link to="/" className="NavBar-div1 NavBar-button iconecolor">
+                    Home
+                </Link>
+                
+                <Link to="/oui" className="NavBar-div2 NavBar-button iconecolor">
+                    Oui
+                </Link>
+                
+                <Link to="/contact" className="NavBar-div3 NavBar-button iconecolor">
+                    Contact
+                </Link>
+
+            </div>
         </>
     )
 }

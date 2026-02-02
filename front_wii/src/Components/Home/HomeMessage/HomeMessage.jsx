@@ -1,6 +1,8 @@
-import { useState } from "react";
-import "./HomeMessage.css";
+/* Css */
 import "../Home.css"
+import "./HomeMessage.css";
+
+import { useState } from "react";
 
 export default function HomeMessage({message, grid_style}) {
 

@@ -1,4 +1,4 @@
-.homefooter-grid{
+.HomeFooter-grid{
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
 
@@ -9,9 +9,9 @@
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.651);
 }
 
-.homefooter1{ grid-column-start: 1; grid-column-end: 2; }
-.homefooter2{ grid-column-start: 2; grid-column-end: 3; }
-.homefooter3{ grid-column-start: 3; grid-column-end: 4; }
+.HomeFooter1{ grid-column-start: 1; grid-column-end: 2; }
+.HomeFooter2{ grid-column-start: 2; grid-column-end: 3; }
+.HomeFooter3{ grid-column-start: 3; grid-column-end: 4; }
 
 
 .center{

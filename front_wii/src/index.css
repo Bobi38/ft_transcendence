@@ -1,19 +1,15 @@
-
-:root{
-  background-color: cadetblue;
+body {
+  background-color: rgb(164, 164, 164);
 }
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* html, body {
-} */
-
-/* Forcer la div React à prendre tout l'espace disponible */
 #root {
   height: 100vh;
   width: 100vw;
+}
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 a{
@@ -22,12 +18,20 @@ a{
     cursor: default;
 }
 
-button{
-  border: none;
+
+button{ border: none; }
+
+
+.flex{ display: flex; }
+.full{ height: 100%; width: 100%; }
+
+
+.iconecolor{
+    border-radius: 20px;
+    background: radial-gradient(circle,rgb(109, 204, 204), #ffffff);
+    box-shadow: 0 6px 15px rgba(99, 99, 99, 0.651);
 }
 
-*{
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.iconecolor:hover{
+    box-shadow: 0 6px 15px rgba(236, 234, 234, 0.651);
 }

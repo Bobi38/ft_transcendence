@@ -1,79 +1,71 @@
+/* Css */
+import "./Home.css";
+
+/* Components */
 import HomeFooter from './HomeFooter/HomeFooter.jsx';
 import HomeMessage from './HomeMessage/HomeMessage.jsx';
 import HomeIcone from './HomeIcone/HomeIcone.jsx';
 import HomeArrow from './HomeArrow/HomeArrow.jsx';
 
-import "./Home.css";
-
-export default function Home({changePage}){
+export default function Home(){
 
     return (
         <>
-            <div className='Homewii'>
+            <div className='Home-grid'>
                 <>
-                    <HomeIcone      grid_style="div1 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
-                                    text="weather"/>
+                    <HomeIcone      grid_style="Home-div1 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Weather"
+                                    text="Weather"/>
 
-                    <HomeIcone      grid_style="div2 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
-                                    text="intra"
+                    <HomeIcone      grid_style="Home-div2 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Intra"
+                                    text="Intra"
                                     link="https://meta.intra.42.fr/clusters"/>
 
-                    <HomeIcone      grid_style="div3 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
-                                    text="general message"/>
+                    <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Nothing"
+                                    />
                 </>
                 
                 <>
-                    <HomeIcone      grid_style="div4 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
-                                    text="stat"
+                    <HomeIcone      grid_style="Home-div4 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Stat"
+                                    text="Stat"
                                     />
 
-                    <HomeIcone      grid_style="div5 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
-                                    text="jeu"
+                    <HomeIcone      grid_style="Home-div5 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Jeu"
+                                    text="Jeu"
                                     />
 
-                    <HomeIcone      grid_style="div6 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
-                                    text="private message"
+                    <HomeIcone      grid_style="Home-div6 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/PrivateMessage"
+                                    text="Private Message"
                                     />
 
                 </>
 
-                    <HomeArrow      grid_style="div12 iconedisplay"/>
+                    <HomeArrow      grid_style="Home-div12 Home-iconedisplay"/>
 
                 <>
-                    <HomeIcone      grid_style="div7 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
+                    <HomeIcone      grid_style="Home-div7 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Nothing"
                                     />
 
-                    <HomeIcone      grid_style="div8 iconedisplay iconecolor"
-                                    changePage={changePage}
-                                    arg="Home"
+                    <HomeIcone      grid_style="Home-div8 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/Nothing"
                                     />
 
-                    <HomeIcone      grid_style="div9 iconedisplay iconecolor" 
-                                    changePage={changePage}
-                                    arg="ContactUs" text="contact friend"
+                    <HomeIcone      grid_style="Home-div9 Home-iconedisplay Home-iconemargin iconecolor" 
+                                    arg="/ContactUs" text="contact friend"
                                     />
 
                 </>
 
 
-                <HomeMessage        grid_style="div10 iconedisplay iconecolor"/>
+                <HomeMessage        grid_style="Home-div10 Home-iconedisplay Home-iconemargin iconecolor"/>
                 
-                <HomeFooter         grid_style="div11" 
-                                    changePage={changePage}
+                <HomeFooter         grid_style="Home-div11"
                                     />
 
             </div>

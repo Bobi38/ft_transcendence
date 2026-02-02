@@ -1,18 +1,19 @@
-import "./HomeIcone.css";
+/* Css */
 import "../Home.css"
+import "./HomeIcone.css";
 
+import { Link } from "react-router-dom"; 
 
-export default function HomeIcone({grid_style, changePage, arg, text, link}) {
+export default function HomeIcone({grid_style, arg, text, link}) {
 
 
     return (
         <>
-        <button className={`${grid_style}`} 
-                onClick={() => changePage(arg)}>
+        <Link to={arg} className={`${grid_style}`} >
             <p>
                 {text ?? "nothing for moment"}
             </p>
-        </button>
+        </Link>
         </>
     )
 }
