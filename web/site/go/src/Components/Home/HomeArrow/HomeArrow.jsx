@@ -1,10 +1,15 @@
+/* Css */
 import "./HomeArrow.css";
-    
-export default function HomeArrow() {
+import "../Home.css";
+
+
+export default function HomeArrow({grid_style}) {
     return (
         <>
-            <div className="pos-grid-arrow">
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
+            <div className={`${grid_style}`}>
+                <a  href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" 
+                    target="_blank">
+                    
                     <div className="arrow-right"></div>
                 </a>
             </div>

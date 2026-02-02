@@ -22,7 +22,7 @@
 # CMD ["npm", "start"]
 # DOCKER POUR LA PRODDDDDDDDDDDDD
 
-FROM node:20-bullseye
+FROM node:24.13.0
 
 WORKDIR /app
 

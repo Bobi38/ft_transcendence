@@ -1,4 +1,4 @@
-import "./log.css";
+import "./Log.css";
 import { useNavigate } from "react-router-dom";
 import { showAlert } from "../../../../../fct1";
     

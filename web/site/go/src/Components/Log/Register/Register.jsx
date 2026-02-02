@@ -1,4 +1,4 @@
-import "./register.css";
+import "./Register.css";
 import { showAlert } from "../../../../../fct1";
 import {useNavigate} from "react-router-dom";
     
