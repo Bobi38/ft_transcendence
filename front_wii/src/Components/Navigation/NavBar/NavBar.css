@@ -1,0 +1,16 @@
+.NavBar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 0.8fr) 10fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0.5rem;
+    grid-row-gap: 0px;
+}
+
+.NavBar-div1 { grid-area: 1 / 1 / 2 / 2; }
+.NavBar-div2 { grid-area: 1 / 2 / 2 / 3; }
+.NavBar-div3 { grid-area: 1 / 3 / 2 / 4; }
+
+.NavBar-button{
+    align-content: center;
+    text-align: center;
+}

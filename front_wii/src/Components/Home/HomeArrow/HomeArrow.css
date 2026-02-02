@@ -1,18 +1,9 @@
-.pos-grid-arrow {
-    grid-column: 3;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-}
-
-
 .arrow-right {
-	border-top: 30px solid transparent;
-	border-left: 40px solid #555;
-	border-bottom: 30px solid transparent;
+	border-top: 2rem solid transparent;
+	border-left: 2rem solid #555;
+	border-bottom: 2rem solid transparent;
 }
 
-
-.pos-grid-arrow a:hover div{
-	border-left: 40px solid #727272;
+.arrow-right:hover{
+	border-left: 2rem solid #727272;
 }

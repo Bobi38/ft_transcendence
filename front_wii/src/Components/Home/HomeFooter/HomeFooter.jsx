@@ -1,26 +1,41 @@
+/* Css */
 import "./HomeFooter.css"
-import "../Home.css"
+import "../../../index.css"
 
-export default function HomeFooter() {
-    
+/* Components */
+import { Link } from "react-router-dom"; 
+
+export default function HomeFooter({grid_style}) {
     
     return (
-        <div className="grid_footer grid_fr1_fr2_fr1">
+        <>
+            <div className={`${grid_style} HomeFooter-grid stretch`}>
 
-                <div className="grid_icone iconecolor" style={{flex:1,gridColumnStart: 1,gridColumnEnd: 2,}}>
-                    contact (notre github)
-                </div>
+                    <Link   to='/ContactUs'
+                            className="HomeFooter1 Home-iconemargin iconecolor center">
+
+                        <a href="">
+                            Contact us
+                        </a>
+
+                    </Link>
 
 
-                <div>
-                    <p>8:42</p>
-                </div>
-                
+                    <div className="HomeFooter2 center">
+                        <p>8:42</p>
+                    </div>
+                    
 
-                <div className="grid_icone iconecolor" style={{flex:1,gridColumnStart: 3,gridColumnEnd: 4,}}>
-                    <a href="">Profile</a>
-                </div>
+                    <Link   to='/Profile'
+                            className="HomeFooter3 Home-iconemargin iconecolor center">
 
-        </div>
+                        <a href="">
+                            Profile
+                        </a>
+
+                    </Link>
+
+            </div>
+        </>
     );
 }
