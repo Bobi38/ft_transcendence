@@ -34,7 +34,7 @@ export default function Profil() {
     }
 
     fetchProfile();
-  }, []); // 👈 très important
+  }, []);
 
     return (
         <>
