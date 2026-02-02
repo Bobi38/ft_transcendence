@@ -13,6 +13,8 @@ export default function Navigation({ screen }) {
         switch(screen) {
             case 'ContactUs':
                 return <ContactUs/>;
+            // case 'Profils':
+            //     return <Profils/>;
             default:
                 return <Nothing/>;
         }

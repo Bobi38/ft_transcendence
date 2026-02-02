@@ -1,5 +1,5 @@
 import "./Log.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { showAlert } from "../../../../../fct1";
     
 export default function Log() {
@@ -33,7 +33,7 @@ export default function Log() {
                 sessionStorage.setItem('token', result.tooken);
                 sessionStorage.setItem('message', "Registration successful");
                 sessionStorage.setItem('type', "success");
-                navigate("/home");onclick
+                navigate("/home");
             } else {
                 showAlert("Erreur : " + result.message, "danger");
             }
@@ -42,6 +42,8 @@ export default function Log() {
             alert("Impossible de se connecter pour le moment");
         }
     };
+
+
     return (
         <>
         <main>
@@ -59,7 +61,9 @@ export default function Log() {
         	    </div>
         	    <button type="submit" className="btn btn-priimary">Se conencter</button>
     	    </form>
-            <button type="button" onClick={() => navigate("/register")}>S'inscrire</button>
+            <Link to="/register" >
+                    Inscrit-toi
+                </Link>
         </main>
         </>
     )

@@ -17,10 +17,21 @@ export default function HomeMessage({message, grid_style}) {
     };
     
 
-    // function fetchMsg(){
-    //     fetch(api)
+    // async function  fetchMsg(){
+    //     const reponse = await fetch('/api/getchat', {
+    //             method: 'GET',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             credentials: "include"
+    //         });
+
+    //     const rep = await reponse.json();
+    //     if (rep.succes){
+    //         const chat = rep.ret;
+    //     }
 
     // }
+
+    // async function addmess(){}
     return (
         <>
             <div className={`${grid_style} message center`}>
@@ -29,103 +40,6 @@ export default function HomeMessage({message, grid_style}) {
 
 
                         {/* {fetchMsg()} */}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        {displayedMessage && <p>{displayedMessage}</p>}
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrrwqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-                        <p>{message??"wqeqwerrrrrrrqwer  rrrrrrrrrrrr rrr"}</p>
-
                     </div>
 
                     <form onSubmit={handleSubmit}>

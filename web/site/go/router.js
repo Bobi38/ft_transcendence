@@ -345,3 +345,20 @@ export {secret_chat};
 export {secret};
 export { checktok };
 export default router;
+
+/*
+jsson{[
+  login: "lzozo"
+  message: "salut tout le monde c'est david la farge"
+  monMsg: true
+  timesamp: date..
+  ],
+}
+*/
+
+/* 
+<div id={json.monMsg}>
+  <div>json.login</div><div>json.timesamp</div> 
+  <p>json.message</p>
+</div>
+*/
