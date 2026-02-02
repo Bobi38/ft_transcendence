@@ -10,3 +10,6 @@
 .Navigation-div1 { grid-area: 1 / 1 / 2 / 5; }
 .Navigation-div2 { grid-area: 2 / 1 / 3 / 5; }
 
+.bgwhite{
+    background: white;
+}

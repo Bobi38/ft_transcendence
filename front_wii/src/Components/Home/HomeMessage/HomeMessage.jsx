@@ -16,12 +16,19 @@ export default function HomeMessage({message, grid_style}) {
         setInput(""); // optionnel : reset le champ
     };
     
+
+    // function fetchMsg(){
+    //     fetch(api)
+
+    // }
     return (
         <>
             <div className={`${grid_style} message center`}>
 
                     <div className="display-message ">
-                        
+
+
+                        {/* {fetchMsg()} */}
                         {displayedMessage && <p>{displayedMessage}</p>}
                         {displayedMessage && <p>{displayedMessage}</p>}
                         {displayedMessage && <p>{displayedMessage}</p>}

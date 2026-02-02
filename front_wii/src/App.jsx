@@ -1,6 +1,7 @@
+/* Css */
 import './App.css'
 
-// import { useState } from 'react'
+/* Components */
 import Home from './Components/Home/Home.jsx'
 import Navigation from './Components/Navigation/Navigation.jsx'
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
@@ -10,6 +11,7 @@ export default function App() {
     <>
       <BrowserRouter>
         <Routes>
+          
           {/* Home */}
           <Route path="/" element={<Home />} />
 

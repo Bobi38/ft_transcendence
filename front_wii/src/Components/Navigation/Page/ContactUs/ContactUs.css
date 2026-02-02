@@ -1,0 +1,48 @@
+.ContactUs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr 1fr 1.5fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;    
+    @media (max-width: 1000px) {
+        grid-template-columns: 0.2fr 2fr 0.2fr;
+        grid-template-rows: repeat(6, 1fr);
+    };
+    @media (max-width: 520px) {
+        grid-template-columns: 0.2fr 2fr 0.2fr;
+        grid-template-rows: repeat(6, 1fr);
+    };
+}
+
+.ContactUs-div1 { grid-area: 1 / 1 / 2 / 2; }
+.ContactUs-div2 { grid-area: 1 / 3 / 2 / 4; }
+.ContactUs-div3 { grid-area: 2 / 2 / 3 / 3; }
+.ContactUs-div4 { grid-area: 3 / 1 / 4 / 2; }
+.ContactUs-div5 { grid-area: 3 / 3 / 4 / 4; }
+.ContactUs-div6 { grid-area: 4 / 1 / 5 / 4; }
+
+.div1 { grid-area: 1 / 2 / 2 / 3; }
+.div2 { grid-area: 2 / 2 / 3 / 3; }
+.div3 { grid-area: 3 / 2 / 4 / 3; }
+.div4 { grid-area: 4 / 2 / 5 / 3; }
+.div5 { grid-area: 5 / 2 / 6 / 3; }
+.div6 { grid-area: 6 / 2 / 7 / 3; }
+
+@media (max-width: 1000px){
+    .ContactUs-div1 { grid-area: 1 / 2 / 2 / 3; }
+    .ContactUs-div2 { grid-area: 2 / 2 / 3 / 3; }
+    .ContactUs-div3 { grid-area: 3 / 2 / 4 / 3; }
+    .ContactUs-div4 { grid-area: 4 / 2 / 5 / 3; }
+    .ContactUs-div5 { grid-area: 5 / 2 / 6 / 3; }
+    .ContactUs-div6 { grid-area: 6 / 2 / 7 / 3; }
+}
+
+
+
+.ContactUs-iconemargin{
+    margin: 1rem 4rem;
+}
+
+.ContactUs-grid-padding{
+    padding: 1rem;
+}

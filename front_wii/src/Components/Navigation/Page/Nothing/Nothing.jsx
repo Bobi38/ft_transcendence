@@ -1,9 +1,11 @@
+/* Css */
+import "../../Navigation.css"
 import "./Nothing.css";
     
 export default function Nothing() {
     return (
         <>
-            <div className="Nothing-bgwhite full"></div>
+            <div className="bgwhite full"></div>
         </>
     )
 }
