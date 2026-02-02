@@ -1,0 +1,19 @@
+.Homewii{
+  display: grid;
+  grid-template-columns: 20px 1fr 20px;
+  grid-template-rows: repeat(5, 1fr);
+  margin: 1.5em;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  background: radial-gradient(circle,rgb(27, 215, 221), rgb(27, 88, 221));
+}
+
+.iconecolor{
+    background: radial-gradient(circle,rgb(109, 204, 207), #ffffff);
+    box-shadow: 0 6px 15px rgba(145, 0, 0, 0.651);
+}
+
+
+.iconecolor:hover{
+    box-shadow: 0 6px 15px rgba(236, 234, 234, 0.651);
+}
