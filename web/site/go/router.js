@@ -72,7 +72,7 @@ router.use(async (req, res, next) => {
   if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' ) {
     return res.status(401).json({ success: false, redirect: true});
   }
-  if (!token && (req.path === '/' || req.path === '/login' || req.path === '/register')) {
+  if (req.path === '/' || req.path === '/login' || req.path === '/register') {
     return next() ;
   }
   const valid = await checktok(token);
@@ -105,6 +105,10 @@ router.get('/getname', CheckName, async(req, res) =>{
     res.status(501).json({success: false, message: 'Err mysql getname'});
   }
 });
+
+router.get('/checkco', async(req, res) =>{
+  res.status(201)({success:true, message: "good token and good co"});
+})
 
 router.get('/getprofile', async(req, res) =>{
   try{
@@ -174,6 +178,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/logout', async (req, res) => {
   try {
+    console.log("dans logout");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
