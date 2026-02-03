@@ -1,8 +1,11 @@
-import "./Log.css";
-import { useNavigate, Link } from "react-router-dom";
+/* Css */
+import "../LogRegister.css";
+
 import { showAlert } from "../../../../../fct1";
+import { useNavigate, Link } from "react-router-dom";
     
 export default function Log() {
+
     const navigate = useNavigate();
 
     const logsub =  async (event) => {
@@ -43,28 +46,35 @@ export default function Log() {
         }
     };
 
-
     return (
         <>
-        <main>
-            <h2>CONNECTEZ_VOUS</h2>
-			    <div id="alert-container"></div>
-			    <form id="login" onSubmit={logsub}>
-        		    <div className="mb-3">
-            	    <label htmlFor="email">Email</label>
-            	    <input type="email" className="form-control" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
-            	    <div id="email-help" className="form-text">L'email utilisé lors de la création de compte.</div>
-        	    </div>
-        	    <div className="mb-3">
-            	    <label htmlFor="password">Mot de passe</label>
-            	    <input type="password" className="form-control" id="password" name="password"/>
-        	    </div>
-        	    <button type="submit" className="btn btn-priimary">Se conencter</button>
-    	    </form>
-            <Link to="/register" >
-                    Inscrit-toi
-                </Link>
-        </main>
+            <main className="full LogRegister-flex1 LogRegister-bglow">
+                
+                <div className="LogRegister-div1 iconecolor">
+
+                    <div id="alert-container">
+                        {/* ne pas creat une div faire un innertext */}
+                    </div>
+                    
+                    <form id="login" className="full LogRegister-flex2 center" onSubmit={logsub}>
+
+                        <h4>CONNECTEZ VOUS</h4>
+
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
+
+                        <label htmlFor="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" placeholder="1234btw"/>
+                        
+                        <div className="full LogRegister-flex3">
+                            <Link to="/register" className="iconecolor negativ">Inscrit-toi</Link>
+                            <button type="submit" className="iconecolor negativ">Se connecter</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </main>
         </>
     )
 }

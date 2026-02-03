@@ -6,6 +6,7 @@ function showAlert(message, type = "danger") {
     alertDiv.textContent = message;
     container.appendChild(alertDiv);
     setTimeout(() => {
+        // container.innerText = "";
         container.removeChild(alertDiv);
     }, 1000);
 }

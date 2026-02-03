@@ -13,11 +13,7 @@ export default function HomeFooter({grid_style}) {
 
                     <Link   to='/ContactUs'
                             className="HomeFooter1 Home-iconemargin iconecolor center">
-
-                        <a href="">
                             Contact us
-                        </a>
-
                     </Link>
 
 
@@ -28,11 +24,7 @@ export default function HomeFooter({grid_style}) {
 
                     <Link   to='/Profile'
                             className="HomeFooter3 Home-iconemargin iconecolor center">
-
-                        <a href="">
                             Profile
-                        </a>
-
                     </Link>
 
             </div>

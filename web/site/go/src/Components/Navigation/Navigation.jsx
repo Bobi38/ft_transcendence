@@ -22,11 +22,11 @@ export default function Navigation({ screen }) {
     
     return (
         <>
-            <div className="full Navigation-grid" >
+            <div className="full Navigation-grid" > 
 
                 <NavBar grid_style="Navigation-div1"/>
                         
-                <div className="Navigation-div2" >{renderScreenNav()}</div>
+                <div className="full Navigation-div2" >{renderScreenNav()}</div>
 
             </div>
         </>
