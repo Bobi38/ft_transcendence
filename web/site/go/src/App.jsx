@@ -4,8 +4,8 @@ import './App.css'
 /* Components */
 import Home from './Components/Home/Home.jsx'
 import Navigation from './Components/Navigation/Navigation.jsx'
-import Log from './Components/LogRegister/Log/Log.jsx'
-import Register from './Components/LogRegister/Register/Register.jsx'
+import Log from './Components/LogRegister/Jsx/Log.jsx'
+import Register from './Components/LogRegister/Jsx/Register.jsx'
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 export default function App() {

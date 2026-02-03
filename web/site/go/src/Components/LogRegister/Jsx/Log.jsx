@@ -1,4 +1,4 @@
-
+/* Css */
 import "../LogRegister.css";
 
 import { showAlert } from "../../../../../fct1";
@@ -60,10 +60,10 @@ export default function Log() {
 
                         <h4>CONNECTEZ VOUS</h4>
 
-                        <label for="email">Email</label>
+                        <label htmlFor="email">Email</label>
                         <input type="email" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
 
-                        <label for="password">Mot de passe</label>
+                        <label htmlFor="password">Mot de passe</label>
                         <input type="password" id="password" name="password" placeholder="1234btw"/>
                         
                         <div className="full LogRegister-flex3">
