@@ -65,7 +65,7 @@ export default function Register() {
                     <input type="text" id="name" name="name" placeholder="Pseudo: XxX_DarkSasuke_XxX"/>
 
                     <label htmlFor="email">Email</label>
-                    <input type="email" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
+                    <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
 
                     <label htmlFor="password">Mot de passe</label>
                     <input type="password" id="password" name="password" placeholder="1234btw"/>
