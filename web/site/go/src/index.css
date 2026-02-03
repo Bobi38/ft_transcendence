@@ -12,10 +12,16 @@ body {
   padding: 0;
 }
 
-a{
-    text-decoration: none;
+a {
+    display: inline-block;
     color: inherit;
+    border: none;
+    background: none;
     cursor: default;
+    font-size: 1rem;
+    font-family: inherit;
+    text-decoration: none;
+    vertical-align: middle;
 }
 
 
@@ -47,3 +53,5 @@ button{ border: none; }
 .negativ{
   filter: invert(1);
 }
+
+

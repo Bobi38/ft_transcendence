@@ -1,6 +1,8 @@
-import "./Register.css";
+
+import "../LogRegister.css";
+
 import { showAlert } from "../../../../../fct1";
-import {useNavigate} from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
     
 export default function Register() {
 
@@ -47,30 +49,33 @@ export default function Register() {
 
     return (
         <>
-        <header>
-			<h1>CONNECT</h1>
-		</header>
-		<main>
-            <h2>INSCRIVER-VOUS</h2>
-            <div id="alert-container"></div>
-            <form id="regist" onSubmit={retsubmit}>
+		<main className="full LogRegister-flex1 LogRegister-bglow">
 
-                <div>
-                    <label htmlFor="name" className="form-label">Nom</label>
-                    <input type="text" className="form-control" id="name" name="name" placeholder="Votre nom"/>
-                </div>
-                <div>
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input type="email" className="form-control" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
+            <div className="div1 iconecolor">
+
+                <div id="alert-container">
+                    {/* ne pas creat une div faire un innertext */}
                 </div>
 
-                <div>
-                    <label htmlFor="password" className="form-label">Mot de passe</label>
-                    <input type="password" className="form-control" id="password" name="password"/>
-                </div>
-                <button type="submit" className="btn btn-priimary">S'inscrire</button>
+                <form id="regist" className="full LogRegister-flex2 center" onSubmit={retsubmit}>
 
-            </form>
+                    <h4>INSCRIVER-VOUS</h4>
+
+                    <label for="name">Pseudo</label>
+                    <input type="text" id="name" name="name" placeholder="Pseudo: XxX_DarkSasuke_XxX"/>
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
+
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="1234btw"/>
+
+                    <div className="full LogRegister-flex3">
+                        <button type="submit" className="iconecolor negativ">S'inscrire</button>
+                    </div>
+                </form>
+
+            </div>
 		</main>
         </>
     )
