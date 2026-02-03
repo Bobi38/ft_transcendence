@@ -10,18 +10,20 @@ export default function HomeMessage({message, grid_style}) {
     
   const [input, setInput] = useState("");
   const [displayedMessages, setDisplayedMessages] = useState([]);
-    useEffect(() => {
-        fetchMsg();
-        if (SocketM.nb() === 0){
-            SocketM.connect();
-        }
-        SocketM.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === "message") {
-                setDisplayedMessages((prev) => [...prev, data.id + ": " + data.mess]);
-            }
-        };
-    }, []);
+
+
+    // useEffect(() => {
+    //     fetchMsg();
+    //     if (SocketM.nb() === 0){
+    //         SocketM.connect();
+    //     }
+    //     SocketM.socket.onmessage = (event) => {
+    //         const data = JSON.parse(event.data);
+    //         if (data.type === "message") {
+    //             setDisplayedMessages((prev) => [...prev, data.id + ": " + data.mess]);
+    //         }
+    //     };
+    // }, []);
     
     
 
@@ -34,19 +36,19 @@ export default function HomeMessage({message, grid_style}) {
     };
     
 
-    // async function  fetchMsg(){
-    //     const reponse = await fetch('/api/getchat', {
-    //             method: 'GET',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             credentials: "include"
-    //         });
+    async function  fetchMsg(){
+        const reponse = await fetch('/api/getchat', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: "include"
+            });
 
-    //     const rep = await reponse.json();
-    //     if (rep.succes){
-    //         const chat = rep.ret;
-    //     }
+        const rep = await reponse.json();
+        if (rep.succes){
+            const chat = rep.ret;
+        }
 
-    // }
+    }
 
     async function addmess(){
         const reponse = await fetch('/api/addchat', {

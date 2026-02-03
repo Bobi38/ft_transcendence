@@ -12,6 +12,7 @@ export default function Home(){
     return (
         <>
             <div className='Home-grid'>
+                
                 <>
                     <HomeIcone      grid_style="Home-div1 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/Weather"
@@ -26,7 +27,7 @@ export default function Home(){
                                     arg="/Nothing"
                                     />
                 </>
-           export default SocketM ;     
+
                 <>
                     <HomeIcone      grid_style="Home-div4 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/Stat"
