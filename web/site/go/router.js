@@ -107,7 +107,8 @@ router.get('/getname', CheckName, async(req, res) =>{
 });
 
 router.get('/checkco', async(req, res) =>{
-  res.status(201)({success:true, message: "good token and good co"});
+  console.log("dans checkco");
+  res.status(201).json({success:true, message: "good token and good co"});
 })
 
 router.get('/getprofile', async(req, res) =>{

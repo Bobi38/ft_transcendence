@@ -5,7 +5,7 @@ import "./HomeIcone.css";
 import { Link } from "react-router-dom"; 
 
 export default function HomeIcone({ grid_style, arg, text }) {
-
+    
 
     return (
         <>

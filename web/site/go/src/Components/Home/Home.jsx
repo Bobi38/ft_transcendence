@@ -6,12 +6,40 @@ import HomeFooter from './HomeFooter/HomeFooter.jsx';
 import HomeMessage from './HomeMessage/HomeMessage.jsx';
 import HomeIcone from './HomeIcone/HomeIcone.jsx';
 import HomeArrow from './HomeArrow/HomeArrow.jsx';
+import Log from "../LogRegister/Jsx/Log.jsx"
 
+import checkCo from "../../../../fct1.js"
+import { useEffect } from "react";
+import { useNavigate} from "react-router-dom";
 
 export default function Home(){
+    const navigate = useNavigate();
+    useEffect(() => {
+        const el = document.getElementById("OUIOUI");
+        if (!el) return;
+
+        const handler = async () => {
+            
+            const resCo = await checkCo();
+            if (resCo) {
+                console.log("coooooooooooooooooooo");
+            }else {
+                el.appendChild(<Log/>)
+                // navigate("/");
+            }
+            console.log("FVAFB");
+        };
+
+        el.addEventListener("click", handler);
+
+        return () => {
+            el.removeEventListener("click", handler);
+        };
+    }, []);
+
     return (
         <>
-            <div className='Home-grid'>
+            <div className='Home-grid' id="OUIOUI">
                 
                 <>
                     <HomeIcone      grid_style="Home-div1 Home-iconedisplay Home-iconemargin iconecolor"
