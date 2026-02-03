@@ -26,7 +26,6 @@ export default function App() {
           <Route path="/*" element={<Navigation screen="Nothing"/>} />
           <Route path="/*" element={<Navigation screen="ErrorRedir"/>} />
 
-
         </Routes>
       </BrowserRouter>
     </>

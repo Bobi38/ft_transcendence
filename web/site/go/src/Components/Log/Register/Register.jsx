@@ -36,7 +36,7 @@ export default function Register() {
             const result = await reponse.json();
             console.log("coucou");
             if (result.success) {
-                navigate("/log");
+                navigate("/");
             } else {
                 showAlert(result.message, 'danger');
             }
@@ -51,24 +51,26 @@ export default function Register() {
 			<h1>CONNECT</h1>
 		</header>
 		<main>
-			<h2>INSCRIVER-VOUS</h2>
-			<div id="alert-container"></div>
-			<form id="regist" onSubmit={retsubmit}>
-        	<div>
-            	<label htmlFor="name" className="form-label">Nom</label>
-            	<input type="text" className="form-control" id="name" name="name" placeholder="Votre nom"/>
-        	</div>
-        	<div>
-            	<label htmlFor="email" className="form-label">Email</label>
-            	<input type="email" className="form-control" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
-        	</div>
+            <h2>INSCRIVER-VOUS</h2>
+            <div id="alert-container"></div>
+            <form id="regist" onSubmit={retsubmit}>
 
-        	<div>
-            	<label htmlFor="password" className="form-label">Mot de passe</label>
-            	<input type="password" className="form-control" id="password" name="password"/>
-        	</div>
-        	<button type="submit" className="btn btn-priimary">S'inscrire</button>
-    	</form>
+                <div>
+                    <label htmlFor="name" className="form-label">Nom</label>
+                    <input type="text" className="form-control" id="name" name="name" placeholder="Votre nom"/>
+                </div>
+                <div>
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input type="email" className="form-control" id="email" name="email" aria-describedby="email-help" placeholder="you@exemple.com"/>
+                </div>
+
+                <div>
+                    <label htmlFor="password" className="form-label">Mot de passe</label>
+                    <input type="password" className="form-control" id="password" name="password"/>
+                </div>
+                <button type="submit" className="btn btn-priimary">S'inscrire</button>
+
+            </form>
 		</main>
         </>
     )
