@@ -5,6 +5,7 @@ import "./Navigation.css";
 import NavBar from "./NavBar/NavBar.jsx";
 import ContactUs from "./Page/ContactUs/ContactUs.jsx";
 import Nothing from "./Page/Nothing/Nothing.jsx";
+import Morpion from "./Page/Jeu/Morpion/Morpion.jsx";
 
     
 export default function Navigation({ screen }) {
@@ -13,8 +14,8 @@ export default function Navigation({ screen }) {
         switch(screen) {
             case 'ContactUs':
                 return <ContactUs/>;
-            // case 'Profils':
-            //     return <Profils/>;
+            case 'Morpion':
+                return <Morpion/>;
             default:
                 return <Nothing/>;
         }
