@@ -6,11 +6,13 @@ import ContactIssue from "./ContactIssue/ContactIssue";
 
 
 export default function ContactUs() {
+
     return (
         <>
-            <div className="full ContactUs-grid ContactUs-grid-padding">
+            <div className={`full ContactUs-root ContactUs-root_bg`}>
 
-                <ContactIcone grid_style="ContactUs-div1 center iconecolor ContactUs-iconemargin"
+                <h1>Contacter Nous</h1>
+                <ContactIcone grid_style="center iconecolor"
                               name={undefined}
                               git={undefined}
                               linkedin={undefined}
@@ -18,7 +20,7 @@ export default function ContactUs() {
                               />
 
                               
-                <ContactIcone grid_style="ContactUs-div2 center iconecolor ContactUs-iconemargin"
+                <ContactIcone grid_style="center iconecolor"
                               name={undefined}
                               git={undefined}
                               linkedin={undefined}
@@ -26,7 +28,7 @@ export default function ContactUs() {
                               />
 
                               
-                <ContactIcone grid_style="ContactUs-div3 center iconecolor ContactUs-iconemargin"
+                <ContactIcone grid_style="center iconecolor"
                               name="Florent Cretin"
                               git={{ url: "https://github.com/Lzozoflo", name: "LzozoFlo" }}
                               linkedin={{ url: "https://www.linkedin.com/in/florent-cretin-8b5b9021a/", name: "Florent Cretin"  }} 
@@ -34,7 +36,7 @@ export default function ContactUs() {
                               />
 
                               
-                <ContactIcone grid_style="ContactUs-div4 center iconecolor ContactUs-iconemargin"
+                <ContactIcone grid_style="center iconecolor"
                               name={undefined}
                               git={undefined}
                               linkedin={undefined}
@@ -42,14 +44,15 @@ export default function ContactUs() {
                               />
 
                               
-                <ContactIcone grid_style="ContactUs-div5 center iconecolor ContactUs-iconemargin"
+                <ContactIcone grid_style="center iconecolor"
                               name={undefined}
                               git={undefined}
                               linkedin={undefined}
                               intraUrl={undefined}
                               />
 
-                <ContactIssue grid_style="ContactUs-div6 iconecolor "
+                <h2>Issue</h2>
+                <ContactIssue grid_style="iconecolor"
                               />
 
             </div>

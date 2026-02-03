@@ -1,8 +1,13 @@
-.ContactIcone-margin div{
-    font-size: 2rem;
+
+
+.ContactIcone-margin{
     margin: 1rem;
 }
 
 .ContactIcone-margin div strong{
     font-size: 3rem;
+}
+
+.translateY:hover{
+    transform: translateY(-10px);
 }

@@ -13,6 +13,7 @@
 [tag_icon_ts]: https://skillicons.dev/icons?i=react
 [tag_ressource_grid]: https://cssgrid-generator.netlify.app/ 
 [tag_ressource_reacticone]: https://react-icons.github.io/react-icons/
+[tag_ressource_claude_transition]: https://claude.ai/public/artifacts/96fe632f-2869-4d78-99f4-20053d0ebf7c
 
 
 # ![icons][tag_icon_ts] Name ![icons][tag_icon_ts]
@@ -136,6 +137,7 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam corporis
 
 - [Generateur de grid][tag_ressource_grid]
 - [how to use react-icons][tag_ressource_reacticone]
+- [transition by claude][tag_ressource_claude_transition]
 
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam corporis
  quas eligendi, voluptatem provident nisi est blanditiis dolorem nostrum 

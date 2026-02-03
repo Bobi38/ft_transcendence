@@ -8,7 +8,7 @@ import { Si42 } from "react-icons/si";
 
 export default function ContactIcone({ 
     grid_style, 
-    name = "wesh tro for on peu mettre de value part default", 
+    name = "default", 
     git = { url: "https://github.com", name: "ton nom de compte ta vu" },
     linkedin = { url: "https://www.linkedin.com/", name: "ton prenom nom"  }, 
     intraUrl  = "https://profile.intra.42.fr/users/fcretin"
@@ -23,9 +23,9 @@ export default function ContactIcone({
 
     return (
         <>
-            <div className={`${grid_style} ContactIcone-margin`}>
+            <div className={`${grid_style} ContactIcone-margin translateY`}>
                 <div> 
-                    <strong>{name}</strong>
+                    <h2>{name}</h2>
                 </div>
 
                 <div>

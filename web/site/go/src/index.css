@@ -47,11 +47,10 @@ button{ border: none; }
 }
 
 .iconecolor:hover{
-    box-shadow: 0 6px 15px rgba(236, 234, 234, 0.651);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 15px rgba(236, 234, 234, 0.651);
 }
 
 .negativ{
   filter: invert(1);
 }
-
-

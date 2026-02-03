@@ -8,21 +8,23 @@ import { Link } from "react-router-dom";
 export default function NavBar({ grid_style }) { 
     return (
         <>
-            <div className={`${grid_style} NavBar-grid`}>
-                
-                <Link to="/home" className="NavBar-div1 NavBar-button iconecolor">
-                    Home
-                </Link>
-                
-                <Link to="/oui" className="NavBar-div2 NavBar-button iconecolor">
-                    Oui
-                </Link>
-                
-                <Link to="/contact" className="NavBar-div3 NavBar-button iconecolor">
-                    Contact
-                </Link>
+            <nav className={`${grid_style}`}>
 
-            </div>
+                <div className="NavBar-display">
+                    <Link to="/home" className="NavBar-button iconecolor">
+                        Home
+                    </Link>
+                    
+                    <Link to="/oui" className="NavBar-button iconecolor">
+                        Oui
+                    </Link>
+                    
+                    <Link to="/contact" className="NavBar-button iconecolor">
+                        Contact
+                    </Link>
+                </div>
+
+            </nav>
         </>
     )
 }
