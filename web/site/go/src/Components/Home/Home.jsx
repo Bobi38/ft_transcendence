@@ -35,7 +35,7 @@ export default function Home(){
 
                     <HomeIcone      grid_style="Home-div5 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/Morpion"
-                                    text="Jeu de nfant"/>
+                                    text="Jeu de enfant"/>
                                     <h3>Morpion</h3>
 
                     <HomeIcone      grid_style="Home-div6 Home-iconedisplay Home-iconemargin iconecolor"

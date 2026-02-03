@@ -23,7 +23,18 @@ export default function App() {
 
           {/* Navigation/page/{sreen} */}
           <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
+          <Route path="/Morpion" element={<Navigation screen="Morpion"/>} />
           <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          {/* <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} /> */}
           <Route path="/*" element={<Navigation screen="ErrorRedir"/>} />
 
         </Routes>
