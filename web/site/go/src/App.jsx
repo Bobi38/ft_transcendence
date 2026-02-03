@@ -43,35 +43,3 @@ export default function App() {
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// export default function App() {
-  
-//   const [screen, setScreen] = useState('Home')
-
-//   const renderScreen = () => {
-//     switch(screen) {
-//       case 'Home':
-//         return <Home changePage={setScreen}/>
-//       default:
-//         return <Navigation changePage={setScreen} screen={screen} />
-//     }
-//   }
-
-//   return (
-//     <>
-//       {renderScreen()}
-//     </>
-//   )
-// }
