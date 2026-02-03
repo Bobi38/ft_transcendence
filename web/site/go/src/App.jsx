@@ -1,37 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+/* Css */
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+/* Components */
+import Home from './Components/Home/Home.jsx'
+import Navigation from './Components/Navigation/Navigation.jsx'
+import Log from './Components/LogRegister/Jsx/Log.jsx'
+import Register from './Components/LogRegister/Jsx/Register.jsx'
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
+export default function App() {
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a><a><p>titi</p></a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <BrowserRouter>
+        <Routes>
 
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on thv and logos to learn more
-      </p>
+          {/* login base page */}
+          <Route path="/" element={<Log />} />
+          <Route path="/register" element={<Register />} />
+          
+          {/* Home */}
+          <Route path="/Home" element={<Home />} />
+
+          {/* Navigation/page/{sreen} */}
+          <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
+          <Route path="/*" element={<Navigation screen="Nothing"/>} />
+          <Route path="/*" element={<Navigation screen="ErrorRedir"/>} />
+
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
 
-export default App
+
+
+
+
+
+
+
+
+
+
+
+
+// export default function App() {
+  
+//   const [screen, setScreen] = useState('Home')
+
+//   const renderScreen = () => {
+//     switch(screen) {
+//       case 'Home':
+//         return <Home changePage={setScreen}/>
+//       default:
+//         return <Navigation changePage={setScreen} screen={screen} />
+//     }
+//   }
+
+//   return (
+//     <>
+//       {renderScreen()}
+//     </>
+//   )
+// }

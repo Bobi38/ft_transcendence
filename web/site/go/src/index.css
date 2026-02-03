@@ -1,81 +1,57 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+body {
+  background-color: rgb(164, 164, 164);
+}
+#root {
+  height: 100vh;
+  width: 100vw;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+    display: inline-block;
+    color: inherit;
+    border: none;
+    background: none;
+    cursor: default;
+    font-size: inherit;
+    font-family: inherit;
+    text-decoration: none;
+    vertical-align: middle;
 }
 
 
-.container {
-  display: flex;
-  gap: 30px;          /* espace entre App et MyApp */
-  align-items: start; /* alignement vertical */
+button{ border: none; }
+
+
+.flex{ display: flex; }
+.full{ height: 100%; width: 100%; }
+
+.center{
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.containD {
-  display: flex;
-  gap: 30px;          /* espace entre App et MyApp */
-  align-items: end;
+
+.iconecolor{
+    padding: 0.1rem;
+    border-radius: 0.5rem;
+    background: radial-gradient(circle,rgb(109, 204, 204), #ffffff);
+    box-shadow: 0 6px 15px rgba(99, 99, 99, 0.651);
 }
+
+.iconecolor:hover{
+    box-shadow: 0 6px 15px rgba(236, 234, 234, 0.651);
+}
+
+.negativ{
+  filter: invert(1);
+}
+
+

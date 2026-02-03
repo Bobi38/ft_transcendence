@@ -8,11 +8,11 @@ const PrivMess = sequelize.define('PrivMess', {
     primaryKey: true,
     autoIncrement: true,
   },
-  idSend: {
+  SenderId: {
     type: DataTypes.STRING(512),
     allowNull: false,
   },
-  conv:{
+  contenu:{
     type: DataTypes.STRING(512),
     allowNull: false,
   }
