@@ -8,17 +8,17 @@ export default function ContactIssue({ grid_style }) {
                 <form className="full ContactIssue-form">
 
                     <div>
-                        <label for="name">Noms</label>
+                        <label htmlFor="name">Noms</label>
                             <input type="text" id="name"/>
                     </div>
 
                     {/* <div> */}
-                        <label for="mail">Email</label>
+                        <label htmlFor="mail">Email</label>
                             <input type="email" id="mail"/>
                     {/* </div> */}
 
                     {/* <div> */}
-                        <label for="issue-type">Type issue</label>
+                        <label htmlFor="issue-type">Type issue</label>
                             <select name="issue-type" id="type-selected">
                                 <option value="">--Veuillez choisir une option--</option>
                                 <option value="bug">Bug</option>
@@ -29,7 +29,7 @@ export default function ContactIssue({ grid_style }) {
                     {/* </div> */}
 
                     {/* <div> */}
-                        <label for="story">Issue</label>
+                        <label htmlFor="story">Issue</label>
                             <textarea id="story" name="story" rows="5" cols="33"/>
                     {/* </div> */}
                     <input type="submit"/>

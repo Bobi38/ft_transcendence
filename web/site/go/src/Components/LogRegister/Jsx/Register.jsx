@@ -49,34 +49,34 @@ export default function Register() {
 
     return (
         <>
-		<main className="full LogRegister-flex1 LogRegister-bglow">
+            <main className="full LogRegister-flex1 LogRegister-bglow">
 
-            <div className="div1 iconecolor">
+                <div className="LogRegister-div1 iconecolor">
 
-                <div id="alert-container">
-                    {/* ne pas creat une div faire un innertext */}
-                </div>
-
-                <form id="regist" className="full LogRegister-flex2 center" onSubmit={retsubmit}>
-
-                    <h4>INSCRIVER-VOUS</h4>
-
-                    <label htmlFor="name">Pseudo</label>
-                    <input type="text" id="name" name="name" placeholder="Pseudo: XxX_DarkSasuke_XxX"/>
-
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
-
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" placeholder="1234btw"/>
-
-                    <div className="full LogRegister-flex3">
-                        <button type="submit" className="iconecolor negativ">S'inscrire</button>
+                    <div id="alert-container">
+                        {/* ne pas creat une div faire un innertext */}
                     </div>
-                </form>
 
-            </div>
-		</main>
+                    <form id="regist" className="full LogRegister-flex2 center" onSubmit={retsubmit}>
+
+                        <h4>INSCRIVER-VOUS</h4>
+
+                        <label htmlFor="name">Pseudo</label>
+                        <input type="text" id="name" name="name" placeholder="Pseudo: XxX_DarkSasuke_XxX"/>
+
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
+
+                        <label htmlFor="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" placeholder="1234btw"/>
+
+                        <div className="full LogRegister-flex3">
+                            <button type="submit" className="iconecolor negativ">S'inscrire</button>
+                        </div>
+                    </form>
+
+                </div>
+            </main>
         </>
     )
 }

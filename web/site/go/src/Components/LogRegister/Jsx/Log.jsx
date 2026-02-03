@@ -50,7 +50,7 @@ export default function Log() {
         <>
             <main className="full LogRegister-flex1 LogRegister-bglow">
                 
-                <div className="div1 iconecolor">
+                <div className="LogRegister-div1 iconecolor">
 
                     <div id="alert-container">
                         {/* ne pas creat une div faire un innertext */}

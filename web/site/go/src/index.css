@@ -18,7 +18,7 @@ a {
     border: none;
     background: none;
     cursor: default;
-    font-size: 1rem;
+    font-size: inherit;
     font-family: inherit;
     text-decoration: none;
     vertical-align: middle;
