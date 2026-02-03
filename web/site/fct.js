@@ -1,10 +1,12 @@
 import sequelize from './models/index.js';
 import jwt from 'jsonwebtoken';
-import {secret} from './go/router.js';
 import User from './models/user.js';
 import ChatG from './models/test.js';
 import bcrypt from 'bcrypt';
-const secrett = 'toto';
+import fs from 'fs';
+
+
+const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
 
 class Chat {
@@ -13,7 +15,7 @@ class Chat {
   }
   addtok(token, socket) {
     try {
-      const decoded = jwt.verify(token, secrett);
+      const decoded = jwt.verify(token, secret);
       this.sessions.set(token, {userId: decoded.id,socket});
       console.log("WS enregistré user", decoded.id);
       return decoded.id;
@@ -33,7 +35,7 @@ class Chat {
   }
   decoded(token){
     try{
-      const decodeded = jwt.verify(token, secrett);
+      const decodeded = jwt.verify(token, secret);
       return decodeded;
     }catch(err){
       console.log("err "  + err);
@@ -69,7 +71,6 @@ async function addDb(){
       await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 100});
       await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
       await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
-      await ChatG.create({contenu: ""});
       majDb();
       
     }

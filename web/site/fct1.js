@@ -23,6 +23,30 @@ class HistoryChat{
     }
 }
 
+
+export default async function checkCo(){
+    try{
+        const response = await fetch('/api/checkco', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: "include"
+        });
+
+        const rep = await response.json();
+        if (rep.success){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    catch(err){
+        console.log("Error in checkCo function:", err);
+        return false;
+    }
+}
+
+
 export const HistoryC = new HistoryChat();
 export { showAlert };
 // export let HistoryChat = "";

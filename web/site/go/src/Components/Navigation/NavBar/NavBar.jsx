@@ -21,7 +21,6 @@ export default function NavBar({ grid_style }) {
                 <Link to="/contact" className="NavBar-div3 NavBar-button iconecolor">
                     Contact
                 </Link>
-
             </div>
         </>
     )

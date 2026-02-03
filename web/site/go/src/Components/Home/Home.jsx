@@ -7,8 +7,8 @@ import HomeMessage from './HomeMessage/HomeMessage.jsx';
 import HomeIcone from './HomeIcone/HomeIcone.jsx';
 import HomeArrow from './HomeArrow/HomeArrow.jsx';
 
-export default function Home(){
 
+export default function Home(){
     return (
         <>
             <div className='Home-grid'>
@@ -26,7 +26,7 @@ export default function Home(){
                                     arg="/Nothing"
                                     />
                 </>
-                
+           export default SocketM ;     
                 <>
                     <HomeIcone      grid_style="Home-div4 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/Stat"
