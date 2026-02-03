@@ -1,40 +1,31 @@
-import { addmess } from "./wel.js";
 import { HistoryC } from '../fct1.js';  
 
 class SocketManag{
     constructor(){
         this.socket = null;
-        this.id = null;
         this.reco = true;
         this.nbco = 0;
     }
-    connect(token){
-        console.log("totot " , token);
-        if (token)
-            this.id = token;
+    connect(){
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host; // Inclut le port si présent
         console.log(`${protocol}//${host}/ws`);
         this.socket = new WebSocket(`${protocol}//${host}/ws`);
-        this.id = token;
         this.socket.onopen = () => {
-            if (this.id)
-                this.sendd({type: "auth", id: this.id,  mess: null})
+            this.sendd({type: "auth",  mess: null})
         }
 
-    const chatDisplay = document.getElementById("chat-display");
+        this.socket.onmessage = (event) => {
+            const dataa = JSON.parse(event.data);
 
-    this.socket.onmessage = (event) => {
-        const dataa = JSON.parse(event.data);
+            if (dataa.type === 'message') {
+                const message = dataa.id + " : " + dataa.mess;
 
-        if (dataa.type === 'message') {
-          const message = dataa.id + " : " + dataa.mess;
-
-            chatDisplay.value += message + "\n";
-            HistoryC.setHisto(chatDisplay.value);
-            chatDisplay.scrollTop = chatDisplay.scrollHeight;
-    }
-};
+                chatDisplay.value += message + "\n";
+                HistoryC.setHisto(chatDisplay.value);
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            }
+        };
         this.socket.onerror = (error) => {
             console.log("errr socket" + error);
         }
