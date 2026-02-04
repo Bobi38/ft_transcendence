@@ -10,5 +10,12 @@
 }
 
 .HomeFooter1{ grid-column-start: 1; grid-column-end: 2; }
-.HomeFooter2{ grid-column-start: 2; grid-column-end: 3; }
 .HomeFooter3{ grid-column-start: 3; grid-column-end: 4; }
+.HomeFooter2{ grid-column-start: 2; grid-column-end: 3; 
+display: flex;
+flex-direction: column;
+justify-content: space-around;}
+
+.HomeFooter-padding{
+    padding: 1rem;
+}

@@ -1,10 +1,11 @@
 /* Css */
 import "../LogRegister.css";
 
-import { showAlert } from "../../../../../fct1";
+import { showAlert } from "../../../../../../fct1";
 import { useNavigate, Link} from "react-router-dom";
+import { AUTH } from "../../Home.jsx"
     
-export default function Register() {
+export default function Register({setShowLog}) {
 
     const navigate = useNavigate();
     const form = document.getElementById('regist');
@@ -34,11 +35,11 @@ export default function Register() {
                 },
                 body: JSON.stringify(data)
             });
-
+            
             const result = await reponse.json();
             console.log("coucou");
             if (result.success) {
-                navigate("/");
+                // navigate("/");
             } else {
                 showAlert(result.message, 'danger');
             }
@@ -46,6 +47,12 @@ export default function Register() {
             console.error("Server error", error);
         }
     };
+
+    function logMode() {
+        console.log("Passage en mode connection:", AUTH.REGISTER);
+        setShowLog(AUTH.LOGIN)
+    }
+
 
     return (
         <>
@@ -59,10 +66,10 @@ export default function Register() {
 
                     <form id="regist" className="full LogRegister-flex2 center" onSubmit={retsubmit}>
 
-                        <h4>INSCRIVER-VOUS</h4>
+                        <h4>INSCRIVEZ-VOUS</h4>
 
                         <label htmlFor="name">Pseudo</label>
-                        <input type="text" id="name" name="name" placeholder="Pseudo: XxX_DarkSasuke_XxX"/>
+                        <input type="text" id="name" name="name" placeholder="XxX_DarkSasuke_XxX"/>
 
                         <label htmlFor="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
@@ -71,7 +78,16 @@ export default function Register() {
                         <input type="password" id="password" name="password" placeholder="1234btw"/>
 
                         <div className="full LogRegister-flex3">
+
                             <button type="submit" className="iconecolor negativ">S'inscrire</button>
+                                
+                            <button type="button"
+                                    className="iconecolor negativ"
+                                    onClick={logMode}
+                                    >
+                                    Se connecter
+                            </button>
+
                         </div>
                     </form>
 

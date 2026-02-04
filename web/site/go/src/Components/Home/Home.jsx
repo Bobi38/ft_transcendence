@@ -6,41 +6,53 @@ import HomeFooter from './HomeFooter/HomeFooter.jsx';
 import HomeMessage from './HomeMessage/HomeMessage.jsx';
 import HomeIcone from './HomeIcone/HomeIcone.jsx';
 import HomeArrow from './HomeArrow/HomeArrow.jsx';
-import Log from "../LogRegister/Jsx/Log.jsx"
+import Log from "./LogRegister/Jsx/Log.jsx"
+import Register from "./LogRegister/Jsx/Register.jsx"
 
 import checkCo from "../../../../fct1.js"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate} from "react-router-dom";
 
-export default function Home(){
-    const navigate = useNavigate();
-    useEffect(() => {
-        const el = document.getElementById("OUIOUI");
-        if (!el) return;
+export const AUTH = {
+    NONE: 0,
+    LOGIN: 1,
+    REGISTER: 2,
+    LOGOUT: 3,
+};
 
-        const handler = async () => {
+export default function Home(){
+
+    const [showLog, setShowLog] = useState(AUTH.NONE);
+
+    
+    useEffect(() => {
+        const home_root = document.getElementById("home_root");
+        if (!home_root) return;
+
+        const handler = async (event) => {
+            if (event.target.closest('.LogRegister-flex1')) {
+                return;
+            }
             
             const resCo = await checkCo();
-            if (resCo) {
-                console.log("coooooooooooooooooooo");
-            }else {
-                el.appendChild(<Log/>)
-                // navigate("/");
+            if (!resCo) {
+                setShowLog(AUTH.LOGIN);
             }
-            console.log("FVAFB");
         };
 
-        el.addEventListener("click", handler);
-
-        return () => {
-            el.removeEventListener("click", handler);
-        };
+        home_root.addEventListener("click", handler);
+        return () => home_root.removeEventListener("click", handler);
     }, []);
+
 
     return (
         <>
-            <div className='Home-grid' id="OUIOUI">
+            <div className='Home-grid' id="home_root">
                 
+                <div id="alertttt" className={`Home-pos full ${showLog === AUTH.NONE ? "hidden" : "visible"}`} >
+                    {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
+                    {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+                </div>
                 <>
                     <HomeIcone      grid_style="Home-div1 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/Weather"
@@ -94,6 +106,7 @@ export default function Home(){
                 <HomeMessage        grid_style="Home-div10 Home-iconedisplay Home-iconemargin iconecolor"/>
                 
                 <HomeFooter         grid_style="Home-div11"
+                                    setShowLog={setShowLog}
                                     />
 
             </div>

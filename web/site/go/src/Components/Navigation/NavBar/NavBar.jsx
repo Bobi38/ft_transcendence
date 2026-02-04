@@ -11,7 +11,7 @@ export default function NavBar({ grid_style }) {
             <nav className={`${grid_style}`}>
 
                 <div className="NavBar-display">
-                    <Link to="/home" className="NavBar-button iconecolor">
+                    <Link to="/" className="NavBar-button iconecolor">
                         Home
                     </Link>
                     

@@ -4,8 +4,9 @@ import "../../../index.css"
 
 /* Components */
 import { Link, useNavigate } from "react-router-dom"; 
+import AUTH from "../Home.jsx"
 
-export default function HomeFooter({grid_style}) {
+export default function HomeFooter({ grid_style, setShowLog }) {
 
     const navigate = useNavigate();
     function LOGOUT() {
@@ -38,12 +39,15 @@ export default function HomeFooter({grid_style}) {
 
 
                     <div className="HomeFooter2 center">
-                        <p>8:42</p>
+                        <div className="hidden-box-shadow iconecolor HomeFooter-padding ">
+                            8:42
+                        </div>
+                        <div className="iconecolor HomeFooter-padding"
+                             onClick={(LOGOUT)}>
+                                LOGOUT
+                        </div>
                     </div>
                     
-                    <div className="HomeFooter2 center">
-                        <button type="button" onClick={(LOGOUT)}>LOGOUT</button>
-                    </div>
 
                     <Link   to='/Profile'
                             className="HomeFooter3 Home-iconemargin iconecolor center">
