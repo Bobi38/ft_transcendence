@@ -69,10 +69,10 @@ async function maj_conv(id, conv, namelst){
 router.use(async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path:", req.path);
-  if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' ) {
+  if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' && req.path !== '/truc') {
     return res.status(401).json({ success: false, redirect: true});
   }
-  if (!token && (req.path === '/' || req.path === '/login' || req.path === '/register')) {
+  if (!token && (req.path === '/' || req.path === '/login' || req.path === '/register' || req.path === '/truc')) {
     return next() ;
   }
   const valid = await checktok(token);
@@ -86,12 +86,69 @@ router.use(async (req, res, next) => {
   next();                  
 });
 
+
 function CheckName(req, res, next){
   console.log("je suis dan middel checkname");
   if (req.session.nameNeedUpdate)
       return res.status(201).json({success: true, message: req.session.username});
   next();
 }
+
+let nextPartyId = 0;
+let wait = null;
+const parties = {};
+const createParty = () => ({
+  player1: undefined, 
+  player2: undefined,
+  nb_moves: 0,
+  board:  Array(9).fill(null),
+})
+
+const rootTruc = async (req, res) => {
+  try{
+    if(req.body.partyId === undefined){
+      let player = Date.now();
+      let partyId;
+      if (wait === null){
+        partyId = nextPartyId++;
+        wait = partyId;
+        req.body.party = partyId;
+        req.body.player = player;
+        parties[partyId] = createParty();
+        parties[partyId].player1 = player;
+        req.body.message = "en attente joueur 2";
+      }
+      else{
+        req.body.party = wait;
+        req.body.player = player;
+        wait = null;
+        req.body.message = "tout les joueur sont la";
+        req.body.start = true;
+      }
+      return res.status(201).json({ success: true, data: req.body});
+    }
+    let currentPartie = parties[req.body.partyId];
+    let currentPlayer = currentPartie.player1 === req.body.player ? "X" : "O";
+    if (currentPlayer == 'X' && currentPartie.nb_moves % 2 === 1){
+      req.body.message = "attente jeu adverse";
+    }
+    else{
+      let move = req.body.move;
+      if (move < 0 && move > 9)
+        throw new Error("bad game - bad player")
+      if (currentPartie.board[move] !== null)
+        throw new Error("deja occupe")
+      currentPartie.board[move] = currentPlayer;
+    }
+    req.body.board = currentPartie.board;
+    req.body.message = "bien joue - en attente adversaire";
+    return res.status(201).json({ success: true, data: req.body});
+  } catch(err){
+    res.status(501).json({success: false, message: "root truc corrupted :" + err.value});
+  }
+}
+
+router.post('/truc', rootTruc);
 
 router.get('/getname', CheckName, async(req, res) =>{
   try{
@@ -320,6 +377,7 @@ router.post('/addchat', async (req, res) => {
 //     res.status(500).json({ success: false, message: 'Erreur MySQL' });
 //   }
 // });
+
 
 
 

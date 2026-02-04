@@ -5,7 +5,7 @@ import "./Navigation.css";
 import NavBar from "./NavBar/NavBar.jsx";
 import ContactUs from "./Page/ContactUs/ContactUs.jsx";
 import Nothing from "./Page/Nothing/Nothing.jsx";
-import Morpion from "./Page/Jeu/Morpion/Morpion.jsx";
+import Morpion from "./Page/Game/Morpion/Morpion.jsx";
 
     
 export default function Navigation({ screen }) {
