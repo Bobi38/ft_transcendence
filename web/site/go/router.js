@@ -95,60 +95,164 @@ function CheckName(req, res, next){
 }
 
 let nextPartyId = 0;
-let wait = null;
+let waitingParty = -1;
 const parties = {};
+
 const createParty = () => ({
-  player1: undefined, 
+  player1: undefined,
   player2: undefined,
-  nb_moves: 0,
-  board:  Array(9).fill(null),
-})
+  board: Array(9).fill(null), // board partagé complet
+  moves: [],                   // historique des coups
+  nextTurn: 1,                 // joueur 1 commence
+});
 
 const rootTruc = async (req, res) => {
-  try{
-    if(req.body.partyId === undefined){
-      let player = Date.now();
-      let partyId;
-      if (wait === null){
-        partyId = nextPartyId++;
-        wait = partyId;
-        req.body.party = partyId;
-        req.body.player = player;
-        parties[partyId] = createParty();
-        parties[partyId].player1 = player;
-        req.body.message = "en attente joueur 2";
-      }
-      else{
-        req.body.party = wait;
-        req.body.player = player;
-        wait = null;
-        req.body.message = "tout les joueur sont la";
-        req.body.start = true;
-      }
-      return res.status(201).json({ success: true, data: req.body});
-    }
-    let currentPartie = parties[req.body.partyId];
-    let currentPlayer = currentPartie.player1 === req.body.player ? "X" : "O";
-    if (currentPlayer == 'X' && currentPartie.nb_moves % 2 === 1){
-      req.body.message = "attente jeu adverse";
-    }
-    else{
-      let move = req.body.move;
-      if (move < 0 && move > 9)
-        throw new Error("bad game - bad player")
-      if (currentPartie.board[move] !== null)
-        throw new Error("deja occupe")
-      currentPartie.board[move] = currentPlayer;
-    }
-    req.body.board = currentPartie.board;
-    req.body.message = "bien joue - en attente adversaire";
-    return res.status(201).json({ success: true, data: req.body});
-  } catch(err){
-    res.status(501).json({success: false, message: "root truc corrupted :" + err.value});
+  console.log(req.body.partyId ? req.body.partyId : "pas encore d Id")
+  try {
+    const player = Date.now();
+    let partyId;
+    let start;
+    let message;
+    let playerNumber;
+
+if (waitingParty === -1) {
+  if (req.body.player) {
+    return res.status(200).json({ success: true, body: req.body });
   }
+  partyId = nextPartyId++;
+  waitingParty = partyId; // IMPORTANT : on définit waitingParty **avant** la réponse
+  const party = createParty();
+  party.player1 = player;
+  parties[partyId] = party;
+
+  start = false;
+  message = "En attente du joueur 2...";
+  playerNumber = 1;
+} else {
+  // Deuxième joueur → rejoindre la partie en attente
+  partyId = waitingParty;
+  waitingParty = -1;
+  const party = parties[partyId];
+  party.player2 = player;
+
+  start = true;
+  message = "Tous les joueurs sont là ! La partie peut commencer.";
+  playerNumber = 2;
 }
 
+
+    const party = parties[partyId];
+
+    return res.status(201).json({
+      success: true,
+      body: {
+        partyId,
+        player,
+        playerNumber,
+        start,
+        message,
+        board: party.board,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+};
+
+const playMove = async (req, res) => {
+  try {
+    const { partyId, playerNumber, index } = req.body;
+
+    const party = parties[partyId];
+    if (!party) throw new Error("Partie introuvable");
+
+    // Vérifie si c’est bien le tour du joueur
+    if (party.nextTurn !== playerNumber) {
+      return res.status(400).json({ success: false, message: "Pas votre tour !" });
+    }
+
+    // Vérifie que la case est vide
+    if (party.board[index] !== null) {
+      return res.status(400).json({ success: false, message: "Case déjà jouée" });
+    }
+
+    // Met à jour le board côté serveur
+    party.board[index] = playerNumber;
+    party.moves.push({ index, playerNumber });
+
+    // Change le tour
+    party.nextTurn = playerNumber === 1 ? 2 : 1;
+
+    return res.status(200).json({
+      success: true,
+      body: {
+        board: party.board,
+        message: `Joueur ${playerNumber} a joué`,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+};
+// let nextPartyId = 0;
+// let waitingParty = -1;
+// const parties = {};
+
+// const createParty = () => ({
+//   player1: undefined,
+//   player2: undefined,
+//   nb_moves: 0,
+//   board: Array(9).fill(null),
+// });
+
+// const rootTruc = async (req, res) => {
+//   try {
+//     const player = Date.now();
+//     let partyId;
+//     let start;
+//     let message;
+//     let playerNumber;
+
+//     if (waitingParty === -1) {
+//       partyId = nextPartyId++;
+//       waitingParty = partyId;
+//       parties[partyId] = createParty();
+//       parties[partyId].player1 = player;
+
+//       start = true;
+//       message = "En attente du joueur 2...";
+//       playerNumber = 1;
+//     } else {
+//       partyId = waitingParty;
+//       waitingParty = -1;
+//       parties[partyId].player2 = player;
+
+//       start = true;
+//       message = "Tous les joueurs sont là ! La partie peut commencer.";
+//       playerNumber = 2;
+//     }
+
+//     // ResponseBody factorisé et complet
+//     const responseBody = {
+//       partyId,
+//       player,
+//       playerNumber,
+//       start,
+//       message,
+//       board: parties[partyId].board,
+//     };
+
+//     return res.status(201).json({ success: true, body: responseBody });
+//   } catch (err) {
+//     console.error(err);
+//     return res.status(500).json({ success: false, message: "Erreur serveur" });
+//   }
+// };
+
 router.post('/truc', rootTruc);
+router.post('/move', playMove);
 
 router.get('/getname', CheckName, async(req, res) =>{
   try{
@@ -404,7 +508,7 @@ router.get('/getchat', async (req, res) => {
 });
 
 router.post('/welcome', async (req, res) => {
-  // console.log("COOOOUUUUUUU_________________");
+
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
