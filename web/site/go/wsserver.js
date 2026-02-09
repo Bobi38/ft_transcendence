@@ -73,15 +73,17 @@ export function initWebSocket(server) {
         if (data.type === 'mess'){
           console.log("je suis dans un type messsssssssss")
           const nono = socket.userId;
-          console.log ("----" , nono , "----" );
+          const na = chat.finduser(nono);
+          const ni = na.username;
+          console.log ("----" , nono , "----", ni);
           console.log("taille === ", chat.countUser());
           for (const session of chat.sessions.values()){
             console.log("session ", session.userId);
-            console.log("idddd " + session.userId + "   "  +  nono + "-----" + session.username);
+            console.log("idddd " + session.userId + "   "  +  nono + "-----" + socket.username);
             if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
                 console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
                 // session.socket.send(JSON.stringify({type: "message", id: userid, mess: "JE SUIS LE SERVER " + data.mess + " from " + userid }));
-                session.socket.send(JSON.stringify({type: 'message', senderid: nono, mess: data.mess, name: session.username}));
+                session.socket.send(JSON.stringify({type: 'message', senderid: nono, mess: data.mess, name: ni}));
             }
           }
         }
