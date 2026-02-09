@@ -46,25 +46,42 @@ async function checktok(tokenn) {
   }
 }
 
+// async function maj_conv(id, conv, namelst){
+//   const  tableau = [];
+
+//   for (let i = conv.length - 1; i >= 0; i--) {
+//     let name;
+//     let monMs; 
+//     if (conv[i].SenderId == id){
+//       name = "me";
+//       monMs = true;
+//     }
+//     else{
+//       const user = namelst.find(u => u.id === conv[i].SenderId);
+//       name = user ? user.name : "unknown";
+//       monMs = false;
+//     }
+//     tableau.push({monMsg: monMs, message: conv[i].contenu, login: name, timestamp: conv[i].time})
+//   }
+//   return tableau;
+// };
+
 async function maj_conv(id, conv, namelst){
-  const  tableau = [];
+  let  tableau;
 
   for (let i = conv.length - 1; i >= 0; i--) {
     let name;
-    let monMs; 
-    if (conv[i].SenderId == id){
+    if (conv[i].SenderId == id)
       name = "me";
-      monMs = true;
-    }
     else{
       const user = namelst.find(u => u.id === conv[i].SenderId);
       name = user ? user.name : "unknown";
-      monMs = false;
     }
-    tableau.push({monMsg: monMs, message: conv[i].contenu, login: name, timestamp: conv[i].time})
+    tableau += name + " " + conv.time + " : " + conv.contenu + "\n";
   }
   return tableau;
 };
+
 
 router.use(async (req, res, next) => {
   const token = req.cookies.token;
@@ -147,7 +164,7 @@ router.post('/login', async (req, res) => {
     console.log("ID", result[0].id);
     req.session.username = result[0].name;
     req.session.nameNeedUpdate = false;
-    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+    res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id, tooken: token});
     majDb();
   } catch (err) {
@@ -340,6 +357,7 @@ router.get('/getchat', async (req, res) => {
     const conv = await ChatG.findAll({order:[['id', 'DESC']], limit: 30});
     const name = await User.findAll({attributes: ['id', 'name'], where: {co: true}});
     let ret = "";
+    console.log("conv ", conv.length);
     if (conv.length - 1 != 0)
       ret = maj_conv(result[0].id, conv, name);
     console.log ("ret ", ret);
