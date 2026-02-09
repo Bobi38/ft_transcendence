@@ -8,6 +8,15 @@ export const initialState = {
   boardMasked: Array(9).fill(null),
 };
 
+export function getPlayerId() {
+  let playerId = localStorage.getItem("playerId");
+  if (!playerId) {
+    playerId = Date.now() + "-" + Math.random();
+    localStorage.setItem("playerId", playerId);
+  }
+  return playerId;
+}
+
 export function gameReducer(state, action) {
   switch (action.type) {
     case "CREATE_GAME":
