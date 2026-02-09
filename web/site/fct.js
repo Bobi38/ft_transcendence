@@ -9,16 +9,18 @@ import fs from 'fs';
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
 
+
 class Chat {
   constructor() {
     this.sessions = new Map();
   }
-  addtok(token, socket) {
+  async addtok(token, socket, userId) {
     try {
-      const decoded = jwt.verify(token, secret);
-      this.sessions.set(token, {userId: decoded.id,socket});
-      console.log("WS enregistré user", decoded.id);
-      return decoded.id;
+        const user = await User.findByPk(userId);
+      // const decoded = jwt.verify(token, secret);
+      this.sessions.set(token, { socket, userId, username: user.name });
+      // console.log("WS enregistré user", decoded.id);
+      return token;
     } catch (err) {
       console.log("Token invalide:", err.message);
       return null;

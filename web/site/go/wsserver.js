@@ -17,7 +17,7 @@ export function initWebSocket(server) {
   const wss = new WebSocketServer({ server, path: '/ws' });
 
   console.log('WebSocket server initialized on path /ws');
-  wss.on('connection', (socket, req) => {
+  wss.on('connection', async (socket, req) => {
     console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
     console.log('URL:', req.url);
     console.log('Headers upgrade:', req.headers.upgrade);
@@ -47,7 +47,7 @@ export function initWebSocket(server) {
     }
     else{
       console.log("new user, add to chat sessions");
-      chat.addtok(useid, socket);
+      await chat.addtok(useid, socket, useid);
       socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
     }
     console.log("taille =" , chat.countUser());
@@ -72,14 +72,16 @@ export function initWebSocket(server) {
         // }
         if (data.type === 'mess'){
           console.log("je suis dans un type messsssssssss")
-          const nono = chat.decoded(data.id);
+          const nono = socket.userId;
           console.log ("----" , nono , "----" );
+          console.log("taille === ", chat.countUser());
           for (const session of chat.sessions.values()){
-            console.log("idddd " + session.userId + "   "  +  nono.id + "-----");
-            if (session.socket.readyState === ws.OPEN && session.userId != nono.id){ //&& session.userId != nono.id
-                console.log("ca va SEND from server " + data.id);
+            console.log("session ", session.userId);
+            console.log("idddd " + session.userId + "   "  +  nono + "-----" + session.username);
+            if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
+                console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
                 // session.socket.send(JSON.stringify({type: "message", id: userid, mess: "JE SUIS LE SERVER " + data.mess + " from " + userid }));
-                session.socket.send(JSON.stringify({type: 'message', id: nono.id, mess: data.mess}));
+                session.socket.send(JSON.stringify({type: 'message', senderid: nono, mess: data.mess, name: session.username}));
             }
           }
         }

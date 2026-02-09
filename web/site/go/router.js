@@ -66,18 +66,20 @@ async function checktok(tokenn) {
 //   return tableau;
 // };
 
-async function maj_conv(id, conv, namelst){
-  let  tableau;
+function maj_conv(id, conv, namelst){
+  let  tableau = "";
 
   for (let i = conv.length - 1; i >= 0; i--) {
-    let name;
+    // console.log("conv ", conv[i].contenu, " sender ", conv[i].SenderId);
+    // console.log("id ", id);
+    let name = "";
     if (conv[i].SenderId == id)
       name = "me";
     else{
       const user = namelst.find(u => u.id === conv[i].SenderId);
       name = user ? user.name : "unknown";
     }
-    tableau += name + " " + conv.time + " : " + conv.contenu + "\n";
+    tableau += name + " " + conv[i].time + " : " + conv[i].contenu + "\n";
   }
   return tableau;
 };
@@ -307,8 +309,8 @@ router.post('/addchat', async (req, res) => {
       res.status(201)({success: true});
     const tok = req.cookies.token
     const id = jwt.verify(tok, secret);
-    console.log (id.id, " " , chat.send);
-    await ChatG.create({contenu: chat.send, SenderId: id.id, time: new Date() });
+    console.log (id.id, " " , chat.message);
+    await ChatG.create({contenu: chat.message, SenderId: id.id, time: new Date() });
     console.log("buuuuug");
     // console.log('chat= ', chat);
     // const achat = await ChatG.findByPk(1);
@@ -360,7 +362,7 @@ router.get('/getchat', async (req, res) => {
     console.log("conv ", conv.length);
     if (conv.length - 1 != 0)
       ret = maj_conv(result[0].id, conv, name);
-    console.log ("ret ", ret);
+    // console.log ("ret ", ret);
     res.status(201).json({ success: true, message: ret});
   }
   catch (err) {
