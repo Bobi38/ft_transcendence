@@ -8,22 +8,27 @@ import {SocketM} from '../../../../SocketManag.js';
 
 export default function HomeMessage({message, grid_style}) {
     
-  const [input, setInput] = useState("");
-  const [displayedMessages, setDisplayedMessages] = useState([]);
+    const [input, setInput] = useState("");
+    const [displayedMessages, setDisplayedMessages] = useState([]);
 
 
-    // useEffect(() => {
-    //     fetchMsg();
-    //     if (SocketM.nb() === 0){
-    //         SocketM.connect();
-    //     }
-    //     SocketM.socket.onmessage = (event) => {
-    //         const data = JSON.parse(event.data);
-    //         if (data.type === "message") {
-    //             setDisplayedMessages((prev) => [...prev, data.id + ": " + data.mess]);
-    //         }
-    //     };
-    // }, []);
+    useEffect(() => {
+        fetchMsg();
+        console.log("use effect home message");
+        console.log("nb co = " + SocketM.nb());
+        if (SocketM.nb() === 0) {
+            SocketM.connect();
+        }
+        // const handleChat = (data) => {
+        //     console.log("Message reçu via SocketM.onChat:", data.message);
+        //     setDisplayedMessages((prev) => [...prev,data.id + ": " + data.mess]);
+        // };
+        // SocketM.onChat(handleChat);
+        return () => {
+            console.log("out of chat useEffect");
+            // SocketM.offChat(handleChat);
+        };
+    }, []);
     
     
 
@@ -31,8 +36,10 @@ export default function HomeMessage({message, grid_style}) {
         e.preventDefault();
         setDisplayedMessages(prev => [...prev, input]);
         addmess();
-        SocketM.sendd(input);
-        setInput("");
+        const data = {type: "mess", mess: input};
+        console.log("data to send via WebSocket:", input);
+        SocketM.sendd(data);
+        setInput(""); 
     };
     
 
@@ -46,6 +53,7 @@ export default function HomeMessage({message, grid_style}) {
         const rep = await reponse.json();
         if (rep.succes){
             const chat = rep.ret;
+            setDisplayedMessages(chat);
         }
 
     }

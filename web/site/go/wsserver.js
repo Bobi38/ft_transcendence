@@ -46,6 +46,7 @@ export function initWebSocket(server) {
       console.log("user already exist");
     }
     else{
+      console.log("new user, add to chat sessions");
       chat.addtok(useid, socket);
       socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
     }
