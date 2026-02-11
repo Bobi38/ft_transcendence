@@ -11,7 +11,7 @@ import Register from "./LogRegister/Jsx/Register.jsx"
 
 import checkCo from "../../../../fct1.js"
 import { useEffect, useState } from "react";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const AUTH = {
     NONE: 0,
@@ -23,25 +23,41 @@ export const AUTH = {
 export default function Home(){
 
     const [showLog, setShowLog] = useState(AUTH.NONE);
-
+    const navigate = useNavigate();
     
     useEffect(() => {
+
         const home_root = document.getElementById("home_root");
+
         if (!home_root) return;
 
         const handler = async (event) => {
+
             if (event.target.closest('.LogRegister-flex1')) {
                 return;
             }
-            
+
+            event.preventDefault();
+
             const resCo = await checkCo();
+
             if (!resCo) {
                 setShowLog(AUTH.LOGIN);
+
+            } else {
+            
+                // console.log(event.target)
+
+                const link = event.target.closest("a");
+                if (link) navigate(link.pathname); // ✅ équivalent <a>
+
             }
+
         };
 
         home_root.addEventListener("click", handler);
         return () => home_root.removeEventListener("click", handler);
+
     }, []);
 
 

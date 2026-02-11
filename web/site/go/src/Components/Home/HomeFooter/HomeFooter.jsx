@@ -10,6 +10,9 @@ export default function HomeFooter({ grid_style, setShowLog }) {
 
     const navigate = useNavigate();
     function LOGOUT() {
+        
+        console.log("oui")
+
         fetch('/api/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -26,6 +29,7 @@ export default function HomeFooter({ grid_style, setShowLog }) {
         .catch(error => {
             console.error("Error during logout:", error);
         });
+        
     }
     
     return (
