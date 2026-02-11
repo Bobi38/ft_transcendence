@@ -1,10 +1,10 @@
 import sequelize from './models/index.js';
 import jwt from 'jsonwebtoken';
-import {secret} from './go/router.js';
 import User from './models/user.js';
 import ChatG from './models/test.js';
 import bcrypt from 'bcrypt';
-const secrett = 'toto';
+import fs from 'fs';
+const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
 
 class Chat {
@@ -13,10 +13,10 @@ class Chat {
   }
   addtok(token, socket) {
     try {
-      const decoded = jwt.verify(token, secrett);
-      this.sessions.set(token, {userId: decoded.id,socket});
-      console.log("WS enregistré user", decoded.id);
-      return decoded.id;
+      // const decoded = jwt.verify(token, secret);
+      this.sessions.set(token, {userId: token,socket});
+      console.log("WS enregistré user", token);
+      return token;
     } catch (err) {
       console.log("Token invalide:", err.message);
       return null;
@@ -33,7 +33,7 @@ class Chat {
   }
   decoded(token){
     try{
-      const decodeded = jwt.verify(token, secrett);
+      const decodeded = jwt.verify(token, secret);
       return decodeded;
     }catch(err){
       console.log("err "  + err);

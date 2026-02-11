@@ -2,22 +2,57 @@ import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from '../fct.js';
 import cookie from 'cookie' ;
+import { handletruc } from './handletruc.js'
 
+
+function getCookie(name, cookieHeader) {
+  if (!cookieHeader) return null;
+  const match = cookieHeader
+    .split(';')
+    .map(c => c.trim())
+    .find(c => c.startsWith(name + '='));
+  return match ? decodeURIComponent(match.split('=')[1]) : null;
+}
 
 export function initWebSocket(server) {
   const wss = new WebSocketServer({ server, path: '/ws' });
 
   console.log('WebSocket server initialized on path /ws');
-  
-  wss.on('connection', (socket, req) => {
+  wss.on('connection', async (socket, req) => {
     console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
     console.log('URL:', req.url);
     console.log('Headers upgrade:', req.headers.upgrade);
-    // console.log('Nombre de clients connectés :', clients.length);
-    
-    // Test: envoie un message de bienvenue
-    socket.send(JSON.stringify({type: 'null', mess:"Connexion établieeeeeeeeeeeeeeee!"}));
-    let userid = null;
+    console.log(req.headers.cookie)
+    const token = getCookie('token', req.headers.cookie);
+    if (!token) {
+      socket.close();
+      return;
+    }
+
+    let user;
+    console.log("totototo   ", token)
+    try {
+      user = chat.decoded(token);
+    } catch {
+      socket.close();
+      return;
+    }
+
+    console.log("uuu-------", user);
+    const useid = user.id;
+    socket.userId = useid;
+
+    const exist = chat.finduser(useid);
+    if (exist){
+      exist.socket = socket;
+      console.log("user already exist");
+    }
+    else{
+      console.log("new user, add to chat sessions");
+      console.log(useid)
+      await chat.addtok(useid, socket);
+      socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
+    }
     console.log("taille =" , chat.countUser());
     socket.on('message', (message) => {          
       try{
@@ -25,30 +60,37 @@ export function initWebSocket(server) {
         console.log('=== MESSAGE REÇU ===');
         console.log('Type:', data.type);
         console.log('Contenu:', data.mess);
-        console.log('id: ', data.id);
         console.log('===================');
-        if (data.type === 'auth'){
-          userid = data.id;
-          const use = chat.finduser(userid);
-          if (use){
-            use.socket = socket;
-            console.log("user already exist");
-            return ;
-          }
-          chat.addtok(userid, socket);
-          socket.send(JSON.stringify({type: 'auth_success', id: userid, mess: 'auth goog'}));
-          return ;
+        if (data.type === 'truc'){
+          console.log("nouveau truci")
+          handletruc(data, socket);
         }
+        // if (data.type === 'auth'){
+        //   userid = data.id;
+        //   const use = chat.finduser(userid);
+        //   if (use){
+        //     use.socket = socket;
+        //     console.log("user already exist");
+        //     return ;
+        //   }
+        //   chat.addtok(userid, socket);
+        //   socket.send(JSON.stringify({type: 'auth_success', id: userid, mess: 'auth goog'}));
+        //   return ;
+        // }
         if (data.type === 'mess'){
           console.log("je suis dans un type messsssssssss")
-          const nono = chat.decoded(data.id);
-          console.log ("----" , nono , "----" );
+          const nono = socket.userId;
+          const na = chat.finduser(nono);
+          const ni = na.username;
+          console.log ("----" , nono , "----", ni);
+          console.log("taille === ", chat.countUser());
           for (const session of chat.sessions.values()){
-            console.log("idddd " + session.userId + "   "  +  nono.id + "-----");
-            if (session.socket.readyState === ws.OPEN && session.userId != nono.id){ //&& session.userId != nono.id
-                console.log("ca va SEND from server " + data.id);
+            console.log("session ", session.userId);
+            console.log("idddd " + session.userId + "   "  +  nono + "-----" + socket.username);
+            if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
+                console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
                 // session.socket.send(JSON.stringify({type: "message", id: userid, mess: "JE SUIS LE SERVER " + data.mess + " from " + userid }));
-                session.socket.send(JSON.stringify({type: 'message', id: nono.id, mess: data.mess}));
+                session.socket.send(JSON.stringify({type: 'message', senderid: nono, mess: data.mess, name: ni}));
             }
           }
         }

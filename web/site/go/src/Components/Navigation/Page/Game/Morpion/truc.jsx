@@ -1,55 +1,32 @@
-import { useState, useEffect } from "react"
-import { postJson, initial } from "./postjson"
+import { useState, useEffect } from "react";
+import { SocketM } from "../../../../../../SocketManag";
 
 
-function Square({ value }) {
-  return (
-    <button className="square">
-      {value}
-    </button>
-  );
-}
+export default function Truc() {
+  const [msg, setMsg] = useState("En attente...");
 
-export default function Truc(){
-    const [msg, setMsg] = useState("")
-    const [tab, setTab] = useState("")
-    const [start, setStart] = useState("")
     useEffect(() => {
-        const sendMessage = async () => {
-            try {
-                const reponse = await fetch(
-                    "/api/truc",
-                    postJson(initial));
+    if(SocketM.nb() === 0){
+        SocketM.connect()
+    }
 
-                const result = await reponse.json();
-                if (result.sucess === false)
-                    throw new Error(result.message);
-                setTab(result.data.tab);    
-                setMsg(result.data.message);
-                setStart(result.data.start);
-            } catch (err) {console.error(err);}
-        };
-        sendMessage();
-    }, []);
+    SocketM.sendd({
+          type: "truc",
+          mess: "est-ce que tu me reçois ?"
+    });
+    
+    console.log("after co");
 
-    return (
-    <>
-      <div className="status">{msg}</div>
-      <div className="board-row">
-        <Square value={tab[0]} />
-        <Square value={tab[1]} />
-        <Square value={tab[2]} />
-      </div>
-      <div className="board-row">
-        <Square value={tab[3]} />
-        <Square value={tab[4]} />
-        <Square value={tab[5]} />
-      </div>
-      <div className="board-row">
-        <Square value={tab[6]} />
-        <Square value={tab[7]} />
-        <Square value={tab[8]} />
-      </div><p>
-        affiche tab :
-        </p><ol>{tab}</ol></>)
+    const handleTest = (data) => {
+      setMsg(data.mess);
+    };
+
+    SocketM.ontruc(handleTest);
+
+    return () => {
+      SocketM.offtruc(handleTest);
+    }
+  }, []);
+
+  return <p>{msg}</p>;
 }
