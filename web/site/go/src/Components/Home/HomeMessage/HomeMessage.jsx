@@ -82,6 +82,7 @@ export default function HomeMessage({message, grid_style}) {
         setInput(""); 
     };
     
+
     return (
         <>
             <div className={`${grid_style} message center`}>
@@ -91,16 +92,17 @@ export default function HomeMessage({message, grid_style}) {
                             <div key={index}>{msg}</div>
                         ))}
                     </div> */}
+
                     <div style={{ whiteSpace: "pre-line" }}>
                     {displayedMessages}
                     </div>
-                    <form onSubmit={handleSubmit}>
+                    <form id="HomeMessageform" onSubmit={handleSubmit}>
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                         />
-                        <input type="submit"></input>
+                        <input id="HomeMessagesubmit" type="submit"></input>
                     </form>
            
             </div>
