@@ -6,11 +6,7 @@ import NavBar from "./NavBar/NavBar.jsx";
 
 import ContactUs from "./Page/ContactUs/ContactUs.jsx";
 import Morpion from "./Page/Game/Morpion/Morpion.jsx";
-import Stats from "./Page/Stats/Stats.jsx";
-import ErrorRedir from "./Page/ErrorRedir/ErrorRedir.jsx";
-
-import Nothing from "./Page/Nothing/Nothing.jsx";
-
+import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
     
 export default function Navigation({ screen }) {
 
@@ -23,10 +19,8 @@ export default function Navigation({ screen }) {
                 return <ContactUs/>;
             case 'Morpion':
                 return <Morpion/>;
-            case 'Stats':
-                return <Stats/>;
-            case 'ErrorRedir':
-                return <ErrorRedir/>;
+            case 'WaitRoom':
+                return <WaitRoom/>;
             default:
                 return <Nothing/>;
                 

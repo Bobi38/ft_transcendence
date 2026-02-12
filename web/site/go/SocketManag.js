@@ -1,4 +1,3 @@
-import { HistoryC } from '../fct1.js';  
 
 class SocketManag{
     constructor(){
@@ -29,7 +28,8 @@ class SocketManag{
             if (dataa.type === 'game') {
                 this.listeners.game.forEach(cb => cb(dataa));
             }
-            if (dataa.type === 'room') {
+            if (dataa.type === 'waitRoom') {
+                console.log("Message reçu de type waitRoom via WebSocket:", dataa.mess);
                 this.listeners.room.forEach(cb => cb(dataa));
             }
         };
@@ -55,12 +55,21 @@ class SocketManag{
         this.listeners.chat = this.listeners.chat.filter(listener => listener !== cb);
     }
 
-    onGmae(cb) {
+    offGame(cb) {
+        this.listeners.game = this.listeners.game.filter(listener => listener !== cb);
+    }
+
+    offRoom(cb) {
+        this.listeners.room = this.listeners.room.filter(listener => listener !== cb);
+    }
+
+    onGame(cb) {
         this.listeners.game.push(cb);
     }
 
     onRoom(cb) {
-        this.listeners.room.push(cb);
+        if (!this.listeners.room.includes(cb))
+            this.listeners.room.push(cb);
     }
 
     nb(){
@@ -68,7 +77,7 @@ class SocketManag{
     }
 
     sendd (data){
-        console.log("coucou je suis dans sendd");
+        console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
         if (this.socket && this.socket.readyState == WebSocket.OPEN){
             console.log("envoi du message via WebSocket:", data);
             this.socket.send(JSON.stringify(data));

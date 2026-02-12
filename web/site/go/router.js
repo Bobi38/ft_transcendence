@@ -88,10 +88,11 @@ function maj_conv(id, conv, namelst){
 router.use(async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path:", req.path);
-  if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' ) {
+  if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' && req.path !== '/github' && req.path !== '/github/callback') {
     return res.status(401).json({ success: false, redirect: true});
   }
-  if (req.path === '/' || req.path === '/login' || req.path === '/register') {
+  if (req.path === '/' || req.path === '/login' || req.path === '/register' || req.path === '/github' || req.path === '/github/callback') {
+    console.log("Public route, no auth required");
     return next() ;
   }
   const valid = await checktok(token);
@@ -181,7 +182,10 @@ router.post('/register', async (req, res) => {
   try {
     const find = await User.findAll({ where: { mail: email } });
     if (find.length != 0) {
-      return res.status(500).json({success: false, message: 'Email already used'});
+      if (find[0].OAuth == true)
+        return res.status(500).json({success: false, message: 'Email already used with OAuth, try to login with GitHub'});
+      else
+        return res.status(500).json({success: false, message: 'Email already used'});
     }
     console.log("av");
     const CrypPass = await bcrypt.hash(password, 10);
@@ -376,6 +380,65 @@ router.post('/welcome', async (req, res) => {
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
+router.get('/github',  (req, res) => {
+  console.log("dans github");
+  const clientiD = 'Ov23liKAY6PJhfRJ6mf8';
+  const redirectUri = 'http://localhost:9000/api/github/callback';
+  const githubAuthUrl = `https://github.com/login/oauth/authorize` + `?client_id=${clientiD}` +`&redirect_uri=${redirectUri}` +`&scope=user:email`;
+  console.log("github auth url ", githubAuthUrl);
+  res.redirect(githubAuthUrl);
+});
+
+
+router.get('/github/callback', async (req, res) => {
+  const code = req.query.code; 
+  console.log("je suis dams github callback");
+  console.log("GitHub callback code:", code);
+
+  const params = new URLSearchParams();
+  params.append("client_id", 'Ov23liKAY6PJhfRJ6mf8');
+  params.append("client_secret", '15e78a3fa1121b8d51fe7dd0c8bf512a88358289');
+  params.append("code", code);
+
+
+  const response = await fetch("https://github.com/login/oauth/access_token", {
+    method: "POST",
+    headers: { "Accept": "application/json" },
+    body: params,
+  });
+
+  const data = await response.json();
+  const accessToken = data.access_token;
+  console.log("GitHub access token:", accessToken);
+
+  const userRes = await fetch("https://api.github.com/user", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const user = await userRes.json();
+  console.log("GitHub user info:", user);
+  const emailuse = await fetch ("https://api.github.com/user/emails", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const email = await emailuse.json();
+  console.log("GitHub user email:", email);
+  const result = await User.findAll({ where: { mail: email[0].email } });
+  if (result.length === 0) {
+    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true,  co: true, win: 0, total_part: 0});
+    console.log("New user created:", newUser);
+    const token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
+    const re = await Co.create({token: token, userId: newUser.id});
+  }
+  else {
+    await result[0].update({co: true});
+    console.log("Existing user logged in:", result[0].name);
+    const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
+    const re = await Co.create({token: token, userId: result[0].id});
+  }
+  res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+  res.status(201).json({ success: true, message: 'Login successful', redirectUrl: 'http://localhost:5173/home' });
+});
+
+
 export {secret_chat};
 export {secret};
 export { checktok };
@@ -396,4 +459,11 @@ jsson{[
   <div>json.login</div><div>json.timesamp</div> 
   <p>json.message</p>
 </div>
+*/
+
+/*
+adress
+telephone
+date de naissance
+photo
 */

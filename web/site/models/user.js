@@ -20,6 +20,10 @@ const User = sequelize.define('User', {
     allowNull: false,
     unique: true,
   },
+  OAuth: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,  
+  },
   co:{
     type: DataTypes.BOOLEAN,
     defaultValue: false,
