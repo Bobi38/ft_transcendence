@@ -15,6 +15,10 @@ import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import session from 'express-session';
+import QRCode from 'qrcode';
+
+import {authenticator} from 'otplib';
+
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +29,7 @@ router.use(coockieParser());
 // const secret = location.address;
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 const secret_chat = fs.readFileSync('/run/secrets/cle_chat', 'utf-8').trim();
+const secret_qr = "toto";
 
 
 async function checktok(tokenn) {
@@ -112,6 +117,20 @@ function CheckName(req, res, next){
       return res.status(201).json({success: true, message: req.session.username});
   next();
 }
+
+router.get('/qrimage', async(req, res) => {
+  try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findAll({ where: { id: decoded.id } });
+    const otpauth = authenticator.keyuri(decoded.id, 'Try 2FA', secret_qr);
+    const image = await QRCode.toDataURL(otpauth);
+    res.status(201).json({success: true, message: image});
+  }
+  catch(err){
+  res.status(500).json({success: false, message: err});
+  }
+});
 
 router.get('/getname', CheckName, async(req, res) =>{
   try{
@@ -390,6 +409,8 @@ router.get('/github',  (req, res) => {
 });
 
 
+
+
 router.get('/github/callback', async (req, res) => {
   const code = req.query.code; 
   console.log("je suis dams github callback");
@@ -422,20 +443,21 @@ router.get('/github/callback', async (req, res) => {
   const email = await emailuse.json();
   console.log("GitHub user email:", email);
   const result = await User.findAll({ where: { mail: email[0].email } });
+  let token = "";
   if (result.length === 0) {
-    const newUser = await User.create({name: user.login, password: user.id, mail: email[0].email, OAuth:true,  co: true, win: 0, total_part: 0});
+    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true,  co: true, win: 0, total_part: 0});
     console.log("New user created:", newUser);
-    const token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
+    token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: newUser.id});
   }
   else {
     await result[0].update({co: true});
     console.log("Existing user logged in:", result[0].name);
-    const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
+    token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: result[0].id});
   }
   res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-  res.status(201).json({ success: true, message: 'Login successful', redirectUrl: 'http://localhost:5173/home' });
+  res.redirect('http://localhost:5173');
 });
 
 
