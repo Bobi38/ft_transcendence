@@ -106,6 +106,7 @@ export default function Log({setShowLog}) {
 
                         <button type="button" 
                                 className="iconecolor negativ"
+                                target="_blank"
                                 onClick={handleGit}
                                 >
                                 <FaGithub/> GitHub

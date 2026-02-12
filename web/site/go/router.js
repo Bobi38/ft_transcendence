@@ -423,7 +423,7 @@ router.get('/github/callback', async (req, res) => {
   console.log("GitHub user email:", email);
   const result = await User.findAll({ where: { mail: email[0].email } });
   if (result.length === 0) {
-    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true,  co: true, win: 0, total_part: 0});
+    const newUser = await User.create({name: user.login, password: user.id, mail: email[0].email, OAuth:true,  co: true, win: 0, total_part: 0});
     console.log("New user created:", newUser);
     const token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: newUser.id});
