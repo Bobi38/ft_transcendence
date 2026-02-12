@@ -21,6 +21,7 @@ export default function App() {
           {/* Navigation/page/{sreen} */}
           <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
           <Route path="/Morpion" element={<Navigation screen="Morpion"/>} />
+          <Route path="/Stats" element={<Navigation screen="Stats"/>} />
           <Route path="/Nothing" element={<Navigation screen="Nothing"/>} />
 
           {/* <Route path="/*" element={<Navigation screen="Nothing"/>} />

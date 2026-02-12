@@ -102,8 +102,8 @@ export default function Home(){
                 <>
 
                     <HomeIcone      grid_style={`Home-div4 ${home_css}`}
-                                    arg="/Stat"
-                                    text="Stat"
+                                    arg="/Stats"
+                                    text="Stats"
                                     />
 
                     <HomeIcone      grid_style={`Home-div5 ${home_css}`}
