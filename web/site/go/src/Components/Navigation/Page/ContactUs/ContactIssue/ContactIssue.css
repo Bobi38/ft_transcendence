@@ -1,5 +1,5 @@
 .ContactIssue{
-    margin-top: 1rem;
+    margin: 1rem;
 }
 
 .ContactIssue:hover{
@@ -20,6 +20,7 @@
     font-size: 1.5rem;
 }
 
-.ContactIssue-form input, .ContactIssue-form select{
+.ContactIssue-form input, .ContactIssue-form select, .ContactIssue-form textarea{
+    font-size: 1.5rem;
     height: 3rem;
 }

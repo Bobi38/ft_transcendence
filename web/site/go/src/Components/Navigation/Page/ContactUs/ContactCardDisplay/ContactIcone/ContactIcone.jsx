@@ -21,29 +21,44 @@ export default function ContactIcone({
     </svg>
     );
 
-    return (
+    return ( 
         <>
-            <div className={`${grid_style} ContactIcone-margin translateY`}>
-                <div> 
-                    <h2>{name}</h2>
+            <div className={`${grid_style} full ContactIcone-padding translateY`}>
+
+                <div className="ContactIcone-root">
+
+                    <div className="ContactIcone-div1">
+                        <img src={`https://sevetys.fr/_next/image/?url=https%3A%2F%2Fcharming-angel-5ca83bf286.media.strapiapp.com%2FChat_europeen_573af6e71d.webp&w=3840&q=75`}
+                            alt={`${name}'s avatar`} 
+                            width="275" height="275"
+                            />
+                    </div>
+
+                    <div className="ContactIcone-div2 ContactIcone-card ContactIcone-font">
+                        
+                        <div>
+                            <h2>{name}</h2>
+                        </div>
+
+
+                        <a href={`${git.url}`} target="_blank">
+                            {GitHubIcon()} {git.name}
+                        </a>
+                    
+
+                        <a href={`${linkedin.url}`} target="_blank">
+                            <FaLinkedin /> {linkedin.name}
+                        </a>
+
+
+                        <a href={`${intraUrl}`} target="_blank">
+                            <Si42 /> Intra 42
+                        </a>
+
+                    </div>
+
                 </div>
 
-                <div>
-                    <a href={`${git.url}`} target="_blank">
-                        {GitHubIcon()} {git.name}
-                    </a>
-                </div>
-                <div>
-                    <a href={`${linkedin.url}`} target="_blank">
-                        <FaLinkedin /> {linkedin.name}
-                    </a>
-                </div>
-
-                <div>
-                    <a href={`${intraUrl}`} target="_blank">
-                        <Si42 /> Intra 42
-                    </a>
-                </div>
             </div>
         </>
     )

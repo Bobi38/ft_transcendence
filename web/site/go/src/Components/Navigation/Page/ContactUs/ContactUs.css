@@ -1,16 +1,14 @@
-.ContactUs-root {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding: 20px;
+.ContactUs-bg{
+    background: blueviolet;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
 }
 
-.ContactUs-root h1, .ContactUs-root h2 {
+.ContactUs-bg h1, .ContactUs-bg h2 {
+    padding-top: 1rem;
     text-align: center;
 }
 
-.ContactUs-root_bg{
-    background: blueviolet;
-    border-radius: 35px;
-}
-    
+
+.ContactUs-padding{ padding: 1.5rem; }
+

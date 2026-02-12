@@ -30,6 +30,8 @@ button{ border: none; }
 
 .flex{ display: flex; }
 .full{ height: 100%; width: 100%; }
+.fullh{ height: 100%; }
+.fullw{ width: 100%; }
 
 .center{
   justify-content: center;
