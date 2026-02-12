@@ -37,6 +37,7 @@ export function initWebSocket(server) {
       return;
     }
 
+    if (!user) {socket.close(); return; }
     console.log("uuu-------", user);
     const useid = user.id;
     socket.userId = useid;
