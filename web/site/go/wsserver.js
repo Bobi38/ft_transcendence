@@ -57,12 +57,11 @@ export function initWebSocket(server) {
     socket.on('message', (message) => {          
       try{
         const data = JSON.parse(message.toString());
-        console.log('=== MESSAGE REÇU ===');
-        console.log('Type:', data.type);
+        console.log('=== MESSAGE ENVOYE ===');
+        // console.log('Type:', data.type);
         console.log('Contenu:', data.mess);
-        console.log('===================');
+        // console.log('===================');
         if (data.type === 'truc'){
-          console.log("nouveau truci")
           handletruc(data, socket);
         }
         // if (data.type === 'auth'){

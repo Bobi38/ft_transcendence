@@ -1,20 +1,99 @@
-let count = 0;
-let sockets = [];
+let waitingPlayer = null;
+let games = [];
 
-export function handletruc(data, socket){
-    if(sockets.includes(socket)){
-        socket.send(JSON.stringify({type: "truc", mess: "deja connecte"}));
+/* ---------- utilitaire ---------- */
+
+function send(socket, mess) {
+  if (!socket || socket.readyState !== WebSocket.OPEN) return;
+
+  socket.send(JSON.stringify({
+    type: "truc",
+    mess,
+  }));
+}
+
+/* ---------- reboot ---------- */
+
+function reboot() {
+  games.forEach(game => {
+    game.players.forEach(player => {
+      send(player, "ça a reboot");
+    });
+  });
+
+  if (waitingPlayer) {
+    send(waitingPlayer, "ça a reboot");
+  }
+
+  waitingPlayer = null;
+  games = [];
+}
+
+/* ---------- démarrer une partie ---------- */
+
+function startGame(player1, player2) {
+  const newGame = {
+    players: [player1, player2],
+    board: Array(9).fill(" ")
+  };
+
+  games.push(newGame);
+
+  send(player1, "Le jeu commence - à toi de jouer");
+  send(player2, "Le jeu commence - attente joueur 1");
+}
+
+/* ---------- trouver la partie d’un joueur ---------- */
+
+function findGame(socket) {
+  return games.find(game =>
+    game.players.includes(socket)
+  );
+}
+
+/* ---------- fermer une partie ---------- */
+
+function closeGame(socket, message) {
+  const game = findGame(socket);
+  if (!game) return;
+
+  const opponent = game.players.find(p => p !== socket);
+
+  send(socket, message);
+  send(opponent, "L'adversaire a quitté - victoire");
+
+  games = games.filter(g => g !== game);
+}
+
+/* ---------- handler principal ---------- */
+
+export function handletruc(data, socket) {
+    if (socket === waitingPlayer)
         return ;
-    }
-    count++;
-    if (count % 2 == 1){
-        sockets.push(socket);
-        socket.send(JSON.stringify({type: "truc", mess: "tu es le premier"}));
-        return ;
-    }
-    sockets.push(socket);
-    socket.send(JSON.stringify({type: "truc", mess: "nous sommes deux"}));
-    const other = sockets[sockets.length - 2];
-    other.send(JSON.stringify({type: "truc", mess: "nous sommes deux"}));
-    sockets = [];
+
+  if (data.mess === "reboot") {
+    reboot();
+    return;
+  }
+
+  if (data.mess === "je pars") {
+    closeGame(socket, "Tu as quitté la partie");
+    return;
+  }
+
+  // Si le joueur est déjà dans une partie
+  const existingGame = findGame(socket);
+  if (existingGame) {
+    send(socket, "La partie est en cours...");
+    return;
+  }
+
+  // Sinon on gère l’attente
+  if (!waitingPlayer) {
+    waitingPlayer = socket;
+    send(socket, "En attente d’un second joueur...");
+  } else {
+    startGame(waitingPlayer, socket);
+    waitingPlayer = null;
+  }
 }
