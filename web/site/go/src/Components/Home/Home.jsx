@@ -9,6 +9,7 @@ import HomeArrow from './HomeArrow/HomeArrow.jsx';
 import Log from "./LogRegister/Jsx/Log.jsx"
 import Register from "./LogRegister/Jsx/Register.jsx"
 
+
 import checkCo from "../../../../fct1.js"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -94,8 +95,9 @@ export default function Home(){
                                     text="Intra"
                                     link="https://meta.intra.42.fr/clusters"/>
 
-                    <HomeIcone      grid_style={`Home-div3 ${home_css}`}
-                                    arg="/Nothing"
+                    <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
+                                    arg="/WaitRoom"
+                                    text="WaitRoom"
                                     />
                 </>
 

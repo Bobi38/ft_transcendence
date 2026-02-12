@@ -1,6 +1,6 @@
 import './Morpion.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Square({ value, onSquareClick }) {
   return (
@@ -11,6 +11,8 @@ function Square({ value, onSquareClick }) {
 }
 
 function Board({ xIsNext, squares, onPlay }) {
+  console.log("dans board");
+  console.log(squares)
   function handleClick(i) {
     if (calculateWinner(squares) || squares[i]) {
       return;
@@ -83,12 +85,14 @@ export default function Morpion() {
   const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares) {
+    console.log("je suis dans handle");
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
 
   function jumpTo(nextMove) {
+    console.log("dans le move" ,nextMove);
     setCurrentMove(nextMove);
   }
 

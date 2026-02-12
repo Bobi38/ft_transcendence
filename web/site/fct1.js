@@ -11,18 +11,6 @@ function showAlert(message, type = "danger") {
     }, 1000);
 }
 
-class HistoryChat{
-    constructor(){
-        this.History = "";
-    }
-    setHisto(text){
-        this.History += text;
-    }
-    getHisto(){
-        return this.History;
-    }
-}
-
 
 export default async function checkCo(){
     try{
@@ -47,6 +35,5 @@ export default async function checkCo(){
 }
 
 
-export const HistoryC = new HistoryChat();
 export { showAlert };
 // export let HistoryChat = "";
