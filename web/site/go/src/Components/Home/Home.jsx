@@ -73,68 +73,73 @@ export default function Home(){
 
     }, []);
 
+    const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
+    const home_css = "Home-iconedisplay Home-iconemargin iconecolor";
 
     return (
         <>
             <div className='Home-grid' id="home_root">
                 
-                <div id="alertttt" className={`Home-pos full ${showLog === AUTH.NONE ? "hidden" : "visible"}`} >
+                <div id="home-login" className={`Home-pos full ${home_login}`} >
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
                 </div>
                 <>
-                    <HomeIcone      grid_style="Home-div1 Home-iconedisplay Home-iconemargin iconecolor"
+                    <HomeIcone      grid_style={`Home-div1 ${home_css}`}
                                     arg="/Weather"
                                     text="Weather"/>
 
-                    <HomeIcone      grid_style="Home-div2 Home-iconedisplay Home-iconemargin iconecolor"
+                    <HomeIcone      grid_style={`Home-div2 ${home_css}`}
                                     arg="/Intra"
                                     text="Intra"
                                     link="https://meta.intra.42.fr/clusters"/>
 
-                    <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
+                    <HomeIcone      grid_style={`Home-div3 ${home_css}`}
                                     arg="/Nothing"
                                     />
                 </>
 
                 <>
-                    <HomeIcone      grid_style="Home-div4 Home-iconedisplay Home-iconemargin iconecolor"
+
+                    <HomeIcone      grid_style={`Home-div4 ${home_css}`}
                                     arg="/Stat"
                                     text="Stat"
                                     />
 
-                    <HomeIcone      grid_style="Home-div5 Home-iconedisplay Home-iconemargin iconecolor"
-                                    arg="/Morpion"
-                                    text="Jeu de enfant"/>
+                    <HomeIcone      grid_style={`Home-div5 ${home_css}`}
+                                    arg="/jeux"
+                                    text="jeux"/>
 
-                    <HomeIcone      grid_style="Home-div6 Home-iconedisplay Home-iconemargin iconecolor"
+                    <HomeIcone      grid_style={`Home-div6 ${home_css}`}
                                     arg="/PrivateMessage"
                                     text="Private Message"
                                     />
 
                 </>
 
-                    <HomeArrow      grid_style="Home-div12 Home-iconedisplay"/>
+                    <HomeArrow      grid_style={`Home-div12 Home-iconedisplay`}/>
 
                 <>
-                    <HomeIcone      grid_style="Home-div7 Home-iconedisplay Home-iconemargin iconecolor"
+                    <HomeIcone      grid_style={`Home-div7 ${home_css}`}
                                     arg="/Nothing"
                                     />
 
-                    <HomeIcone      grid_style="Home-div8 Home-iconedisplay Home-iconemargin iconecolor"
-                                    arg="/Nothing"
+                    <HomeIcone      grid_style={`Home-div8 ${home_css}`}
+                                    arg="/Morpion"
+                                    text="Mini-games"
                                     />
 
-                    <HomeIcone      grid_style="Home-div9 Home-iconedisplay Home-iconemargin iconecolor" 
-                                    arg="/ContactUs" text="contact friend"
+                    <HomeIcone      grid_style={`Home-div9 ${home_css}`} 
+                                    arg="/Friends-List" 
+                                    text="Friends-List"
                                     />
 
                 </>
 
 
-                <HomeMessage        grid_style="Home-div10 Home-iconedisplay Home-iconemargin iconecolor"/>
+                <HomeMessage        grid_style={`Home-div10 ${home_css}`}/>
                 
-                <HomeFooter         grid_style="Home-div11"
+                <HomeFooter         grid_style={`Home-div11`}
                                     setShowLog={setShowLog}
                                     />
 
