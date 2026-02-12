@@ -6,7 +6,7 @@ import "./HomeMessage.css";
 import { useEffect, useState } from "react";
 import {SocketM} from '../../../../SocketManag.js';
 
-export default function HomeMessage({message, grid_style}) {
+export default function HomeMessage({grid_style}) {
     
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
