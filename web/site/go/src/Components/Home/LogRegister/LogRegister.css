@@ -13,7 +13,7 @@
 .LogRegister-flex3 {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Espace entre les éléments */
+    gap: 20px;
     padding: 30px;
 }
 

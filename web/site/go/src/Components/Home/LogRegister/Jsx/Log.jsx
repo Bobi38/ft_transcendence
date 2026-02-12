@@ -4,6 +4,7 @@ import "../LogRegister.css";
 import { showAlert } from "../../../../../../fct1";
 import { useNavigate } from "react-router-dom";
 import { AUTH } from "../../Home.jsx"
+import { FaGithub } from "react-icons/fa";
 
 export default function Log({setShowLog}) {
 
@@ -52,6 +53,10 @@ export default function Log({setShowLog}) {
         setShowLog(AUTH.REGISTER);
     }
 
+    const handleGit = () => {
+        window.location.href = "/api/github";
+    };
+
 
     return (
         <main className="full LogRegister-flex1 LogRegister-bglow">
@@ -86,17 +91,25 @@ export default function Log({setShowLog}) {
                     
                     <div className="full LogRegister-flex3">
 
-                        <button type="submit" className="iconecolor negativ">
-                            Connexion
+                        <button type="submit" 
+                                className="iconecolor negativ"
+                                >
+                                Connexion
                         </button>
 
                         <button type="button"
                                 className="iconecolor negativ"
                                 onClick={registerMode}
                                 >
-                            Inscris-toi
+                                Inscris-toi
                         </button>
 
+                        <button type="button" 
+                                className="iconecolor negativ"
+                                onClick={handleGit}
+                                >
+                                <FaGithub/> GitHub
+                        </button>
                     </div>
 
                 </form>
