@@ -4,8 +4,6 @@ import './App.css'
 /* Components */
 import Home from './Components/Home/Home.jsx'
 import Navigation from './Components/Navigation/Navigation.jsx'
-import Log from './Components/Home/LogRegister/Jsx/Log.jsx'
-import Register from './Components/Home/LogRegister/Jsx/Register.jsx'
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 export default function App() {
@@ -23,18 +21,9 @@ export default function App() {
           {/* Navigation/page/{sreen} */}
           <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
           <Route path="/Morpion" element={<Navigation screen="Morpion"/>} />
+          <Route path="/Stats" element={<Navigation screen="Stats"/>} />
           <Route path="/Nothing" element={<Navigation screen="Nothing"/>} />
 
-          {/* <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} />
-          <Route path="/*" element={<Navigation screen="Nothing"/>} /> */}
           <Route path="/*" element={<Navigation screen="ErrorRedir"/>} />
 
 
