@@ -52,6 +52,7 @@ export default function Log({setShowLog}) {
         setShowLog(AUTH.REGISTER);
     }
 
+
     return (
         <main className="full LogRegister-flex1 LogRegister-bglow">
             
