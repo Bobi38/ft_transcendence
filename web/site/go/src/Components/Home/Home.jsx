@@ -49,8 +49,21 @@ export default function Home(){
                 // console.log(event.target)
 
                 const link = event.target.closest("a");
-                if (link) navigate(link.pathname); // ✅ équivalent <a>
+                if (link){
+                    navigate(link.pathname);
+                    return
+                } 
 
+                if (event.target.id === "HomeMessagesubmit"){
+                    // console.log(event.target.id);
+
+                    const form = event.target.form
+                    if (form) {
+                        // console.log(form);
+                        form.requestSubmit();
+                    }
+                    return
+                }
             }
 
         };
