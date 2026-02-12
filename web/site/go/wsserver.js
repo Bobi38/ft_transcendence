@@ -2,7 +2,7 @@ import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from '../fct.js';
 import cookie from 'cookie' ;
-import { handletruc } from './handletruc.js'
+import { handletruc , handletrucDisconnect } from './handletruc.js'
 
 
 function getCookie(name, cookieHeader) {
@@ -107,6 +107,10 @@ export function initWebSocket(server) {
 
     socket.on('error', (error) => {
       console.error('Erreur WebSocket:', error);
+    });
+    
+    socket.on("close", () => {
+      handleDisconnect(socket);
     });
   });
 }
