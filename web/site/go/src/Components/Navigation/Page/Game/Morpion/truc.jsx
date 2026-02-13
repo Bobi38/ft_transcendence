@@ -1,18 +1,29 @@
 import { useState, useEffect } from "react";
 import { SocketM } from "../../../../../../SocketManag";
+import './Morpion.css';
 
-function handleclick(){
-  SocketM.sendd({
+function GoOUT(){
+  return (
+  <button onClick={() =>
+    SocketM.sendd({
         type: "truc",
         mess: "je pars"
-  });
+      })
+    }
+  > 
+    je veux partir
+  </button>
+  );
 }
 
 function RebootTruc() {
   return (
     <button
       onClick={() =>
-        SocketM.sendd({ type: "truc", mess: "reboot" })
+        SocketM.sendd({
+          type: "truc",
+          mess: "reboot"
+        })
       }
     >
       Reboot (dev)
@@ -20,16 +31,46 @@ function RebootTruc() {
   );
 }
 
-function Square({ value }) {
+function Square({ value, onSquareClick }) {
   return (
-    <button className="square" onClick={handleclick}>
+    <button className="square" onClick={onSquareClick}>
       {value}
     </button>
   );
 }
 
+function Board( { squares }) {
+    function handleClick(i) {
+      SocketM.sendd({
+        type: "truc",
+        mess: i,
+      })
+  }
+ 
+  return (
+    <>
+      <div className="board-row">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      </div>
+    </>
+  );
+}
+
 export default function Truc() {
   const [msg, setMsg] = useState("En attente...");
+  const [board, setBoard] = useState(Array(9).fill(" "));
 
     useEffect(() => {
     if(SocketM.nb() === 0){
@@ -45,6 +86,8 @@ export default function Truc() {
 
     const handleTest = (data) => {
       setMsg(data.mess);
+      if (data.board)
+        setBoard(data.board);
     };
 
     SocketM.ontruc(handleTest);
@@ -54,5 +97,15 @@ export default function Truc() {
     }
   }, []);
 
-  return (<><Square value="fin"/><p>{msg}</p><RebootTruc /></>);
+
+    return (
+    <>
+      <div className="status">{msg}</div>
+      <div>< RebootTruc /></div>
+      <div>< GoOUT /></div>
+      <div className="game-board">
+        <Board squares={board}/>
+      </div>
+    </>
+  );
 }
