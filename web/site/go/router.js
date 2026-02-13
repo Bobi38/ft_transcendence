@@ -29,7 +29,7 @@ router.use(coockieParser());
 // const secret = location.address;
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 const secret_chat = fs.readFileSync('/run/secrets/cle_chat', 'utf-8').trim();
-const secret_qr = "toto";
+const secret__tok_2fa = "toto";
 
 
 async function checktok(tokenn) {
@@ -123,14 +123,23 @@ router.get('/qrimage', async(req, res) => {
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
+    const secret_qr = authenticator.generateSecret();
     const otpauth = authenticator.keyuri(decoded.id, 'Try 2FA', secret_qr);
     const image = await QRCode.toDataURL(otpauth);
+    console.log("otpauth ", otpauth);
     res.status(201).json({success: true, message: image});
   }
   catch(err){
   res.status(500).json({success: false, message: err});
   }
 });
+
+// router.post('/valide2FA', async(req,res) => {
+//   try{
+//     const { code } = req.body;
+//     const 
+//   }
+// } )
 
 router.get('/getname', CheckName, async(req, res) =>{
   try{
@@ -399,7 +408,7 @@ router.post('/welcome', async (req, res) => {
   res.status(201).json({ success: true, message: 'Bienvenue' });
 });
 
-router.get('/github',  (req, res) => {
+router.get('/github',  async (req, res) => {
   console.log("dans github");
   const clientiD = 'Ov23liKAY6PJhfRJ6mf8';
   const redirectUri = 'http://localhost:9000/api/github/callback';
@@ -428,6 +437,7 @@ router.get('/github/callback', async (req, res) => {
     body: params,
   });
 
+  res.status(201).json({ success: true, message: 'Bienvenue copain' });
   const data = await response.json();
   const accessToken = data.access_token;
   console.log("GitHub access token:", accessToken);
