@@ -1,99 +1,120 @@
 let waitingPlayer = null;
+const cooldowns = new Map();
 let games = [];
 
-/* ---------- utilitaire ---------- */
-
 function send(socket, mess) {
-  if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
 
-  socket.send(JSON.stringify({
+    socket.send(JSON.stringify({
     type: "truc",
     mess,
-  }));
+    }));
 }
-
-/* ---------- reboot ---------- */
 
 function reboot() {
-  games.forEach(game => {
+    games.forEach(game => {
     game.players.forEach(player => {
-      send(player, "ça a reboot");
+        send(player, "ça a reboot");
+        });
     });
-  });
 
-  if (waitingPlayer) {
-    send(waitingPlayer, "ça a reboot");
-  }
+    if (waitingPlayer) {
+        send(waitingPlayer, "ça a reboot");
+    }
 
-  waitingPlayer = null;
-  games = [];
+    waitingPlayer = null;
+    games = [];
 }
-
-/* ---------- démarrer une partie ---------- */
 
 function startGame(player1, player2) {
-  const newGame = {
-    players: [player1, player2],
-    board: Array(9).fill(" ")
-  };
+    const newGame = {
+        players: [player1, player2],
+        board: Array(9).fill(" ")
+    };
 
-  games.push(newGame);
+    games.push(newGame);
 
-  send(player1, "Le jeu commence - à toi de jouer");
-  send(player2, "Le jeu commence - attente joueur 1");
+    send(player1, "Le jeu commence - à toi de jouer");
+    send(player2, "Le jeu commence - attente joueur 1");
 }
 
-/* ---------- trouver la partie d’un joueur ---------- */
 
 function findGame(socket) {
-  return games.find(game =>
-    game.players.includes(socket)
-  );
+        return games.find(game =>
+        game.players.includes(socket)
+    );
 }
-
-/* ---------- fermer une partie ---------- */
 
 function closeGame(socket, message) {
-  const game = findGame(socket);
-  if (!game) return;
+    if (socket === waitingPlayer){
+        waitingPlayer = null;
+        send(socket, "bye bye");
+        return
+    }
+    const game = findGame(socket);
+    if (!game)
+        return;
 
-  const opponent = game.players.find(p => p !== socket);
+    const opponent = game.players.find(p => p !== socket);
 
-  send(socket, message);
-  send(opponent, "L'adversaire a quitté - victoire");
+    send(socket, message);
+    send(opponent, "L'adversaire a quitté - victoire");
 
-  games = games.filter(g => g !== game);
+    games = games.filter(g => g !== game);
 }
 
-/* ---------- handler principal ---------- */
 
 export function handletruc(data, socket) {
-    if (socket === waitingPlayer)
-        return ;
+    if (cooldowns.has(socket)) {
+        return;
+    }
 
-  if (data.mess === "reboot") {
-    reboot();
-    return;
-  }
+    cooldowns.set(socket, true);
 
-  if (data.mess === "je pars") {
-    closeGame(socket, "Tu as quitté la partie");
-    return;
-  }
+    setTimeout(() => {
+        cooldowns.delete(socket);
+    }, 300);
 
-  // Si le joueur est déjà dans une partie
-  const existingGame = findGame(socket);
-  if (existingGame) {
-    send(socket, "La partie est en cours...");
-    return;
-  }
+    if (data.mess === "reboot") {
+        reboot();
+        return;
+    }
 
-  // Sinon on gère l’attente
-  if (!waitingPlayer) {
-    waitingPlayer = socket;
-    send(socket, "En attente d’un second joueur...");
-  } else {
-    startGame(waitingPlayer, socket);
-    waitingPlayer = null;
-  }
+    if (data.mess === "je pars") {
+        closeGame(socket, "Tu as quitté la partie");
+        return;
+    }
+
+    const existingGame = findGame(socket);
+    if (existingGame) {
+        send(socket, "La partie est en cours...");
+        return;
+    }
+
+    if (!waitingPlayer) {
+        waitingPlayer = socket;
+        send(socket, "En attente d´un second joueur...");
+    }
+    else {
+        startGame(waitingPlayer, socket);
+        waitingPlayer = null;
+    }
+}
+
+export function handleTrucDisconnect(socket) {
+    console.log("Un joueur s'est déconnecté");
+    
+    if (waitingPlayer === socket) {
+        waitingPlayer = null;
+        return;
+    };
+
+    const game = findGame(socket);
+    if (!game) return;
+
+    const opponent = game.players.find(p => p !== socket);
+
+    send(opponent, "L'adversaire s'est déconnecté - victoire");
+
+    games = games.filter(g => g !== game);
 }

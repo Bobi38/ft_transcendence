@@ -1,7 +1,6 @@
 let sockets = [];
 let games = [];
-let nbGames = -1;
-let nbPlayers = -1;
+
 
 class clientOutError extends Error{
     constructor(message, index){
@@ -32,21 +31,18 @@ function reboot(){
     });
     sockets = [];
     games = [];
-    nbGames = -1;
-    nbPlayers = -1;
 }
 
 function startgame(){
+    let nbPlayers = sockets.length;
     try {
-        sendTruc(nbPlayers - 1, "ffff le jeu commence");
-        sendTruc(nbPlayers - 0, "ffff en attente mouvement player 1");
+        sendTruc(nbPlayers - 2, "ffff le jeu commence");
+        sendTruc(nbPlayers - 1, "ffff en attente mouvement player 1");
         games.push(Array(9).fill(" "));
-        games++;
         return 1;
     }
     catch (err){
         if (err instanceof(clientOutError)){
-            nbPlayers--;
             sockets.splice(err.index, 1);
         }
         else
@@ -64,12 +60,9 @@ function closeGame(index, mess){
     catch (err) {
         console.log(err.message)
     }
-    if (nbPlayers % 2 === 0){
+    if (sockets.length === 0){
         games.splice(index / 2, 1);
-        nbGames--;
-        nbPlayers--;
     }
-    nbPlayers--;
     sockets.splice(index < second ? index : second, 2);
 }
 
@@ -80,21 +73,14 @@ export function handletruc(data, socket){
 
     const index  = sockets.indexOf(socket);
     if (index === -1){
-        if (data.mess === "reboot") {
-            return ;
-    }
+
         sockets.push(socket);
-        nbPlayers++;
         
-        if (nbPlayers % 2 === 1 && startgame()){
+        if (sockets.length % 2 === 0 && startgame()){
             console.log("on a associe deux joueurs");
             return ;
         }
-        return sendTruc(nbPlayers - 1, "tttttt en attente second joueur");
-    }
-
-    if (data.mess === "reboot") {
-        return reboot();
+        return sendTruc(sockets.length - 1, "tttttt en attente second joueur");
     }
 
     if (data.mess === "je pars"){

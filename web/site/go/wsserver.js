@@ -2,7 +2,7 @@ import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from '../fct.js';
 import cookie from 'cookie' ;
-import { handletruc , handletrucDisconnect } from './handletruc.js'
+import { handletruc , handleTrucDisconnect } from './handletruc.js'
 
 
 function getCookie(name, cookieHeader) {
@@ -110,7 +110,7 @@ export function initWebSocket(server) {
     });
     
     socket.on("close", () => {
-      handleDisconnect(socket);
+      handleTrucDisconnect(socket);
     });
   });
 }
