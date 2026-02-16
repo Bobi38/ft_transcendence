@@ -38,7 +38,6 @@ export default function Log({setShowLog}) {
                 sessionStorage.setItem('message', "Connexion réussie");
                 sessionStorage.setItem('type', "success");
                 setShowLog(AUTH.NONE);
-                // Optionnel : navigate("/dashboard");
             } else {
                 showAlert("Erreur : " + result.message, "danger");
             }

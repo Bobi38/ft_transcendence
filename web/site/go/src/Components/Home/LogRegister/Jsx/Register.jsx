@@ -8,9 +8,6 @@ import { AUTH } from "../../Home.jsx"
 export default function Register({setShowLog}) {
 
     const navigate = useNavigate();
-    const form = document.getElementById('regist');
-
-    console.log("regist.js loaded");
 
     const retsubmit = async (event) => {
         event.preventDefault();
@@ -37,9 +34,9 @@ export default function Register({setShowLog}) {
             });
             
             const result = await reponse.json();
-            console.log("coucou");
+            
             if (result.success) {
-                // navigate("/");
+                setShowLog(AUTH.LOGIN);
             } else {
                 showAlert(result.message, 'danger');
             }
