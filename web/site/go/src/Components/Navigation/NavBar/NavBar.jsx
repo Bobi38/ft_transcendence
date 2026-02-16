@@ -19,7 +19,7 @@ export default function NavBar({ grid_style }) {
                         Oui
                     </Link>
                     
-                    <Link to="/contact" className="NavBar-button iconecolor">
+                    <Link to="/ContactUs" className="NavBar-button iconecolor">
                         Contact
                     </Link>
                 </div>

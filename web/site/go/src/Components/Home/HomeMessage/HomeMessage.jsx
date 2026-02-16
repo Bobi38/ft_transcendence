@@ -51,6 +51,7 @@ export default function HomeMessage({grid_style}) {
 
     useEffect(() => {
         (async () => {await fetchMsg();})();
+        
         console.log("use effect home message");
         console.log("nb co = " + SocketM.nb());
         if (SocketM.nb() === 0) {
