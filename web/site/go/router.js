@@ -20,6 +20,7 @@ import QRCode from 'qrcode';
 import {authenticator} from 'otplib';
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { TiMediaPlayReverse } from 'react-icons/ti';
 
 
 
@@ -53,43 +54,26 @@ async function checktok(tokenn) {
   }
 }
 
-// async function maj_conv(id, conv, namelst){
-//   const  tableau = [];
-
-//   for (let i = conv.length - 1; i >= 0; i--) {
-//     let name;
-//     let monMs; 
-//     if (conv[i].SenderId == id){
-//       name = "me";
-//       monMs = true;
-//     }
-//     else{
-//       const user = namelst.find(u => u.id === conv[i].SenderId);
-//       name = user ? user.name : "unknown";
-//       monMs = false;
-//     }
-//     tableau.push({monMsg: monMs, message: conv[i].contenu, login: name, timestamp: conv[i].time})
-//   }
-//   return tableau;
-// };
-
 function maj_conv(id, conv, namelst){
-  let  tableau = "";
+  const  tableau = [];
 
   for (let i = conv.length - 1; i >= 0; i--) {
-    // console.log("conv ", conv[i].contenu, " sender ", conv[i].SenderId);
-    // console.log("id ", id);
-    let name = "";
-    if (conv[i].SenderId == id)
+    let name;
+    let monMs; 
+    if (conv[i].SenderId == id){
       name = "me";
+      monMs = true;
+    }
     else{
       const user = namelst.find(u => u.id === conv[i].SenderId);
       name = user ? user.name : "unknown";
+      monMs = false;
     }
-    tableau += name + " " + conv[i].time + " : " + conv[i].contenu + "\n";
+    tableau.push({monMsg: monMs, message: conv[i].contenu, login: name, timer: conv[i].time})
   }
   return tableau;
 };
+
 
 
 router.use(async (req, res, next) => {
@@ -389,7 +373,7 @@ router.post('/addchat', async (req, res) => {
     const tok = req.cookies.token
     const id = jwt.verify(tok, secret);
     console.log (id.id, " " , chat.message);
-    await ChatG.create({contenu: chat.message, SenderId: id.id, time: new Date() });
+    await ChatG.create({contenu: chat.message, SenderId: id.id, time: chat.timer });
     console.log("buuuuug");
     // console.log('chat= ', chat);
     // const achat = await ChatG.findByPk(1);

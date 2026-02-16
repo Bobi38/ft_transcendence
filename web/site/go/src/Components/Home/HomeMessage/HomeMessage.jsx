@@ -12,7 +12,7 @@ export default function HomeMessage({grid_style}) {
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
     async function  fetchMsg(){
-        console.log("fetch message from db");
+        console.log("fetchMsg(1) called");
         try {
         const reponse = await fetch('/api/getchat', {
                 method: 'GET',
@@ -22,10 +22,16 @@ export default function HomeMessage({grid_style}) {
 
         const rep = await reponse.json();
         if (rep.success){
-            console.log("message get from db" , rep.message);
+            console.log("fetchMsg(2)" , rep.message);
+            //message 1
+
+            // rep.message.map((name, mess, index ) => (
+            //     <div key={index}>{name + " " + mess}</div>
+            // ))
+
             setDisplayedMessages(rep.message);
-        }
-        else{
+
+        }else{
             alerte("message get from db failed");
         }
         } catch (error) {
@@ -34,13 +40,13 @@ export default function HomeMessage({grid_style}) {
 
     }
 
-    async function addmess(){
-        console.log("add mess to db : " + input);
+    async function addmess(time){
+        console.log("addmess(): " + input);
         const reponse = await fetch('/api/addchat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: "include",
-                body: JSON.stringify({ message: input }),
+                body: JSON.stringify({ message: input, timer: time }),
             });
 
         const rep = await reponse.json();
@@ -52,19 +58,22 @@ export default function HomeMessage({grid_style}) {
     useEffect(() => {
         (async () => {await fetchMsg();})();
         
-        console.log("use effect home message");
-        console.log("nb co = " + SocketM.nb());
+        // console.log("use effect home message");
+        // console.log("nb co = " + SocketM.nb());
         if (SocketM.nb() === 0) {
             SocketM.connect();
         }
         const handleChat = (data) => {
-            console.log("Message reçu via SocketM.onChat:", data.message);
+            console.log("Message reçu via SocketM.onChat:", data);
             const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            setDisplayedMessages((prev) => [...prev, data.name + " " + time + ": " + data.mess + "\n"]);
+            //message 2 externe 
+
+            setDisplayedMessages((prev) => [...prev, data]);
+
         };
         SocketM.onChat(handleChat);
         return () => {
-            console.log("out of chat useEffect");
+            // console.log("out of chat useEffect");
             SocketM.offChat(handleChat);
         };
     }, []);
@@ -73,30 +82,52 @@ export default function HomeMessage({grid_style}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (input === "") return;
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        console.log("submit message : " + input);
-        setDisplayedMessages(prev => [...prev, "me " + time + " : " + input + "\n"]);
-        addmess();
-        const data = {type: "mess", mess: input};
-        console.log("data to send via WebSocket:", input);
-        SocketM.sendd(data);
+        console.log("handleSubmit(): " + input);
+        //message 2 moi
+
+        const data = {monMsg: true, type: "mess", message: input, timer: time};
+        setDisplayedMessages(prev => [...prev, data]);
+        
+        const data2 = {...data, monMsg: false};
+        
+        addmess(time);
+        console.log("send via WebSocket data2:", data2);
+        SocketM.sendd(data2);
         setInput(""); 
     };
     
 
     return (
         <>
-            <div className={`${grid_style} message center`}>
+            <div className={`${grid_style} HomeMessage-box`}>
 
-                    {/* <div className="display-message ">
-                        {displayedMessages.map((msg, index) => (
-                            <div key={index}>{msg}</div>
-                        ))}
-                    </div> */}
+                    <div className="HomeMessage-message">
+                        <h3>Chat</h3>
 
-                    <div style={{ whiteSpace: "pre-line" }}>
-                    {displayedMessages}
+                    {displayedMessages.map((msg, index) => (
+                        <div  key={index} className={msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}>
+
+                            {msg.monMsg ? (
+                                <>
+                                    <span>{msg.timer}</span>
+                                    <p>{msg.message}</p>
+                                </>
+                            ) : (
+                                <>
+                                    <strong>{msg.login}</strong><span> {msg.timer}</span>
+                                    <p>{msg.message}</p>
+                                </>
+                            )}
+
+                        </div>
+                    ))}
+
                     </div>
+
+
+
                     <form id="HomeMessageform" onSubmit={handleSubmit}>
                         <input
                             type="text"
