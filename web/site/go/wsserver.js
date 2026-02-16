@@ -85,7 +85,8 @@ export function initWebSocket(server) {
             if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
                 console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
                 // session.socket.send(JSON.stringify({type: "message", id: userid, mess: "JE SUIS LE SERVER " + data.mess + " from " + userid }));
-                session.socket.send(JSON.stringify({type: 'message', senderid: nono, mess: data.mess, name: ni}));
+                
+                session.socket.send(JSON.stringify({type: 'message',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
             }
           }
         }
