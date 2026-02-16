@@ -28,6 +28,10 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  password_2FA: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+  },
   win: {
     type: DataTypes.INTEGER,
     defaultValue: 0,

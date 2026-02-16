@@ -20,6 +20,8 @@ export default function App() {
 
           {/* Navigation/page/{sreen} */}
           <Route path="/ContactUs" element={<Navigation screen="ContactUs"/>} />
+          <Route path="/WaitRoom" element={<Navigation screen="WaitRoom"/>} />
+          <Route path="/Qrcode" element={<Navigation screen="Qrcode"/>} />
           <Route path="/Morpion" element={<Navigation screen="Morpion"/>} />
           <Route path="/Nothing" element={<Navigation screen="Nothing"/>} />
           <Route path="/Profile" element={<Navigation screen="Profile"/>} />
