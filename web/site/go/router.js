@@ -18,6 +18,8 @@ import session from 'express-session';
 import QRCode from 'qrcode';
 
 import {authenticator} from 'otplib';
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 
 
@@ -29,7 +31,7 @@ router.use(coockieParser());
 // const secret = location.address;
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 const secret_chat = fs.readFileSync('/run/secrets/cle_chat', 'utf-8').trim();
-const secret__tok_2fa = "toto";
+const secret_tok_2fa = "toto";
 
 
 async function checktok(tokenn) {
@@ -107,7 +109,7 @@ router.use(async (req, res, next) => {
     return res.status(401).json({ success: false, redirect: true});
   }
 
-  // console.log("token valid");
+  console.log("token valid");
   next();                  
 });
 
@@ -118,21 +120,62 @@ function CheckName(req, res, next){
   next();
 }
 
-router.get('/qrimage', async(req, res) => {
+router.get('/sendmail', async (req, res) => {
   try{
+    console.log("JE SUIS DEDANS");
+    const code = crypto.randomInt(100000, 999999).toString();
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "noreply.transc@gmail.com",
+        pass: "ykxu xqcc hokp zkfg"
+      }});
+    await transporter.sendMail({
+        from: "noreply.transc@gmail.com",
+        to: "voisin.titou@gmail.com",
+        subject: "Votre code de connexion",
+        text: `Votre code est : ${code}`
+      });
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
-    const result = await User.findAll({ where: { id: decoded.id } });
-    const secret_qr = authenticator.generateSecret();
-    const otpauth = authenticator.keyuri(decoded.id, 'Try 2FA', secret_qr);
-    const image = await QRCode.toDataURL(otpauth);
-    console.log("otpauth ", otpauth);
-    res.status(201).json({success: true, message: image});
+    const result = await User.findOne({ where: { id: decoded.id } });
+    await result.update({password_2FA: code});
+    return res.status(201).json({success: true, message: "message send"});
+  }catch(err){
+    return res.status(500).json({success:false, message: "error" + err})
   }
-  catch(err){
-  res.status(500).json({success: false, message: err});
+})
+
+router.post("/verifCode" , async (req, res) => {
+  try{
+    const {code} = body.req;
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    if (code === result.password_2FA)
+      return res.status(201).json({success: true, message:"good"})
+    else
+      return res.status(500).json({success: true, message:"wrong"})
+  }catch(err){
+    return res.status(500).json({success: false, message: err});
   }
-});
+})
+
+// router.get('/qrimage', async(req, res) => {
+//   try{
+//     const token = req.cookies.token;
+//     const decoded = jwt.verify(token, secret);
+//     const result = await User.findAll({ where: { id: decoded.id } });
+//     const secret_qr = authenticator.generateSecret();
+//     const otpauth = authenticator.keyuri(decoded.id, 'Try 2FA', secret_qr);
+//     const image = await QRCode.toDataURL(otpauth);
+//     console.log("otpauth ", otpauth);
+//     res.status(201).json({success: true, message: image});
+//   }
+//   catch(err){
+//   res.status(500).json({success: false, message: err});
+//   }
+// });
 
 // router.post('/valide2FA', async(req,res) => {
 //   try{
@@ -437,7 +480,7 @@ router.get('/github/callback', async (req, res) => {
     body: params,
   });
 
-  res.status(201).json({ success: true, message: 'Bienvenue copain' });
+  // res.status(201).json({ success: true, message: 'Bienvenue copain' });
   const data = await response.json();
   const accessToken = data.access_token;
   console.log("GitHub access token:", accessToken);
