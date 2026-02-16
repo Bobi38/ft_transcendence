@@ -148,10 +148,14 @@ router.get('/sendmail', async (req, res) => {
 
 router.post("/verifCode" , async (req, res) => {
   try{
-    const {code} = body.req;
+    console.log("coucou")
+    const {code} = req.body;
+    console.log("je suis dans verif")
+    console.log(code);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
+    console.log(result.password_2FA)
     if (code === result.password_2FA)
       return res.status(201).json({success: true, message:"good"})
     else

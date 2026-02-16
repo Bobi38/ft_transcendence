@@ -53,12 +53,16 @@ export default function Qrcode() {
     const formData = new FormData(e.target);
     const code = formData.get("code");
 
+    // const data ={
+    //   code: cod
+    // }
+
     try{
       const rep = await fetch("/api/verifCode", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: code,
+        body: JSON.stringify({code}),
       })
 
       const repp = await rep.json();
