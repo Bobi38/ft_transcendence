@@ -23,11 +23,6 @@ export default function HomeMessage({grid_style}) {
         const rep = await reponse.json();
         if (rep.success){
             console.log("fetchMsg(2)" , rep.message);
-            //message 1
-
-            // rep.message.map((name, mess, index ) => (
-            //     <div key={index}>{name + " " + mess}</div>
-            // ))
 
             setDisplayedMessages(rep.message);
 
@@ -65,7 +60,7 @@ export default function HomeMessage({grid_style}) {
         }
         const handleChat = (data) => {
             console.log("Message reçu via SocketM.onChat:", data);
-            const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            // const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
             //message 2 externe 
 
             setDisplayedMessages((prev) => [...prev, data]);
@@ -106,7 +101,8 @@ export default function HomeMessage({grid_style}) {
                     <div className="HomeMessage-message">
                         <h3>Chat</h3>
 
-                    {displayedMessages.map((msg, index) => (
+                    {displayedMessages && displayedMessages.map((msg, index) => (
+                        
                         <div  key={index} className={msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}>
 
                             {msg.monMsg ? (
