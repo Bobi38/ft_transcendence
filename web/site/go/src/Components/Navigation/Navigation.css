@@ -1,4 +1,7 @@
 .Navigation-root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     padding: 1rem;   
 }
 
@@ -14,36 +17,10 @@
 
 
 .Navigation-renderScreenNav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex: 1; /* prend tout l'espace restant */
 }
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.bgwhite{
-    background: white;
-}

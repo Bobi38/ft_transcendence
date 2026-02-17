@@ -11,6 +11,7 @@ import Nothing from "./Page/Nothing/Nothing.jsx";
 import Profile from "./Page/Profile/Profile.jsx";
 import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
+import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
     
 export default function Navigation({ screen }) {
 
@@ -27,6 +28,8 @@ export default function Navigation({ screen }) {
                 return <Morpion/>;
             case 'Profile':
                 return <Profile/>;
+            case 'PrivateMessage':
+                return <PrivateMessage/>;
             case 'Stats':
                 return <Stats/>;
             case 'WaitRoom':
@@ -40,7 +43,7 @@ export default function Navigation({ screen }) {
     return (
         <>
 
-            <div className="full Navigation-root">
+            <div className="Navigation-root">
 
                 <NavBar grid_style="Navigation-nav"/>
                 

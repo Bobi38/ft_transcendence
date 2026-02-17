@@ -1,0 +1,19 @@
+.PrivateMessage-bg{
+    background: blueviolet;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    
+}
+
+
+.PrivateMessage-flex {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+}
+
+.PrivateMessage-info {
+    border-right: 1.5px solid black;
+    width: 20%;
+    padding: 0.25rem;
+}
