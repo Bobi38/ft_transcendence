@@ -246,6 +246,24 @@ router.post('/updateProfil', async(req, res) => {
   }
 });
 
+router.post('/majPass', async(req,res) => {
+  try{
+    const data = req.body;
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    console.log("data pass= ", data.Pass);
+    if (data.Pass){
+      const CrypPass = await bcrypt.hash(data.Pass, 10);
+      await result.update({password: CrypPass});
+      return res.status(201).json({success: true, message: "goog"});
+    }
+    return res.status(500).json({success: false, message: "password empty"});
+  }catch(err){
+    res.status(500).json({success: false, message: "error majpass ", err});
+  }
+})
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 

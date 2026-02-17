@@ -25,6 +25,41 @@ export default function Profile() {
         location: ""
     });
 
+    const handlePass = async (e) => {
+        e.preventDefault();
+        const password = e.target.password.value.trim();
+        const confirmepassword = e.target.confirmepassword.value.trim();
+
+        if (!password || !confirmepassword) {
+            showAlert("Veuillez remplir tous les champs", "danger");
+            return;
+        }
+
+        if (password !== confirmepassword) {
+            showAlert("Les mots de passe ne correspondent pas", "danger");
+            return;
+        }
+
+        const data ={
+            Pass: password,
+        }
+        try{
+            const rep = await fetch("/api/majPass", {
+                method: "POST",
+                headers : {"Content-Type" : "application/json",},
+                credentials: "include",
+                body: JSON.stringify(data)
+            });
+
+            const repp = await rep.json();
+            if (repp.success)
+                showAlert("Mot de passe mis à jour avec succès", "success");
+            else
+                console.log ("err passmaj" , repp.message);
+        }catch(err){
+            console.log(err);
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,7 +85,7 @@ export default function Profile() {
             });
             const repjson = await rep.json();
             if (repjson.success){
-                console.log("Profile updated successfully");
+                showAlert("Profil mis à jour avec succès", "success");
             }else{
                 console.error("Error updating profile:", repjson.message);
             }
@@ -117,7 +152,7 @@ export default function Profile() {
                         <input  type="text"
                                 id="login"
                                 name="login"
-                                value={user.login}
+                                value={user.login ?? ""}
                                 readOnly={isReadOnly}
                                 onChange={(e) => setUser({ ...user, login: e.target.value }) }
                                 /> 
@@ -126,7 +161,7 @@ export default function Profile() {
                         <input  type="text"
                                 id="login42"
                                 name="login42"
-                                value={user.login42}
+                                value={user.login42 ?? ""}
                                 readOnly={isReadOnly}
                                 onChange={(e) => setUser({ ...user, login42: e.target.value }) }
                                 /> 
@@ -146,7 +181,7 @@ export default function Profile() {
                         <input  type="tel"
                                 id="tel"
                                 name="tel"
-                                value={user.tel}
+                                value={user.tel ?? ""}
                                 readOnly={isReadOnly}
                                 onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                                 /> 
@@ -167,9 +202,7 @@ export default function Profile() {
                     
                     <div className={showFormPassword? "visible" : "hidden"}>
 
-                        <form className="Profile-form" onSubmit={(e) => {
-                            e.preventDefault();
-                        }}>
+                        <form className="Profile-form" onSubmit={handlePass}>
 
                             <label htmlFor="password">Nouveau Mot de passe</label>
                             <div className="Profile-password">
