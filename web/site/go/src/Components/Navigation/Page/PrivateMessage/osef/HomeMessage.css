@@ -1,0 +1,57 @@
+.HomeMessage-box{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.HomeMessage-message {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden auto;
+  scrollbar-width: thin;
+  width: 100%;
+}
+
+.HomeMessage-message-me {
+  text-align: right;
+}
+
+.HomeMessage-message-other{
+  text-align: left;
+}
+
+
+
+.HomeMessage-message-other p,
+.HomeMessage-message-me p {
+  overflow-wrap: anywhere;
+}
+
+
+.HomeMessage-message div {
+  margin-top: 0.5rem;
+  border-radius: 3px;
+
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  background-color: rgb(89, 189, 189);
+}
+
+.HomeMessage-message div:hover {
+  background-color: rgb(79, 179, 179);
+}
+
+
+
+form {
+  width: 100%;
+  margin: 0rem;
+  padding: 0rem;
+  margin-top: 0.5rem;
+  gap: 5px;
+  height: 50px;
+
+  display: flex;
+  flex-direction: column;
+}

@@ -23,6 +23,7 @@ export default function App() {
             <Route path="/Nothing" element={<Navigation screen="Nothing"/>} />
             <Route path="/Profile" element={<Navigation screen="Profile"/>} />
             <Route path="/Stats" element={<Navigation screen="Stats"/>} />
+            <Route path="/PrivateMessage" element={<Navigation screen="PrivateMessage"/>} />
             <Route path="/*" element={<Navigation screen="ErrorRedir"/>} />
 
 
