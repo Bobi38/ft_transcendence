@@ -25,12 +25,35 @@ export const AUTH = {
 export default function Home(){
 
     const [showLog, setShowLog] = useState(AUTH.NONE);
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
     
+
+    const fetchUserData = async () => {
+
+        console.log("fetchUserData(1) called");
+        try {
+            const rep = await fetch("/api/user/profile");
+            const repjson = await rep.json();
+            if (repjson.success){
+                
+                console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
+                setUser(repjson.message);
+
+            }else{
+
+                console.error("fetchUserData(3) Error:", repjson.message);
+            
+            }
+        } catch (error) {
+            console.error("fetchUserData(4) Error", error);
+        }
+
+    };
+
     useEffect(() => {
 
         const home_root = document.getElementById("home_root");
-
         if (!home_root) return;
 
         const handler = async (event) => {
@@ -38,36 +61,24 @@ export default function Home(){
             if (event.target.closest('.LogRegister-flex1')) {
                 return;
             }
-
             event.preventDefault();
-
             const resCo = await checkCo();
-
             if (!resCo) {
                 setShowLog(AUTH.LOGIN);
-
             } else {
-            
-                // console.log(event.target)
-
                 const link = event.target.closest("a");
                 if (link){
                     navigate(link.pathname);
                     return
-                } 
-
+                }
                 if (event.target.id === "HomeMessagesubmit"){
-                    // console.log(event.target.id);
-
                     const form = event.target.form
                     if (form) {
-                        // console.log(form);
                         form.requestSubmit();
                     }
                     return
                 }
             }
-
         };
 
         home_root.addEventListener("click", handler);
@@ -96,7 +107,7 @@ export default function Home(){
                     <HomeIcone      grid_style={`Home-div2 ${home_css}`}
                                     arg="/Intra"
                                     text="Intra"
-                                    link="https://meta.intra.42.fr/clusters"/>
+                                    link={`https://profile.intra.42.fr/users/${user.login42}`}/>
 
                     <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/WaitRoom"

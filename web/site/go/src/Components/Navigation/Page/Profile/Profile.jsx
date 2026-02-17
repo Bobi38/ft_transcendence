@@ -33,8 +33,8 @@ export default function Profile() {
             const repjson = await rep.json();
             if (repjson.success){
                 
-                console.log("fetchUserData(2) User data fetched successfully:", repjson);
-                setUser(repjson);
+                console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
+                setUser(repjson.message);
 
             }else{
 
