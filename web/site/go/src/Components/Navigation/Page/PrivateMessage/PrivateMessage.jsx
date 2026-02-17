@@ -7,6 +7,12 @@ import { useEffect, useState } from "react";
 export default function PrivateMessage() { 
     
     
+    const [displayedMessages, setDisplayedMessages] = useState([
+        {login: "test1"},
+        {login: "test2"},
+        {login: "test3"},
+    ]);
+
     async function  fetchMsg(){
         console.log("fetchMsg(1) called");
         try {
@@ -40,7 +46,32 @@ export default function PrivateMessage() {
         <>
             <div className="full PrivateMessage-flex PrivateMessage-bg">
 
-                <div className="full PrivateMessage-info">info</div>
+                <div className="full PrivateMessage-info">
+                    <div>
+                        <button>Amis</button>
+                        <div className="PrivateMessage-border-bottom"></div>
+                        <button>Ajouter un Amis</button>
+                        <div className="PrivateMessage-border-bottom fullw"></div>
+                    </div>
+
+                    <div>
+                        {displayedMessages && displayedMessages.map((msg, index) => (
+                            <>
+                                <div key={index} className={``}>
+                                    <h4>{msg.login}</h4>
+                                </div>
+                                <div className="PrivateMessage-border-bottom"></div>
+                            </>
+                        ))}
+                    </div>
+                </div>
+
+
+                <div className="PrivateMessage-border-left">
+
+                </div>
+
+
                 <div className="full">display</div>
 
             </div>

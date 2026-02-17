@@ -12,12 +12,23 @@ import Profile from "./Page/Profile/Profile.jsx";
 import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
 import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
+import checkCo from "../../../../fct1.js"
+import { useNavigate } from "react-router-dom";
     
 export default function Navigation({ screen }) {
 
+    const navigate = useNavigate();
+
     const renderScreenNav = () => {
-        
-        console.log("rendering screen nav with screen: ", screen);
+
+        const titi = async () => {
+            const res = await checkCo();
+            if (!res){
+                navigate('/');
+            }
+        };
+
+        titi();
 
         switch(screen) {
             case 'ContactUs':
