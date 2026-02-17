@@ -2,13 +2,10 @@
 import "../LogRegister.css";
 
 import { showAlert } from "../../../../../../fct1";
-import { useNavigate } from "react-router-dom";
 import { AUTH } from "../../Home.jsx"
 import { FaGithub } from "react-icons/fa";
 
 export default function Log({setShowLog}) {
-
-    const navigate = useNavigate();
 
     const logsub = async (event) => {
         
@@ -37,7 +34,12 @@ export default function Log({setShowLog}) {
                 sessionStorage.setItem('token', result.tooken);
                 sessionStorage.setItem('message', "Connexion réussie");
                 sessionStorage.setItem('type', "success");
-                setShowLog(AUTH.NONE);
+
+
+                // setShowLog(AUTH.QRCODE); // change to qrcode
+                setShowLog(AUTH.NONE); // change to qrcode
+
+                
             } else {
                 showAlert("Erreur : " + result.message, "danger");
             }

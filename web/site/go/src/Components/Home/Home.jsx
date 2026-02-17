@@ -18,8 +18,8 @@ import { useNavigate } from "react-router-dom";
 export const AUTH = {
     NONE: 0,
     LOGIN: 1,
-    REGISTER: 2,
-    LOGOUT: 3,
+    QRCODE: 2,
+    REGISTER: 3,
 };
 
 export default function Home(){
@@ -75,8 +75,7 @@ export default function Home(){
 
     }, []);
 
-    // const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
-    const home_login = "visible";
+    const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
     const home_css = "Home-iconedisplay Home-iconemargin iconecolor";
 
     return (
@@ -85,8 +84,9 @@ export default function Home(){
                 
                 <div id="home-login" className={`Home-pos full ${home_login}`} >
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
+                    {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
-                    <Qrcode setShowLog={setShowLog} />
+                    
                 </div>
                 <>
                     <HomeIcone      grid_style={`Home-div1 ${home_css}`}

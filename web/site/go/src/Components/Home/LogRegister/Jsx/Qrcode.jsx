@@ -62,6 +62,7 @@ export default function Qrcode({setShowLog}) {
       if (repjson.success){
 
         console.log("veryfCode(3) 2FA successfully verified");
+        setShowLog(AUTH.NONE); 
       
       } else {
 
