@@ -20,18 +20,31 @@ export default function Profile() {
         firstName: "florent",
         lastName: "cretin",
         email: "florent.cretin@hotmail.fr",
+        location: "Lyon",
         tel: "0778800814"
     });
 
 
     const fetchUserData = async () => {
+
+        console.log("fetchUserData(1) called");
         try {
-            const response = await fetch("/api/user/profile");
-            const data = await response.json();
-            setUser(data);
+            const rep = await fetch("/api/user/profile");
+            const repjson = await rep.json();
+            if (repjson.success){
+                
+                console.log("fetchUserData(2) User data fetched successfully:", repjson);
+                setUser(repjson);
+
+            }else{
+
+                console.error("fetchUserData(3) Error:", repjson.message);
+            
+            }
         } catch (error) {
-            console.error("Error fetching user data:", error);
+            console.error("fetchUserData(4) Error", error);
         }
+
     };
 
     useEffect(() => {
@@ -98,7 +111,17 @@ export default function Profile() {
                                 onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                                 /> 
 
+                        <label htmlFor="location">Location</label> 
+                        <input  type="text"
+                                id="location"
+                                name="location"
+                                value={user.location}
+                                readOnly={isReadOnly}
+                                onChange={(e) => setUser({ ...user, location: e.target.value }) }
+                                />
+
                         <button type="submit">Modifier mes informations</button>
+                        
                     </form>
 
 

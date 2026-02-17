@@ -69,8 +69,8 @@ export default function Qrcode({setShowLog}) {
         console.log("veryfCode(4) 2FA failed:", repjson.message);
       
       }
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      console.log("veryfCode(4) 2FA failed:", error);
     }
   }
 
@@ -93,7 +93,7 @@ export default function Qrcode({setShowLog}) {
                         <input type="text" id="code" name="code" placeholder="Entrez Code"/>
 
                         <button type="submit" className="iconecolor negativ">Valider</button>
-                        <button type="button" className="iconecolor negativ" onClick={sendmail} >Renvoyer un mail de verification</button>
+                        <button type="button" className="iconecolor negativ" onClick={sendmail}>Renvoyer un mail de verification</button>
                       </form>
                     
                     )}
