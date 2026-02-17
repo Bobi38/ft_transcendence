@@ -11,7 +11,8 @@ export default function ContactIcone({
     name = "default", 
     git = { url: "https://github.com", name: "ton nom de compte ta vu" },
     linkedin = { url: "https://www.linkedin.com/", name: "ton prenom nom"  }, 
-    intraUrl  = "https://profile.intra.42.fr/users/fcretin"
+    intraUrl  = "https://profile.intra.42.fr/users/fcretin",
+    image = "https://sevetys.fr/_next/image/?url=https%3A%2F%2Fcharming-angel-5ca83bf286.media.strapiapp.com%2FChat_europeen_573af6e71d.webp&w=3840&q=75"
 }) {
 
 
@@ -28,7 +29,7 @@ export default function ContactIcone({
                 <div className="ContactIcone-root">
 
                     <div className="ContactIcone-div1">
-                        <img src={`https://sevetys.fr/_next/image/?url=https%3A%2F%2Fcharming-angel-5ca83bf286.media.strapiapp.com%2FChat_europeen_573af6e71d.webp&w=3840&q=75`}
+                        <img src={`${image}`}
                             alt={`${name}'s avatar`} 
                             width="275" height="275"
                             />

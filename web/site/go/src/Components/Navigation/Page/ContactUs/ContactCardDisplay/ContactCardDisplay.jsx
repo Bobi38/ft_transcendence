@@ -17,6 +17,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             git={undefined}
                             linkedin={undefined}
                             intraUrl={undefined}
+                            image={undefined}
                             />
 
                             
@@ -25,6 +26,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             git={undefined}
                             linkedin={undefined}
                             intraUrl={undefined}
+                            image={undefined}
                             />
 
                             
@@ -33,6 +35,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             git={{ url: "https://github.com/Lzozoflo", name: "LzozoFlo" }}
                             linkedin={{ url: "https://www.linkedin.com/in/florent-cretin-8b5b9021a/", name: "Florent Cretin"  }} 
                             intraUrl={"https://profile.intra.42.fr/users/fcretin"}
+                            image="https://cdn.discordapp.com/avatars/229667943187873792/2e59c0303f5fd3dbfed52d3695dccab2.webp?size=160"
                             />
 
                             
@@ -41,6 +44,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             git={undefined}
                             linkedin={undefined}
                             intraUrl={undefined}
+                            image={undefined}
                             />
 
                             
@@ -49,6 +53,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             git={undefined}
                             linkedin={undefined}
                             intraUrl={undefined}
+                            image={undefined}
                             />
 
             </div>
