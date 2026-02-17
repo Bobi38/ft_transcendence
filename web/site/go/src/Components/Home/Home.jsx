@@ -25,31 +25,31 @@ export const AUTH = {
 export default function Home(){
 
     const [showLog, setShowLog] = useState(AUTH.NONE);
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
     const navigate = useNavigate();
     
 
-    const fetchUserData = async () => {
+    // const fetchUserData = async () => {
 
-        console.log("fetchUserData(1) called");
-        try {
-            const rep = await fetch("/api/user/profile");
-            const repjson = await rep.json();
-            if (repjson.success){
+    //     console.log("fetchUserData(1) called");
+    //     try {
+    //         const rep = await fetch("/api/user/profile");
+    //         const repjson = await rep.json();
+    //         if (repjson.success){
                 
-                console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
-                setUser(repjson.message);
+    //             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
+    //             setUser(repjson.message);
 
-            }else{
+    //         }else{
 
-                console.error("fetchUserData(3) Error:", repjson.message);
+    //             console.error("fetchUserData(3) Error:", repjson.message);
             
-            }
-        } catch (error) {
-            console.error("fetchUserData(4) Error", error);
-        }
+    //         }
+    //     } catch (error) {
+    //         console.error("fetchUserData(4) Error", error);
+    //     }
 
-    };
+    // };
 
     useEffect(() => {
 
@@ -107,7 +107,8 @@ export default function Home(){
                     <HomeIcone      grid_style={`Home-div2 ${home_css}`}
                                     arg="/Intra"
                                     text="Intra"
-                                    link={`https://profile.intra.42.fr/users/${user.login42}`}/>
+                                    // link={`https://profile.intra.42.fr/users/${user.login42}`}/>
+                                    link={`https://profile.intra.42.fr`}/>
 
                     <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/WaitRoom"
