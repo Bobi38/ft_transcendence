@@ -46,6 +46,7 @@ export default function AddressAutocomplete({value}) {
             key={item.properties.id}
             onClick={() => handleSelect(item.properties.label)}
             style={{ cursor: "pointer" }}
+            className="AddressAutocomplete-list-item"
           >
             {item.properties.label}
           </li>
