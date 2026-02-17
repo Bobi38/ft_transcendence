@@ -11,12 +11,24 @@ import Nothing from "./Page/Nothing/Nothing.jsx";
 import Profile from "./Page/Profile/Profile.jsx";
 import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
+import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
+import checkCo from "../../../../fct1.js"
+import { useNavigate } from "react-router-dom";
     
 export default function Navigation({ screen }) {
 
+    const navigate = useNavigate();
+
     const renderScreenNav = () => {
-        
-        console.log("rendering screen nav with screen: ", screen);
+
+        const titi = async () => {
+            const res = await checkCo();
+            if (!res){
+                navigate('/');
+            }
+        };
+
+        titi();
 
         switch(screen) {
             case 'ContactUs':
@@ -27,6 +39,8 @@ export default function Navigation({ screen }) {
                 return <Morpion/>;
             case 'Profile':
                 return <Profile/>;
+            case 'PrivateMessage':
+                return <PrivateMessage/>;
             case 'Stats':
                 return <Stats/>;
             case 'WaitRoom':
@@ -40,7 +54,7 @@ export default function Navigation({ screen }) {
     return (
         <>
 
-            <div className="full Navigation-root">
+            <div className="Navigation-root">
 
                 <NavBar grid_style="Navigation-nav"/>
                 
