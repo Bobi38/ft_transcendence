@@ -104,8 +104,8 @@ export default function Home(){
                 <>
 
                     <HomeIcone      grid_style={`Home-div4 ${home_css}`}
-                                    arg="/Qrcode"
-                                    text="Qrcode"
+                                    arg="/Stats"
+                                    text="Stats"
                                     />
 
                     <HomeIcone      grid_style={`Home-div5 ${home_css}`}
@@ -123,7 +123,8 @@ export default function Home(){
 
                 <>
                     <HomeIcone      grid_style={`Home-div7 ${home_css}`}
-                                    arg="/Nothing"
+                                    arg="/Qrcode"
+                                    text="Qrcode"
                                     />
 
                     <HomeIcone      grid_style={`Home-div8 ${home_css}`}
