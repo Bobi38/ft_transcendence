@@ -46,7 +46,14 @@
 #login button, 
 #login select, 
 #login textarea, 
-#login a.iconecolor
+#login a.iconecolor,
+
+#qrcode input, 
+#qrcode button, 
+#qrcode select, 
+#qrcode textarea, 
+#qrcode a.iconecolor,
+#mailverif
 {
     margin: 0rem 0.5rem;
     font-size: inherit;

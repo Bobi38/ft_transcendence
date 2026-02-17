@@ -12,6 +12,7 @@ export default function Qrcode({setShowLog}) {
     const [showCodeInput, setShowCodeInput] = useState(false);
       
     const sendmail = async () => {
+
         console.log("sendmail(1) called");
         try {
           const rep = await fetch("/api/sendmail", {
@@ -76,21 +77,22 @@ export default function Qrcode({setShowLog}) {
       <>
             <main className="full LogRegister-flex1 LogRegister-bglow">
 
-                <div className="LogRegister-div1 iconecolor">
+                <div className="LogRegister-div1 iconecolor center">
 
-
-                    <button type="button" onClick={sendmail}>
-                      Envoyer mail verification
-                    </button>
+                    {!showCodeInput && (
+                      <button type="button" id="mailverif" className="iconecolor negativ center" onClick={sendmail}>
+                        Envoyer mail de verification
+                      </button>
+                    )}
 
                     {showCodeInput && (
 
-                      <form className="full LogRegister-flex2 center" onSubmit={veryfCode}>
+                      <form id="qrcode" className="full LogRegister-flex2 center" onSubmit={veryfCode}>
                         
                         <input type="text" id="code" name="code" placeholder="Entrez Code"/>
 
                         <button type="submit" className="iconecolor negativ">Valider</button>
-
+                        <button type="button" className="iconecolor negativ" onClick={sendmail} >Renvoyer un mail de verification</button>
                       </form>
                     
                     )}
