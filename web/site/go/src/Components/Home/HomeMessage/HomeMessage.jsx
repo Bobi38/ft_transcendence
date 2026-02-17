@@ -5,6 +5,7 @@ import "./HomeMessage.css";
 /* Components */
 import { useEffect, useState } from "react";
 import {SocketM} from '../../../../SocketManag.js';
+import checkCo from "../../../../../fct1.js";
 
 export default function HomeMessage({grid_style}) {
     
@@ -50,29 +51,68 @@ export default function HomeMessage({grid_style}) {
         }
     }
 
-    useEffect(() => {
-        (async () => {await fetchMsg();})();
+    // useEffect(() => {
+    //     (async () => {const toto = await checkCo();
+    //         console.log("checkCo() in HomeMessage useEffect:", toto);
+    //         if (!toto) {
+    //             console.log("User not connected, redirecting to home page");
+    //             return;
+    //         }
+    //     })();
+    //     (async () => {await fetchMsg();})();
         
-        // console.log("use effect home message");
-        // console.log("nb co = " + SocketM.nb());
+    //     // console.log("use effect home message");
+    //     // console.log("nb co = " + SocketM.nb());
+    //     if (SocketM.nb() === 0) {
+    //         SocketM.connect();
+    //     }
+    //     const handleChat = (data) => {
+    //         console.log("Message reçu via SocketM.onChat:", data);
+    //         // const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    //         //message 2 externe 
+
+    //         setDisplayedMessages((prev) => [...prev, data]);
+
+    //     };
+    //     SocketM.onChat(handleChat);
+    //     return () => {
+    //         // console.log("out of chat useEffect");
+    //         SocketM.offChat(handleChat);
+    //     };
+    // }, []);
+    
+    useEffect(() => {
+    const init = async () => {
+        const toto = await checkCo();
+        console.log("checkCo() in HomeMessage useEffect:", toto);
+
+        if (!toto) {
+            console.log("User not connected, aborting useEffect");
+            return;
+        }
+
+        await fetchMsg();
+
         if (SocketM.nb() === 0) {
             SocketM.connect();
         }
+
         const handleChat = (data) => {
             console.log("Message reçu via SocketM.onChat:", data);
-            // const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            //message 2 externe 
-
             setDisplayedMessages((prev) => [...prev, data]);
-
         };
+
         SocketM.onChat(handleChat);
+
         return () => {
-            // console.log("out of chat useEffect");
             SocketM.offChat(handleChat);
         };
-    }, []);
-    
+    };
+
+    init();
+
+}, []);
+
     
 
     const handleSubmit = (e) => {

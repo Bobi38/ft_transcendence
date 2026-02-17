@@ -22,9 +22,11 @@ export default async function checkCo(){
 
         const rep = await response.json();
         if (rep.success){
+            console.log("User is connected");
             return true;
         }
         else{
+            console.log("User is not connected");
             return false;
         }
     }

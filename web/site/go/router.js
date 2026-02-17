@@ -21,7 +21,8 @@ import {authenticator} from 'otplib';
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { TiMediaPlayReverse } from 'react-icons/ti';
-
+import validator from 'validator';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -192,14 +193,56 @@ router.get('/checkco', async(req, res) =>{
   res.status(201).json({success:true, message: "good token and good co"});
 })
 
-router.get('/getprofile', async(req, res) =>{
+router.get('/profile', async(req, res) =>{
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
-    const result = await User.findAll({ where: { id: decoded.id } });
-    res.status(201).json({success: true, name: result[0].name, nbvic: result[0].win, nbplay: result[0].total_part});
+    const result = await User.findOne({ where: { id: decoded.id } });
+    const data ={
+      login: result.name,
+      login42: result.Log42,
+      email: result.mail,
+      tel: result.phoneNumber,
+      location: result.adress
+    }
+    res.status(201).json({success: true, message: data});
   }catch(err){
     res.status(501).json({success: false, message: 'Err mysql getname'});
+  }
+});
+
+router.post('/updateProfil', async(req, res) => {
+  try{
+    const user = req.body
+    console.log("dans update profil", user);
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    console.log(user.email)
+    if (validator.isEmail(user.email)){
+      console.log("email valid");
+      await result.update({mail: user.email})
+    }
+    if (isValidPhoneNumber(user.tel)){
+        console.log("phone number valid");
+      await result.update({phoneNumber: user.tel})
+    }
+    console.log()
+    if (user.login && user.login.length < 128){
+      console.log("login good");
+      await result.update({name: user.login})
+    }
+    if (user.login42 && user.login42.length < 128){
+      console.log("login42 valid");
+      await result.update({Log42: user.login42});
+    }
+    if (user.location && user.location.length < 256){
+      console.log("adress good");
+      await result.update({adress: user.location});
+    }
+    res.status(201).json({success: true, message: "good"})
+  }catch(err){
+    res.status(500).json({success: false, message: "error updateProfil " , err});
   }
 });
 

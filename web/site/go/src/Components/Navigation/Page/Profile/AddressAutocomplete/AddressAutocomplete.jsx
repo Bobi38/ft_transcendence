@@ -5,8 +5,8 @@ import "./AddressAutocomplete.css";
 import { useState } from "react";
 
     
-export default function AddressAutocomplete({value}) {
-  const [query, setQuery] = useState(value);
+export default function AddressAutocomplete({user, setUser}) {
+  const [query, setQuery] = useState(user.location);
   const [results, setResults] = useState([]);
 
   const handleChange = async (e) => {
@@ -25,6 +25,7 @@ export default function AddressAutocomplete({value}) {
   };
 
   const handleSelect = (address) => {
+    setUser({...user, location: address})
     setQuery(address);   // met la valeur dans l'input
     setResults([]);      // cache la liste
   };
