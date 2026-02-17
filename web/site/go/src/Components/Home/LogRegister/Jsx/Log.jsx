@@ -36,8 +36,8 @@ export default function Log({setShowLog}) {
                 sessionStorage.setItem('type', "success");
 
 
-                // setShowLog(AUTH.QRCODE); // change to qrcode
-                setShowLog(AUTH.NONE); // change to qrcode
+                setShowLog(AUTH.QRCODE); // change to qrcode
+                // setShowLog(AUTH.NONE); // change to qrcode
 
                 
             } else {

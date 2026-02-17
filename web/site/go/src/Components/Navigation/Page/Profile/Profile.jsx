@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { VscEdit } from "react-icons/vsc";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { Form } from "react-router-dom";
-
+import AddressAutocomplete from "./AddressAutocomplete/AddressAutocomplete.jsx";
 
 export default function Profile() {
     
@@ -17,11 +17,11 @@ export default function Profile() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [user, setUser] = useState({
-        firstName: "florent",
-        lastName: "cretin",
+        login: "florent cretin",
+        login42: "fcretin",
         email: "florent.cretin@hotmail.fr",
-        location: "Lyon",
-        tel: "0778800814"
+        tel: "0778800814",
+        location: "Lyon"
     });
 
 
@@ -72,23 +72,22 @@ export default function Profile() {
                         e.preventDefault();
                     }}>
 
-
-                        <label htmlFor="firstName">Prénom</label>
+                        <label htmlFor="login">Login</label>
                         <input  type="text"
-                                id="firstName"
-                                name="firstName"
-                                value={user.firstName}
+                                id="login"
+                                name="login"
+                                value={user.login}
                                 readOnly={isReadOnly}
-                                onChange={(e) => setUser({ ...user, firstName: e.target.value }) }
+                                onChange={(e) => setUser({ ...user, login: e.target.value }) }
                                 /> 
 
-                        <label htmlFor="lastName">Nom</label> 
+                        <label htmlFor="login42">Login-42</label>
                         <input  type="text"
-                                id="lastName"
-                                name="lastName"
-                                value={user.lastName}
+                                id="login42"
+                                name="login42"
+                                value={user.login42}
                                 readOnly={isReadOnly}
-                                onChange={(e) => setUser({ ...user, lastName: e.target.value }) }
+                                onChange={(e) => setUser({ ...user, login42: e.target.value }) }
                                 /> 
 
                         <label htmlFor="email" className="Profile-cant-change">Email<span >Can't be changed</span></label>
@@ -111,14 +110,8 @@ export default function Profile() {
                                 onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                                 /> 
 
-                        <label htmlFor="location">Location</label> 
-                        <input  type="text"
-                                id="location"
-                                name="location"
-                                value={user.location}
-                                readOnly={isReadOnly}
-                                onChange={(e) => setUser({ ...user, location: e.target.value }) }
-                                />
+                        <label htmlFor="location">Location</label>
+                        <AddressAutocomplete value={user.location}/>
 
                         <button type="submit">Modifier mes informations</button>
                         
