@@ -11,6 +11,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(128),
     allowNull: false,
   },
+  Log42: {
+    type: DataTypes.STRING(128),
+    allowNull: true,
+  },
   password: {
     type: DataTypes.STRING(128),
     allowNull: true,
@@ -19,6 +23,14 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(256),
     allowNull: false,
     unique: true,
+  },
+  adress: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
   },
   OAuth: {
     type: DataTypes.BOOLEAN,
@@ -30,6 +42,10 @@ const User = sequelize.define('User', {
   },
   password_2FA: {
     type: DataTypes.STRING(256),
+    allowNull: true,
+  },
+  password_2FA_time: {
+    type: DataTypes.TIME,
     allowNull: true,
   },
   win: {

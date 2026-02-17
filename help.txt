@@ -301,3 +301,11 @@ combien de pages
 si tu utilises déjà un store
 
 Je te dirai l’architecture la plus simple possible sans sur-ingénierie 😉
+
+id game
+id player 1
+id player 2
+type win = win/draw/abandon
+id winner
+how win = diag/h/v
+duree partie

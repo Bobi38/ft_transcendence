@@ -123,7 +123,7 @@ router.get('/sendmail', async (req, res) => {
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
-    await result.update({password_2FA: code});
+    await result.update({password_2FA: code, password_2FA_time: new Date(Date.now() + 60 * 1000)});
     return res.status(201).json({success: true, message: "message send"});
   }catch(err){
     return res.status(500).json({success:false, message: "error" + err})
@@ -140,8 +140,10 @@ router.post("/verifCode" , async (req, res) => {
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
     console.log(result.password_2FA)
-    if (code === result.password_2FA)
-      return res.status(201).json({success: true, message:"good"})
+    if (code && code === result.password_2FA && new Date() < result.password_2FA_time){
+      await result.update({password_2FA: null, password_2FA_time: null});
+      return res.status(201).json({success: true, message:"good"});
+    }
     else
       return res.status(500).json({success: true, message:"wrong"})
   }catch(err){
@@ -363,6 +365,7 @@ router.get('/getpriv', async (req, res) => {
     res.status(500).json({success: false, message: err});
   }
 })
+
 
 router.post('/addchat', async (req, res) => {
   try{
