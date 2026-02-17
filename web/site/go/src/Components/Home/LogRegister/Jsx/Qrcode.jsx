@@ -1,11 +1,13 @@
 /* Css */
-import "./Qrcode.css";
+import "../LogRegister.css";
 
 
 /* Components */
 import { useState } from "react";
+import { AUTH } from "../../Home.jsx"
+    
 
-export default function Qrcode() {
+export default function Qrcode({setShowLog}) {
   
     const [showCodeInput, setShowCodeInput] = useState(false);
       
@@ -70,22 +72,32 @@ export default function Qrcode() {
     }
   }
 
-  return (
-    <>
+    return (
+      <>
+            <main className="full LogRegister-flex1 LogRegister-bglow">
+
+                <div className="LogRegister-div1 iconecolor">
 
 
-      <button type="button" onClick={sendmail}>
-        Envoyer mail verification
-      </button>
+                    <button type="button" onClick={sendmail}>
+                      Envoyer mail verification
+                    </button>
 
-      {showCodeInput && (
+                    {showCodeInput && (
 
-        <form onSubmit={veryfCode}>
-          <input type= "text" placeholder="Entrez Code" name="code"/>
-          <button type="submit">Valider</button>
-        </form>
-      
-      )}
+                      <form className="full LogRegister-flex2 center" onSubmit={veryfCode}>
+                        
+                        <input type="text" id="code" name="code" placeholder="Entrez Code"/>
+
+                        <button type="submit" className="iconecolor negativ">Valider</button>
+
+                      </form>
+                    
+                    )}
+
+            </div>
+
+        </main>
     </>
   );
 }

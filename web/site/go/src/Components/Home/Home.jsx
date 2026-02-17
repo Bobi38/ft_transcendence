@@ -8,6 +8,7 @@ import HomeIcone from './HomeIcone/HomeIcone.jsx';
 import HomeArrow from './HomeArrow/HomeArrow.jsx';
 import Log from "./LogRegister/Jsx/Log.jsx"
 import Register from "./LogRegister/Jsx/Register.jsx"
+import Qrcode from "./LogRegister/Jsx/Qrcode.jsx"
 
 
 import checkCo from "../../../../fct1.js"
@@ -74,7 +75,8 @@ export default function Home(){
 
     }, []);
 
-    const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
+    // const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
+    const home_login = "visible";
     const home_css = "Home-iconedisplay Home-iconemargin iconecolor";
 
     return (
@@ -84,6 +86,7 @@ export default function Home(){
                 <div id="home-login" className={`Home-pos full ${home_login}`} >
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+                    <Qrcode setShowLog={setShowLog} />
                 </div>
                 <>
                     <HomeIcone      grid_style={`Home-div1 ${home_css}`}
@@ -123,8 +126,8 @@ export default function Home(){
 
                 <>
                     <HomeIcone      grid_style={`Home-div7 ${home_css}`}
-                                    arg="/Qrcode"
-                                    text="Qrcode"
+                                    arg="/Nothing"
+                                    // text="Nothing"
                                     />
 
                     <HomeIcone      grid_style={`Home-div8 ${home_css}`}

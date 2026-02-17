@@ -11,7 +11,6 @@ import Nothing from "./Page/Nothing/Nothing.jsx";
 import Profile from "./Page/Profile/Profile.jsx";
 import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
-import Qrcode from "./Page/Qrcode/Qrcode.jsx";
     
 export default function Navigation({ screen }) {
 
@@ -32,8 +31,6 @@ export default function Navigation({ screen }) {
                 return <Stats/>;
             case 'WaitRoom':
                 return <WaitRoom/>;
-            case 'Qrcode':
-                return <Qrcode/>;
             default:
                 return <Nothing/>;
                 

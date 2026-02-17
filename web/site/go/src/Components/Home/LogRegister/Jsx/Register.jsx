@@ -2,12 +2,10 @@
 import "../LogRegister.css";
 
 import { showAlert } from "../../../../../../fct1";
-import { useNavigate, Link} from "react-router-dom";
 import { AUTH } from "../../Home.jsx"
     
 export default function Register({setShowLog}) {
 
-    const navigate = useNavigate();
 
     const retsubmit = async (event) => {
         event.preventDefault();
