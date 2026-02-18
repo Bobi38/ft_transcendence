@@ -8,7 +8,7 @@ class SocketManag{
             chat: [],
             game: [],
             room: [],
-            priv: new Map(),
+            priv: [],
         };
     }
     connect(){
@@ -33,10 +33,9 @@ class SocketManag{
                 console.log("Message reçu de type waitRoom via WebSocket:", dataa.mess);
                 this.listeners.room.forEach(cb => cb(dataa));
             }
-            if (dataa.type === 'priv') {
-               const cd = this.listeners.priv.get(dataa.to);
-                if (cd)
-                    cb(dataa);
+            if (dataa.type === 'priv_mess') {
+                console.log("Message reçu de type priv_mess via WebSocket:", dataa.mess);
+                this.listeners.priv.forEach(cb => cb(dataa));
             }
         };
         this.socket.onerror = (error) => {
@@ -52,9 +51,9 @@ class SocketManag{
         
     }
     
-    onPriv(UserName, cb) {
-        if (!this.listeners.priv.has(UserName))
-            this.listeners.priv.set(UserName, []);
+    onPriv(cb) {
+        if (!this.listeners.priv.include(cb))
+            this.listeners.priv.push(cb);
     }
 
     onChat(cb) {
@@ -76,6 +75,10 @@ class SocketManag{
 
     offRoom(cb) {
         this.listeners.room = this.listeners.room.filter(listener => listener !== cb);
+    }
+c 
+    offPriv(cb){
+        this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
     }
 
     onGame(cb) {

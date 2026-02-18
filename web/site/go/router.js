@@ -10,6 +10,7 @@ import Co  from '../models/connect.js';
 import ChatG from '../models/test.js';
 import PrivMess from '../models/privmess.js';
 import PrivChat from '../models/privchat.js';
+import Friend from '../models/friend.js';
 import {majDb}  from '../fct.js';
 import os from 'os';
 import path from 'path';
@@ -23,6 +24,7 @@ import crypto from "crypto";
 import { TiMediaPlayReverse } from 'react-icons/ti';
 import validator from 'validator';
 import { isValidPhoneNumber } from 'libphonenumber-js';
+import { time } from 'console';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -389,18 +391,17 @@ router.get('/nclick', async (req, res) => {
 
 router.post('/addpriv', async (req, res) => {
   try{
-    const {tok2 , mess} = req.body;
+    const data = req.body;
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
-    const id2 = jwt.verify(tok2, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
-    const res2 = await User.findOne({ where: { id: id2.id}});
-    if (res1 === 0 || res2 === 0)
+    const id2 = await User.findOne({ where: { name: data.id}});
+    if (res1 === 0 || id2 === 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-    await PrivMess.create({idSend: id1.id, conv: mess, ChatId: findchat.id});
+    await PrivMess.create({idSend: id1.id, conv: data.mess, ChatId: findchat.id, time: data.time});
     res.status(201).json({success: true});
   }catch(err){
     res.status(500).json({success: false, message: err});
@@ -412,9 +413,8 @@ router.get('/getpriv', async (req, res) => {
     const {tok2} = req.body;
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
-    const id2 = jwt.verify(tok2, secret);
-    const res2 = await User.findOne({ where: { id: id2.id}});
-    if (res2 === 0)
+    const id2 = await User.findOne({ where: { name: tok2}});
+    if (id2 === 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
@@ -568,6 +568,15 @@ router.get('/github/callback', async (req, res) => {
   res.redirect('http://localhost:5173');
 });
 
+
+// router.get('/getFriend', async (req, res) => {
+//   try{
+//     const token = req.cookies.token;
+//     const decoded = jwt.verify(token, secret);
+//     const result = await User.findAll({ where: { id: decoded.id } });
+
+//   }
+// })
 
 export {secret_chat};
 export {secret};
