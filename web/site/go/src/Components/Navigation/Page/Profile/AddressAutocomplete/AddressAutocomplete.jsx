@@ -36,7 +36,7 @@ export default function AddressAutocomplete({user, setUser}) {
         type="text"
         id="location"
         name="location"
-        value={query}
+        value={user.location}
         onChange={handleChange}
         placeholder="Entrez votre adresse"
       />

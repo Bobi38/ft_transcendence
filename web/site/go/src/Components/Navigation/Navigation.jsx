@@ -58,7 +58,7 @@ export default function Navigation({ screen }) {
 
                 <NavBar/>
                 
-                <div className={`Navigation-renderScreenNav`}>
+                <div className={screen === "PrivateMessage" ? "Navigation-renderScreenNav-privatechat":"Navigation-renderScreenNav"}>
 
                     {renderScreenNav()}
                     
