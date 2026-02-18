@@ -9,7 +9,7 @@ import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 
 export default function PrivateMessage() { 
     
-    const [setNavInfo, setsetNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
+    const [NavInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
 
     const [navConv, setNavConv] = useState(null)                                                            // changer de conv private
     const [displayedConvPrivate, setDisplayedConvPrivate] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private

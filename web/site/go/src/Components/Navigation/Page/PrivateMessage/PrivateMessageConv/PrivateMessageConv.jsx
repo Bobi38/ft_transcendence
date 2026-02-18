@@ -5,10 +5,11 @@ import SocketM from "../../../../../SocketM/SocketM";
 /* Components */
 import { useEffect, useState } from "react"; 
 
-export default function PrivateMessageConv({navamis}) {    
+// navConv lui contient le login user
+export default function PrivateMessageConv({navConv}) {    
 
 // useEffect
-// fetch(navamis = login)
+// fetch(navConv = login)
 // JSON
 // data
 // setDisplayedMessages(data)
@@ -16,10 +17,10 @@ export default function PrivateMessageConv({navamis}) {
 const [displayedMessages, setDisplayedMessages] = useState([]);
 const [input, setInput] = useState("");
 
-async function addmessprivate(timer, navamis){
+async function addmessprivate(timer, navConv){
     const data={
         time: timer,
-        id: navamis
+        id: navConv
     }
      try{
         const rep = await fetch('/api/addpriv',{
@@ -39,10 +40,10 @@ async function addmessprivate(timer, navamis){
      }
 }
 
-async function fetchPrivMsg({navamis}){
-    console.log("fetch priv", navamis);
+async function fetchPrivMsg({navConv}){
+    console.log("fetch priv", navConv);
 
-    const tok2 = navamis;
+    const tok2 = navConv;
 
     try{
         const rep = await fetch('/api/getpriv', {
@@ -68,7 +69,7 @@ async function fetchPrivMsg({navamis}){
     }
 
     useEffect(() => {
-        async () => { fetchPrivMsg({navamis}) }
+        async () => { fetchPrivMsg({navConv}) }
         if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
             SocketM.connect();
         }
@@ -77,12 +78,12 @@ async function fetchPrivMsg({navamis}){
             console.log("Message privé reçu via WebSocket:", data);
             setDisplayedMessages(prevMessages => [...prevMessages, data]);
         }
-        SocketM.onPriv(navamis, handlePrivMessage);
+        SocketM.onPriv(navConv, handlePrivMessage);
 
         return () => {
             SocketM.offPriv(handlePrivMessage);
         };
-    }, [navamis]);
+    }, [navConv]);
 
     
     const handlerPriv = (e) => {
@@ -97,7 +98,7 @@ async function fetchPrivMsg({navamis}){
 
                 <div className="PrivateMessageConv-flex1">
 
-                    <div><h5 className="center">{navamis}</h5></div>
+                    <div><h5 className="center">{navConv}</h5></div>
 
                     <div className="PrivateMessageConv-flex2">
                         <div>
