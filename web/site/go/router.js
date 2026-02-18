@@ -420,7 +420,10 @@ router.get('/getpriv', async (req, res) => {
     if (findchat === 0)
         return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
     const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
-    const ret = maj_conv(id1.id, conv);
+    const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id,co: true}});
+    let ret = "";
+    if (conv.length - 1 != 0)
+      ret = maj_conv(id1.id, conv, name);
     res.status(201).json({success: true, message: ret});
   }catch(err){
     res.status(500).json({success: false, message: err});
