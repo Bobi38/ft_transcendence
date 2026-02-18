@@ -212,3 +212,100 @@ Le fait qu’un A puisse être un B sur une autre ligne confirme :
 ✔ Ce n’est pas un hasMany
 ✔ Ce n’est pas un simple belongsTo
 🔥 C’est un belongsToMany auto-référencé
+
+
+
+----------------------------------------------------------------------------------
+
+
+Ah parfait 😎 tu veux toute la ligne du dernier message par conversation, pas juste la date ou l’ID.
+
+On va faire ça proprement avec Sequelize.
+
+🔹 1️⃣ Pré-requis
+
+On suppose que :
+
+PrivMess a les colonnes : id, chatId, message, createdAt, etc.
+
+PrivChat a les conversations : id, id1, id2.
+
+id de PrivMess est auto-incrémenté (donc le dernier message = MAX(id)).
+
+🔹 2️⃣ Requête Sequelize pour récupérer le dernier message complet par conversation
+Variante avec sous-requête (MAX(id) par chat)
+const chats = await PrivChat.findAll({
+    where: {
+        [Op.or]: [
+            { id1: result.id },
+            { id2: result.id }
+        ]
+    }
+});
+
+const chatIds = chats.map(c => c.id);
+
+const lastMessages = await PrivMess.findAll({
+    where: {
+        chatId: {
+            [Op.in]: chatIds
+        },
+        id: {
+            [Op.in]: sequelize.literal(`
+                SELECT MAX(id)
+                FROM PrivMess
+                WHERE chatId IN (${chatIds.join(',')})
+                GROUP BY chatId
+            `)
+        }
+    },
+    order: [['createdAt', 'DESC']]
+});
+
+
+✅ Explications :
+
+chatId IN (${chatIds}) : filtre seulement les conversations de l’utilisateur
+
+MAX(id) ... GROUP BY chatId : prend le dernier message de chaque conversation
+
+order: [['createdAt', 'DESC']] : tri du plus récent au plus ancien
+
+Le résultat contient toutes les colonnes (id, message, chatId, etc.)
+
+🔹 3️⃣ Alternative avec Sequelize.literal + include (option join si besoin)
+
+Si tu veux inclure les infos du chat ou des users :
+
+const lastMessages = await PrivMess.findAll({
+    include: [
+        { model: PrivChat }
+    ],
+    where: {
+        id: {
+            [Op.in]: sequelize.literal(`
+                SELECT MAX(id)
+                FROM PrivMess
+                GROUP BY chatId
+            `)
+        }
+    },
+    order: [['createdAt', 'DESC']]
+});
+
+🎯 Résultat
+
+lastMessages contient un tableau d’objets Sequelize :
+
+lastMessages[0].id
+lastMessages[0].message
+lastMessages[0].chatId
+lastMessages[0].createdAt
+...
+
+
+Chaque objet = le dernier message complet d’une conversation.
+
+Si tu veux, je peux te réécrire la version optimisée complète pour ton cas avec PrivChat et PrivMess, prête à l’utiliser directement dans ton projet.
+
+Veux‑tu que je fasse ça ?

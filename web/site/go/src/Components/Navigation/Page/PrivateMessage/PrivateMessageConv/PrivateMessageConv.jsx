@@ -17,7 +17,7 @@ async function addmessprivate(timer, navConv){
         id: navConv,
         mess: input,
     }
-     try{
+    try{
         const rep = await fetch('/api/addpriv',{
             method: "POST",
             headers: {'Content-Type': 'application/json'},
@@ -30,9 +30,9 @@ async function addmessprivate(timer, navConv){
             console.log("message priv good ad to db")
         else
             console.log("err add messpriv ", repp.message)
-     }catch(err){
+    }catch(err){
         console.log("err front addmessprivate ", err)
-     }
+    }
 }
 
 // async function fetchPrivMsg({navConv}){

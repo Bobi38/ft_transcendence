@@ -569,6 +569,15 @@ router.get('/github/callback', async (req, res) => {
 });
 
 
+router.get('/fetchConv', async (req, res) => {
+  try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    const findchat = await PrivChat.findAll({where :{ [Op.or]:[{id1: result.id},{id2: result.id} ]}});
+    const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
+
+
 // router.get('/getFriend', async (req, res) => {
 //   try{
 //     const token = req.cookies.token;
