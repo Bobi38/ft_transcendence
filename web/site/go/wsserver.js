@@ -90,6 +90,17 @@ export function initWebSocket(server) {
             }
           }
         }
+        if (data.type === 'priv_mess'){
+          console.log("je suis dans un type priv_messsssssssss")
+          const nono = socket.userId;
+          const na = chat.finduser(nono);
+          const ni = na.username;
+          const send = chat.finduser(data.id);
+          if (send && send.socket.readyState === ws.OPEN){
+            console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
+            send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
+          }
+        }
         if (data.type === 'waitRoom'){
           let message = "";
           console.log("je suis dans un type waitRoom");
