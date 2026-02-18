@@ -4,44 +4,16 @@ import "./PrivateMessageConv.css";
 /* Components */
 import { useEffect, useState } from "react"; 
 
-export default function PrivateMessageConv() {    
+export default function PrivateMessageConv({navamis}) {    
 
-    const [displayedMessages, setDisplayedMessages] = useState([
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        {login: "test1", message: "oui oui ch0zure"},
-        // {login: "test1", message: "oui oui ch0zure"},
-        // {login: "test1", message: "oui oui ch0zure"},
-        // {login: "test1", message: "oui oui ch0zure"},
-        // {login: "test1", message: "oui oui ch0zure"},
-        // {login: "test1", message: "oui oui ch0zure"},
-        // {login: "test1", message: "oui oui ch0zure"},
-    ]);
+// useEffect
+// fetch(navamis = login)
+// JSON
+// data
+// setDisplayedMessages(data)
+// ws
+
+    const [displayedMessages, setDisplayedMessages] = useState([]);
 
     const handler = (e) =>{
         e.preventDefault();
@@ -54,9 +26,7 @@ export default function PrivateMessageConv() {
 
                 <div className="PrivateMessageConv-flex1">
 
-                    <div><h5 className="center">{"msg.login"}</h5></div>
-
-
+                    <div><h5 className="center">{navamis}</h5></div>
 
                     <div className="PrivateMessageConv-flex2">
                         <div>
@@ -73,7 +43,6 @@ export default function PrivateMessageConv() {
                             );})}
 
                         </div>
-
 
                     </div>
 

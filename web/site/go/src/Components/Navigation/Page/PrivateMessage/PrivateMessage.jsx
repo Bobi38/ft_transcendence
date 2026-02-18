@@ -9,7 +9,9 @@ import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 
 export default function PrivateMessage() { 
     
-    
+    const [navpri, setNavpri] = useState(1)
+    const [navamis, setNavAmis] = useState(null)
+
     async function  fetchMsg(){
         console.log("fetchMsg(1) called");
         try {
@@ -39,44 +41,7 @@ export default function PrivateMessage() {
     }, []);
     
     
-    const [displayedMessages, setDisplayedMessages] = useState([
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        {login: "test3"},
-        {login: "test1"},
-        {login: "test2"},
-        // {login: "test3"},
-        // {login: "test1"},
-        // {login: "test2"},
-        // {login: "test3"},
-    ]);
+    const [displayedMessages, setDisplayedMessages] = useState([{login: "titou"},{login: "flo"}]);
     
     return (
         <>
@@ -87,21 +52,21 @@ export default function PrivateMessage() {
                 <div className="PrivateMessage-info">
 
                     <div className="PrivateMessage-bloc-friend-message ">
-                        <div className="center PrivateMessage-bloc-left">Amis</div>
+                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavpri(1); setNavAmis(null)} }>Amis</div>
                         <div className="PrivateMessage-border-bottom"></div>
-                        <div className="center PrivateMessage-bloc-left">Ajouter un Amis</div>
+                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavpri(2); setNavAmis(null)} }>Ajouter un Amis</div>
                     </div>
 
-{/* ------------------------------------------------------------------------------ */}
+    {/* ------------------------------------------------------------------------------ */}
                     <div className="PrivateMessage-border-bottom-big fullw"></div>
-{/* ------------------------------------------------------------------------------ */}
+    {/* ------------------------------------------------------------------------------ */}
 
                     <div className="PrivateMessage-bloc-friend-message ">
                         
                         {displayedMessages && displayedMessages.map((msg, index) => (
                             <>
 
-                                <div key={index} className={`center PrivateMessage-bloc-left`}>
+                                <div key={index} className={`center PrivateMessage-bloc-left`} onClick={() => {setNavpri(0); setNavAmis(msg.login);} }>
 
                                     <h4>{msg.login}</h4>
 
@@ -111,6 +76,7 @@ export default function PrivateMessage() {
 
                             </>
                         ))}
+
                     </div>
 
                 </div>
@@ -119,11 +85,14 @@ export default function PrivateMessage() {
 
                 <div className="PrivateMessage-border-left"></div>
 
+                    {/* {{navpri &&
 
-                <PrivateMessageConv />
-                {/* <Amis /> */}
-                {/* <AjouterAmis /> */}
+                        switch (navpri)
+                        <Amis /> 
+                        <AjouterAmis />
 
+                    }} */}
+                        {navamis && <PrivateMessageConv navamis={navamis}/> }
             </div>
         </>
     )
