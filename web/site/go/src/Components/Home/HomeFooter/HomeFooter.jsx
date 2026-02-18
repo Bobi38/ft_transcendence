@@ -48,7 +48,7 @@ export default function HomeFooter({ grid_style, setShowLog }) {
                         </div>
                         <div className="iconecolor HomeFooter-padding"
                              onClick={(LOGOUT)}>
-                                LOGOUT
+                                LOGOUT quand pas log on enleve
                         </div>
                     </div>
                     

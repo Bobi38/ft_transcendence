@@ -12,6 +12,7 @@ import Profile from "./Page/Profile/Profile.jsx";
 import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
 import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
+
 import checkCo from "../../../../fct1.js"
 import { useNavigate } from "react-router-dom";
     
@@ -21,6 +22,10 @@ export default function Navigation({ screen }) {
 
 
     const titi = async () => {
+        if (screen == "ErrorRedir"){
+            return // 
+        }
+
         const res = await checkCo();
         if (!res){
             navigate('/');
@@ -33,17 +38,17 @@ export default function Navigation({ screen }) {
 
         switch(screen) {
             case 'ContactUs':
-                return <ContactUs/>;
+                return <ContactUs/>;//
             case 'ErrorRedir':
-                return <ErrorRedir/>;
+                return <ErrorRedir/>;//
             case 'Morpion':
-                return <Morpion/>;
+                return <Morpion/>;// need css
             case 'Profile':
-                return <Profile/>;
+                return <Profile/>;//
             case 'PrivateMessage':
-                return <PrivateMessage/>;
+                return <PrivateMessage/>;//
             case 'Stats':
-                return <Stats/>;
+                return <Stats/>;// 50% mais on att de la data du morpion 
             case 'WaitRoom':
                 return <WaitRoom/>;
             default:
@@ -54,11 +59,12 @@ export default function Navigation({ screen }) {
     return (
         <>
 
-            <div className="Navigation-root">
+            <div className="Navigation-root"> {/* 100vh */}
 
-                <NavBar/>
+                <NavBar/>{/* la taille */}
                 
-                <div className={screen === "PrivateMessage" ? "Navigation-renderScreenNav-privatechat":"Navigation-renderScreenNav"}>
+                {/* <div className={screen === "PrivateMessage" ? "Navigation-renderScreenNav-privatechat":"Navigation-renderScreenNav"}> */}
+                <div className={"Navigation-renderScreenNav"}> {/* le reste */}
 
                     {renderScreenNav()}
                     
