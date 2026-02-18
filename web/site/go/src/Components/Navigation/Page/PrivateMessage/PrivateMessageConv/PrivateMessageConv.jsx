@@ -1,5 +1,5 @@
 /* Css */
-import "./PrivateMessageConv.css"; 
+import "./PrivateMessageConv.scss"; 
 
 /* Components */
 import { useEffect, useState } from "react"; 
@@ -20,7 +20,6 @@ export default function PrivateMessageConv({navamis}) {
         console.log("uai handler")
     }
 
-    
     return (
         <>
 
@@ -52,9 +51,7 @@ export default function PrivateMessageConv({navamis}) {
                             <button type="submit">button</button>
                         </form>
                     </div>
-                    
                 </div>
-
         </>
     )
 }

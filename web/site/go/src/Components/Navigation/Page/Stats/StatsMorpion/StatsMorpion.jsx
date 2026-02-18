@@ -1,5 +1,5 @@
 /* Css */
-import "./StatsMorpion.css";
+import "./StatsMorpion.scss";
 
 /* Components */
     

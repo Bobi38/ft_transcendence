@@ -1,16 +1,15 @@
 /* Css */
-import "../LogRegister.css";
+import "../LogRegister.scss";
 
 
 /* Components */
 import { useState } from "react";
 import { AUTH } from "../../Home.jsx"
-    
 
 export default function Qrcode({setShowLog}) {
-  
+
     const [showCodeInput, setShowCodeInput] = useState(false);
-      
+
     const sendmail = async () => {
 
         console.log("sendmail(1) called");
@@ -40,8 +39,6 @@ export default function Qrcode({setShowLog}) {
         }
     };
 
-
-
   const veryfCode = async (e) => {
     console.log("veryfCode(1) called");
     e.preventDefault();
@@ -62,12 +59,12 @@ export default function Qrcode({setShowLog}) {
       if (repjson.success){
 
         console.log("veryfCode(3) 2FA successfully verified");
-        setShowLog(AUTH.NONE); 
-      
+        setShowLog(AUTH.NONE);
+
       } else {
 
         console.log("veryfCode(4) 2FA failed:", repjson.message);
-      
+
       }
     }catch(error){
       console.log("veryfCode(4) 2FA failed:", error);
@@ -89,13 +86,13 @@ export default function Qrcode({setShowLog}) {
                     {showCodeInput && (
 
                       <form id="qrcode" className="full LogRegister-flex2 center" onSubmit={veryfCode}>
-                        
+
                         <input type="text" id="code" name="code" placeholder="Entrez Code"/>
 
                         <button type="submit" className="iconecolor negativ">Valider</button>
                         <button type="button" className="iconecolor negativ" onClick={sendmail}>Renvoyer un mail de verification</button>
                       </form>
-                    
+
                     )}
 
             </div>

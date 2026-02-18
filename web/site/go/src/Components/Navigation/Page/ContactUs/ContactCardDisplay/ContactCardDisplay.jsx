@@ -1,5 +1,5 @@
 /* Css */
-import "./ContactCardDisplay.css";
+import "./ContactCardDisplay.scss";
 
 /* Components */
 import ContactIcone from "./ContactIcone/ContactIcone";

@@ -1,6 +1,6 @@
 /* Css */
-import "../../../index.css"
-import "./HomeMessage.css";
+import "../../../index.scss"
+import "./HomeMessage.scss";
 
 /* Components */
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import {SocketM} from '../../../../SocketManag.js';
 import checkCo from "../../../../../fct1.js";
 
 export default function HomeMessage({grid_style}) {
-    
+
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
@@ -33,7 +33,6 @@ export default function HomeMessage({grid_style}) {
         } catch (error) {
             console.error("Error fetching messages:", error);
         }
-
     }
 
     async function addmess(time){
@@ -60,7 +59,7 @@ export default function HomeMessage({grid_style}) {
     //         }
     //     })();
     //     (async () => {await fetchMsg();})();
-        
+
     //     // console.log("use effect home message");
     //     // console.log("nb co = " + SocketM.nb());
     //     if (SocketM.nb() === 0) {
@@ -69,7 +68,7 @@ export default function HomeMessage({grid_style}) {
     //     const handleChat = (data) => {
     //         console.log("Message reçu via SocketM.onChat:", data);
     //         // const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    //         //message 2 externe 
+    //         //message 2 externe
 
     //         setDisplayedMessages((prev) => [...prev, data]);
 
@@ -80,7 +79,7 @@ export default function HomeMessage({grid_style}) {
     //         SocketM.offChat(handleChat);
     //     };
     // }, []);
-    
+
     useEffect(() => {
     const init = async () => {
         const toto = await checkCo();
@@ -110,10 +109,7 @@ export default function HomeMessage({grid_style}) {
     };
 
     init();
-
-}, []);
-
-    
+	}, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -124,15 +120,14 @@ export default function HomeMessage({grid_style}) {
 
         const data = {monMsg: true, type: "mess", message: input, timer: time};
         setDisplayedMessages(prev => [...prev, data]);
-        
+
         const data2 = {...data, monMsg: false};
-        
+
         addmess(time);
         console.log("send via WebSocket data2:", data2);
         SocketM.sendd(data2);
-        setInput(""); 
+        setInput("");
     };
-    
 
     return (
         <>
@@ -142,7 +137,7 @@ export default function HomeMessage({grid_style}) {
                         <h3>Chat</h3>
 
                     {displayedMessages && displayedMessages.map((msg, index) => (
-                        
+
                         <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}`}>
 
                             {msg.monMsg ? (
@@ -162,8 +157,6 @@ export default function HomeMessage({grid_style}) {
 
                     </div>
 
-
-
                     <form id="HomeMessageform" onSubmit={handleSubmit}>
                         <input
                             type="text"
@@ -172,7 +165,6 @@ export default function HomeMessage({grid_style}) {
                         />
                         <input id="HomeMessagesubmit" type="submit"></input>
                     </form>
-           
             </div>
         </>
     )

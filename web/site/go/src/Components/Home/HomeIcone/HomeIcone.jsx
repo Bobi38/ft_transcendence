@@ -1,11 +1,10 @@
 /* Css */
-import "./HomeIcone.css";
+import "./HomeIcone.scss";
 
 /* Components */
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 
 export default function HomeIcone({ grid_style, arg, text }) {
-    
 
     return (
         <>

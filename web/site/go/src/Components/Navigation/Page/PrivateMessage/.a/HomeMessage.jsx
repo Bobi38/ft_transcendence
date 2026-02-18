@@ -1,6 +1,6 @@
 /* Css */
-import "../../../index.css"
-import "./HomeMessage.css";
+import "../../../index.scss"
+import "./HomeMessage.scss";
 
 /* Components */
 import { useEffect, useState } from "react";

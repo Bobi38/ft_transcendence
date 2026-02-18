@@ -1,5 +1,5 @@
 /* Css */
-import "./Navigation.css";
+import "./Navigation.scss";
 
 /* Components */
 import NavBar from "./NavBar/NavBar.jsx";

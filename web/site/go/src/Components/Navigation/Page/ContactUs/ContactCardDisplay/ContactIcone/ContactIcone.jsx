@@ -1,5 +1,5 @@
 /* Css */
-import "./ContactIcone.css";
+import "./ContactIcone.scss";
 
 /* Components */
 // import { FaGithub } from "react-icons/fa";

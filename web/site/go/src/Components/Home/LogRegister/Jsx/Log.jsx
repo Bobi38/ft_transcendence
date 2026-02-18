@@ -1,5 +1,5 @@
 /* Css */
-import "../LogRegister.css";
+import "../LogRegister.scss";
 
 import { showAlert } from "../../../../../../fct1";
 import { AUTH } from "../../Home.jsx"
@@ -8,8 +8,8 @@ import { FaGithub } from "react-icons/fa";
 export default function Log({setShowLog}) {
 
     const logsub = async (event) => {
-        
-        event.preventDefault();
+
+		event.preventDefault();
         const form = event.target;
         const data = {
             email: form.email.value.trim(),
@@ -39,7 +39,6 @@ export default function Log({setShowLog}) {
                 setShowLog(AUTH.QRCODE); // change to qrcode
                 // setShowLog(AUTH.NONE); // change to qrcode
 
-                
             } else {
                 showAlert("Erreur : " + result.message, "danger");
             }
@@ -61,38 +60,38 @@ export default function Log({setShowLog}) {
 
     return (
         <main className="full LogRegister-flex1 LogRegister-bglow">
-            
+
             <div className="LogRegister-div1 iconecolor">
 
                 <div id="alert-container">
                     {/* ne pas creat une div faire un innertext */}
                 </div>
-                
+
                 <form id="login" className="full LogRegister-flex2 center" onSubmit={logsub}>
 
                     <h4>CONNECTEZ-VOUS</h4>
 
                     <label htmlFor="email">Email</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
                         placeholder="you@exemple.com"
                         required
                     />
 
                     <label htmlFor="password">Mot de passe</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
                         placeholder="1234btw"
                         required
                     />
-                    
+
                     <div className="full LogRegister-flex3">
 
-                        <button type="submit" 
+                        <button type="submit"
                                 className="iconecolor negativ"
                                 >
                                 Connexion
@@ -105,7 +104,7 @@ export default function Log({setShowLog}) {
                                 Inscris-toi
                         </button>
 
-                        <button type="button" 
+                        <button type="button"
                                 className="iconecolor negativ"
                                 target="_blank"
                                 onClick={handleGit}
@@ -113,9 +112,7 @@ export default function Log({setShowLog}) {
                                 <FaGithub/> GitHub
                         </button>
                     </div>
-
                 </form>
-
             </div>
         </main>
     )
