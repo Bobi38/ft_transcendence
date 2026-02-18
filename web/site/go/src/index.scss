@@ -1,18 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   index.css                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: edarnand <edarnand@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/18 16:49:17 by edarnand          #+#    #+#             */
-/*   Updated: 2026/02/18 16:49:19 by edarnand         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 body {
   background-color: rgb(164, 164, 164);
 }
+
 #root {
   height: 100vh;
   width: 100vw;
@@ -29,7 +18,6 @@ a {
     color: inherit;
     border: none;
     background: none;
-    cursor: default;
     font-size: inherit;
     font-family: inherit;
     text-decoration: none;
