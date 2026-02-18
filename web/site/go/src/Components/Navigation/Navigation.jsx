@@ -19,14 +19,15 @@ export default function Navigation({ screen }) {
 
     const navigate = useNavigate();
 
-    const renderScreenNav = () => {
 
-        const titi = async () => {
-            const res = await checkCo();
-            if (!res){
-                navigate('/');
-            }
-        };
+    const titi = async () => {
+        const res = await checkCo();
+        if (!res){
+            navigate('/');
+        }
+    };
+
+    const renderScreenNav = () => {
 
         titi();
 
@@ -47,7 +48,6 @@ export default function Navigation({ screen }) {
                 return <WaitRoom/>;
             default:
                 return <Nothing/>;
-                
         }
     }
     
@@ -56,7 +56,7 @@ export default function Navigation({ screen }) {
 
             <div className="Navigation-root">
 
-                <NavBar grid_style="Navigation-nav"/>
+                <NavBar/>
                 
                 <div className={`Navigation-renderScreenNav`}>
 

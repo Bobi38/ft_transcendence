@@ -13,18 +13,9 @@
   width: 100%;
 }
 
-.HomeMessage-message-me {
-  text-align: right;
-}
-
-.HomeMessage-message-other{
-  text-align: left;
-}
-
-
-
-.HomeMessage-message-other p,
-.HomeMessage-message-me p {
+.HomeMessage-message-me {text-align: right;}
+.HomeMessage-message-other {text-align: left;}
+.HomeMessage-message-other p, .HomeMessage-message-me p {
   overflow-wrap: anywhere;
 }
 

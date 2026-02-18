@@ -1,23 +1,13 @@
 .Navigation-root {
+    height: 100vh;          /* plein écran */
     display: flex;
-    flex-direction: column;
-    height: 100vh;
-    padding: 1rem;   
-}
-
-.Navigation-nav{
-    background: white;
-    border-radius: 10px;
+    flex-direction: column; /* nav en haut, reste en dessous */
     padding: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 1.5rem;
 }
-
-
-
 
 .Navigation-renderScreenNav {
-    flex: 1; /* prend tout l'espace restant */
+    height: calc(100% - 11%);
 }
 
 
