@@ -53,6 +53,12 @@ export default function Home(){
 
     useEffect(() => {
 
+        // const handler = async (event) => {
+        //     const resCo = await checkCo();
+        //     if (!resCo) {
+        //         navigate("/login");
+        //     }
+        // }
         const home_root = document.getElementById("home_root");
         if (!home_root) return;
 
@@ -68,7 +74,7 @@ export default function Home(){
             } else {
                 const link = event.target.closest("a");
                 if (link){
-                    navigate(link.pathname);
+                    window.location.href = link.href;
                     return
                 }
                 if (event.target.id === "HomeMessagesubmit"){
@@ -106,10 +112,10 @@ export default function Home(){
                                     text="Weather"/>
 
                     <HomeIcone      grid_style={`Home-div2 ${home_css}`}
-                                    arg="/Intra"
+                                    // arg="/Intra"
                                     text="Intra"
-                                    // link={`https://profile.intra.42.fr/users/${user.login42}`}/>
-                                    link={`https://profile.intra.42.fr`}/>
+                                    arg="https://profile.intra.42.fr"/>
+                                    {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
 
                     <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/WaitRoom"
