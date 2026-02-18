@@ -94,6 +94,7 @@ export default function Home(){
             <div className='Home-grid' id="home_root">
                 
                 <div id="home-login" className={`Home-pos full ${home_login}`} >
+                    
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
                     {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
