@@ -53,30 +53,19 @@ export default function Home(){
 
     useEffect(() => {
 
-        // const handler = async (event) => {
-        //     const resCo = await checkCo();
-        //     if (!resCo) {
-        //         navigate("/login");
-        //     }
-        // }
         const home_root = document.getElementById("home_root");
         if (!home_root) return;
 
-        const handler = async (event) => {
+        const Home_handler = async (event) => {
 
             if (event.target.closest('.LogRegister-flex1')) {
+                console.log("Home_handler(1) need to connect")
                 return;
             }
-            event.preventDefault();
             const resCo = await checkCo();
             if (!resCo) {
                 setShowLog(AUTH.LOGIN);
             } else {
-                const link = event.target.closest("a");
-                if (link){
-                    window.location.href = link.href;
-                    return
-                }
                 if (event.target.id === "HomeMessagesubmit"){
                     const form = event.target.form
                     if (form) {
@@ -87,8 +76,8 @@ export default function Home(){
             }
         };
 
-        home_root.addEventListener("click", handler);
-        return () => home_root.removeEventListener("click", handler);
+        home_root.addEventListener("click", Home_handler);
+        return () => home_root.removeEventListener("click", Home_handler);
 
     }, []);
 
