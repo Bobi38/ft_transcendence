@@ -25,6 +25,8 @@ import { TiMediaPlayReverse } from 'react-icons/ti';
 import validator from 'validator';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 import { time } from 'console';
+import { Op } from "sequelize";
+
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -300,6 +302,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
 router.post('/register', async (req, res) => {
   console.log("je suis la ");
   const { name, password, email } = req.body;
@@ -569,13 +572,25 @@ router.get('/github/callback', async (req, res) => {
 });
 
 
-router.get('/fetchConv', async (req, res) => {
+router.post('/fetchConv', async (req, res) => {
   try{
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await User.findOne({ where: { id: decoded.id } });
-    const findchat = await PrivChat.findAll({where :{ [Op.or]:[{id1: result.id},{id2: result.id} ]}});
-    const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
+    const {input} = req.body
+    console.log("in fectch ", input)
+    // const token = req.cookies.token;
+    // const decoded = jwt.verify(token, secret);
+    // const result = await User.findOne({ where: { id: decoded.id } });
+    const result = await User.findOne({where :{name: input}});
+    console.log("rest   ", result.id);
+    const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+    console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
+    console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
+    console.log("test join ", chats[0].user1.name);
+    return res.status(201).json({success: true, message: chats});
+  }catch(err){
+    console.log(err);
+    return res.status(500).json({success: false, message: err});
+  }
+});
 
 
 // router.get('/getFriend', async (req, res) => {

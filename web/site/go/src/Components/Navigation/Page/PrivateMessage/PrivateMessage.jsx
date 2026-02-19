@@ -46,8 +46,19 @@ export default function PrivateMessage() {
                 credentials: "include",                
             });
             const repp = await rep.json();
-            if (repp.success)
-                setDisplayedConvPrivate(repp.message);
+            if (repp.success){
+                const chats = repp.message;
+                console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
+                console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
+                console.log("test join ", chats[0].user1.name);
+                //Chat est un tableau 0-1-2-3-....
+                //chaque partie du tableau est le dernier message d une conversation
+                //PrivMesses est un tableau d une taille de 1 car qu un seul message
+                //dans chaque message il y a le nom des deux personnes dans la conversation= .user1 et .user2
+                // un des deux c'est me
+                // il faudra donc checker chaque chat[i] pour savoir si me est .user1 ou .user2 et mettre a jour la colonne des conversation
+                // puis setDisplayedConvPrivate
+            }
             else
                 console.log("error fectchConv back ", repp.message);
         }catch(err){
@@ -56,7 +67,7 @@ export default function PrivateMessage() {
     }
     
     useEffect(() => {
-        // (async () => {await fetchMsg();})();
+        (async () => {await fetchConvPrivate();})();
     }, []);
     
     useEffect(() => {
@@ -71,7 +82,9 @@ export default function PrivateMessage() {
             if (data.login === navConv)
                 setDisplayedMessages(prevMessages => [...prevMessages, data]);
             else
-                setDisplayedConvPrivate(); // COMMENT METTRE A JOUR ??
+                setDisplayedConvPrivate();
+                //ici nous recevrons un message ne venant pas de la conversation qui est ouverte
+                // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
         
         }
         SocketM.onPriv(handlePrivMessage);
