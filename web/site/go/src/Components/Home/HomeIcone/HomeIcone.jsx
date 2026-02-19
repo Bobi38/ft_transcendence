@@ -4,7 +4,7 @@ import "./HomeIcone.scss";
 /* Components */
 import checkCo from "../../../../../fct1.js"
 
-export default function HomeIcone({ grid_style, arg, text }) {
+export default function HomeIcone({ grid_id, arg, text }) {
 
 	const HomeIcone_clicked = async (arg) => {
 
@@ -21,7 +21,7 @@ export default function HomeIcone({ grid_style, arg, text }) {
 
     return (
         <>
-            <button onClick={() => {HomeIcone_clicked(arg)}} className={`${grid_style}`}>
+            <button onClick={() => {HomeIcone_clicked(arg)}} className={`${grid_id} Home-iconedisplay Home-iconemargin iconecolor`}>
 
                 <p>
                     {text ?? "nothing for moment"}

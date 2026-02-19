@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { SocketM } from '../../../../SocketManag';
 import checkCo from "../../../../../fct1.js";
 
-export default function HomeMessage({grid_style}) {
+export default function HomeMessage({grid_id}) {
 
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
@@ -131,7 +131,7 @@ export default function HomeMessage({grid_style}) {
 
     return (
         <>
-            <div className={`${grid_style} HomeMessage-box`}>
+            <div className={`${grid_id} Home-iconedisplay Home-iconemargin iconecolor HomeMessage-box`}>
 
                     <div className="HomeMessage-message">
                         <h3>Chat</h3>

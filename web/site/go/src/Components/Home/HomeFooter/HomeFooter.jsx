@@ -5,7 +5,7 @@ import "../../../index.scss"
 /* Components */
 import { Link, useNavigate } from "react-router-dom";
 
-export default function HomeFooter({ grid_style, setShowLog }) {
+export default function HomeFooter({ grid_id, setShowLog }) {
 
     const navigate = useNavigate();
     function LOGOUT() {
@@ -32,7 +32,7 @@ export default function HomeFooter({ grid_style, setShowLog }) {
 
     return (
         <>
-            <div className={`${grid_style} HomeFooter-grid stretch`}>
+            <div className={`${grid_id} HomeFooter-grid`}>
 
                     <Link   to='/ContactUs'
                             className="HomeFooter1 Home-iconemargin iconecolor center">

@@ -82,7 +82,6 @@ export default function Home(){
     }, []);
 
     const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
-    const home_css = "Home-iconedisplay Home-iconemargin iconecolor";
 
     return (
         <>
@@ -96,17 +95,17 @@ export default function Home(){
 
                 </div>
                 <>
-                    <HomeIcone      grid_style={`Home-div1 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div1`}
                                     arg="/Weather"
                                     text="Weather"/>
 
-                    <HomeIcone      grid_style={`Home-div2 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div2`}
                                     // arg="/Intra"
                                     text="Intra"
                                     arg="https://profile.intra.42.fr"/>
                                     {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
 
-                    <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
+                    <HomeIcone      grid_id={`Home-div3`}
                                     arg="/WaitRoom"
                                     text="WaitRoom"
                                     />
@@ -114,36 +113,36 @@ export default function Home(){
 
                 <>
 
-                    <HomeIcone      grid_style={`Home-div4 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div4`}
                                     arg="/Stats"
                                     text="Stats"
                                     />
 
-                    <HomeIcone      grid_style={`Home-div5 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div5`}
                                     arg="/jeux"
                                     text="jeux"/>
 
-                    <HomeIcone      grid_style={`Home-div6 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div6`}
                                     arg="/PrivateMessage"
                                     text="Private Message"
                                     />
 
                 </>
 
-                    <HomeArrow      grid_style={`Home-div12 Home-iconedisplay`}/>
+                    <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
 
                 <>
-                    <HomeIcone      grid_style={`Home-div7 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div7`}
                                     arg="/Nothing"
                                     // text="Nothing"
                                     />
 
-                    <HomeIcone      grid_style={`Home-div8 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div8`}
                                     arg="/Morpion"
                                     text="Mini-games"
                                     />
 
-                    <HomeIcone      grid_style={`Home-div9 ${home_css}`}
+                    <HomeIcone      grid_id={`Home-div9`}
                                     arg="/Friends-List"
                                     text="Friends-List"
                                     />
@@ -151,9 +150,9 @@ export default function Home(){
                 </>
 
 
-                <HomeMessage        grid_style={`Home-div10 ${home_css}`}/>
+                <HomeMessage        grid_id={`Home-div10`}/>
 
-                <HomeFooter         grid_style={`Home-div11`}
+                <HomeFooter         grid_id={`Home-div11`}
                                     setShowLog={setShowLog}
                                     />
 
