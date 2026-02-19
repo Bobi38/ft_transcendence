@@ -9,8 +9,12 @@ import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 
 export default function PrivateMessage() { 
     
-    const [navpri, setNavpri] = useState(1)
-    const [navamis, setNavAmis] = useState(null)
+    const [NavInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
+
+    const [navConv, setNavConv] = useState(null)                                                            // changer de conv private
+    const [displayedConvPrivate, setDisplayedConvPrivate] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
+
+
 
     async function  fetchMsg(){
         console.log("fetchMsg(1) called");
@@ -25,7 +29,7 @@ export default function PrivateMessage() {
             if (repjson.success){
                 console.log("fetchMsg(2)" , repjson.message);
                 
-                setDisplayedMessages(repjson.message);
+                setDisplayedConvPrivate(repjson.message);
                 
             }else{
                 alerte("message get from db failed");
@@ -41,7 +45,6 @@ export default function PrivateMessage() {
     }, []);
     
     
-    const [displayedMessages, setDisplayedMessages] = useState([{login: "titou"},{login: "flo"}]);
     
     return (
         <>
@@ -52,9 +55,9 @@ export default function PrivateMessage() {
                 <div className="PrivateMessage-info">
 
                     <div className="PrivateMessage-bloc-friend-message ">
-                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavpri(1); setNavAmis(null)} }>Amis</div>
+                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavInfo(1); setNavConv(null)} }>Amis</div>
                         <div className="PrivateMessage-border-bottom"></div>
-                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavpri(2); setNavAmis(null)} }>Ajouter un Amis</div>
+                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavInfo(2); setNavConv(null)} }>Ajouter un Amis</div>
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}
@@ -63,10 +66,10 @@ export default function PrivateMessage() {
 
                     <div className="PrivateMessage-bloc-friend-message ">
                         
-                        {displayedMessages && displayedMessages.map((msg, index) => (
+                        {displayedConvPrivate && displayedConvPrivate.map((msg, index) => (
                             <>
 
-                                <div key={index} className={`center PrivateMessage-bloc-left`} onClick={() => {setNavpri(0); setNavAmis(msg.login);} }>
+                                <div key={index} className={`center PrivateMessage-bloc-left`} onClick={() => {setNavInfo(0); setNavConv(msg.login);} }>
 
                                     <h4>{msg.login}</h4>
 
@@ -85,14 +88,14 @@ export default function PrivateMessage() {
 
                 <div className="PrivateMessage-border-left"></div>
 
-                    {/* {{navpri &&
+                    {/* {{navInfo &&
 
-                        switch (navpri)
+                        switch (navInfo)
                         <Amis /> 
                         <AjouterAmis />
 
                     }} */}
-                        {navamis && <PrivateMessageConv navamis={navamis}/> }
+                    {navConv && <PrivateMessageConv navConv={navConv}/> }
             </div>
         </>
     )

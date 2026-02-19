@@ -56,21 +56,16 @@ export default function Home(){
         const home_root = document.getElementById("home_root");
         if (!home_root) return;
 
-        const handler = async (event) => {
+        const Home_handler = async (event) => {
 
             if (event.target.closest('.LogRegister-flex1')) {
+                console.log("Home_handler(1) need to connect")
                 return;
             }
-            event.preventDefault();
             const resCo = await checkCo();
             if (!resCo) {
                 setShowLog(AUTH.LOGIN);
             } else {
-                const link = event.target.closest("a");
-                if (link){
-                    navigate(link.pathname);
-                    return
-                }
                 if (event.target.id === "HomeMessagesubmit"){
                     const form = event.target.form
                     if (form) {
@@ -81,8 +76,8 @@ export default function Home(){
             }
         };
 
-        home_root.addEventListener("click", handler);
-        return () => home_root.removeEventListener("click", handler);
+        home_root.addEventListener("click", Home_handler);
+        return () => home_root.removeEventListener("click", Home_handler);
 
     }, []);
 
@@ -106,10 +101,10 @@ export default function Home(){
                                     text="Weather"/>
 
                     <HomeIcone      grid_style={`Home-div2 ${home_css}`}
-                                    arg="/Intra"
+                                    // arg="/Intra"
                                     text="Intra"
-                                    // link={`https://profile.intra.42.fr/users/${user.login42}`}/>
-                                    link={`https://profile.intra.42.fr`}/>
+                                    arg="https://profile.intra.42.fr"/>
+                                    {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
 
                     <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/WaitRoom"

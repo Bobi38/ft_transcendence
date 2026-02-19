@@ -15,7 +15,11 @@ const PrivMess = sequelize.define('PrivMess', {
   contenu:{
     type: DataTypes.STRING(512),
     allowNull: false,
-  }
+  },
+    time:{
+    type: DataTypes.TIME,
+    allowNull: false
+  },
 }, {
   tableName: 'PrivMess',
   timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas

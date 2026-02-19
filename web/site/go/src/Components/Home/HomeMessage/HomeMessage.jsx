@@ -4,7 +4,7 @@ import "./HomeMessage.scss";
 
 /* Components */
 import { useEffect, useState } from "react";
-import {SocketM} from '../../../../SocketManag.js';
+import { SocketM } from '../../../../SocketManag';
 import checkCo from "../../../../../fct1.js";
 
 export default function HomeMessage({grid_style}) {

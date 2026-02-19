@@ -8,7 +8,7 @@ class SocketManag{
             chat: [],
             game: [],
             room: [],
-            priv: []
+            priv: new Map(),
         };
     }
     connect(){
@@ -34,8 +34,9 @@ class SocketManag{
                 this.listeners.room.forEach(cb => cb(dataa));
             }
             if (dataa.type === 'priv') {
-                console.log("Message reçu de type priv via WebSocket:", dataa.mess);
-                this.listeners.priv.forEach(cb => cb(dataa));
+               const cd = this.listeners.priv.get(dataa.to);
+                if (cd)
+                    cb(dataa);
             }
         };
         this.socket.onerror = (error) => {
@@ -51,9 +52,9 @@ class SocketManag{
         
     }
     
-    onPriv(cb) {
-        if (!this.listeners.priv.includes(cb))
-            this.listeners.priv.push(cb);
+    onPriv(UserName, cb) {
+        if (!this.listeners.priv.has(UserName))
+            this.listeners.priv.set(UserName, []);
     }
 
     onChat(cb) {
@@ -105,8 +106,11 @@ class SocketManag{
             this.socket = null;
         }
     }
+    getState(){
+        if (this.socket)
+            return this.socket.readyState;
+        return null;
+    }
 }
-
-
 
 export const SocketM = new SocketManag();

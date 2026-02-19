@@ -1,31 +1,103 @@
 /* Css */
-import "./PrivateMessageConv.scss"; 
+import "./PrivateMessageConv.scss";
 
 /* Components */
-import { useEffect, useState } from "react"; 
+import { SocketM } from "../../../../../../SocketManag";
+import { useEffect, useState } from "react";
 
-export default function PrivateMessageConv({navamis}) {    
+// navConv lui contient le login user
+export default function PrivateMessageConv({navConv}) {
 
 // useEffect
-// fetch(navamis = login)
+// fetch(navConv = login)
 // JSON
 // data
 // setDisplayedMessages(data)
 // ws
+const [displayedMessages, setDisplayedMessages] = useState([]);
+const [input, setInput] = useState("");
 
-    const [displayedMessages, setDisplayedMessages] = useState([]);
+async function addmessprivate(timer, navConv){
+    const data={
+        time: timer,
+        id: navConv
+    }
+     try{
+        const rep = await fetch('/api/addpriv',{
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+            body: JSON.stringify(data),
+        });
+
+        const repp = await rep.json();
+        if(repp.success)
+            console.log("message priv good ad to db")
+        else
+            console.log("err add messpriv ", repp.message)
+     }catch(err){
+        console.log("err front addmessprivate ", err)
+     }
+}
+
+async function fetchPrivMsg({navConv}){
+    console.log("fetch priv", navConv);
+
+    const tok2 = navConv;
+
+    try{
+        const rep = await fetch('/api/getpriv', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+            body: JSON.stringify({tok2}),
+        });
+        const repp = await rep.json();
+        if (repp.success)
+            setDisplayedMessages(message)
+        else
+            console.log("fetch getpriv fail ", repp.message);
+    }catch(err){
+        console.log("fetch getpriv error ", err);
+    }
+}
 
     const handler = (e) =>{
         e.preventDefault();
         console.log("uai handler")
     }
 
+    useEffect(() => {
+        async () => { fetchPrivMsg({navConv}) }
+        if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
+            SocketM.connect();
+        }
+
+        const handlePrivMessage = (data) => {
+            console.log("Message privé reçu via WebSocket:", data);
+            setDisplayedMessages(prevMessages => [...prevMessages, data]);
+        }
+        SocketM.onPriv(navConv, handlePrivMessage);
+
+        return () => {
+            SocketM.offPriv(handlePrivMessage);
+        };
+    }, [navConv]);
+
+    
+    const handlerPriv = (e) => {
+        e.preventDefault();
+        const message = e.target[0].value;
+        console.log("handlerPriv: ", message);
+        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: null}
+    }
     return (
         <>
 
                 <div className="PrivateMessageConv-flex1">
 
-                    <div><h5 className="center">{navamis}</h5></div>
+                    <div><h5 className="center">{navConv}</h5></div>
 
                     <div className="PrivateMessageConv-flex2">
                         <div>
@@ -46,8 +118,11 @@ export default function PrivateMessageConv({navamis}) {
                     </div>
 
                     <div>
-                        <form onSubmit={handler}>
-                            <input type="text"/>
+                        <form onSubmit={handlerPriv}>
+                            <input type="text"
+                            value = {input}
+                            onChange={(e) => setInput(e.target.value)}
+                            />
                             <button type="submit">button</button>
                         </form>
                     </div>
