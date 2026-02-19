@@ -1,5 +1,5 @@
 /* Css */
-import "./AjouterAmis.css";
+import "./AjouterAmis.scss";
 
 /* Components */
 import { useEffect, useState } from "react";

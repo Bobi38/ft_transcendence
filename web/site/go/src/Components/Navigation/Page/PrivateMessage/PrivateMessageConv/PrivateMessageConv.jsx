@@ -3,7 +3,8 @@ import "./PrivateMessageConv.css";
 import {SocketM} from "../../../../../../SocketManag.js";
 
 /* Components */
-import { useEffect, useState } from "react"; 
+import { SocketM } from "../../../../../../SocketManag";
+import { useEffect, useState } from "react";
 
 // navConv lui contient le login user
 export default function PrivateMessageConv({navConv, displayedMessages, setDisplayedMessages}) {    
@@ -129,9 +130,7 @@ async function addmessprivate(timer, navConv){
                             <button type="submit">button</button>
                         </form>
                     </div>
-                    
                 </div>
-
         </>
     )
 }

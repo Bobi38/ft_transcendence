@@ -1,5 +1,5 @@
 /* Css */
-import "./StatsWiiGame.css";
+import "./StatsWiiGame.scss";
 
 /* Components */
     

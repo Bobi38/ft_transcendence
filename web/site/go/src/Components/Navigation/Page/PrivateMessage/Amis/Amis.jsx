@@ -1,5 +1,5 @@
 /* Css */
-import "./Amis.css";
+import "./Amis.scss";
 
 /* Components */
     

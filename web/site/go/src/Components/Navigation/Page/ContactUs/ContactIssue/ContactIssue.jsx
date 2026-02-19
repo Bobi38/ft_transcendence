@@ -1,6 +1,6 @@
 /* Css */
-import "./ContactIssue.css";
-    
+import "./ContactIssue.scss";
+
 export default function ContactIssue({ grid_style }) {
     return (
         <>

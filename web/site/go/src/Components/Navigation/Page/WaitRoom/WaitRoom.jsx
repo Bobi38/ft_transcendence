@@ -1,4 +1,4 @@
-import "./waitRoom.css";
+import "./waitRoom.scss";
 import { SocketM } from "../../../../../SocketManag";
 import { use, useEffect, useState } from "react";
 import { useNavigate} from "react-router-dom";

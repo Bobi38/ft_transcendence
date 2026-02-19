@@ -1,9 +1,9 @@
 /* Css */
-import "../LogRegister.css";
+import "../LogRegister.scss";
 
 import { showAlert } from "../../../../../../fct1";
 import { AUTH } from "../../Home.jsx"
-    
+
 export default function Register({setShowLog}) {
 
 
@@ -30,9 +30,9 @@ export default function Register({setShowLog}) {
                 },
                 body: JSON.stringify(data)
             });
-            
+
             const result = await reponse.json();
-            
+
             if (result.success) {
                 setShowLog(AUTH.LOGIN);
             } else {
@@ -75,7 +75,7 @@ export default function Register({setShowLog}) {
                         <div className="full LogRegister-flex3">
 
                             <button type="submit" className="iconecolor negativ">S'inscrire</button>
-                                
+
                             <button type="button"
                                     className="iconecolor negativ"
                                     onClick={logMode}

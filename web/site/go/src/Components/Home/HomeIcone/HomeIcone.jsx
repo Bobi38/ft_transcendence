@@ -1,13 +1,12 @@
 /* Css */
-import "./HomeIcone.css";
+import "./HomeIcone.scss";
 
 /* Components */
 import checkCo from "../../../../../fct1.js"
 
 export default function HomeIcone({ grid_style, arg, text }) {
-    
 
-    const HomeIcone_clicked = async (arg) => {
+	const HomeIcone_clicked = async (arg) => {
 
         console.log("HomeIcone_clicked(1) called");
         const resCo = await checkCo();
@@ -17,7 +16,7 @@ export default function HomeIcone({ grid_style, arg, text }) {
         }
         console.log("HomeIcone_clicked(3) navigation autoriser");
         window.location.href = arg;
-        
+
     }
 
     return (
@@ -31,5 +30,4 @@ export default function HomeIcone({ grid_style, arg, text }) {
             </button>
         </>
     )
-
 }

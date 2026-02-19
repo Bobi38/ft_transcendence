@@ -1,7 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
-const router = express.Router();
 import pool from '../pool.js';
 import jwt from 'jsonwebtoken';
 import coockieParser from 'cookie-parser';
@@ -17,7 +16,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import session from 'express-session';
 import QRCode from 'qrcode';
-
 import {authenticator} from 'otplib';
 import nodemailer from "nodemailer";
 import crypto from "crypto";
@@ -29,6 +27,7 @@ import { Op } from "sequelize";
 
 
 
+const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

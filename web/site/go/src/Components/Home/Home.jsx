@@ -1,5 +1,5 @@
 /* Css */
-import "./Home.css";
+import "./Home.scss";
 
 /* Components */
 import HomeFooter from './HomeFooter/HomeFooter.jsx';
@@ -27,7 +27,7 @@ export default function Home(){
     const [showLog, setShowLog] = useState(AUTH.NONE);
     // const [user, setUser] = useState(null);
     const navigate = useNavigate();
-    
+
 
     // const fetchUserData = async () => {
 
@@ -36,14 +36,14 @@ export default function Home(){
     //         const rep = await fetch("/api/user/profile");
     //         const repjson = await rep.json();
     //         if (repjson.success){
-                
+
     //             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
     //             setUser(repjson.message);
 
     //         }else{
 
     //             console.error("fetchUserData(3) Error:", repjson.message);
-            
+
     //         }
     //     } catch (error) {
     //         console.error("fetchUserData(4) Error", error);
@@ -87,13 +87,13 @@ export default function Home(){
     return (
         <>
             <div className='Home-grid' id="home_root">
-                
+
                 <div id="home-login" className={`Home-pos full ${home_login}`} >
-                    
+
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
                     {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
-                    
+
                 </div>
                 <>
                     <HomeIcone      grid_style={`Home-div1 ${home_css}`}
@@ -143,8 +143,8 @@ export default function Home(){
                                     text="Mini-games"
                                     />
 
-                    <HomeIcone      grid_style={`Home-div9 ${home_css}`} 
-                                    arg="/Friends-List" 
+                    <HomeIcone      grid_style={`Home-div9 ${home_css}`}
+                                    arg="/Friends-List"
                                     text="Friends-List"
                                     />
 
@@ -152,7 +152,7 @@ export default function Home(){
 
 
                 <HomeMessage        grid_style={`Home-div10 ${home_css}`}/>
-                
+
                 <HomeFooter         grid_style={`Home-div11`}
                                     setShowLog={setShowLog}
                                     />

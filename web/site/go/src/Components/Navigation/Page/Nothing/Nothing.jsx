@@ -1,6 +1,6 @@
 /* Css */
-import "../../Navigation.css"
-import "./Nothing.css";
+import "../../Navigation.scss"
+import "./Nothing.scss";
     
 export default function Nothing() {
     return (

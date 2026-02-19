@@ -1,5 +1,5 @@
 /* Css */
-import "./AddressAutocomplete.css";
+import "./AddressAutocomplete.scss";
 
 /* Components */
 import { useState } from "react";

@@ -1,5 +1,5 @@
 /* Css */
-import "./PrivateMessage.css";
+import "./PrivateMessage.scss";
 
 /* Components */
 import { useEffect, useState } from "react";

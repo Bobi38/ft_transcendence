@@ -1,4 +1,4 @@
-import "./Jeu.css";
+import "./Jeu.scss";
     
 export default function Jeu() {
     return (

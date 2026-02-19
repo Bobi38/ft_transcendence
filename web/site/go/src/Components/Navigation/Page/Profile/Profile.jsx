@@ -1,5 +1,5 @@
 /* Css */
-import "./Profile.css";
+import "./Profile.scss";
 
 /* Components */
 import { useState, useEffect } from "react";
