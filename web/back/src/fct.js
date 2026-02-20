@@ -1,16 +1,15 @@
-import sequelize from './models/index.js';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import fs from 'fs';
+
+//model
+import sequelize from './models/index.js';
 import User from './models/user.js';
 import ChatG from './models/test.js';
 import PrivChat from './models/privchat.js';
 import PrivMess from './models/privmess.js';
-import bcrypt from 'bcrypt';
-import fs from 'fs';
-
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
-
-
 
 class Chat {
   constructor() {

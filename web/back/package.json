@@ -2,9 +2,9 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "server.js",
+  "main": "./src/server.js",
   "scripts": {
-    "dev": "concurrently -k \"nodemon --legacy-watch server.js\" \"cd site/go && npm run dev\"",
+    "dev": "concurrently -k \"nodemon --legacy-watch server.js\" \"cd /app/front && npm run dev\"",
     "start": "node server.js"
   },
   "dependencies": {

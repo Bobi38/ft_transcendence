@@ -1,9 +1,24 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
-import pool from './pool.js';
 import jwt from 'jsonwebtoken';
 import coockieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import nodemailer from "nodemailer";
+import crypto from "crypto";
+import validator from 'validator';
+import { isValidPhoneNumber } from 'libphonenumber-js';
+import { Op, where } from "sequelize";
+import os from 'os';
+import session from 'express-session';
+import QRCode from 'qrcode';
+import {authenticator} from 'otplib';
+import { time } from 'console';
+
+import pool from './pool.js';
+import {majDb}  from './fct.js';
+
 import User  from './models/user.js';
 import Co  from './models/connect.js';
 import ChatG from './models/test.js';
@@ -11,21 +26,6 @@ import PrivMess from './models/privmess.js';
 import PrivChat from './models/privchat.js';
 import Friend from './models/friend.js';
 import PswEmail from './models/PssWrdEmail.js';
-import {majDb}  from './fct.js';
-import os from 'os';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import session from 'express-session';
-import QRCode from 'qrcode';
-import {authenticator} from 'otplib';
-import nodemailer from "nodemailer";
-import crypto from "crypto";
-import { TiMediaPlayReverse } from 'react-icons/ti';
-import validator from 'validator';
-import { isValidPhoneNumber } from 'libphonenumber-js';
-import { time } from 'console';
-import { Op, where } from "sequelize";
-
 
 
 const router = express.Router();
@@ -64,7 +64,7 @@ function maj_conv(id, conv, namelst){
 
   for (let i = conv.length - 1; i >= 0; i--) {
     let name;
-    let monMs; 
+    let monMs;
     if (conv[i].SenderId == id){
       name = "me";
       monMs = true;
@@ -92,14 +92,14 @@ router.use(async (req, res, next) => {
     return next() ;
   }
   const valid = await checktok(token);
-  if (valid === 1) {           
+  if (valid === 1) {
     console.log("token not valid");
-    res.clearCookie('token');  
+    res.clearCookie('token');
     return res.status(401).json({ success: false, redirect: true});
   }
 
   console.log("token valid");
-  next();                  
+  next();
 });
 
 function CheckName(req, res, next){

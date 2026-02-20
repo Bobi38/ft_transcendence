@@ -41,7 +41,7 @@ export function initWebSocket(server) {
     console.log("uuu-------", user);
     const useid = user.id;
     socket.userId = useid;
- 
+
     const exist = chat.finduser(useid);
     if (exist){
       exist.socket = socket;
@@ -53,7 +53,7 @@ export function initWebSocket(server) {
       socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
     }
     console.log("taille =" , chat.countUser());
-    socket.on('message', (message) => {          
+    socket.on('message', (message) => {
       try{
         const data = JSON.parse(message.toString());
         console.log('=== MESSAGE REÇU ===');
@@ -85,7 +85,7 @@ export function initWebSocket(server) {
             if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
                 console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
                 // session.socket.send(JSON.stringify({type: "message", id: userid, mess: "JE SUIS LE SERVER " + data.mess + " from " + userid }));
-                
+
                 session.socket.send(JSON.stringify({type: 'message',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
             }
           }
@@ -110,7 +110,7 @@ export function initWebSocket(server) {
             room = ManagRoom.findoneplace(socket, socket.userId);
           if (room.isFull()){
             message = "yes";
-          } 
+          }
           else
             message = "wait";
           console.log("popopopo");
@@ -127,15 +127,15 @@ export function initWebSocket(server) {
         if (data.type === "in-game"){
           if (data.act === "role"){
             //objectif est de repartir les roles pour savoir qui commence et qui aura les O ou les X
-            //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois 
+            //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois
           }
           if (data.act === "move"){
             //mettre a jour les move et les envoyer aux joueurs
-            //enregistre la partie/la map ici dans le back pour eviter les triches 
+            //enregistre la partie/la map ici dans le back pour eviter les triches
           }
           if (data.act === "win"){
             //mettre a jour la db gagant/nombre de parties jouee
-            //clean room et managroom 
+            //clean room et managroom
           }
         }
 

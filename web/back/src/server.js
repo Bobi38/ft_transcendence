@@ -147,9 +147,9 @@ if (isDev) {
 } else {
   console.log("JE SUIS PROOOOOOOOOODDDDDDDDDDDd")
   // 🔹 En prod : servir le dist
-  app.use(express.static(path.join(__dirname, 'site/go/dist')));
+  app.use(express.static(path.join(__dirname, 'site/go/dist')));//TODO prod
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'site/go/dist', 'index.html'));
+    res.sendFile(path.join(__dirname, 'site/go/dist', 'index.html'));//TODO prod
   });
 }
 

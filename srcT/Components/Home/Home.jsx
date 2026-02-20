@@ -84,41 +84,41 @@ export default function Home(){
 
     const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
 
-	//const cards = [];
-	//const cards_content = [
-	//	{ text:"Weather", path: "/Weather" },
-	//	{ text:"Intra", path: "/https://profile.intra.42.fr" },
-	//	{ text:"WaitRoom", path: "/WaitRoom" },
-	//	{ text:"Stats", path: "/Stats" },
-	//	{ text:"Game", path: "/Game" },
-	//	{ text:"PrivateMessage", path: "/PrivateMessage" },
-	//	{ text:"Nothing", path: "/Nothing" },
-	//	{ text:"Morpion", path: "/Morpion" },
-	//	{ text:"Friends", path: "/FriendsList" },
-	//]
+	const cards = [];
+	const cards_content = [
+		{ text:"Weather", path: "/Weather" },
+		{ text:"Intra", path: "/https://profile.intra.42.fr" },
+		{ text:"WaitRoom", path: "/WaitRoom" },
+		{ text:"Stats", path: "/Stats" },
+		{ text:"Game", path: "/Game" },
+		{ text:"PrivateMessage", path: "/PrivateMessage" },
+		{ text:"Nothing", path: "/Nothing" },
+		{ text:"Morpion", path: "/Morpion" },
+		{ text:"Friends", path: "/FriendsList" },
+	]
 
-	//let id = 0
-	//cards_content.forEach((el)=>{
-	//	cards.push( <div key={id} className={st.card}>{el.text}</div> )
-	//	++id
-	//})
+	let id = 0
+	cards_content.forEach((el)=>{
+		cards.push( <div key={id} className={st.card}>{el.text}</div> )
+		++id
+	})
 
-	//return (
-	//	<div className={st.main_menu}>
-	//		<div className={st.menu}>
-	//			<div className={st.card_continer}>
-	//				{cards}
-	//			</div>
-	//			<div className={st.chat}>
-	//				im the chat
-	//			</div>
-	//		</div>
-	//		<div className={st.footer}>
-	//			im the footer
-	//		</div>
-	//	</div>
+	return (
+		<div className={st.main_menu}>
+			<div className={st.menu}>
+				<div className={st.card_continer}>
+					{cards}
+				</div>
+				<div className={st.chat}>
+					im the chat
+				</div>
+			</div>
+			<div className={st.footer}>
+				im the footer
+			</div>
+		</div>
 
-	//)
+	)
 
 
     return (
