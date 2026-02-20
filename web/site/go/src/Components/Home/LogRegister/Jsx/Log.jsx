@@ -101,6 +101,13 @@ export default function Log({setShowLog}) {
                                 className="iconecolor negativ"
                                 onClick={registerMode}
                                 >
+                                mdp-lost
+                        </button>
+                        
+                        <button type="button"
+                                className="iconecolor negativ"
+                                onClick={registerMode}
+                                >
                                 Inscris-toi
                         </button>
 

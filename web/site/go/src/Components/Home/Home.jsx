@@ -19,6 +19,7 @@ export const AUTH = {
     LOGIN: 1,
     QRCODE: 2,
     REGISTER: 3,
+    PASSWORD_LOST: 4,
 };
 
 export default function Home(){

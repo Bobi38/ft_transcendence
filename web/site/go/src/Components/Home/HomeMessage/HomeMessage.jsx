@@ -74,6 +74,7 @@ export default function HomeMessage({parent_style}) {
         SocketM.onChat(handleChat);
 
         return () => {
+            console.log("idk")
             SocketM.offChat(handleChat);
         };
     };
