@@ -309,3 +309,74 @@ Chaque objet = le dernier message complet d’une conversation.
 Si tu veux, je peux te réécrire la version optimisée complète pour ton cas avec PrivChat et PrivMess, prête à l’utiliser directement dans ton projet.
 
 Veux‑tu que je fasse ça ?
+
+
+--------------------------- SOCKET ---------------------------
+✅ ✅ SOLUTION PROPRE : Context + Instance unique
+1️⃣ Crée ton contexte
+📁 SocketContext.js
+import { createContext, useContext, useRef } from "react";
+import SocketManag from "./SocketManag";
+
+const SocketContext = createContext(null);
+
+export const SocketProvider = ({ children }) => {
+  const socketRef = useRef(null);
+
+  if (!socketRef.current) {
+    socketRef.current = new SocketManag();
+    socketRef.current.connect();
+  }
+
+  return (
+    <SocketContext.Provider value={socketRef.current}>
+      {children}
+    </SocketContext.Provider>
+  );
+};
+
+export const useSocket = () => {
+  return useContext(SocketContext);
+};
+🔎 Pourquoi useRef ?
+
+useRef garde la même instance entre les re-renders
+
+Le constructeur n’est appelé qu’une seule fois
+
+Même si App re-render → pas de nouvelle instance
+
+2️⃣ Wrap ton App
+📁 App.jsx
+import { SocketProvider } from "./SocketContext";
+
+function App() {
+  return (
+    <SocketProvider>
+      <YourRoutes />
+    </SocketProvider>
+  );
+}
+
+export default App;
+3️⃣ Utilisation dans n’importe quel composant
+import { useSocket } from "../SocketContext";
+import { useEffect } from "react";
+
+function Chat() {
+  const socket = useSocket();
+
+  useEffect(() => {
+    const handleMessage = (data) => {
+      console.log("chat reçu :", data);
+    };
+
+    socket.onChat(handleMessage);
+
+    return () => {
+      socket.offChat(handleMessage);
+    };
+  }, [socket]);
+
+  return <div>Chat</div>;
+}

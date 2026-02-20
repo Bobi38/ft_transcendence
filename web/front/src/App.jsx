@@ -2,8 +2,11 @@
 import Home from '/app/front/src/page/Home/Home.jsx'
 import Navigation from '/app/front/src/page/Navigation/Navigation.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {SocketM} from '/app/front/src/context/SocketM.jsx'
 
 export default function App() {
+
+  const {socket} = SocketM();
 
   return (
     <>
@@ -29,3 +32,5 @@ export default function App() {
     </>
   );
 }
+
+export { socket };
