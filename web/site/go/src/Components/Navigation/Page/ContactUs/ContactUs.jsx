@@ -16,13 +16,13 @@ export default function ContactUs() {
                     <h1>Contacter Nous</h1>
                 </div>
 
-                <ContactCardDisplay grid_style={`full ContactUs-padding`}/>
+                <ContactCardDisplay parent_style={`full ContactUs-padding`}/>
 
                 <div>
                     <h2>Issue</h2>
                 </div>
 
-                <ContactIssue grid_style="iconecolor"/>
+                <ContactIssue parent_style="iconecolor"/>
 
             </div>
         </>

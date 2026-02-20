@@ -7,7 +7,7 @@ import { FaLinkedin } from "react-icons/fa";
 import { Si42 } from "react-icons/si";
 
 export default function ContactIcone({ 
-    grid_style, 
+    parent_style, 
     name = "default", 
     git = { url: "https://github.com", name: "ton nom de compte ta vu" },
     linkedin = { url: "https://www.linkedin.com/", name: "ton prenom nom"  }, 
@@ -24,7 +24,7 @@ export default function ContactIcone({
 
     return ( 
         <>
-            <div className={`${grid_style} full ContactIcone-padding translateY`}>
+            <div className={`${parent_style} full ContactIcone-padding translateY`}>
 
                 <div className="ContactIcone-root">
 

@@ -1,9 +1,10 @@
-.arrowRight {
+.HomeArrow_right {
 	border-top: 2rem solid transparent;
 	border-left: 2rem solid #555;
-	border-bottom: 2rem solid transparent;
-}
+	border-bottom: 2rem solid transparent; 
 
-.arrowRight:hover{
-	border-left: 2rem solid #727272;
+	&:hover{
+		border-left: 2rem solid #727272;
+	}
+	
 }

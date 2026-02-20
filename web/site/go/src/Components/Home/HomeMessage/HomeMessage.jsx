@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { SocketM } from '../../../../SocketManag';
 import checkCo from "../../../../../fct1.js";
 
-export default function HomeMessage({grid_style}) {
+export default function HomeMessage({parent_style}) {
 
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
@@ -50,42 +50,12 @@ export default function HomeMessage({grid_style}) {
         }
     }
 
-    // useEffect(() => {
-    //     (async () => {const toto = await checkCo();
-    //         console.log("checkCo() in HomeMessage useEffect:", toto);
-    //         if (!toto) {
-    //             console.log("User not connected, redirecting to home page");
-    //             return;
-    //         }
-    //     })();
-    //     (async () => {await fetchMsg();})();
-
-    //     // console.log("use effect home message");
-    //     // console.log("nb co = " + SocketM.nb());
-    //     if (SocketM.nb() === 0) {
-    //         SocketM.connect();
-    //     }
-    //     const handleChat = (data) => {
-    //         console.log("Message reçu via SocketM.onChat:", data);
-    //         // const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    //         //message 2 externe
-
-    //         setDisplayedMessages((prev) => [...prev, data]);
-
-    //     };
-    //     SocketM.onChat(handleChat);
-    //     return () => {
-    //         // console.log("out of chat useEffect");
-    //         SocketM.offChat(handleChat);
-    //     };
-    // }, []);
-
-    useEffect(() => {
     const init = async () => {
-        const toto = await checkCo();
-        console.log("checkCo() in HomeMessage useEffect:", toto);
 
-        if (!toto) {
+        const repco = await checkCo();
+        console.log("checkCo() in HomeMessage useEffect:", repco);
+
+        if (!repco) {
             console.log("User not connected, aborting useEffect");
             return;
         }
@@ -108,7 +78,8 @@ export default function HomeMessage({grid_style}) {
         };
     };
 
-    init();
+    useEffect(() => {
+        init();
 	}, []);
 
     const handleSubmit = (e) => {
@@ -131,7 +102,7 @@ export default function HomeMessage({grid_style}) {
 
     return (
         <>
-            <div className={`${grid_style} HomeMessage-box`}>
+            <div className={`${parent_style} HomeMessage-box`}>
 
                     <div className="HomeMessage-message">
                         <h3>Chat</h3>
@@ -139,8 +110,6 @@ export default function HomeMessage({grid_style}) {
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
                         <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-me" : "HomeMessage-other"}`}>
-
-                        {/* <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}`}> */}
 
                             {msg.monMsg ? (
                                 <>
