@@ -75,7 +75,6 @@ export default function HomeMessage({grid_id}) {
         SocketM.onChat(handleChat);
 
         return () => {
-            console.log("idk")
             SocketM.offChat(handleChat);
         };
     };

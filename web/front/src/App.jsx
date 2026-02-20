@@ -1,8 +1,8 @@
 import './style/index.scss'
 
 /* Components */
-import Home from 'SRC/page/Home/Home.jsx'
-// import Navigation from 'SRC/page/Navigation/Navigation.jsx'
+import Home from 'FRONT/page/Home/Home.jsx'
+// import Navigation from 'FRONT/page/Navigation/Navigation.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {

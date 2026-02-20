@@ -1,8 +1,8 @@
 /* Css */
-import "SRC/page/Home/LogRegister/LogRegister.scss";
+import "FRONT/page/Home/LogRegister/LogRegister.scss";
 
 import { showAlert } from "/app/back/src/fct1.js";
-import { AUTH } from "SRC/page/Home/Home.jsx"
+import { AUTH } from "FRONT/page/Home/Home.jsx"
 import { FaGithub } from "react-icons/fa";
 
 export default function Log({setShowLog}) {

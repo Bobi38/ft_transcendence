@@ -1,16 +1,17 @@
 /* Css */
-import "SRC/page/Home/Home.scss";
+import "FRONT/page/Home/Home.scss";
 
 /* Components */
-// import HomeFooter from 'SRC/page/Home/HomeFooter/HomeFooter.jsx';
-// import HomeMessage from 'SRC/page/Home/HomeMessage/HomeMessage.jsx';
-// import HomeIcone from 'SRC/page/Home/HomeIcone/HomeIcone.jsx';
-// import HomeArrow from 'SRC/page/Home/HomeArrow/HomeArrow.jsx';
-// import Log from "SRC/page/Home/LogRegister/Jsx/Log.jsx"
-// import Register from "SRC/page/Home/LogRegister/Jsx/Register.jsx"
-// import Qrcode from "SRC/page/Home/LogRegister/Jsx/Qrcode.jsx"
+// import HomeFooter from 'FRONT/page/Home/HomeFooter/HomeFooter.jsx';
+// import HomeMessage from 'FRONT/page/Home/HomeMessage/HomeMessage.jsx';
+// import HomeIcone from 'FRONT/page/Home/HomeIcone/HomeIcone.jsx';
+// import HomeArrow from 'FRONT/page/Home/HomeArrow/HomeArrow.jsx';
+// import Log from "FRONT/page/Home/LogRegister/Jsx/Log.jsx"
+// import Register from "FRONT/page/Home/LogRegister/Jsx/Register.jsx"
+// import Qrcode from "FRONT/page/Home/LogRegister/Jsx/Qrcode.jsx"
 
-import Button from "SRC/Component/Button/Button.jsx"
+
+import HomeCard from "FRONT/page/Home/HomeCard/HomeCard.jsx";
 
 import checkCo from "/app/back/src/fct1.js"
 import { useEffect, useState } from "react";
@@ -102,7 +103,7 @@ export default function Home(){
 	]
 
 	cards_content.forEach((el, index)=>{
-		cards.push( <div key={index} className={`card`}>{el.text}</div> )
+		cards.push( <HomeCard key={index} type_css={0}>{el.text}</HomeCard> )
 		
 	})
 
@@ -118,10 +119,8 @@ export default function Home(){
                 {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
 
             </div>
-            <Button type_css="type0">
-                clickme
-            </Button>
-			{/* <div className={`menu`}>
+
+			<div className={`menu`}>
 
 				<div className={`card_continer`}>
 					{cards}
@@ -137,7 +136,7 @@ export default function Home(){
 
 				im the footer
 
-			</div> */}
+			</div>
 
 		</div>
 

@@ -20,7 +20,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      'SRC': path.resolve(__dirname, './src'),
+      'FRONT': path.resolve(__dirname, './src'),
+      // 'BACK': path.resolve(__dirname, '../back/src'),
     },
   },
 });
