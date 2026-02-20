@@ -1,6 +1,5 @@
 /* Css */
-import "./PrivateMessageConv.css"; 
-import {SocketM} from "../../../../../../SocketManag.js";
+import "./PrivateMessageConv.scss"; 
 
 /* Components */
 import { SocketM } from "../../../../../../SocketManag";
