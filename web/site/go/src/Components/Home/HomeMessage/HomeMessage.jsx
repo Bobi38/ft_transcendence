@@ -1,13 +1,14 @@
 /* Css */
-import "../../../index.css"
-import "./HomeMessage.css";
+import "../../../index.scss"
+import "./HomeMessage.scss";
 
 /* Components */
 import { useEffect, useState } from "react";
-import {SocketM} from '../../../../SocketManag.js';
+import { SocketM } from '../../../../SocketManag';
+import checkCo from "../../../../../fct1.js";
 
-export default function HomeMessage({grid_style}) {
-    
+export default function HomeMessage({parent_style}) {
+
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
@@ -32,7 +33,6 @@ export default function HomeMessage({grid_style}) {
         } catch (error) {
             console.error("Error fetching messages:", error);
         }
-
     }
 
     async function addmess(time){
@@ -50,30 +50,38 @@ export default function HomeMessage({grid_style}) {
         }
     }
 
-    useEffect(() => {
-        (async () => {await fetchMsg();})();
-        
-        // console.log("use effect home message");
-        // console.log("nb co = " + SocketM.nb());
+    const init = async () => {
+
+        const repco = await checkCo();
+        console.log("checkCo() in HomeMessage useEffect:", repco);
+
+        if (!repco) {
+            console.log("User not connected, aborting useEffect");
+            return;
+        }
+
+        await fetchMsg();
+
         if (SocketM.nb() === 0) {
             SocketM.connect();
         }
+
         const handleChat = (data) => {
             console.log("Message reçu via SocketM.onChat:", data);
-            // const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            //message 2 externe 
-
             setDisplayedMessages((prev) => [...prev, data]);
-
         };
+
         SocketM.onChat(handleChat);
+
         return () => {
-            // console.log("out of chat useEffect");
+            console.log("idk")
             SocketM.offChat(handleChat);
         };
-    }, []);
-    
-    
+    };
+
+    useEffect(() => {
+        init();
+	}, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -84,26 +92,25 @@ export default function HomeMessage({grid_style}) {
 
         const data = {monMsg: true, type: "mess", message: input, timer: time};
         setDisplayedMessages(prev => [...prev, data]);
-        
+
         const data2 = {...data, monMsg: false};
-        
+
         addmess(time);
         console.log("send via WebSocket data2:", data2);
         SocketM.sendd(data2);
-        setInput(""); 
+        setInput("");
     };
-    
 
     return (
         <>
-            <div className={`${grid_style} HomeMessage-box`}>
+            <div className={`${parent_style} HomeMessage-root`}>
 
-                    <div className="HomeMessage-message">
-                        <h3>Chat</h3>
+                <div className="HomeMessage-message">
+                    <h3>Chat</h3>
 
                     {displayedMessages && displayedMessages.map((msg, index) => (
-                        
-                        <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}`}>
+
+                        <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-me" : "HomeMessage-other"}`}>
 
                             {msg.monMsg ? (
                                 <>
@@ -120,20 +127,19 @@ export default function HomeMessage({grid_style}) {
                         </div>
                     ))}
 
-                    </div>
-
-
-
-                    <form id="HomeMessageform" onSubmit={handleSubmit}>
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                        />
-                        <input id="HomeMessagesubmit" type="submit"></input>
+                </div>
+                    
+                    <form onSubmit={handleSubmit}>
+                        <div className="HomeMesssage-form">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                />
+                            <button type="submit">Envoyer</button>
+                        </div>
                     </form>
-           
-            </div>
+                </div>
         </>
     )
 }

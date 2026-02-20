@@ -1,18 +1,18 @@
 /* Css */
-import "./ContactCardDisplay.css";
+import "./ContactCardDisplay.scss";
 
 /* Components */
 import ContactIcone from "./ContactIcone/ContactIcone";
     
-export default function ContactCardDisplay({ grid_style }) {
+export default function ContactCardDisplay({ parent_style }) {
 
     
     return (
         <>
 
-            <div className={`${grid_style} ContactCardDisplay-root `}>
+            <div className={`${parent_style} ContactCardDisplay-root `}>
 
-                <ContactIcone grid_style="ContactCardDisplay-div1 center iconecolor"
+                <ContactIcone parent_style="ContactCardDisplay-div1 center iconecolor"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -21,7 +21,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             />
 
                             
-                <ContactIcone grid_style="ContactCardDisplay-div2 center iconecolor"
+                <ContactIcone parent_style="ContactCardDisplay-div2 center iconecolor"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -30,7 +30,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             />
 
                             
-                <ContactIcone grid_style="ContactCardDisplay-div3 center iconecolor"
+                <ContactIcone parent_style="ContactCardDisplay-div3 center iconecolor"
                             name="Florent Cretin"
                             git={{ url: "https://github.com/Lzozoflo", name: "LzozoFlo" }}
                             linkedin={{ url: "https://www.linkedin.com/in/florent-cretin-8b5b9021a/", name: "Florent Cretin"  }} 
@@ -39,7 +39,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             />
 
                             
-                <ContactIcone grid_style="ContactCardDisplay-div4 center iconecolor"
+                <ContactIcone parent_style="ContactCardDisplay-div4 center iconecolor"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -48,7 +48,7 @@ export default function ContactCardDisplay({ grid_style }) {
                             />
 
                             
-                <ContactIcone grid_style="ContactCardDisplay-div5 center iconecolor"
+                <ContactIcone parent_style="ContactCardDisplay-div5 center iconecolor"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}

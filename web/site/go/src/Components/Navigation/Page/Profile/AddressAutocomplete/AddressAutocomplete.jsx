@@ -1,23 +1,23 @@
 /* Css */
-import "./AddressAutocomplete.css";
+import "./AddressAutocomplete.scss";
 
 /* Components */
 import { useState } from "react";
 
     
-export default function AddressAutocomplete({value}) {
-  const [query, setQuery] = useState(value);
+export default function AddressAutocomplete({user, setUser}) {
   const [results, setResults] = useState([]);
 
   const handleChange = async (e) => {
+    setUser({ ...user, location: e.target.value }) 
     const value = e.target.value;
-    setQuery(value);
 
     if (value.length > 3) {
       const res = await fetch(
         `https://api-adresse.data.gouv.fr/search/?q=${value}`
       );
-      const data = await res.json();
+
+    const data = await res.json();
       setResults(data.features);
     } else {
       setResults([]);
@@ -25,8 +25,8 @@ export default function AddressAutocomplete({value}) {
   };
 
   const handleSelect = (address) => {
-    setQuery(address);   // met la valeur dans l'input
-    setResults([]);      // cache la liste
+    setUser({...user, location: address})
+    setResults([]);
   };
 
   return (
@@ -35,23 +35,26 @@ export default function AddressAutocomplete({value}) {
         type="text"
         id="location"
         name="location"
-        value={query}
+        value={user.location}
         onChange={handleChange}
         placeholder="Entrez votre adresse"
       />
 
-      <ul>
-        {results.map((item) => (
-          <li
-            key={item.properties.id}
-            onClick={() => handleSelect(item.properties.label)}
-            style={{ cursor: "pointer" }}
-            className="AddressAutocomplete-list-item"
-          >
-            {item.properties.label}
-          </li>
-        ))}
-      </ul>
+        <div className="AddressAutocomplete-list-item" >
+          <ul>
+            {results.map((item) => (
+              <li
+                key={item.properties.id}
+                onClick={() => handleSelect(item.properties.label)}
+                style={{ cursor: "pointer" }}
+                >
+                {item.properties.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+
     </div>
   );
 }

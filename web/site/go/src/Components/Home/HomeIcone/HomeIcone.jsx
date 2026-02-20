@@ -1,19 +1,33 @@
 /* Css */
-import "./HomeIcone.css";
+import "./HomeIcone.scss";
 
 /* Components */
-import { Link } from "react-router-dom"; 
+import checkCo from "../../../../../fct1.js"
 
-export default function HomeIcone({ grid_style, arg, text }) {
-    
+export default function HomeIcone({ parent_style, arg, text }) {
+
+	const HomeIcone_clicked = async (arg) => {
+
+        console.log("HomeIcone_clicked(1) called");
+        const resCo = await checkCo();
+        if (!resCo) {
+            console.log("HomeIcone_clicked(2) checkco failed");
+            return;
+        }
+        console.log("HomeIcone_clicked(3) navigation autoriser");
+        window.location.href = arg;
+
+    }
 
     return (
         <>
-            <Link to={arg} className={`${grid_style}`} >
+            <button onClick={() => {HomeIcone_clicked(arg)}} className={`${parent_style}`}>
+
                 <p>
                     {text ?? "nothing for moment"}
                 </p>
-            </Link>
+
+            </button>
         </>
     )
 }

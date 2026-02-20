@@ -1,5 +1,5 @@
 /* Css */
-import "./Profile.css";
+import "./Profile.scss";
 
 /* Components */
 import { useState, useEffect } from "react";
@@ -7,6 +7,7 @@ import { VscEdit } from "react-icons/vsc";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { Form } from "react-router-dom";
 import AddressAutocomplete from "./AddressAutocomplete/AddressAutocomplete.jsx";
+import { showAlert } from "../../../../../../fct1";
 
 export default function Profile() {
     
@@ -17,19 +18,93 @@ export default function Profile() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [user, setUser] = useState({
-        login: "florent cretin",
-        login42: "fcretin",
-        email: "florent.cretin@hotmail.fr",
-        tel: "0778800814",
-        location: "Lyon"
+        login: "",
+        login42: "",
+        email: "",
+        tel: "",
+        location: ""
     });
 
+    const handlePass = async (e) => {
+        e.preventDefault();
+        const password = e.target.password.value.trim();
+        const confirmepassword = e.target.confirmepassword.value.trim();
+
+        if (!password || !confirmepassword) {
+            showAlert("Veuillez remplir tous les champs", "danger");
+            return;
+        }
+
+        if (password !== confirmepassword) {
+            showAlert("Les mots de passe ne correspondent pas", "danger");
+            return;
+        }
+
+        const data ={
+            Pass: password,
+        }
+        try{
+            const rep = await fetch("/api/majPass", {
+                method: "POST",
+                headers : {"Content-Type" : "application/json",},
+                credentials: "include",
+                body: JSON.stringify(data)
+            });
+
+            const repp = await rep.json();
+            if (repp.success)
+                showAlert("Mot de passe mis à jour avec succès", "success");
+            else
+                console.log ("err passmaj" , repp.message);
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!user.login || !user.login42 || !user.tel || !user.location || !user.email || !user.tel) {
+            showAlert("Veuillez remplir tous les champs", "danger");
+            return;
+        }
+
+        if (user.tel[0] !== '+' || user.tel[1] !== '3' || user.tel[2] !== '3' || user.tel.length < 10) {
+            showAlert("Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
+            return;
+        }
+
+        try{
+            const rep = await fetch("/api/updateProfil", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(user)
+            });
+            const repjson = await rep.json();
+            if (repjson.success){
+                showAlert("Profil mis à jour avec succès", "success");
+            }else{
+                console.error("Error updating profile:", repjson.message);
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
+    };
 
     const fetchUserData = async () => {
-
+        
         console.log("fetchUserData(1) called");
         try {
-            const rep = await fetch("/api/user/profile");
+            const rep = await fetch("/api/profile" ,{
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
             const repjson = await rep.json();
             if (repjson.success){
                 
@@ -48,7 +123,7 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        // fetchUserData();
+        fetchUserData();
     }, []);
     
 
@@ -56,27 +131,29 @@ export default function Profile() {
     return (
         <>
 
-            <div className="full Profile-bg center Profile-container">
+            <div className="full Profile-bg Profile-container">
+
+                <div id="alert-container">
+                    {/* ne pas creat une div faire un innertext */}
+                </div>
 
                 <h1>Mon Profil</h1>
 
-                <div    className="Profile-edit"
-                        onClick={() => setIsReadOnly(!isReadOnly)}>
-                    <VscEdit />   {isReadOnly ? " Edit" : " Editing"}
+                <div className="Profile-edit"
+                     onClick={() => setIsReadOnly(!isReadOnly)}>
+                     <VscEdit />   {isReadOnly ? " Edit" : " Editing"}
                 </div>
 
 
-                <div className="Profile-container">
+                <div className="Profile-all-form">
 
-                    <form className="Profile-form" onSubmit={(e) => {
-                        e.preventDefault();
-                    }}>
+                    <form className="Profile-form-info" onSubmit={handleSubmit}>
 
                         <label htmlFor="login">Login</label>
                         <input  type="text"
                                 id="login"
                                 name="login"
-                                value={user.login}
+                                value={user.login ?? ""}
                                 readOnly={isReadOnly}
                                 onChange={(e) => setUser({ ...user, login: e.target.value }) }
                                 /> 
@@ -85,7 +162,7 @@ export default function Profile() {
                         <input  type="text"
                                 id="login42"
                                 name="login42"
-                                value={user.login42}
+                                value={user.login42 ?? ""}
                                 readOnly={isReadOnly}
                                 onChange={(e) => setUser({ ...user, login42: e.target.value }) }
                                 /> 
@@ -102,33 +179,31 @@ export default function Profile() {
 
 
                         <label htmlFor="tel">Téléphone</label> 
-                        <input  type="text"
+                        <input  type="tel"
                                 id="tel"
                                 name="tel"
-                                value={user.tel}
+                                value={user.tel ?? ""}
                                 readOnly={isReadOnly}
                                 onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                                 /> 
 
                         <label htmlFor="location">Location</label>
-                        <AddressAutocomplete value={user.location}/>
+                        <AddressAutocomplete user={user} setUser={setUser}/>
 
                         <button type="submit">Modifier mes informations</button>
                         
                     </form>
 
 
-                    <div    className="Profile-change-password"
-                            onClick={() => setShowFormPassword(!showFormPassword)}>
+                    <div className="Profile-change-password"
+                         onClick={() => setShowFormPassword(!showFormPassword)}>
                         Changer de mot de passe
                     </div>
 
                     
-                    <div className={showFormPassword? "visible" : "hidden"}>
+                    <div className={showFormPassword ? "visible" : "hidden"}>
 
-                        <form className="Profile-form" onSubmit={(e) => {
-                            e.preventDefault();
-                        }}>
+                        <form className="Profile-form-password" onSubmit={handlePass}>
 
                             <label htmlFor="password">Nouveau Mot de passe</label>
                             <div className="Profile-password">
@@ -169,6 +244,8 @@ export default function Profile() {
                     </div>
 
                 </div>
+
+
             </div>
         </>
     )

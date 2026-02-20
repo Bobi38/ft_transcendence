@@ -1,5 +1,5 @@
 /* Css */
-import "./Navigation.css";
+import "./Navigation.scss";
 
 /* Components */
 import NavBar from "./NavBar/NavBar.jsx";
@@ -8,46 +8,62 @@ import ContactUs from "./Page/ContactUs/ContactUs.jsx";
 import ErrorRedir from "./Page/ErrorRedir/ErrorRedir.jsx";
 import MorpionTraining from "./Page/Game/Morpion/MorpionTraining.jsx";
 import Morpion from "./Page/Game/Morpion/Morpion.jsx";
-import Nothing from "./Page/Nothing/Nothing.jsx";
 import Profile from "./Page/Profile/Profile.jsx";
 import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
+import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
+
+import checkCo from "../../../../fct1.js"
+import { useNavigate } from "react-router-dom";
     
 export default function Navigation({ screen }) {
 
+    const navigate = useNavigate();
+
+
+    const connectioncheck = async () => {
+        if (screen == "ErrorRedir"){
+            return // 
+        }
+
+        const res = await checkCo();
+        if (!res){
+            navigate('/');
+        }
+    };
+
     const renderScreenNav = () => {
-        
-        console.log("rendering screen nav with screen: ", screen);
+
+        connectioncheck();
 
         switch(screen) {
             case 'ContactUs':
-                return <ContactUs/>;
+                return <ContactUs/>;//
             case 'ErrorRedir':
-                return <ErrorRedir/>;
+                return <ErrorRedir/>;//
             case 'Morpion':
                 return <Morpion/>;
             case 'MorpionTraining':
                 return <MorpionTraining/>;
             case 'Profile':
-                return <Profile/>;
+                return <Profile/>;//
+            case 'PrivateMessage':
+                return <PrivateMessage/>;//
             case 'Stats':
-                return <Stats/>;
+                return <Stats/>;// 50% mais on att de la data du morpion 
             case 'WaitRoom':
                 return <WaitRoom/>;
-            default:
-                return <Nothing/>;
-                
         }
     }
     
     return (
         <>
 
-            <div className="full Navigation-root">
+            <div className="Navigation-root"> {/* 100vh */}
 
-                <NavBar grid_style="Navigation-nav"/>
+                <NavBar/>{/* la taille */}
                 
-                <div className={`Navigation-renderScreenNav`}>
+                <div className={"Navigation-renderScreenNav"}> {/* le reste */}
 
                     {renderScreenNav()}
                     

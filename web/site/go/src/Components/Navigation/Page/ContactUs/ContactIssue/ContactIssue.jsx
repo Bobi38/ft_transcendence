@@ -1,10 +1,10 @@
 /* Css */
-import "./ContactIssue.css";
-    
-export default function ContactIssue({ grid_style }) {
+import "./ContactIssue.scss";
+
+export default function ContactIssue({ parent_style }) {
     return (
         <>
-            <div className={`${grid_style} ContactIssue`}>
+            <div className={`${parent_style} ContactIssue`}>
                 <form className="full ContactIssue-form">
 
                     <label htmlFor="name">Noms</label>

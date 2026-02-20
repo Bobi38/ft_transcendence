@@ -1,5 +1,5 @@
 /* Css */
-import "./ErrorRedir.css";
+import "./ErrorRedir.scss";
 
 /* Components */
 import { Link } from "react-router-dom";

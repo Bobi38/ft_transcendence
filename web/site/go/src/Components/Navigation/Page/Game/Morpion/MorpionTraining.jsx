@@ -1,4 +1,4 @@
-import './Morpion.css';
+import './Morpion.scss';
 
 import { useEffect, useState } from 'react';
 

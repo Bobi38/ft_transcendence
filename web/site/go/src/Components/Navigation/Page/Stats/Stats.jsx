@@ -1,5 +1,5 @@
 /* Css */
-import "./Stats.css";
+import "./Stats.scss";
 
 /* Components */ 
 import StatsMorpion from "./StatsMorpion/StatsMorpion.jsx";
@@ -21,12 +21,16 @@ export default function Stats() {
 
     return (
         <>
-            <div className="full Stats-bg center">
-                <h1>History</h1>
-                <button className="Stats-btn" onClick={() => handle("WiiGame")}>Wii Game</button>
-                <button className="Stats-btn" onClick={() => handle("Morpion")}>Morpion</button>
+            <div className="full Stats-bg Stats-flex center">
+                <div>
+                    <h1>History</h1>
+                    <div>
+                        <button className="Stats-btn" onClick={() => handle("WiiGame")}>Wii Game</button>
+                        <button className="Stats-btn" onClick={() => handle("Morpion")}>Morpion</button>
+                    </div>
+                </div>
 
-                <div className="full">
+                <div >
                     {!selected && <p className="Stats-p">Select a game to see the stats</p>}
                     {selected === "WiiGame" && <StatsWiiGame />}
                     {selected === "Morpion" && <StatsMorpion />}

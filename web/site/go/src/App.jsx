@@ -1,5 +1,5 @@
 /* Css */
-import './App.css'
+import './App.scss'
 
 /* Components */
 import Home from './Components/Home/Home.jsx'
@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 export default function App() {
 
   return (
-    <> 
+    <>
         <BrowserRouter>
           <Routes>
 
@@ -23,6 +23,7 @@ export default function App() {
             <Route path="/Nothing" element={<Navigation screen="Nothing"/>} />
             <Route path="/Profile" element={<Navigation screen="Profile"/>} />
             <Route path="/Stats" element={<Navigation screen="Stats"/>} />
+            <Route path="/PrivateMessage" element={<Navigation screen="PrivateMessage"/>} />
             <Route path="/*" element={<Navigation screen="ErrorRedir"/>} />
 
 

@@ -1,16 +1,15 @@
 /* Css */
-import "./HomeFooter.css"
-import "../../../index.css"
+import "./HomeFooter.scss"
+import "../../../index.scss"
 
 /* Components */
-import { Link, useNavigate } from "react-router-dom"; 
-import AUTH from "../Home.jsx"
+import { Link, useNavigate } from "react-router-dom";
 
-export default function HomeFooter({ grid_style, setShowLog }) {
+export default function HomeFooter({ parent_style, setShowLog }) {
 
     const navigate = useNavigate();
     function LOGOUT() {
-        
+
         console.log("oui")
 
         fetch('/api/logout', {
@@ -29,12 +28,11 @@ export default function HomeFooter({ grid_style, setShowLog }) {
         .catch(error => {
             console.error("Error during logout:", error);
         });
-        
     }
-    
+
     return (
         <>
-            <div className={`${grid_style} HomeFooter-grid stretch`}>
+            <div className={`${parent_style} HomeFooter-grid stretch`}>
 
                     <Link   to='/ContactUs'
                             className="HomeFooter1 Home-iconemargin iconecolor center">
@@ -48,10 +46,9 @@ export default function HomeFooter({ grid_style, setShowLog }) {
                         </div>
                         <div className="iconecolor HomeFooter-padding"
                              onClick={(LOGOUT)}>
-                                LOGOUT
+                                LOGOUT quand pas log on enleve
                         </div>
                     </div>
-                    
 
                     <Link   to='/Profile'
                             className="HomeFooter3 Home-iconemargin iconecolor center">

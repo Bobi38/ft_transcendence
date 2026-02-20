@@ -8,6 +8,7 @@ class SocketManag{
             chat: [],
             game: [],
             room: [],
+            priv: [],
         };
     }
 
@@ -34,6 +35,10 @@ class SocketManag{
                 console.log("Message reçu de type waitRoom via WebSocket:", dataa.mess);
                 this.listeners.room.forEach(cb => cb(dataa));
             }
+            if (dataa.type === 'priv_mess') {
+                console.log("Message reçu de type priv_mess via WebSocket:", dataa.mess);
+                this.listeners.priv.forEach(cb => cb(dataa));
+            }
         };
         this.socket.onerror = (error) => {
             console.log("errr socket" + error);
@@ -47,11 +52,20 @@ class SocketManag{
         this.nbco++;
     }
     
+    onPriv(cb) {
+        if (!this.listeners.priv.include(cb))
+            this.listeners.priv.push(cb);
+    }
+
     onChat(cb) {
         if (!this.listeners.chat.includes(cb))
             this.listeners.chat.push(cb);
     }
 
+    offPriv(cb) {
+        this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
+    }
+    
     offChat(cb) {
         this.listeners.chat = this.listeners.chat.filter(listener => listener !== cb);
     }
@@ -62,6 +76,10 @@ class SocketManag{
 
     offRoom(cb) {
         this.listeners.room = this.listeners.room.filter(listener => listener !== cb);
+    }
+c 
+    offPriv(cb){
+        this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
     }
 
     onGame(cb) {
@@ -92,6 +110,11 @@ class SocketManag{
             this.socket.close();
             this.socket = null;
         }
+    }
+    getState(){
+        if (this.socket)
+            return this.socket.readyState;
+        return null;
     }
 }
 
