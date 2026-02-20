@@ -1,16 +1,16 @@
 /* Css */
-import "/app/front/src/page/Home/Home.scss";
-import st from "./Home.module.scss";
+import "SRC/page/Home/Home.scss";
 
 /* Components */
-import HomeFooter from '/app/front/src/page/Home/HomeFooter/HomeFooter.jsx';
-import HomeMessage from '/app/front/src/page/Home/HomeMessage/HomeMessage.jsx';
-import HomeIcone from '/app/front/src/page/Home/HomeIcone/HomeIcone.jsx';
-import HomeArrow from '/app/front/src/page/Home/HomeArrow/HomeArrow.jsx';
-import Log from "/app/front/src/page/Home/LogRegister/Jsx/Log.jsx"
-import Register from "/app/front/src/page/Home/LogRegister/Jsx/Register.jsx"
-import Qrcode from "/app/front/src/page/Home/LogRegister/Jsx/Qrcode.jsx"
+// import HomeFooter from 'SRC/page/Home/HomeFooter/HomeFooter.jsx';
+// import HomeMessage from 'SRC/page/Home/HomeMessage/HomeMessage.jsx';
+// import HomeIcone from 'SRC/page/Home/HomeIcone/HomeIcone.jsx';
+// import HomeArrow from 'SRC/page/Home/HomeArrow/HomeArrow.jsx';
+// import Log from "SRC/page/Home/LogRegister/Jsx/Log.jsx"
+// import Register from "SRC/page/Home/LogRegister/Jsx/Register.jsx"
+// import Qrcode from "SRC/page/Home/LogRegister/Jsx/Qrcode.jsx"
 
+import Button from "SRC/Component/Button/Button.jsx"
 
 import checkCo from "/app/back/src/fct1.js"
 import { useEffect, useState } from "react";
@@ -22,6 +22,8 @@ export const AUTH = {
     QRCODE: 2,
     REGISTER: 3,
 };
+
+
 
 export default function Home(){
 
@@ -82,7 +84,9 @@ export default function Home(){
 
     }, []);
 
-    const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
+
+
+    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
 
 	const cards = [];
 	const cards_content = [
@@ -97,104 +101,123 @@ export default function Home(){
 		{ text:"Friends", path: "/FriendsList" },
 	]
 
-	let id = 0
-	cards_content.forEach((el)=>{
-		cards.push( <div key={id} className={st.card}>{el.text}</div> )
-		++id
+	cards_content.forEach((el, index)=>{
+		cards.push( <div key={index} className={`card`}>{el.text}</div> )
+		
 	})
 
+    
 	return (
-		<div className={st.main_menu}>
-			<div className={st.menu}>
-				<div className={st.card_continer}>
+
+		<div id="Home-root">
+
+            <div className={`Home-pos full ${is_popup}`} >
+
+                {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
+                {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
+                {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+
+            </div>
+            <Button type_css="type0">
+                clickme
+            </Button>
+			{/* <div className={`menu`}>
+
+				<div className={`card_continer`}>
 					{cards}
 				</div>
-				<div className={st.chat}>
+
+				<div className={`chat`}>
 					im the chat
 				</div>
+
 			</div>
-			<div className={st.footer}>
+
+			<div className={`footer`}>
+
 				im the footer
-			</div>
+
+			</div> */}
+
 		</div>
 
 	)
 
 
-    return (
-        <>
-            <div className='Home-grid' id="home_root">
+    // return (
+    //     <>
+    //         <div className='Home-grid' id="home_root">
 
-                <div id="home-login" className={`Home-pos full ${home_login}`} >
+    //             <div id="home-login" className={`Home-pos full ${is_popup}`} >
 
-                    {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
-                    {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
-                    {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+    //                 {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
+    //                 {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
+    //                 {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
 
-                </div>
-                <>
-                    <HomeIcone      grid_id={`Home-div1`}
-                                    arg="/Weather"
-                                    text="Weather"/>
+    //             </div>
+    //             <>
+    //                 <HomeIcone      grid_id={`Home-div1`}
+    //                                 arg="/Weather"
+    //                                 text="Weather"/>
 
-                    <HomeIcone      grid_id={`Home-div2`}
-                                    // arg="/Intra"
-                                    text="Intra"
-                                    arg="https://profile.intra.42.fr"/>
-                                    {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
+    //                 <HomeIcone      grid_id={`Home-div2`}
+    //                                 // arg="/Intra"
+    //                                 text="Intra"
+    //                                 arg="https://profile.intra.42.fr"/>
+    //                                 {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
 
-                    <HomeIcone      grid_id={`Home-div3`}
-                                    arg="/WaitRoom"
-                                    text="WaitRoom"
-                                    />
-                </>
+    //                 <HomeIcone      grid_id={`Home-div3`}
+    //                                 arg="/WaitRoom"
+    //                                 text="WaitRoom"
+    //                                 />
+    //             </>
 
-                <>
+    //             <>
 
-                    <HomeIcone      grid_id={`Home-div4`}
-                                    arg="/Stats"
-                                    text="Stats"
-                                    />
+    //                 <HomeIcone      grid_id={`Home-div4`}
+    //                                 arg="/Stats"
+    //                                 text="Stats"
+    //                                 />
 
-                    <HomeIcone      grid_id={`Home-div5`}
-                                    arg="/jeux"
-                                    text="jeux"/>
+    //                 <HomeIcone      grid_id={`Home-div5`}
+    //                                 arg="/jeux"
+    //                                 text="jeux"/>
 
-                    <HomeIcone      grid_id={`Home-div6`}
-                                    arg="/PrivateMessage"
-                                    text="Private Message"
-                                    />
+    //                 <HomeIcone      grid_id={`Home-div6`}
+    //                                 arg="/PrivateMessage"
+    //                                 text="Private Message"
+    //                                 />
 
-                </>
+    //             </>
 
-                    <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
+    //                 <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
 
-                <>
-                    <HomeIcone      grid_id={`Home-div7`}
-                                    arg="/Nothing"
-                                    // text="Nothing"
-                                    />
+    //             <>
+    //                 <HomeIcone      grid_id={`Home-div7`}
+    //                                 arg="/Nothing"
+    //                                 // text="Nothing"
+    //                                 />
 
-                    <HomeIcone      grid_id={`Home-div8`}
-                                    arg="/Morpion"
-                                    text="Mini-games"
-                                    />
+    //                 <HomeIcone      grid_id={`Home-div8`}
+    //                                 arg="/Morpion"
+    //                                 text="Mini-games"
+    //                                 />
 
-                    <HomeIcone      grid_id={`Home-div9`}
-                                    arg="/Friends-List"
-                                    text="Friends-List"
-                                    />
+    //                 <HomeIcone      grid_id={`Home-div9`}
+    //                                 arg="/Friends-List"
+    //                                 text="Friends-List"
+    //                                 />
 
-                </>
+    //             </>
 
 
-                <HomeMessage        grid_id={`Home-div10`}/>
+    //             <HomeMessage        grid_id={`Home-div10`}/>
 
-                <HomeFooter         grid_id={`Home-div11`}
-                                    setShowLog={setShowLog}
-                                    />
+    //             <HomeFooter         grid_id={`Home-div11`}
+    //                                 setShowLog={setShowLog}
+    //                                 />
 
-            </div>
-        </>
-    )
+    //         </div>
+    //     </>
+    // )
 }

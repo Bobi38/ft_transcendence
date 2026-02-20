@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react'; // ou react si tu utilises React
+import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
@@ -15,6 +16,11 @@ export default defineConfig({
         target: 'ws://localhost:9000',
         ws: true,
       },
+    },
+  },
+  resolve: {
+    alias: {
+      'SRC': path.resolve(__dirname, './src'),
     },
   },
 });
