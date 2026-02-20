@@ -104,39 +104,41 @@ export default function HomeMessage({parent_style}) {
         <>
             <div className={`${parent_style} HomeMessage-root`}>
 
-                    <div className="HomeMessage-message">
-                        <h3>Chat</h3>
+                <div className="HomeMessage-message">
+                    <h3>Chat</h3>
 
-                        {displayedMessages && displayedMessages.map((msg, index) => (
+                    {displayedMessages && displayedMessages.map((msg, index) => (
 
-                            <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-me" : "HomeMessage-other"}`}>
+                        <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-me" : "HomeMessage-other"}`}>
 
-                                {msg.monMsg ? (
-                                    <>
-                                        <div><span>{msg.timer}</span></div>
-                                        <p>{msg.message}</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div><strong>{msg.login}</strong> <span>{msg.timer}</span></div>
-                                        <p>{msg.message}</p>
-                                    </>
-                                )}
+                            {msg.monMsg ? (
+                                <>
+                                    <div><span>{msg.timer}</span></div>
+                                    <p>{msg.message}</p>
+                                </>
+                            ) : (
+                                <>
+                                    <div><strong>{msg.login}</strong> <span>{msg.timer}</span></div>
+                                    <p>{msg.message}</p>
+                                </>
+                            )}
 
-                            </div>
-                        ))}
+                        </div>
+                    ))}
 
-                    </div>
-
-                    <form id="HomeMessageform" onSubmit={handleSubmit}>
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                        />
-                        <input id="HomeMessagesubmit" type="submit"></input>
+                </div>
+                    
+                    <form onSubmit={handleSubmit}>
+                        <div className="HomeMesssage-form">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                />
+                            <button type="submit">Envoyer</button>
+                        </div>
                     </form>
-            </div>
+                </div>
         </>
     )
 }
