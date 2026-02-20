@@ -10,3 +10,31 @@ body, #root {
     height: 100vh;
     width: 100vw;
 }
+
+
+
+//   @include full;
+
+// @mixin full {
+//     height: 100%;
+//     width: 100%;
+// }
+// @mixin fullw { width: 100%; }
+// @mixin fullh { height: 100%; }
+
+.full {
+    height: 100%;
+    width: 100%;
+}
+.fullw { width: 100%; }
+.fullh { height: 100%; }
+
+.hidden {display: none;}
+.visible {display: block;}
+
+
+.center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

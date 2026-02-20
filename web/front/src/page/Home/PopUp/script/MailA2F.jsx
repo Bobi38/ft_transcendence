@@ -75,19 +75,21 @@ export default function MailA2F({setShowLog}) {
         <>
 
             {!showCodeInput && (
-                <button type="button" id="mailverif" className="iconecolor negativ center" onClick={sendmail}>
+                <button type="button" id={`mailverif`} className={``} onClick={sendmail}>
                   Envoyer mail de verification
                 </button>
             )}
 
             {showCodeInput && (
 
-              <form id="qrcode" className="full LogRegister-flex2 center" onSubmit={veryfCode}>
+              <form id={`maila2f`} className={``} onSubmit={veryfCode}>
 
                 <input type="text" id="code" name="code" placeholder="Entrez Code"/>
 
-                <button type="submit" className="iconecolor negativ">Valider</button>
-                <button type="button" className="iconecolor negativ" onClick={sendmail}>Renvoyer un mail de verification</button>
+                  <div className={`button-container`}>
+                      <button type="submit" className={``}>Valider</button>
+                      <button type="button" className={``} onClick={sendmail}>Renvoyer un mail de verification</button>
+                  </div>
               </form>
 
             )}

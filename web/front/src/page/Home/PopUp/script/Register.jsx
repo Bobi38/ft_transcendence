@@ -49,31 +49,26 @@ export default function Register({setShowLog}) {
 
 
     return (
-        <form id="regist" className="full LogRegister-flex2 center" onSubmit={retsubmit}>
+        <form id="regist" className={``} onSubmit={retsubmit}>
 
-            <h4>INSCRIVEZ-VOUS</h4>
+            <h4>Register</h4>
 
-            <label htmlFor="name">Pseudo</label>
+            <label htmlFor="name">Nickname</label>
             <input type="text" id="name" name="name" placeholder="XxX_DarkSasuke_XxX"/>
 
             <label htmlFor="email">Email</label>
             <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
 
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password">Password</label>
             <input type="password" id="password" name="password" placeholder="1234btw"/>
 
-            <div className="full LogRegister-flex3">
+            <div className={`button-container`}>
 
-                <button type="submit" className="iconecolor negativ">S'inscrire</button>
-
-                <button type="button"
-                        className="iconecolor negativ"
-                        onClick={logMode}
-                        >
-                        Se connecter
-                </button>
+                <button type="submit" className={``}>Register</button>
+                <button type="button" className={``} onClick={logMode}>Connexion</button>
 
             </div>
+
         </form>
     )
 }

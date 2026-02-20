@@ -36,8 +36,8 @@ export default function Login({setShowLog}) {
                 sessionStorage.setItem('type', "success");
 
 
-                setShowLog(AUTH.QRCODE); // change to qrcode
-                // setShowLog(AUTH.NONE); // change to qrcode
+                setShowLog(AUTH.MAILA2F); 
+                // setShowLog(AUTH.NONE); 
 
             } else {
                 showAlert("Erreur : " + result.message, "danger");
@@ -64,9 +64,9 @@ export default function Login({setShowLog}) {
 
 
     return (
-        <form id="login" className="full LogRegister-flex2 center" onSubmit={logsub}>
+        <form id={`login`} onSubmit={logsub}>
 
-            <h4>CONNECTEZ-VOUS</h4>
+            <h4>Connexion</h4>
 
             <label htmlFor="email">Email</label>
             <input
@@ -77,7 +77,7 @@ export default function Login({setShowLog}) {
                 required
             />
 
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password">Password</label>
             <input
                 type="password"
                 id="password"
@@ -86,30 +86,30 @@ export default function Login({setShowLog}) {
                 required
             />
 
-            <div className="full LogRegister-flex3">
+            <div className={`button-container`}>
 
                 <button type="submit"
-                        className="iconecolor negativ"
+                        className={``}
                         >
                         Connexion
                 </button>
 
                 <button type="button"
-                        className="iconecolor negativ"
+                        className={``}
                         onClick={registerMode}
                         >
-                        mdp-lost
+                        Password lost
                 </button>
                 
                 <button type="button"
-                        className="iconecolor negativ"
+                        className={``}
                         onClick={registerMode}
                         >
-                        Inscris-toi
+                        Register
                 </button>
 
                 <button type="button"
-                        className="iconecolor negativ"
+                        className={``}
                         target="_blank"
                         onClick={handleGit}
                         >
@@ -117,11 +117,11 @@ export default function Login({setShowLog}) {
                 </button>
 
                 <button type="button"
-                        className="iconecolor negativ"
+                        className={``}
                         target="_blank"
                         onClick={MissPswdMode}
                         >
-                        Mot de Passe Oublie ?
+                        Password forgot ?
                 </button>
             </div>
         </form>

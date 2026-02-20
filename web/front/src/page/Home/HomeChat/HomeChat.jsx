@@ -120,7 +120,7 @@ export default function HomeChat() {
 
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
-                        <div  key={index} className={`full ${msg.monMsg ? "me" : "other"}`}>
+                        <div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
 
                             {msg.monMsg ? (
                                 <div className="msg">

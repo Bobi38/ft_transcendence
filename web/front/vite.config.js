@@ -21,7 +21,8 @@ export default defineConfig({
   resolve: {
     alias: {
       'FRONT': path.resolve(__dirname, './src'),
-      // 'BACK': path.resolve(__dirname, '../back/src'),
+      'BACK': path.resolve(__dirname, '/app/back/src'),
+      'STYLE': path.resolve(__dirname, './src/style'),
     },
   },
 });

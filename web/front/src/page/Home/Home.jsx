@@ -1,85 +1,69 @@
 /* Css */
 import "FRONT/page/Home/Home.scss";
 
+
 /* Components */
-// import HomeFooter from 'FRONT/page/Home/HomeFooter/HomeFooter.jsx';
-// import HomeArrow from 'FRONT/page/Home/HomeArrow/HomeArrow.jsx';
+import PopUp from "./PopUp/PopUp.jsx"
+import HomeChat from "./HomeChat/HomeChat.jsx";
+import HomeCard from "./HomeCard/HomeCard.jsx";
 
-    /* PopUp */
-import Log from "FRONT/page/Home/PopUp/Jsx/Log.jsx"
-import Register from "FRONT/page/Home/PopUp/Jsx/Register.jsx"
-import MailA2F from "FRONT/page/Home/PopUp/Jsx/MailA2F.jsx"
-
-
-import HomeChat from "FRONT/page/Home/HomeChat/HomeChat.jsx";
-import HomeCard from "FRONT/page/Home/HomeCard/HomeCard.jsx";
-
-import checkCo from "/app/back/src/fct1.js"
+    /* other */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+
+
+/* back */
+import checkCo from "BACK/fct1.js"
+
+
 
 export const AUTH = {
     NONE: 0,
     LOGIN: 1,
-    QRCODE: 2,
+    MAILA2F: 2,
     REGISTER: 3,
 };
 
 
+export default function Home() {
 
-export default function Home(){
-
+    
     const [showLog, setShowLog] = useState(AUTH.NONE);
-    // const [user, setUser] = useState(null);
     const navigate = useNavigate();
+    
+    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
+    
 
 
-    // const fetchUserData = async () => {
+    const Home_handler = async (event) => {
 
-    //     console.log("fetchUserData(1) called");
-    //     try {
-    //         const rep = await fetch("/api/user/profile");
-    //         const repjson = await rep.json();
-    //         if (repjson.success){
+        if (event.target.closest('#PopUp')) {
+            console.log("Home_handler(1) need to connect")
+            return;
+        }
 
-    //             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
-    //             setUser(repjson.message);
+        const resCo = await checkCo();
+        if (!resCo) {
+            setShowLog(AUTH.LOGIN);
+        } else {
+            if (event.target.id === "HomeChatsubmit"){
+                const form = event.target.form
+                if (form) {
+                    form.requestSubmit();
+                }
+                return
+            }
+        }
+    };
 
-    //         }else{
-
-    //             console.error("fetchUserData(3) Error:", repjson.message);
-
-    //         }
-    //     } catch (error) {
-    //         console.error("fetchUserData(4) Error", error);
-    //     }
-
-    // };
 
     useEffect(() => {
 
         const home_root = document.getElementById("Home-root");
         if (!home_root) return;
 
-        const Home_handler = async (event) => {
-
-            if (event.target.closest('.LogRegister-flex1')) {
-                console.log("Home_handler(1) need to connect")
-                return;
-            }
-            const resCo = await checkCo();
-            if (!resCo) {
-                setShowLog(AUTH.LOGIN);
-            } else {
-                if (event.target.id === "HomeChatsubmit"){
-                    const form = event.target.form
-                    if (form) {
-                        form.requestSubmit();
-                    }
-                    return
-                }
-            }
-        };
+        Home_handler();
 
         home_root.addEventListener("click", Home_handler);
         return () => home_root.removeEventListener("click", Home_handler);
@@ -88,7 +72,14 @@ export default function Home(){
 
 
 
-    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
+
+
+
+
+
+
+
+
 
 	const cards = [];
 	const cards_content = [
@@ -108,21 +99,20 @@ export default function Home(){
 	})
 
     
+
 	return (
 
-		<div id="Home-root">
+		<section id="Home-root">
 
-            <div className={`Home-pos full ${is_popup}`} >
+            <div className={`Home-PopUp ${is_popup}`} >
 
-                {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
-                {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
-                {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+                {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
 
             </div>
 
 			<div className={`menu`}>
 
-				<div className={`card_continer`}>
+				<div className={`card-continer`}>
 					{cards}
 				</div>
 
@@ -136,85 +126,32 @@ export default function Home(){
 
 			</div>
 
-		</div>
-
+		</section>
 	)
-
-
-    // return (
-    //     <>
-    //         <div className='Home-grid' id="home_root">
-
-    //             <div id="home-login" className={`Home-pos full ${is_popup}`} >
-
-    //                 {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
-    //                 {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
-    //                 {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
-
-    //             </div>
-    //             <>
-    //                 <HomeIcone      grid_id={`Home-div1`}
-    //                                 arg="/Weather"
-    //                                 text="Weather"/>
-
-    //                 <HomeIcone      grid_id={`Home-div2`}
-    //                                 // arg="/Intra"
-    //                                 text="Intra"
-    //                                 arg="https://profile.intra.42.fr"/>
-    //                                 {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
-
-    //                 <HomeIcone      grid_id={`Home-div3`}
-    //                                 arg="/WaitRoom"
-    //                                 text="WaitRoom"
-    //                                 />
-    //             </>
-
-    //             <>
-
-    //                 <HomeIcone      grid_id={`Home-div4`}
-    //                                 arg="/Stats"
-    //                                 text="Stats"
-    //                                 />
-
-    //                 <HomeIcone      grid_id={`Home-div5`}
-    //                                 arg="/jeux"
-    //                                 text="jeux"/>
-
-    //                 <HomeIcone      grid_id={`Home-div6`}
-    //                                 arg="/PrivateMessage"
-    //                                 text="Private Message"
-    //                                 />
-
-    //             </>
-
-    //                 <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
-
-    //             <>
-    //                 <HomeIcone      grid_id={`Home-div7`}
-    //                                 arg="/Nothing"
-    //                                 // text="Nothing"
-    //                                 />
-
-    //                 <HomeIcone      grid_id={`Home-div8`}
-    //                                 arg="/Morpion"
-    //                                 text="Mini-games"
-    //                                 />
-
-    //                 <HomeIcone      grid_id={`Home-div9`}
-    //                                 arg="/Friends-List"
-    //                                 text="Friends-List"
-    //                                 />
-
-    //             </>
-
-
-    //             <HomeChat        grid_id={`Home-div10`}/>
-
-    //             <HomeFooter         grid_id={`Home-div11`}
-    //                                 setShowLog={setShowLog}
-    //                                 />
-
-    //         </div>
-    //     </>
-    // )
 }
+
+
+
+
+// const [user, setUser] = useState(null);
+// const fetchUserData = async () => {
+
+//     console.log("fetchUserData(1) called");
+//     try {
+//         const rep = await fetch("/api/user/profile");
+//         const repjson = await rep.json();
+//         if (repjson.success){
+
+//             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
+//             setUser(repjson.message);
+
+//         }else{
+
+//             console.error("fetchUserData(3) Error:", repjson.message);
+
+//         }
+//     } catch (error) {
+//         console.error("fetchUserData(4) Error", error);
+//     }
+
+// };

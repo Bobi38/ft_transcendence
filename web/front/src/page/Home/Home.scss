@@ -1,7 +1,8 @@
 $menu_height: 85%;
 $footer_height: 100% - $menu_height;
 
-$padding: 1em;
+$padding: 1rem;
+
 
 #Home-root {
 	height: 100%;
@@ -9,6 +10,19 @@ $padding: 1em;
 	background: blue;
 	padding: $padding;
     
+	.Home-PopUp {
+		position: absolute;
+		top:0;
+		left:0;
+		display: flex;
+		// include full
+		height: 100%;
+		width: 100%;
+		// include center
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
 
 	.menu {
 		padding: $padding;
@@ -17,7 +31,7 @@ $padding: 1em;
 		flex-direction: row;
 		background: red;
 
-		.card_continer {
+		.card-continer {
 			width: 70%;
 			padding-right: $padding;
 			display: grid;

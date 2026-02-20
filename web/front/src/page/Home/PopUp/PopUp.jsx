@@ -2,25 +2,41 @@
 import "./PopUp.scss";
 
 /* Components */
-import Login from "./script/Login.jsx"
-import Register from "./script/Register.jsx"
-import MailA2F from "./script/MailA2F.jsx"
-    
-export default function PopUp() {
+import Login from "./script/Login.jsx"          // on essaie de ce co et rediriger MailA2F
+import Register from "./script/Register.jsx"    // pas de compte cree nous en cree un et redirige vers Login
+import MailA2F from "./script/MailA2F.jsx"      // on envoye un mail a titou donc faut pas clicker
+
+
+import { AUTH } from "FRONT/page/Home/Home.jsx"
+
+export default function PopUp({ setShowLog, showLog }) {
 
     
 
     return (
-        <main className="full LogRegister-flex1 LogRegister-bglow">
 
-            <div className="LogRegister-div1 iconecolor">
-
-                <div id="alert-container">
-                    {/* ne pas creat une div faire un innertext */}
-                </div>
+        <div id={`PopUp`}>
 
 
+            <div id={`alert-container`}>
+                {/* 
+                    ne pas creat une div faire un innertext 
+                    TITOU TODO FAUT FAIT PARTOUT MEME POUR MAILA2F
+                */} 
             </div>
-        </main>
+
+            {showLog === AUTH.LOGIN && <Login setShowLog={setShowLog}/>}
+            {showLog === AUTH.MAILA2F && <MailA2F setShowLog={setShowLog}/>}
+            {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog}/>}
+
+
+        </div>
     )
 }
+
+// export const AUTH = {
+//     NONE: 0,
+//     LOGIN: 1,
+//     MAILA2F: 2,
+//     REGISTER: 3,
+// };
