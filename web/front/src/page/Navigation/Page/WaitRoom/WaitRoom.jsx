@@ -1,5 +1,5 @@
 import "./waitRoom.scss";
-import { SocketM } from "../../../../../SocketManag";
+import { SocketM } from "/app/back/src/SocketManag";
 import { useEffect, } from "react";
 import { useNavigate} from "react-router-dom";
 

@@ -13,7 +13,8 @@ import Stats from "./Page/Stats/Stats.jsx";
 import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
 import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
 
-import checkCo from "../../../../fct1.js"
+import checkCo from "/app/back/src/fct1.js"
+	
 import { useNavigate } from "react-router-dom";
     
 export default function Navigation({ screen }) {
