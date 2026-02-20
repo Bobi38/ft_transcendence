@@ -45,6 +45,10 @@ GameMorp.belongsTo(User, { foreignKey: 'iDWin' });
 
 export default GameMorp;
 
+await GameMorp.create({HowWin: "D", DateGame: new Date(), Ending: "Win", Time1: time1, Time2: time2, map: , Player1: })
+
+
+
 
 
 /*

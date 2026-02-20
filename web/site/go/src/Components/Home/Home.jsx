@@ -84,125 +84,117 @@ export default function Home(){
 
     const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
 
-	const cards = [];
-	const cards_content = [
-		{ text:"Weather", path: "/Weather" },
-		{ text:"Intra", path: "/https://profile.intra.42.fr" },
-		{ text:"WaitRoom", path: "/WaitRoom" },
-		{ text:"Stats", path: "/Stats" },
-		{ text:"Game", path: "/Game" },
-		{ text:"PrivateMessage", path: "/PrivateMessage" },
-		{ text:"Nothing", path: "/Nothing" },
-		{ text:"Morpion", path: "/Morpion" },
-		{ text:"Friends", path: "/FriendsList" },
-	]
+	//const cards = [];
+	//const cards_content = [
+	//	{ text:"Weather", path: "/Weather" },
+	//	{ text:"Intra", path: "/https://profile.intra.42.fr" },
+	//	{ text:"WaitRoom", path: "/WaitRoom" },
+	//	{ text:"Stats", path: "/Stats" },
+	//	{ text:"Game", path: "/Game" },
+	//	{ text:"PrivateMessage", path: "/PrivateMessage" },
+	//	{ text:"Nothing", path: "/Nothing" },
+	//	{ text:"Morpion", path: "/Morpion" },
+	//	{ text:"Friends", path: "/FriendsList" },
+	//]
 
-	let id = 0
-	cards_content.forEach((el)=>{
-		cards.push( <div key={id} className={st.card}>{el.text}</div> )
-		++id
-	})
+	//let id = 0
+	//cards_content.forEach((el)=>{
+	//	cards.push( <div key={id} className={st.card}>{el.text}</div> )
+	//	++id
+	//})
 
-	return (
-		<div className={st.main_menu}>
-			<div className={st.menu}>
-				<div className={st.card_continer}>
-					{cards}
-				</div>
-				<div className={st.chat}>
-					im the chat
-				</div>
-			</div>
-			<div className={st.footer}>
-				im the footer
-			</div>
-		</div>
+	//return (
+	//	<div className={st.main_menu}>
+	//		<div className={st.menu}>
+	//			<div className={st.card_continer}>
+	//				{cards}
+	//			</div>
+	//			<div className={st.chat}>
+	//				im the chat
+	//			</div>
+	//		</div>
+	//		<div className={st.footer}>
+	//			im the footer
+	//		</div>
+	//	</div>
 
-	)
-
-
+	//)
 
 
+    return (
+        <>
+            <div className='Home-grid' id="home_root">
+
+                <div id="home-login" className={`Home-pos full ${home_login}`} >
+
+                    {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
+                    {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
+                    {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+
+                </div>
+                <>
+                    <HomeIcone      grid_id={`Home-div1`}
+                                    arg="/Weather"
+                                    text="Weather"/>
+
+                    <HomeIcone      grid_id={`Home-div2`}
+                                    // arg="/Intra"
+                                    text="Intra"
+                                    arg="https://profile.intra.42.fr"/>
+                                    {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
+
+                    <HomeIcone      grid_id={`Home-div3`}
+                                    arg="/WaitRoom"
+                                    text="WaitRoom"
+                                    />
+                </>
+
+                <>
+
+                    <HomeIcone      grid_id={`Home-div4`}
+                                    arg="/Stats"
+                                    text="Stats"
+                                    />
+
+                    <HomeIcone      grid_id={`Home-div5`}
+                                    arg="/jeux"
+                                    text="jeux"/>
+
+                    <HomeIcone      grid_id={`Home-div6`}
+                                    arg="/PrivateMessage"
+                                    text="Private Message"
+                                    />
+
+                </>
+
+                    <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
+
+                <>
+                    <HomeIcone      grid_id={`Home-div7`}
+                                    arg="/Nothing"
+                                    // text="Nothing"
+                                    />
+
+                    <HomeIcone      grid_id={`Home-div8`}
+                                    arg="/Morpion"
+                                    text="Mini-games"
+                                    />
+
+                    <HomeIcone      grid_id={`Home-div9`}
+                                    arg="/Friends-List"
+                                    text="Friends-List"
+                                    />
+
+                </>
 
 
+                <HomeMessage        grid_id={`Home-div10`}/>
 
+                <HomeFooter         grid_id={`Home-div11`}
+                                    setShowLog={setShowLog}
+                                    />
 
-
-
-    //return (
-    //    <>
-    //        <div className='Home-grid' id="home_root">
-
-    //            <div id="home-login" className={`Home-pos full ${home_login}`} >
-
-    //                {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
-    //                {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
-    //                {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
-
-    //            </div>
-    //            <>
-    //                <HomeIcone      grid_id={`Home-div1`}
-    //                                arg="/Weather"
-    //                                text="Weather"/>
-
-    //                <HomeIcone      grid_id={`Home-div2`}
-    //                                // arg="/Intra"
-    //                                text="Intra"
-    //                                arg="https://profile.intra.42.fr"/>
-    //                                {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
-
-    //                <HomeIcone      grid_id={`Home-div3`}
-    //                                arg="/WaitRoom"
-    //                                text="WaitRoom"
-    //                                />
-    //            </>
-
-    //            <>
-
-    //                <HomeIcone      grid_id={`Home-div4`}
-    //                                arg="/Stats"
-    //                                text="Stats"
-    //                                />
-
-    //                <HomeIcone      grid_id={`Home-div5`}
-    //                                arg="/jeux"
-    //                                text="jeux"/>
-
-    //                <HomeIcone      grid_id={`Home-div6`}
-    //                                arg="/PrivateMessage"
-    //                                text="Private Message"
-    //                                />
-
-    //            </>
-
-    //                <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
-
-    //            <>
-    //                <HomeIcone      grid_id={`Home-div7`}
-    //                                arg="/Nothing"
-    //                                // text="Nothing"
-    //                                />
-
-    //                <HomeIcone      grid_id={`Home-div8`}
-    //                                arg="/Morpion"
-    //                                text="Mini-games"
-    //                                />
-
-    //                <HomeIcone      grid_id={`Home-div9`}
-    //                                arg="/Friends-List"
-    //                                text="Friends-List"
-    //                                />
-
-    //            </>
-
-
-    //            <HomeMessage        grid_id={`Home-div10`}/>
-
-    //            <HomeFooter         grid_id={`Home-div11`}
-    //                                setShowLog={setShowLog}
-    //                                />
-
-    //        </div>
-    //    </>
-    //)
+            </div>
+        </>
+    )
 }

@@ -1,28 +1,23 @@
 /* Css */
-import "./PrivateMessageConv.scss";
+import "./PrivateMessageConv.scss"; 
 
 /* Components */
 import { SocketM } from "../../../../../../SocketManag";
 import { useEffect, useState } from "react";
 
 // navConv lui contient le login user
-export default function PrivateMessageConv({navConv}) {
+export default function PrivateMessageConv({navConv, displayedMessages, setDisplayedMessages}) {    
 
-// useEffect
-// fetch(navConv = login)
-// JSON
-// data
-// setDisplayedMessages(data)
-// ws
-const [displayedMessages, setDisplayedMessages] = useState([]);
+
 const [input, setInput] = useState("");
 
 async function addmessprivate(timer, navConv){
     const data={
         time: timer,
-        id: navConv
+        id: navConv,
+        mess: input,
     }
-     try{
+    try{
         const rep = await fetch('/api/addpriv',{
             method: "POST",
             headers: {'Content-Type': 'application/json'},
@@ -35,54 +30,58 @@ async function addmessprivate(timer, navConv){
             console.log("message priv good ad to db")
         else
             console.log("err add messpriv ", repp.message)
-     }catch(err){
-        console.log("err front addmessprivate ", err)
-     }
-}
-
-async function fetchPrivMsg({navConv}){
-    console.log("fetch priv", navConv);
-
-    const tok2 = navConv;
-
-    try{
-        const rep = await fetch('/api/getpriv', {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-            body: JSON.stringify({tok2}),
-        });
-        const repp = await rep.json();
-        if (repp.success)
-            setDisplayedMessages(message)
-        else
-            console.log("fetch getpriv fail ", repp.message);
     }catch(err){
-        console.log("fetch getpriv error ", err);
+        console.log("err front addmessprivate ", err)
     }
 }
+
+// async function fetchPrivMsg({navConv}){
+//     console.log("fetch priv", navConv);
+
+//     const tok2 = navConv;
+
+//     try{
+//         const rep = await fetch('/api/getpriv', {
+//             method: "POST",
+//             headers: {'Content-Type': 'application/json'},
+//             credentials: "include",
+//             body: JSON.stringify({tok2}),
+//         });
+//         const repp = await rep.json();
+//         if (repp.success)
+//             setDisplayedMessages(message)
+//         else
+//             console.log("fetch getpriv fail ", repp.message);
+//     }catch(err){
+//         console.log("fetch getpriv error ", err);
+//     }
+// }
+    
 
     const handler = (e) =>{
         e.preventDefault();
         console.log("uai handler")
     }
 
-    useEffect(() => {
-        async () => { fetchPrivMsg({navConv}) }
-        if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
-            SocketM.connect();
-        }
+    // useEffect(() => {
+    //     async () => { fetchPrivMsg({navConv}) }
+    //     if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
+    //         SocketM.connect();
+    //     }
 
-        const handlePrivMessage = (data) => {
-            console.log("Message privé reçu via WebSocket:", data);
-            setDisplayedMessages(prevMessages => [...prevMessages, data]);
-        }
-        SocketM.onPriv(navConv, handlePrivMessage);
+    //     const handlePrivMessage = (data) => {
+    //         console.log("Message privé reçu via WebSocket:", data);
+    //         if (data.login === navConv)
+    //             setDisplayedMessages(prevMessages => [...prevMessages, data]);
+    //         // else
+    //         //     setDisplayedConv
+    //     }
+    //     SocketM.onPriv(navConv, handlePrivMessage);
 
-        return () => {
-            SocketM.offPriv(handlePrivMessage);
-        };
-    }, [navConv]);
+    //     return () => {
+    //         SocketM.offPriv(handlePrivMessage);
+    //     };
+    // }, [navConv]);
 
     
     const handlerPriv = (e) => {
@@ -90,7 +89,11 @@ async function fetchPrivMsg({navConv}){
         const message = e.target[0].value;
         console.log("handlerPriv: ", message);
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: null}
+        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
+        addmessprivate(time, navConv);
+        SocketM.sendd(data);
+        setDisplayedMessages(prev => [...prev, data]);
+        setInput("");
     }
     return (
         <>

@@ -53,6 +53,11 @@ export default function Log({setShowLog}) {
         setShowLog(AUTH.REGISTER);
     }
 
+    const MissPswdMode = () => {
+        console.log("Passage en mode inscription:", AUTH.REGISTER);
+        setShowLog(AUTH.REGISTER);
+    }
+
     const handleGit = () => {
         window.location.href = "/api/github";
     };
@@ -101,6 +106,13 @@ export default function Log({setShowLog}) {
                                 className="iconecolor negativ"
                                 onClick={registerMode}
                                 >
+                                mdp-lost
+                        </button>
+                        
+                        <button type="button"
+                                className="iconecolor negativ"
+                                onClick={registerMode}
+                                >
                                 Inscris-toi
                         </button>
 
@@ -110,6 +122,14 @@ export default function Log({setShowLog}) {
                                 onClick={handleGit}
                                 >
                                 <FaGithub/> GitHub
+                        </button>
+
+                        <button type="button"
+                                className="iconecolor negativ"
+                                target="_blank"
+                                onClick={MissPswdMode}
+                                >
+                                Mot de Passe Oublie ?
                         </button>
                     </div>
                 </form>

@@ -131,22 +131,23 @@ export default function Profile() {
     return (
         <>
 
-            <div className="full Profile-bg center Profile-container">
+            <div className="full Profile-bg Profile-container">
+
                 <div id="alert-container">
                     {/* ne pas creat une div faire un innertext */}
                 </div>
 
                 <h1>Mon Profil</h1>
 
-                <div    className="Profile-edit"
-                        onClick={() => setIsReadOnly(!isReadOnly)}>
-                    <VscEdit />   {isReadOnly ? " Edit" : " Editing"}
+                <div className="Profile-edit"
+                     onClick={() => setIsReadOnly(!isReadOnly)}>
+                     <VscEdit />   {isReadOnly ? " Edit" : " Editing"}
                 </div>
 
 
-                <div className="Profile-container">
+                <div className="Profile-all-form">
 
-                    <form className="Profile-form" onSubmit={handleSubmit}>
+                    <form className="Profile-form-info" onSubmit={handleSubmit}>
 
                         <label htmlFor="login">Login</label>
                         <input  type="text"
@@ -194,15 +195,15 @@ export default function Profile() {
                     </form>
 
 
-                    <div    className="Profile-change-password"
-                            onClick={() => setShowFormPassword(!showFormPassword)}>
+                    <div className="Profile-change-password"
+                         onClick={() => setShowFormPassword(!showFormPassword)}>
                         Changer de mot de passe
                     </div>
 
                     
-                    <div className={showFormPassword? "visible" : "hidden"}>
+                    <div className={showFormPassword ? "visible" : "hidden"}>
 
-                        <form className="Profile-form" onSubmit={handlePass}>
+                        <form className="Profile-form-password" onSubmit={handlePass}>
 
                             <label htmlFor="password">Nouveau Mot de passe</label>
                             <div className="Profile-password">
@@ -243,6 +244,8 @@ export default function Profile() {
                     </div>
 
                 </div>
+
+
             </div>
         </>
     )

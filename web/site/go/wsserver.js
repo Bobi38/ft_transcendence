@@ -101,7 +101,7 @@ export function initWebSocket(server) {
             send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
           }
         }
-        if (data.type === 'waitRoom'){
+        if (data.type === 'morpion'){
           let message = "";
           console.log("je suis dans un type waitRoom");
           console.log("user id dans wait room " + socket.userId);
@@ -110,10 +110,9 @@ export function initWebSocket(server) {
             room = ManagRoom.findoneplace(socket, socket.userId);
           if (room.isFull()){
             message = "yes";
-            room.setlocked(true);
           } 
           else
-            message = "no";
+            message = "wait";
           console.log("popopopo");
           console.log("room =", room);
           console.log("playersid size =", room.playersid.size);

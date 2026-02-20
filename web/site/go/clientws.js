@@ -10,6 +10,8 @@ document.forms.publish.onsubmit = function() {
 
 // message reçu - affiche le message dans div#messages
 socket.onmessage = function(event) {
+  if (!event.data) {console.log("qwerty13");return;}
+
   let message = event.data;
 
   let messageElem = document.createElement('div');

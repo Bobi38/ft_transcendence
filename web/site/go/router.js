@@ -9,6 +9,8 @@ import Co  from '../models/connect.js';
 import ChatG from '../models/test.js';
 import PrivMess from '../models/privmess.js';
 import PrivChat from '../models/privchat.js';
+import Friend from '../models/friend.js';
+import PswEmail from '../models/PssWrdEmail.js';
 import {majDb}  from '../fct.js';
 import os from 'os';
 import path from 'path';
@@ -21,6 +23,9 @@ import crypto from "crypto";
 import { TiMediaPlayReverse } from 'react-icons/ti';
 import validator from 'validator';
 import { isValidPhoneNumber } from 'libphonenumber-js';
+import { time } from 'console';
+import { Op, where } from "sequelize";
+
 
 
 const router = express.Router();
@@ -106,6 +111,9 @@ function CheckName(req, res, next){
 
 router.get('/sendmail', async (req, res) => {
   try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
     console.log("JE SUIS DEDANS");
     const code = crypto.randomInt(100000, 999999).toString();
     const transporter = nodemailer.createTransport({
@@ -116,14 +124,44 @@ router.get('/sendmail', async (req, res) => {
       }});
     await transporter.sendMail({
         from: "noreply.transc@gmail.com",
-        to: "voisin.titou@gmail.com",
+        to: result.mail,
         subject: "Votre code de connexion",
-        text: `Votre code est : ${code}`
+        text: `Votre code pour finalier votre connexion est : ${code}`
       });
+    const CrypPass = await bcrypt.hash(code, 10);
+    const check = await PswEmail.findOne({ where: { idUser: decoded.id, type: 1 } });
+    if (check)
+      await check.destroy();
+    await result.createCode({type: 1, Code : CrypPass, DateCreate: new Date()});  
+    return res.status(201).json({success: true, message: "message send"});
+  }catch(err){
+    return res.status(500).json({success:false, message: "error" + err})
+  }
+})
+
+router.get('/recupPswd', async (req, res) => {
+  try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
-    await result.update({password_2FA: code, password_2FA_time: new Date(Date.now() + 60 * 1000)});
+    const code = crypto.randomInt(100000, 999999).toString();
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "noreply.transc@gmail.com",
+        pass: "ykxu xqcc hokp zkfg"
+      }});
+    await transporter.sendMail({
+        from: "noreply.transc@gmail.com",
+        to: result.mail,
+        subject: "Votre code de connexion",
+        text: `Votre code pour finalier votre connexion est : ${code}`
+      });
+    const CrypPass = await bcrypt.hash(code, 10);
+    const check = await PswEmail.findOne({ where: { idUser: decoded.id, type: 2 } });
+    if (check)
+      await check.destroy();
+    await result.createCode({type: 2, Code : CrypPass, DateCreate: new Date()});  
     return res.status(201).json({success: true, message: "message send"});
   }catch(err){
     return res.status(500).json({success:false, message: "error" + err})
@@ -138,10 +176,11 @@ router.post("/verifCode" , async (req, res) => {
     console.log(code);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
-    const result = await User.findOne({ where: { id: decoded.id } });
-    console.log(result.password_2FA)
-    if (code && code === result.password_2FA && new Date() < result.password_2FA_time){
-      await result.update({password_2FA: null, password_2FA_time: null});
+    const result = await User.findOne({ where: { id: decoded.id }, include: {model: PswEmail, as: 'code' , where :{type: 1}} });
+    console.log(result.code.Code)
+    if (code && code === result.code.Code && new Date() < result.code.DateCreate + 60 * 1000){
+      const co = await result.getCode({where: {type: 1}});
+      await co.destroy();
       return res.status(201).json({success: true, message:"good"});
     }
     else
@@ -297,6 +336,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
 router.post('/register', async (req, res) => {
   console.log("je suis la ");
   const { name, password, email } = req.body;
@@ -388,18 +428,17 @@ router.get('/nclick', async (req, res) => {
 
 router.post('/addpriv', async (req, res) => {
   try{
-    const {tok2 , mess} = req.body;
+    const data = req.body;
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
-    const id2 = jwt.verify(tok2, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
-    const res2 = await User.findOne({ where: { id: id2.id}});
-    if (res1 === 0 || res2 === 0)
+    const id2 = await User.findOne({ where: { name: data.id}});
+    if (res1 === 0 || id2 === 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-    await PrivMess.create({idSend: id1.id, conv: mess, ChatId: findchat.id});
+    await PrivMess.create({idSend: id1.id, conv: data.mess, ChatId: findchat.id, time: data.time});
     res.status(201).json({success: true});
   }catch(err){
     res.status(500).json({success: false, message: err});
@@ -411,9 +450,8 @@ router.get('/getpriv', async (req, res) => {
     const {tok2} = req.body;
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
-    const id2 = jwt.verify(tok2, secret);
-    const res2 = await User.findOne({ where: { id: id2.id}});
-    if (res2 === 0)
+    const id2 = await User.findOne({ where: { name: tok2}});
+    if (id2 === 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
@@ -567,6 +605,36 @@ router.get('/github/callback', async (req, res) => {
   res.redirect('http://localhost:5173');
 });
 
+
+router.post('/fetchConv', async (req, res) => {
+  try{
+    const {input} = req.body
+    console.log("in fectch ", input)
+    // const token = req.cookies.token;
+    // const decoded = jwt.verify(token, secret);
+    // const result = await User.findOne({ where: { id: decoded.id } });
+    const result = await User.findOne({where :{name: input}});
+    console.log("rest   ", result.id);
+    const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+    console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
+    console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
+    console.log("test join ", chats[0].user1.name);
+    return res.status(201).json({success: true, message: chats});
+  }catch(err){
+    console.log(err);
+    return res.status(500).json({success: false, message: err});
+  }
+});
+
+
+// router.get('/getFriend', async (req, res) => {
+//   try{
+//     const token = req.cookies.token;
+//     const decoded = jwt.verify(token, secret);
+//     const result = await User.findAll({ where: { id: decoded.id } });
+
+//   }
+// })
 
 export {secret_chat};
 export {secret};

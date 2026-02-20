@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
+import User from './user.js';
 
 const PrivChat = sequelize.define('PrivChat', {
   id: {
@@ -8,18 +9,19 @@ const PrivChat = sequelize.define('PrivChat', {
     autoIncrement: true,
   },
   id1: {
-    type: DataTypes.STRING(512),
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   id2: {
-    type: DataTypes.STRING(512),
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 }, {
   tableName: 'PrivChat',
-  timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas
+  timestamps: false, 
 });
 
-
+PrivChat.belongsTo(User, { as: 'user1', foreignKey: 'id1' });
+PrivChat.belongsTo(User, { as: 'user2', foreignKey: 'id2' });
 
 export default PrivChat;

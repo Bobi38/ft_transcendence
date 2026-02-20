@@ -10,7 +10,7 @@ export default function HomeArrow({grid_id}) {
                 <a  href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     target="_blank">
 
-                    <div className={styles.arrowRight}></div>
+                    <div className={styles.HomeArrow_right}></div>
                 </a>
             </div>
         </>
