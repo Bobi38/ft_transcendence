@@ -3,10 +3,12 @@ import "./HomeCard.scss";
 
 /* Components */
     
-export default function HomeCard({children}) {
+export default function HomeCard({children, path}) {
     return (
         <div className={`HomeCard`}>
-            {children}
+            <a href={path}>
+                {children}
+            </a>
         </div>
     )
 }

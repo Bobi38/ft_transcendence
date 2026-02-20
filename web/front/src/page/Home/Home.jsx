@@ -6,9 +6,9 @@ import "FRONT/page/Home/Home.scss";
 // import HomeMessage from 'FRONT/page/Home/HomeMessage/HomeMessage.jsx';
 // import HomeIcone from 'FRONT/page/Home/HomeIcone/HomeIcone.jsx';
 // import HomeArrow from 'FRONT/page/Home/HomeArrow/HomeArrow.jsx';
-// import Log from "FRONT/page/Home/LogRegister/Jsx/Log.jsx"
-// import Register from "FRONT/page/Home/LogRegister/Jsx/Register.jsx"
-// import Qrcode from "FRONT/page/Home/LogRegister/Jsx/Qrcode.jsx"
+// import Log from "FRONT/page/Home/PopUp/Jsx/Log.jsx"
+// import Register from "FRONT/page/Home/PopUp/Jsx/Register.jsx"
+// import Qrcode from "FRONT/page/Home/PopUp/Jsx/Qrcode.jsx"
 
 
 import HomeCard from "FRONT/page/Home/HomeCard/HomeCard.jsx";
@@ -102,9 +102,8 @@ export default function Home(){
 		{ text:"Friends", path: "/FriendsList" },
 	]
 
-	cards_content.forEach((el, index)=>{
-		cards.push( <HomeCard key={index} type_css={0}>{el.text}</HomeCard> )
-		
+	cards_content.forEach((el, index) => {
+		cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
 	})
 
     
