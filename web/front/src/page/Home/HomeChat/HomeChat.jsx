@@ -1,5 +1,5 @@
 /* Css */
-import "./HomeMessage.scss";
+import "./HomeChat.scss";
 
 /* Components */
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { SocketM } from '/app/back/src/SocketManag.js';
 import checkCo from "/app/back/src/fct1.js";
 
-export default function HomeMessage({grid_id}) {
+export default function HomeChat() {
 
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
@@ -54,7 +54,7 @@ export default function HomeMessage({grid_id}) {
     const init = async () => {
 
         const repco = await checkCo();
-        console.log("checkCo() in HomeMessage useEffect:", repco);
+        console.log("checkCo() in HomeChat useEffect:", repco);
 
         if (!repco) {
             console.log("User not connected, aborting useEffect");
@@ -101,45 +101,63 @@ export default function HomeMessage({grid_id}) {
         setInput("");
     };
 
+
+
+
+
+
+
+
+
+
+
     return (
         <>
-            <div className={`${grid_id} Home-iconedisplay Home-iconemargin iconecolor HomeMessage-box`}>
+            <div id={`HomeChat-root`}>
 
-                <div className="HomeMessage-message">
-                    <h3>Chat</h3>
+                    <h3>Global Chat</h3>
+                <div className="message">
 
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
-                        <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-me" : "HomeMessage-other"}`}>
+                        <div  key={index} className={`full ${msg.monMsg ? "me" : "other"}`}>
 
                             {msg.monMsg ? (
-                                <>
-                                    <div><span>{msg.timer}</span></div>
+                                <div className="msg">
+                                    <div>{msg.timer}</div>
                                     <p>{msg.message}</p>
-                                </>
+                                </div>
                             ) : (
-                                <>
-                                    <div><strong>{msg.login}</strong> <span>{msg.timer}</span></div>
+                                <div className="msg">
+                                    <div><strong>{msg.login}</strong>{msg.timer}</div>
                                     <p>{msg.message}</p>
-                                </>
+                                </div>
                             )}
 
                         </div>
                     ))}
+                </div>
 
-                </div>
-                    
-                    <form onSubmit={handleSubmit}>
-                        <div className="HomeMesssage-form">
-                            <input
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                />
-                            <button type="submit">Envoyer</button>
-                        </div>
-                    </form>
-                </div>
+
+
+
+
+
+
+
+
+
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        />
+                    <button type="submit">Envoyer</button>
+                </form>
+
+
+            </div>
         </>
     )
 }

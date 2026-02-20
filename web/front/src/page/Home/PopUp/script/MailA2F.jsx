@@ -1,12 +1,12 @@
 /* Css */
-import "../LogRegister.scss";
+import "FRONT/page/Home/PopUp/PopUp.scss";
 
 
 /* Components */
 import { useState } from "react";
 import { AUTH } from "../../Home.jsx"
 
-export default function Qrcode({setShowLog}) {
+export default function MailA2F({setShowLog}) {
 
     const [showCodeInput, setShowCodeInput] = useState(false);
 
@@ -72,32 +72,25 @@ export default function Qrcode({setShowLog}) {
   }
 
     return (
-      <>
-            <main className="full LogRegister-flex1 LogRegister-bglow">
+        <>
 
-                <div className="LogRegister-div1 iconecolor center">
+            {!showCodeInput && (
+                <button type="button" id="mailverif" className="iconecolor negativ center" onClick={sendmail}>
+                  Envoyer mail de verification
+                </button>
+            )}
 
-                    {!showCodeInput && (
-                      <button type="button" id="mailverif" className="iconecolor negativ center" onClick={sendmail}>
-                        Envoyer mail de verification
-                      </button>
-                    )}
+            {showCodeInput && (
 
-                    {showCodeInput && (
+              <form id="qrcode" className="full LogRegister-flex2 center" onSubmit={veryfCode}>
 
-                      <form id="qrcode" className="full LogRegister-flex2 center" onSubmit={veryfCode}>
+                <input type="text" id="code" name="code" placeholder="Entrez Code"/>
 
-                        <input type="text" id="code" name="code" placeholder="Entrez Code"/>
+                <button type="submit" className="iconecolor negativ">Valider</button>
+                <button type="button" className="iconecolor negativ" onClick={sendmail}>Renvoyer un mail de verification</button>
+              </form>
 
-                        <button type="submit" className="iconecolor negativ">Valider</button>
-                        <button type="button" className="iconecolor negativ" onClick={sendmail}>Renvoyer un mail de verification</button>
-                      </form>
-
-                    )}
-
-            </div>
-
-        </main>
-    </>
+            )}
+      </>
   );
 }

@@ -1,0 +1,41 @@
+#HomeChat-root{
+
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+
+    .message {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        overflow-y: auto;
+    scrollbar-width: thin;
+
+        .msg{
+            border-radius: 0.5rem;
+            background-color: rgb(89, 189, 189);
+
+            &:hover {
+              background-color: rgb(79, 179, 179);
+            }
+            p {
+                overflow-wrap: anywhere;
+            }
+        }
+        
+        .me {
+          text-align: right;
+        }
+        .other {
+          text-align: left;
+        }
+
+    }
+    form{
+      width: 100%;
+    }
+
+}

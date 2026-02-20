@@ -3,14 +3,15 @@ import "FRONT/page/Home/Home.scss";
 
 /* Components */
 // import HomeFooter from 'FRONT/page/Home/HomeFooter/HomeFooter.jsx';
-// import HomeMessage from 'FRONT/page/Home/HomeMessage/HomeMessage.jsx';
-// import HomeIcone from 'FRONT/page/Home/HomeIcone/HomeIcone.jsx';
 // import HomeArrow from 'FRONT/page/Home/HomeArrow/HomeArrow.jsx';
-// import Log from "FRONT/page/Home/PopUp/Jsx/Log.jsx"
-// import Register from "FRONT/page/Home/PopUp/Jsx/Register.jsx"
-// import Qrcode from "FRONT/page/Home/PopUp/Jsx/Qrcode.jsx"
+
+    /* PopUp */
+import Log from "FRONT/page/Home/PopUp/Jsx/Log.jsx"
+import Register from "FRONT/page/Home/PopUp/Jsx/Register.jsx"
+import MailA2F from "FRONT/page/Home/PopUp/Jsx/MailA2F.jsx"
 
 
+import HomeChat from "FRONT/page/Home/HomeChat/HomeChat.jsx";
 import HomeCard from "FRONT/page/Home/HomeCard/HomeCard.jsx";
 
 import checkCo from "/app/back/src/fct1.js"
@@ -57,7 +58,7 @@ export default function Home(){
 
     useEffect(() => {
 
-        const home_root = document.getElementById("home_root");
+        const home_root = document.getElementById("Home-root");
         if (!home_root) return;
 
         const Home_handler = async (event) => {
@@ -70,7 +71,7 @@ export default function Home(){
             if (!resCo) {
                 setShowLog(AUTH.LOGIN);
             } else {
-                if (event.target.id === "HomeMessagesubmit"){
+                if (event.target.id === "HomeChatsubmit"){
                     const form = event.target.form
                     if (form) {
                         form.requestSubmit();
@@ -125,9 +126,7 @@ export default function Home(){
 					{cards}
 				</div>
 
-				<div className={`chat`}>
-					im the chat
-				</div>
+                <HomeChat/>
 
 			</div>
 
@@ -209,7 +208,7 @@ export default function Home(){
     //             </>
 
 
-    //             <HomeMessage        grid_id={`Home-div10`}/>
+    //             <HomeChat        grid_id={`Home-div10`}/>
 
     //             <HomeFooter         grid_id={`Home-div11`}
     //                                 setShowLog={setShowLog}
