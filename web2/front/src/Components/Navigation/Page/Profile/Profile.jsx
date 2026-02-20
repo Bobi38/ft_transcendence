@@ -7,7 +7,7 @@ import { VscEdit } from "react-icons/vsc";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { Form } from "react-router-dom";
 import AddressAutocomplete from "./AddressAutocomplete/AddressAutocomplete.jsx";
-import { showAlert } from "../../../../../../fct1";
+import { showAlert } from "../../../../../../fct1.js";
 
 export default function Profile() {
     

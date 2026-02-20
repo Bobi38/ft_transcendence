@@ -1,7 +1,7 @@
 /* Css */
 import "../LogRegister.scss";
 
-import { showAlert } from "../../../../../../fct1";
+import { showAlert } from "../../../../../../fct1.js";
 import { AUTH } from "../../Home.jsx"
 import { FaGithub } from "react-icons/fa";
 

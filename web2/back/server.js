@@ -108,18 +108,18 @@ import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import router, { checktok } from './site/go/router.js';
-import { majDb } from './site/fct.js';
-import { initWebSocket } from './site/go/wsserver.js';
-import {addDb} from './site/fct.js';
+import router, { checktok } from './router.js';
+import { majDb } from './fct.js';
+import { initWebSocket } from './wsserver.js';
+import {addDb} from './fct.js';
 
 // Models
-import './site/models/index.js';
-import User from './site/models/user.js';
-import './site/models/connect.js';
-import ChatG from './site/models/test.js';
-import './site/models/privchat.js';
-import './site/models/privmess.js';
+import './models/index.js';
+import User from './models/user.js';
+import './models/connect.js';
+import ChatG from './models/test.js';
+import './models/privchat.js';
+import './models/privmess.js';
 
 dotenv.config();
 

@@ -1,5 +1,5 @@
 import sequelize from './index.js';
-import { Player } from "./player";
+import { Player } from "./player.js";
 
 class Room {
     constructor (id) {

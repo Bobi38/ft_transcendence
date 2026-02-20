@@ -1,5 +1,5 @@
-import { MorpionRoom } from "./go/morpionRoom.js";
-import Room from "./go/Room.js";
+import { MorpionRoom } from "./morpionRoom.js";
+import Room from "./Room.js";
 
 class ManagerRoom {
     constructor(){
