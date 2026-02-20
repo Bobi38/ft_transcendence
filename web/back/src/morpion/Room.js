@@ -3,15 +3,15 @@ import { Player } from "./player.js";
 
 class Room {
     constructor (id) {
-        this._type = null;
+        this._type = "default";
         this._id = id;
         this._players = new Map();
         this._minPlayers = 0;
         this._maxPlayers = null;
+        this._dateGame = new Date();
         this._locked = false;
         this._winner = null;
         this.outTimer = null;
-        this._chrono = null;
         this._limitTime = 3600 * 1000;
     }
 
@@ -42,6 +42,14 @@ class Room {
 
         return this._players.size >= this._maxPlayers;
     }
+    
+    isInRoom(id){
+        return this._players.has(id);
+    }
+
+    getId() {
+        return this._id;
+    }
 
     getlock(){
         return this._locked;
@@ -53,10 +61,6 @@ class Room {
         }
 
         this._locked = state;
-    }
-
-    isInRoom(id){
-        return this._players.has(id);
     }
 
     sendAll(mess) {

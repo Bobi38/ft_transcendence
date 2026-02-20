@@ -60,6 +60,10 @@ export class Player{
         }
     }
 
+    getPlayTime(){
+        return this._playTime;
+    }
+
     getData(){
         return ({
             id: this._id,
