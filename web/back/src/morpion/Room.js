@@ -1,4 +1,4 @@
-import sequelize from './index.js';
+import sequelize from '../models/index.js';
 import { Player } from "./player.js";
 
 class Room {
