@@ -1,18 +1,18 @@
 /* Css */
-import "./Home.scss";
+import "/app/front/src/page/Home/Home.scss";
 import st from "./Home.module.scss";
 
 /* Components */
-import HomeFooter from './HomeFooter/HomeFooter.jsx';
-import HomeMessage from './HomeMessage/HomeMessage.jsx';
-import HomeIcone from './HomeIcone/HomeIcone.jsx';
-import HomeArrow from './HomeArrow/HomeArrow.jsx';
-import Log from "./LogRegister/Jsx/Log.jsx"
-import Register from "./LogRegister/Jsx/Register.jsx"
-import Qrcode from "./LogRegister/Jsx/Qrcode.jsx"
+import HomeFooter from '/app/front/src/page/Home/HomeFooter/HomeFooter.jsx';
+import HomeMessage from '/app/front/src/page/Home/HomeMessage/HomeMessage.jsx';
+import HomeIcone from '/app/front/src/page/Home/HomeIcone/HomeIcone.jsx';
+import HomeArrow from '/app/front/src/page/Home/HomeArrow/HomeArrow.jsx';
+import Log from "/app/front/src/page/Home/LogRegister/Jsx/Log.jsx"
+import Register from "/app/front/src/page/Home/LogRegister/Jsx/Register.jsx"
+import Qrcode from "/app/front/src/page/Home/LogRegister/Jsx/Qrcode.jsx"
 
 
-import checkCo from "../../../../fct1.js"
+import checkCo from "/app/back/src/fct1.js"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

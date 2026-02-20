@@ -2,7 +2,7 @@
 import "./PrivateMessageConv.scss"; 
 
 /* Components */
-import { SocketM } from "../../../../../../SocketManag";
+import { SocketM } from "/app/back/src/SocketManag.js";
 import { useEffect, useState } from "react";
 
 // navConv lui contient le login user

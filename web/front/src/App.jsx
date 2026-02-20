@@ -1,6 +1,6 @@
 /* Components */
-import Home from './page/Home/Home.jsx'
-import Navigation from './page/Navigation/Navigation.jsx'
+import Home from '/app/front/src/page/Home/Home.jsx'
+import Navigation from '/app/front/src/page/Navigation/Navigation.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {

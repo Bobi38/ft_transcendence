@@ -1,11 +1,12 @@
 /* Css */
-import "../../../index.scss"
 import "./HomeMessage.scss";
 
 /* Components */
 import { useEffect, useState } from "react";
-import { SocketM } from '../../../../SocketManag.js';
-import checkCo from "../../../../../fct1.js";
+
+
+import { SocketM } from '/app/back/src/SocketManag.js';
+import checkCo from "/app/back/src/fct1.js";
 
 export default function HomeMessage({grid_id}) {
 

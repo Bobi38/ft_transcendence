@@ -1,5 +1,4 @@
 /* Css */
-import "../../../index.scss";
 import "./NavBar.scss";
 
 /* Components */

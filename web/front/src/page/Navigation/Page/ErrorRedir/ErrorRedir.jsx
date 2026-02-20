@@ -2,7 +2,6 @@
 import "./ErrorRedir.scss";
 
 /* Components */
-import { Link } from "react-router-dom";
     
 export default function ErrorRedir() {
     return (

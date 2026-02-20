@@ -1,7 +1,7 @@
 /* Css */
 import "../LogRegister.scss";
 
-import { showAlert } from "../../../../../../fct1.js";
+import { showAlert } from "/app/back/src/fct1.js";
 import { AUTH } from "../../Home.jsx"
 
 export default function Register({setShowLog}) {

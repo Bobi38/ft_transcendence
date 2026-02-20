@@ -2,7 +2,7 @@
 import "./HomeIcone.scss";
 
 /* Components */
-import checkCo from "../../../../../fct1.js"
+import checkCo from "/app/back/src/fct1.js"
 
 export default function HomeIcone({ grid_id, arg, text }) {
 

@@ -1,11 +1,10 @@
 /* Css */
 import "./HomeFooter.scss"
-import "../../../index.scss"
 
 /* Components */
 import { Link, useNavigate } from "react-router-dom";
 
-export default function HomeFooter({ grid_id, setShowLog }) {
+export default function HomeFooter({ grid_id }) {
 
     const navigate = useNavigate();
     function LOGOUT() {

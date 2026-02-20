@@ -4,8 +4,8 @@ import "./PrivateMessage.scss";
 /* Components */
 import { useEffect, useState } from "react";
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
-import Amis from "./Amis/Amis.jsx"
-import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
+// import Amis from "./Amis/Amis.jsx"
+// import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 
 export default function PrivateMessage() { 
     

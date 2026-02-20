@@ -4,14 +4,14 @@ import "./Navigation.scss";
 /* Components */
 import NavBar from "./NavBar/NavBar.jsx";
 
-import ContactUs from "./Page/ContactUs/ContactUs.jsx";
-import ErrorRedir from "./Page/ErrorRedir/ErrorRedir.jsx";
-import MorpionTraining from "./Page/Game/Morpion/MorpionTraining.jsx";
-import Morpion from "./Page/Game/Morpion/Morpion.jsx";
-import Profile from "./Page/Profile/Profile.jsx";
-import Stats from "./Page/Stats/Stats.jsx";
-import WaitRoom from "./Page/WaitRoom/WaitRoom.jsx";
-import PrivateMessage from "./Page/PrivateMessage/PrivateMessage.jsx";
+import ContactUs from "/app/front/src/page/Navigation/Page/ContactUs/ContactUs.jsx";
+import ErrorRedir from "/app/front/src/page/Navigation/Page/ErrorRedir/ErrorRedir.jsx";
+import MorpionTraining from "/app/front/src/page/Navigation/Page/Game/Morpion/MorpionTraining.jsx";
+import Morpion from "/app/front/src/page/Navigation/Page/Game/Morpion/Morpion.jsx";
+import Profile from "/app/front/src/page/Navigation/Page/Profile/Profile.jsx";
+import Stats from "/app/front/src/page/Navigation/Page/Stats/Stats.jsx";
+import WaitRoom from "/app/front/src/page/Navigation/Page/WaitRoom/WaitRoom.jsx";
+import PrivateMessage from "/app/front/src/page/Navigation/Page/PrivateMessage/PrivateMessage.jsx";
 
 import checkCo from "/app/back/src/fct1.js"
 	
