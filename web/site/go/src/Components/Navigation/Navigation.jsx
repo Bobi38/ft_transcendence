@@ -20,7 +20,7 @@ export default function Navigation({ screen }) {
     const navigate = useNavigate();
 
 
-    const titi = async () => {
+    const connectioncheck = async () => {
         if (screen == "ErrorRedir"){
             return // 
         }
@@ -33,7 +33,7 @@ export default function Navigation({ screen }) {
 
     const renderScreenNav = () => {
 
-        titi();
+        connectioncheck();
 
         switch(screen) {
             case 'ContactUs':
