@@ -6,6 +6,7 @@ import NavBar from "./NavBar/NavBar.jsx";
 
 import ContactUs from "./Page/ContactUs/ContactUs.jsx";
 import ErrorRedir from "./Page/ErrorRedir/ErrorRedir.jsx";
+import MorpionTraining from "./Page/Game/Morpion/MorpionTraining.jsx";
 import Morpion from "./Page/Game/Morpion/Morpion.jsx";
 import Nothing from "./Page/Nothing/Nothing.jsx";
 import Profile from "./Page/Profile/Profile.jsx";
@@ -25,6 +26,8 @@ export default function Navigation({ screen }) {
                 return <ErrorRedir/>;
             case 'Morpion':
                 return <Morpion/>;
+            case 'MorpionTraining':
+                return <MorpionTraining/>;
             case 'Profile':
                 return <Profile/>;
             case 'Stats':

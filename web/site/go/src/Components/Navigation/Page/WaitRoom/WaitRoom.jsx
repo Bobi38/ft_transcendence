@@ -1,8 +1,34 @@
 import "./waitRoom.css";
 import { SocketM } from "../../../../../SocketManag";
-import { use, useEffect, useState } from "react";
+import { useEffect, } from "react";
 import { useNavigate} from "react-router-dom";
-    
+
+function Training(){
+  return (
+  <button onClick={() =>
+    SocketM.sendd({
+        type: "waitRoom",
+        mess: "Training"
+      })
+    }> 
+    training sur le meme ecran
+  </button>
+  );
+}
+
+function GoOUT(){
+  return (
+  <button onClick={() =>
+    SocketM.sendd({
+        type: "waitRoom",
+        mess: "je pars"
+      })
+    }> 
+    je veux partir
+  </button>
+  );
+}
+
 export default function WaitRoom() {
 
     const navigate = useNavigate();
@@ -14,19 +40,48 @@ export default function WaitRoom() {
             SocketM.connect();
         }
         const toto = {
-            type: "waitRoom",
-            mess: "je suis dans wait room",
+            type: "morpion",
+            mess: "init",
         }
 
+        const handleRoom = (rawData) => {
+            if (!rawData) return;
 
+            let data;
+            try {
+                data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
+            } catch (err) {
+                console.error("JSON invalide reçu in WaitRoom:", rawData);
+                return;
+            }
 
-        const handleRoom = (data) => {
-            console.log("Message reçu via SocketM.onRoom:" + data.mess);
-            if (data.mess === "yes"){
-                alert("la partie va commencer");
-                navigate("/Morpion");
+            // console.log("Message reçu via SocketM.onRoom:", data.mess);
+
+            switch (data.mess) {
+                case "yes":
+                    alert("La partie va commencer");
+                    navigate("/Morpion");
+                    return;
+
+                case "wait":
+                    return;
+
+                case "training":
+                    navigate("/MorpionTraining");
+                    return;
+
+                case "reboot":
+                    alert("Le serveur a reboot");
+                    navigate(-1);
+                    return;
+
+                default:
+                    console.log("[Waiting Room] other message :", data.mess)
+                    navigate(-1);
+                    return;
             }
         };
+
         SocketM.onRoom(handleRoom);        
         const sendWhenReady = () => {
             if (SocketM.socket && SocketM.socket.readyState === WebSocket.OPEN) {
@@ -44,6 +99,8 @@ export default function WaitRoom() {
 
     return (
         <>
+        <div><GoOUT /></div>
+        <div><Training /></div>
         <p>Wait Room</p>
         </>
     )

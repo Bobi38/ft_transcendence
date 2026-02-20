@@ -10,6 +10,7 @@ class SocketManag{
             room: [],
         };
     }
+
     connect(){
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host; // Inclut le port si présent
@@ -20,6 +21,7 @@ class SocketManag{
         }
 
         this.socket.onmessage = (event) => {
+            if (!event.data) {console.log("qwerty14");return;}
             const dataa = JSON.parse(event.data);
             console.log("Message reçu via WebSocket:", dataa.type, dataa.mess);
             if (dataa.type === 'message') {
@@ -43,7 +45,6 @@ class SocketManag{
                 setTimeout(() => this.connect(), 50);
         }
         this.nbco++;
-        
     }
     
     onChat(cb) {
@@ -83,6 +84,7 @@ class SocketManag{
             this.socket.send(JSON.stringify(data));
         }
     }
+    
     disco(){
         this.reco = false;
         this.id = null;
@@ -92,7 +94,5 @@ class SocketManag{
         }
     }
 }
-
-
 
 export const SocketM = new SocketManag();

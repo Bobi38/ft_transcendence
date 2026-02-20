@@ -143,7 +143,7 @@ export default function Home(){
                                     />
 
                     <HomeIcone      grid_style={`Home-div8 ${home_css}`}
-                                    arg="/Morpion"
+                                    arg="/MorpionTraining"
                                     text="Mini-games"
                                     />
 
