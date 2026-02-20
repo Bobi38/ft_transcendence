@@ -31,3 +31,5 @@ const PswEmail = sequelize.define('PswEmail', {
 });
 
 User.hasMany(PswEmail, {as: 'code', foreignKey: 'idUser' });
+
+export default PswEmail;
