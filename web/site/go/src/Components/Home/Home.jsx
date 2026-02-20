@@ -20,6 +20,7 @@ export const AUTH = {
     LOGIN: 1,
     QRCODE: 2,
     REGISTER: 3,
+    MISSPSWD: 4,
 };
 
 export default function Home(){
@@ -93,6 +94,7 @@ export default function Home(){
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
                     {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+                    {showLog === AUTH.MISSPSWD && <Psw setShowLog={setShowLog}/>}
 
                 </div>
                 <>
