@@ -13,7 +13,6 @@ import Qrcode from "./LogRegister/Jsx/Qrcode.jsx"
 
 import checkCo from "../../../../fct1.js"
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const AUTH = {
     NONE: 0,
@@ -25,10 +24,8 @@ export const AUTH = {
 export default function Home(){
 
     const [showLog, setShowLog] = useState(AUTH.NONE);
+    
     // const [user, setUser] = useState(null);
-    const navigate = useNavigate();
-
-
     // const fetchUserData = async () => {
 
     //     console.log("fetchUserData(1) called");
@@ -36,14 +33,14 @@ export default function Home(){
     //         const rep = await fetch("/api/user/profile");
     //         const repjson = await rep.json();
     //         if (repjson.success){
-
+                
     //             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
     //             setUser(repjson.message);
 
     //         }else{
 
     //             console.error("fetchUserData(3) Error:", repjson.message);
-
+            
     //         }
     //     } catch (error) {
     //         console.error("fetchUserData(4) Error", error);
@@ -51,30 +48,31 @@ export default function Home(){
 
     // };
 
+    const Home_handler = async (event) => {
+
+        if (event.target.closest('.LogRegister-flex1')) {
+            console.log("Home_handler(1) need to connect");
+            return;
+        }
+        const resCo = await checkCo();
+        if (!resCo) {
+            setShowLog(AUTH.LOGIN);
+        } else {
+            if (event.target.id === "HomeMessagesubmit"){
+                const form = event.target.form;
+                if (form) {
+                    form.requestSubmit();
+                }
+                return;
+            }
+        }
+    };
+
+
     useEffect(() => {
 
         const home_root = document.getElementById("home_root");
         if (!home_root) return;
-
-        const Home_handler = async (event) => {
-
-            if (event.target.closest('.LogRegister-flex1')) {
-                console.log("Home_handler(1) need to connect")
-                return;
-            }
-            const resCo = await checkCo();
-            if (!resCo) {
-                setShowLog(AUTH.LOGIN);
-            } else {
-                if (event.target.id === "HomeMessagesubmit"){
-                    const form = event.target.form
-                    if (form) {
-                        form.requestSubmit();
-                    }
-                    return
-                }
-            }
-        };
 
         home_root.addEventListener("click", Home_handler);
         return () => home_root.removeEventListener("click", Home_handler);
@@ -87,13 +85,13 @@ export default function Home(){
     return (
         <>
             <div className='Home-grid' id="home_root">
-
+                
                 <div id="home-login" className={`Home-pos full ${home_login}`} >
-
+                    
                     {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
                     {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
                     {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
-
+                    
                 </div>
                 <>
                     <HomeIcone      grid_style={`Home-div1 ${home_css}`}
@@ -101,10 +99,9 @@ export default function Home(){
                                     text="Weather"/>
 
                     <HomeIcone      grid_style={`Home-div2 ${home_css}`}
-                                    // arg="/Intra"
                                     text="Intra"
                                     arg="https://profile.intra.42.fr"/>
-                                    {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
+                                    {/*arg={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
 
                     <HomeIcone      grid_style="Home-div3 Home-iconedisplay Home-iconemargin iconecolor"
                                     arg="/WaitRoom"
@@ -143,8 +140,8 @@ export default function Home(){
                                     text="Mini-games"
                                     />
 
-                    <HomeIcone      grid_style={`Home-div9 ${home_css}`}
-                                    arg="/Friends-List"
+                    <HomeIcone      grid_style={`Home-div9 ${home_css}`} 
+                                    arg="/Friends-List" 
                                     text="Friends-List"
                                     />
 
@@ -152,7 +149,7 @@ export default function Home(){
 
 
                 <HomeMessage        grid_style={`Home-div10 ${home_css}`}/>
-
+                
                 <HomeFooter         grid_style={`Home-div11`}
                                     setShowLog={setShowLog}
                                     />

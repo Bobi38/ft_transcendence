@@ -11,32 +11,31 @@
   overflow: hidden auto;
   scrollbar-width: thin;
   width: 100%;
-}
 
-.HomeMessage-message-me {
-  text-align: right;
-}
+  .HomeMessage-me,
+  .HomeMessage-other {
+    margin-top: 0.5rem;
+    border-radius: 3px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    background-color: rgb(89, 189, 189);
 
-.HomeMessage-message-other{
-  text-align: left;
-}
+    &:hover {
+      background-color: rgb(79, 179, 179);
+    }
 
-.HomeMessage-message-other p,
-.HomeMessage-message-me p {
-  overflow-wrap: anywhere;
-}
+    p {
+      overflow-wrap: anywhere;
+    }
+  }
 
-.HomeMessage-message div {
-  margin-top: 0.5rem;
-  border-radius: 3px;
+  .HomeMessage-me {
+    text-align: right;
+  }
+  .HomeMessage-other {
+    text-align: left;
+  }
 
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  background-color: rgb(89, 189, 189);
-}
-
-.HomeMessage-message div:hover {
-  background-color: rgb(79, 179, 179);
 }
 
 form {

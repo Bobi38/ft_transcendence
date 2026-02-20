@@ -138,7 +138,9 @@ export default function HomeMessage({grid_style}) {
 
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
-                        <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}`}>
+                        <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-me" : "HomeMessage-other"}`}>
+
+                        {/* <div  key={index} className={`full ${msg.monMsg ? "HomeMessage-message-me" : "HomeMessage-message-other"}`}> */}
 
                             {msg.monMsg ? (
                                 <>
