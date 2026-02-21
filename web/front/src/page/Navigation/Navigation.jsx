@@ -1,7 +1,8 @@
 /* extern */
-import checkCo from "BACK/fct1.js"
 import { useNavigate } from "react-router-dom";
 
+/* back */
+import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./Navigation.scss";
@@ -31,7 +32,7 @@ export default function Navigation({ children }) {
 
             <div className="Navigation-root"> {/* 100vh */}
 
-                <NavBar/>{/* la taille */}
+                <NavBar/>
                 
                 <div className={``}> {/* le reste */}
 
