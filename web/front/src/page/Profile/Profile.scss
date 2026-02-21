@@ -1,49 +1,97 @@
-.Profile-bg {
-    background: blueviolet;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
+.form-container1 {
+
+    .Profile-form-info {
+
+        .Profile-cant-change {
+            position: relative;
+            display: inline-block;
+
+            span {
+                position: absolute;
+                left: 60%;
+                background: black;
+                color: white;
+                font-size:0.8rem;
+                padding: 4px 8px;
+                border-radius: 4px;
+                white-space: nowrap;
+                
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+            &:hover span {
+                opacity: 1;
+            }
+        }
+        
+    }
+
+    .Profile-change-password {
+        height: fit-content;
+        gap: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .Profile-form-password {
+        .Profile-password {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            input {
+                width: 100%;
+                padding-right: 40px;
+            }
+
+            .Profile-eye-icon {
+                position: absolute;
+                right: 10px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
 }
 
-.Profile-container {
+
+
+
+
+
+
+#Profile-root {
+    background-color: blueviolet;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    height: 100%;
+    
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    gap: 5px;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 
-    .Profile-edit {
-        display: flex;
-        align-items: center;
+    .edit {
+        background-color: rgba(0, 0, 0, 0.2);
         cursor: pointer;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        border: #007bff 1px solid;
-        padding: 0.5rem 1rem;
+        padding: 0.75rem;
         border-radius: 0.5rem;
-
         &:hover {
+            background-color: rgba(0, 0, 0, 0.4);
             color: #007bff;
         }
     }
-
-    .Profile-all-form {
+    .form-container{
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        
+        gap: 0.25rem;
+
         form {
-            // margin: 0;
-            padding: 2rem;
-            gap: 1rem;
-            height: fit-content;
             width: 375px;
             display: flex;
             flex-direction: column;
-
-            @media (max-width: 400px) {
-                width: 100%;
-            }
-
+            
             input , button {
                 border-radius: 0.5rem;
             }
@@ -54,70 +102,28 @@
             }
             
             button {
-                margin: 0rem 2rem;
                 padding: 0.5rem 1rem;
+                border: none;
                 background-color: #007bff;
                 color: white;
-                border: none;
                 cursor: pointer;
+
                 &:hover {
                     background-color: #0056b3;
                 }
             }
         }
+        
+        .form-info{
 
-        .Profile-form-info {
-
-            .Profile-cant-change {
-                position: relative;
-                display: inline-block;
-
-                span {
-                    position: absolute;
-                    left: 60%;
-                    background: black;
-                    color: white;
-                    font-size:0.8rem;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    white-space: nowrap;
-                    
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                    pointer-events: none;
-                }
-                &:hover span {
-                    opacity: 1;
-                }
-            }
-            
         }
+        
+        .change-password{
 
-        .Profile-change-password {
-            height: fit-content;
-            gap: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .Profile-form-password {
-            .Profile-password {
-                position: relative;
-                display: flex;
-                align-items: center;
-
-                input {
-                    width: 100%;
-                    padding-right: 40px;
-                }
-
-                .Profile-eye-icon {
-                    position: absolute;
-                    right: 10px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                }
+            .form-password{
+    
             }
         }
+
     }
 }
