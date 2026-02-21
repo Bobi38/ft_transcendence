@@ -1,21 +1,18 @@
-/* Css */
-import "FRONT/page/Home/Home.scss";
+/* extern */
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+/* back */
+import checkCo from "BACK/fct1.js"
+
+/* Css */
+import "./Home.scss";
 
 /* Components */
 import PopUp from "./PopUp/PopUp.jsx"
 import HomeChat from "./HomeChat/HomeChat.jsx";
 import HomeCard from "./HomeCard/HomeCard.jsx";
-
-    /* other */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-
-
-/* back */
-import checkCo from "BACK/fct1.js"
-
+import HomeFooter from "./HomeFooter/HomeFooter.jsx";
 
 
 export const AUTH = {
@@ -104,9 +101,14 @@ export default function Home() {
 
 		<section id="Home-root">
 
-            <div className={`Home-PopUp ${is_popup}`} >
+            <div className={`${is_popup}`} >
 
-                {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
+                <div className={`${is_popup} Home-PopUp`} >
+
+
+                    {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
+
+                </div>
 
             </div>
 
@@ -122,7 +124,7 @@ export default function Home() {
 
 			<div className={`footer`}>
 
-				im the footer
+				<HomeFooter setShowLog={setShowLog}/>
 
 			</div>
 

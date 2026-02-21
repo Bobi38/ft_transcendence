@@ -1,15 +1,19 @@
+/* extern */
+import { Link, useNavigate } from "react-router-dom";
+
+/* back */
+
 /* Css */
 import "./HomeFooter.scss"
 
 /* Components */
-import { Link, useNavigate } from "react-router-dom";
 
-export default function HomeFooter({ grid_id }) {
+export default function HomeFooter({setShowLog}) {
 
     const navigate = useNavigate();
-    function LOGOUT() {
-
-        console.log("oui")
+    
+    function logout() {
+        console.log("logout(1) called")
 
         fetch('/api/logout', {
             method: 'POST',
@@ -18,39 +22,44 @@ export default function HomeFooter({ grid_id }) {
         })
         .then(response => response.json())
         .then(data => {
+
             if (data.success) {
-                navigate("/");
+                setShowLog()
             } else {
-                console.error("Logout failed");
+                console.error("logout(2) failed");
             }
+
         })
         .catch(error => {
-            console.error("Error during logout:", error);
+            console.error("logout(3) Error:", error);
         });
     }
 
     return (
         <>
-            <div className={`${grid_id} HomeFooter-grid`}>
+            <div className={``}>
 
-                    <Link   to='/ContactUs'
-                            className="HomeFooter1 Home-iconemargin iconecolor center">
+                    <Link   to={`/ContactUs`}
+                            className={``}>
                             Contact us
                     </Link>
 
 
-                    <div className="HomeFooter2 center">
-                        <div className="hidden-box-shadow iconecolor HomeFooter-padding ">
+                    <div className={``}>
+
+                        <div className={``}>
                             8:42
                         </div>
-                        <div className="iconecolor HomeFooter-padding"
-                             onClick={(LOGOUT)}>
-                                LOGOUT quand pas log on enleve
-                        </div>
+
+                        <button className={``}
+                                onClick={(logout)}>
+                                logout quand pas log on enleve
+                        </button>
+
                     </div>
 
-                    <Link   to='/Profile'
-                            className="HomeFooter3 Home-iconemargin iconecolor center">
+                    <Link   to={`/Profile`}
+                            className={``}>
                             Profile
                     </Link>
 

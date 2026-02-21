@@ -1,6 +1,9 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+/* back */
+// import checkCo from BACK/fct1.js
+
 /* Css */
 import './style/index.scss'
 
@@ -17,8 +20,6 @@ import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 
   // ./src/page/game
 import MorpionTraining  from    "FRONT/page/Game/Morpion/MorpionTraining.jsx";
-
-
 
 
 
