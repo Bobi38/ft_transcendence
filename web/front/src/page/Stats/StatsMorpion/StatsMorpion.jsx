@@ -23,6 +23,12 @@ export default function StatsMorpion() {
                             <p className={``}>history</p>
                             <p className={``}>history</p>
                             <p className={``}>history</p>
+                            <p className={``}>history</p>
+                            <p className={``}>history</p>
+                            <p className={``}>history</p>
+                            <p className={``}>history</p>
+                            <p className={``}>history</p>
+                            <p className={``}>history</p>
 
 
                     </div>

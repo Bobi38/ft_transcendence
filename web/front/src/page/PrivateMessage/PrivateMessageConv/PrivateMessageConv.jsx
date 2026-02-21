@@ -1,42 +1,47 @@
+/* extern */
+import { useEffect, useState } from "react";
+
+/* back */
+import { SocketM } from "/app/back/src/SocketManag.js";
+
 /* Css */
 import "./PrivateMessageConv.scss"; 
 
 /* Components */
-import { SocketM } from "/app/back/src/SocketManag.js";
-import { useEffect, useState } from "react";
 
 // navConv lui contient le login user
 export default function PrivateMessageConv({navConv, displayedMessages, setDisplayedMessages}) {    
 
 
-const [input, setInput] = useState("");
+// const [input, setInput] = useState("");
 
-async function addmessprivate(timer, navConv){
-    const data={
-        time: timer,
-        id: navConv,
-        mess: input,
-    }
-    try{
-        const rep = await fetch('/api/addpriv',{
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-            body: JSON.stringify(data),
-        });
+// async function add_message_private(timer, navConv){
+//     console.log("add_message_private(1) called")
+//     const data={
+//         time: timer,
+//         id: navConv,
+//         mess: input,
+//     }
+//     try{
+//         const rep = await fetch('/api/addpriv',{
+//             method: "POST",
+//             headers: {'Content-Type': 'application/json'},
+//             credentials: "include",
+//             body: JSON.stringify(data),
+//         });
 
-        const repp = await rep.json();
-        if(repp.success)
-            console.log("message priv good ad to db")
-        else
-            console.log("err add messpriv ", repp.message)
-    }catch(err){
-        console.log("err front addmessprivate ", err)
-    }
-}
+//         const repp = await rep.json();
+//         if(repp.success)
+//             console.log("add_message_private(2) success")
+//         else
+//             console.log("add_message_private(3) fail", repp.message)
+//     }catch(err){
+//         console.log("add_message_private(4) error", err)
+//     }
+// }
 
-// async function fetchPrivMsg({navConv}){
-//     console.log("fetch priv", navConv);
+// async function fetch_private_message({navConv}){
+//     console.log("fetch_private_message(1) called: ", navConv);
 
 //     const tok2 = navConv;
 
@@ -51,20 +56,14 @@ async function addmessprivate(timer, navConv){
 //         if (repp.success)
 //             setDisplayedMessages(message)
 //         else
-//             console.log("fetch getpriv fail ", repp.message);
+//             console.log("fetch_private_message(2) fail: ", repp.message);
 //     }catch(err){
-//         console.log("fetch getpriv error ", err);
+//         console.log("fetch_private_message(3) error: ", err);
 //     }
 // }
     
-
-    const handler = (e) =>{
-        e.preventDefault();
-        console.log("uai handler")
-    }
-
     // useEffect(() => {
-    //     async () => { fetchPrivMsg({navConv}) }
+    //     async () => { fetch_private_message({navConv}) }
     //     if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
     //         SocketM.connect();
     //     }
@@ -84,23 +83,25 @@ async function addmessprivate(timer, navConv){
     // }, [navConv]);
 
     
-    const handlerPriv = (e) => {
-        e.preventDefault();
-        const message = e.target[0].value;
-        console.log("handlerPriv: ", message);
-        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
-        addmessprivate(time, navConv);
-        SocketM.sendd(data);
-        setDisplayedMessages(prev => [...prev, data]);
-        setInput("");
-    }
+    // const handler_private = (e) => {
+    //     console.log("handler_private(1) called");
+    //     e.preventDefault();
+    //     const message = e.target[0].value;
+    //     console.log("handler_private(2) : ", message);
+    //     const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    //     const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
+    //     add_message_private(time, navConv);
+    //     SocketM.sendd(data);
+    //     setDisplayedMessages(prev => [...prev, data]);
+    //     setInput("");
+    // }
+
     return (
         <>
+            <div className={`PrivateMessageConv-root`}>
 
-                <div className="PrivateMessageConv-flex1">
 
-                    <div><h5 className="center">{navConv}</h5></div>
+                    {/* <div><h5 className="center">{navConv}</h5></div>
 
                     <div className="PrivateMessageConv-flex2">
                         <div>
@@ -121,15 +122,16 @@ async function addmessprivate(timer, navConv){
                     </div>
 
                     <div>
-                        <form onSubmit={handlerPriv}>
+                        <form onSubmit={handler_private}>
                             <input type="text"
                             value = {input}
                             onChange={(e) => setInput(e.target.value)}
                             />
                             <button type="submit">button</button>
                         </form>
-                    </div>
-                </div>
+                    </div> */}
+
+            </div>
         </>
     )
 }

@@ -9,15 +9,15 @@ import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 
 export default function PrivateMessage() { 
     
-    const [NavInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
+    const [navInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
 
     const [navConv, setNavConv] = useState(null)                                                            // changer de conv private
     const [displayedConvPrivate, setDisplayedConvPrivate] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
 
-    async function fetchPrivMsg({navConv}){
-        console.log("fetch priv", navConv);
+    async function fetch_private_message({navConv}){
+        console.log("fetch_private_message(1) called: ", navConv);
 
         const tok2 = navConv;
 
@@ -32,9 +32,9 @@ export default function PrivateMessage() {
             if (repp.success)
                 setDisplayedMessages(message)
             else
-                console.log("fetch getpriv fail ", repp.message);
+                console.log("fetch_private_message(1) fail ", repp.message);
         }catch(err){
-            console.log("fetch getpriv error ", err);
+            console.log("fetch_private_message(1) error ", err);
         }
     }
 
@@ -70,14 +70,15 @@ export default function PrivateMessage() {
         (async () => {await fetchConvPrivate();})();
     }, []);
     
+
     useEffect(() => {
         if (!navConv) return;
-        async () => { fetchPrivMsg({navConv}) }
+        async () => { fetch_private_message({navConv}) }
         if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
             SocketM.connect();
         }
 
-        const handlePrivMessage = (data) => {
+        const handle_priv_message = (data) => {
             console.log("Message privé reçu via WebSocket:", data);
             if (data.login === navConv)
                 setDisplayedMessages(prevMessages => [...prevMessages, data]);
@@ -87,43 +88,42 @@ export default function PrivateMessage() {
                 // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
         
         }
-        SocketM.onPriv(handlePrivMessage);
+        SocketM.onPriv(handle_priv_message);
 
         return () => {
-            SocketM.offPriv(handlePrivMessage);
+            SocketM.offPriv(handle_priv_message);
         };
     }, [navConv]);
     
     return (
         <>
-            <div className="PrivateMessage-flex PrivateMessage-bg fullh">
-
+            <div className={`PrivateMessage-root`}>
 
 {/* ------------------------------------------------------------------------------------------- */}
-                <div className="PrivateMessage-info">
+                <div className={`info`}>
 
-                    <div className="PrivateMessage-bloc-friend-message ">
-                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavInfo(1); setNavConv(null)} }>Amis</div>
-                        <div className="PrivateMessage-border-bottom"></div>
-                        <div className="center PrivateMessage-bloc-left" onClick={() => {setNavInfo(2); setNavConv(null)} }>Ajouter un Amis</div>
+                    <div className={`bloc-friend-addfriend`}>
+                        <div className="bloc-left" onClick={() => {setNavInfo(1); setNavConv(null)} }>Amis</div>
+                        <div className={`border-bottom`}></div>
+                        <div className="bloc-left" onClick={() => {setNavInfo(2); setNavConv(null)} }>Ajouter un Amis</div>
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}
-                    <div className="PrivateMessage-border-bottom-big fullw"></div>
+                    <div className={`border-bottom-big`}></div>
     {/* ------------------------------------------------------------------------------ */}
 
-                    <div className="PrivateMessage-bloc-friend-message ">
+                    <div className={`bloc-friend-message`}>
                         
                         {displayedConvPrivate && displayedConvPrivate.map((msg, index) => (
                             <>
 
-                                <div key={index} className={`center PrivateMessage-bloc-left`} onClick={() => {setNavInfo(0); setNavConv(msg.login);} }>
+                                <div key={index} className={`bloc-left`} onClick={() => {setNavInfo(0); setNavConv(msg.login);} }>
 
                                     <h4>{msg.login}</h4>
 
                                 </div>
 
-                                <div className="PrivateMessage-border-bottom"></div>
+                                <div className={`border-bottom`}></div>
 
                             </>
                         ))}
@@ -133,18 +133,27 @@ export default function PrivateMessage() {
                 </div>
 {/* ------------------------------------------------------------------------------------------- */}
 
+    {/* ------------------------------------------------------------------------------ */}
+                <div className={`border-left`}></div>
+    {/* ------------------------------------------------------------------------------ */}
 
-                <div className="PrivateMessage-border-left"></div>
+{/* ------------------------------------------------------------------------------------------- */}
+                <div className={`display-screen`}>
+                    <div className={`border-left`}></div>
 
                     {/* {{navInfo &&
 
-                        switch (navInfo)
-                        <Amis /> 
-                        <AjouterAmis />
+                    switch (navInfo)
+                    <Amis /> 
+                    <AjouterAmis />
 
                     }} */}
                     {navConv && <PrivateMessageConv navConv={navConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
-            </div>
+                
+                </div>
+
+{/* ------------------------------------------------------------------------------------------- */}
+            </div> {/* PrivateMessage-root */}
         </>
     )
 }
