@@ -1,10 +1,20 @@
-// $navbar_height: 
-
+$navbar_height: 13%;
+$children_height: 100% - $navbar_height;
 
 .Navigation-root {
     height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    
+    nav {
+        height: $navbar_height;
+    }
 
+    .children-container {
+        height: $children_height;
+    }
 }
+

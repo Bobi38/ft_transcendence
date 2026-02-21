@@ -8,7 +8,7 @@ import checkCo from "BACK/fct1.js"
 import "./Navigation.scss";
 
 /* Components */
-import NavBar from "FRONT/Component/nav/NavBar/NavBar.jsx";
+import NavBar from "FRONT/Component/NavBar/NavBar.jsx";
 
     
 export default function Navigation({ children }) {
@@ -26,22 +26,20 @@ export default function Navigation({ children }) {
     };
 
     connection_check();
-    
+
     return (
         <>
-
             <div className="Navigation-root"> {/* 100vh */}
 
                 <NavBar/>
-                
-                <div className={``}> {/* le reste */}
+
+                <div className={`children-container`}>
 
                     {children}
-                    
+
                 </div>
             
-            </div>     
-
+            </div>
         </>
     );
 }
