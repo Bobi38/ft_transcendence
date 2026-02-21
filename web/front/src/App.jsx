@@ -8,9 +8,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './style/index.scss'
 
 /* Components */
+import Navigation       from    "FRONT/Component/Navigation/Navigation.jsx";
   // ./src/page/
 import Home             from    "FRONT/page/Home/Home.jsx";
-import Navigation       from    "FRONT/page/Navigation/Navigation.jsx";
 import ContactUs        from    "FRONT/page/ContactUs/ContactUs.jsx";
 import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
 import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";

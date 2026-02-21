@@ -21,13 +21,13 @@ export default function Stats() {
 
     return (
         <>
-            <div className="full Stats-bg Stats-flex center">
+            <div className={`Stats-container`}>
+                
+                <h3>History</h3>
+
                 <div>
-                    <h1>History</h1>
-                    <div>
-                        <button className="Stats-btn" onClick={() => handle("WiiGame")}>Wii Game</button>
-                        <button className="Stats-btn" onClick={() => handle("Morpion")}>Morpion</button>
-                    </div>
+                    <button className="Stats-btn" onClick={() => handle("WiiGame")}>Wii Game</button>
+                    <button className="Stats-btn" onClick={() => handle("Morpion")}>Morpion</button>
                 </div>
 
                 <div >
