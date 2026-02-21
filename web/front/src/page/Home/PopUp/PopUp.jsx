@@ -33,10 +33,3 @@ export default function PopUp({ setShowLog, showLog }) {
         </div>
     )
 }
-
-// export const AUTH = {
-//     NONE: 0,
-//     LOGIN: 1,
-//     MAILA2F: 2,
-//     REGISTER: 3,
-// };

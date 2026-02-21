@@ -10,64 +10,65 @@ export default function MailA2F({setShowLog}) {
 
     const [showCodeInput, setShowCodeInput] = useState(false);
 
-    const sendmail = async () => {
+    const maila2f_send_mail = async () => {
 
-        console.log("sendmail(1) called");
+        console.log("maila2f_send_mail(1) called");
         try {
-          const rep = await fetch("/api/sendmail", {
+          const rep = await fetch("/api/send_mail", {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
           });
 
-          console.log("sendmail(2) Response received:", rep);
+          console.log("maila2f_send_mail(2) Response received:", rep);
 
           const repjson = await rep.json();
           console.log("json parsed:", repjson);
           if (repjson.success) {
 
-            console.log("sendmail(3) Verification email sent successfully:", repjson.message);
+            console.log("maila2f_send_mail(3) Verification email sent successfully:", repjson.message);
             setShowCodeInput(true);
 
           } else {
 
-            console.log("sendmail(4) Error sending verification email");
+            console.log("maila2f_send_mail(4) Error sending verification email");
 
           }
         } catch (error) {
-          console.error("sendmail(5) Error sending verification email:", error);
+          console.error("maila2f_send_mail(5) Error sending verification email:", error);
         }
     };
 
-  const veryfCode = async (e) => {
-    console.log("veryfCode(1) called");
+  const maila2f_check_code = async (e) => {
+
+    console.log("maila2f_check_code(1) called");
     e.preventDefault();
     const formData = new FormData(e.target);
     const code = formData.get("code");
 
 
     try{
-      const rep = await fetch("/api/verifCode", {
+      const rep = await fetch("/api/maila2f_check_code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({code}),
       })
 
-      console.log("veryfCode(2) Response received:", rep);
+      console.log("maila2f_check_code(2) Response received:", rep);
       const repjson = await rep.json();
       if (repjson.success){
 
-        console.log("veryfCode(3) 2FA successfully verified");
+        console.log("maila2f_check_code(3) 2FA successfully verified");
         setShowLog(AUTH.NONE);
 
       } else {
 
-        console.log("veryfCode(4) 2FA failed:", repjson.message);
+        console.log("maila2f_check_code(4) 2FA failed:", repjson.message);
 
       }
     }catch(error){
-      console.log("veryfCode(4) 2FA failed:", error);
+      console.log("maila2f_check_code(4) 2FA failed:", error);
     }
   }
 
@@ -75,20 +76,20 @@ export default function MailA2F({setShowLog}) {
         <>
 
             {!showCodeInput && (
-                <button type="button" id={`mailverif`} className={``} onClick={sendmail}>
+                <button type={`button`} id={`mailverif`} className={``} onClick={maila2f_send_mail}>
                   Envoyer mail de verification
                 </button>
             )}
 
             {showCodeInput && (
 
-              <form id={`maila2f`} className={``} onSubmit={veryfCode}>
+              <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
 
-                <input type="text" id="code" name="code" placeholder="Entrez Code"/>
+                <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
 
                   <div className={`button-container`}>
-                      <button type="submit" className={``}>Valider</button>
-                      <button type="button" className={``} onClick={sendmail}>Renvoyer un mail de verification</button>
+                      <button type={`submit`} className={``}>Valider</button>
+                      <button type={`button`} className={``} onClick={maila2f_send_mail}>Renvoyer un mail de verification</button>
                   </div>
               </form>
 

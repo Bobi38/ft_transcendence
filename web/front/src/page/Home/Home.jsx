@@ -36,10 +36,10 @@ export default function Home() {
     
 
 
-    const Home_handler = async (event) => {
+    const home_handler = async (event) => {
 
         if (event.target.closest('#PopUp')) {
-            console.log("Home_handler(1) need to connect")
+            console.log("home_handler(1) need to connect")
             return;
         }
 
@@ -63,10 +63,10 @@ export default function Home() {
         const home_root = document.getElementById("Home-root");
         if (!home_root) return;
 
-        Home_handler();
+        home_handler();
 
-        home_root.addEventListener("click", Home_handler);
-        return () => home_root.removeEventListener("click", Home_handler);
+        home_root.addEventListener("click", home_handler);
+        return () => home_root.removeEventListener("click", home_handler);
 
     }, []);
 

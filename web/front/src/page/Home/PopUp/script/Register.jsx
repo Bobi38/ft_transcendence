@@ -6,7 +6,8 @@ import { AUTH } from "../../Home.jsx"
 export default function Register({setShowLog}) {
 
 
-    const retsubmit = async (event) => {
+    const register_submit = async (event) => {
+
         event.preventDefault();
 
         const form = event.target;
@@ -17,7 +18,7 @@ export default function Register({setShowLog}) {
         };
 
         if (!data.name || !data.email || !data.password) {
-            showAlert("Missing value", 'danger');
+            showAlert("register_submit(1) Missing value", 'danger');
             return;
         }
         console.log(data.name + " " + data.email + " " + data.password);
@@ -35,40 +36,42 @@ export default function Register({setShowLog}) {
             if (result.success) {
                 setShowLog(AUTH.LOGIN);
             } else {
-                showAlert(result.message, 'danger');
+                showAlert("register_submit(2)" + result.message, 'danger');
             }
         } catch (error) {
-            console.error("Server error", error);
+            console.error("register_submit(3) Server error", error);
         }
     };
 
-    function logMode() {
-        console.log("Passage en mode connection:", AUTH.REGISTER);
+    function login_mode() {
+        console.log("login_mode(1) Passage en mode connection: ", AUTH.REGISTER);
         setShowLog(AUTH.LOGIN)
     }
 
 
     return (
-        <form id="regist" className={``} onSubmit={retsubmit}>
-
+        <>
             <h4>Register</h4>
+            <form id={`register`} className={``} onSubmit={register_submit}>
 
-            <label htmlFor="name">Nickname</label>
-            <input type="text" id="name" name="name" placeholder="XxX_DarkSasuke_XxX"/>
 
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="you@exemple.com"/>
+                <label htmlFor={`name`}>Nickname</label>
+                <input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
 
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="1234btw"/>
+                <label htmlFor={`email`}>Email</label>
+                <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
 
-            <div className={`button-container`}>
+                <label htmlFor={`password`}>Password</label>
+                <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
-                <button type="submit" className={``}>Register</button>
-                <button type="button" className={``} onClick={logMode}>Connexion</button>
+                <div className={`button-container`}>
 
-            </div>
+                    <button type={`submit`} className={``}>Register</button>
+                    <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
 
-        </form>
+                </div>
+
+            </form>
+        </>
     )
 }

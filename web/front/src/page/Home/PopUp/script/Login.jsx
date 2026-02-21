@@ -7,7 +7,7 @@ import { FaGithub } from "react-icons/fa";
 
 export default function Login({setShowLog}) {
 
-    const logsub = async (event) => {
+    const login_submit = async (event) => {
 
 		event.preventDefault();
         const form = event.target;
@@ -43,87 +43,77 @@ export default function Login({setShowLog}) {
                 showAlert("Erreur : " + result.message, "danger");
             }
         } catch (error) {
-            console.error("Erreur serveur", error);
+            console.error("login_submit(1) Erreur serveur", error);
             showAlert("Impossible de se connecter pour le moment", "danger");
         }
     };
 
-    const registerMode = () => {
+
+
+    const register_mode = () => {
         console.log("Passage en mode inscription:", AUTH.REGISTER);
         setShowLog(AUTH.REGISTER);
     }
 
-    const MissPswdMode = () => {
-        console.log("Passage en mode inscription:", AUTH.REGISTER);
-        setShowLog(AUTH.REGISTER);
-    }
-
-    const handleGit = () => {
+    
+    const handle_git = () => {
         window.location.href = "/api/github";
     };
-
+    
+    const miss_pass_mode = () => {
+        console.log("Passage en mode inscription:", AUTH.REGISTER);
+        setShowLog(AUTH.REGISTER);
+    }
 
     return (
-        <form id={`login`} onSubmit={logsub}>
-
+        <>
             <h4>Connexion</h4>
+            <form id={`login`} onSubmit={login_submit}>
 
-            <label htmlFor="email">Email</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="you@exemple.com"
-                required
-            />
 
-            <label htmlFor="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="1234btw"
-                required
-            />
+                <label  htmlFor="email">Email</label>
+                <input  type={`email`}
+                        id={`email`}
+                        name={`email`}
+                        placeholder={`you@exemple.com`}
+                        required
+                        />
 
-            <div className={`button-container`}>
+                <label  htmlFor="password">Password</label>
+                <input  type={`password`}
+                        id={`password`}
+                        name={`password`}
+                        placeholder={`1234btw`}
+                        required
+                        />
 
-                <button type="submit"
-                        className={``}
-                        >
-                        Connexion
-                </button>
+                <div className={`button-container`}>
 
-                <button type="button"
-                        className={``}
-                        onClick={registerMode}
-                        >
-                        Password lost
-                </button>
-                
-                <button type="button"
-                        className={``}
-                        onClick={registerMode}
-                        >
-                        Register
-                </button>
+                    <button type={`submit`} className={``}>
+                            Connexion
+                    </button>
 
-                <button type="button"
-                        className={``}
-                        target="_blank"
-                        onClick={handleGit}
-                        >
-                        <FaGithub/> GitHub
-                </button>
+                    <button type={`button`} className={``}
+                            onClick={register_mode}>
+                            Password lost
+                    </button>
+                    
+                    <button type={`button`} className={``}
+                            onClick={register_mode}>
+                            Register
+                    </button>
 
-                <button type="button"
-                        className={``}
-                        target="_blank"
-                        onClick={MissPswdMode}
-                        >
-                        Password forgot ?
-                </button>
-            </div>
-        </form>
+                    <button type={`button`} className={``} target="_blank"
+                            onClick={handle_git}>
+                            <FaGithub/> GitHub
+                    </button>
+
+                    {/* <button type={`button`} className={``} target="_blank"
+                            onClick={miss_pass_mode}>
+                            Password forgot ?
+                            </button> */}
+                </div>
+            </form>
+        </>
     )
 }
