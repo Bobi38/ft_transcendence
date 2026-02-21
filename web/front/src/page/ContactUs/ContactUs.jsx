@@ -1,16 +1,15 @@
 /* Css */
-import "../../Navigation.scss"
 import "./ContactUs.scss";
 
 /* Components */
-import ContactCardDisplay from "./ContactCardDisplay/ContactCardDisplay";
-import ContactIssue from "./ContactIssue/ContactIssue";
+import ContactCardDisplay   from "./ContactCardDisplay/ContactCardDisplay";
+import ContactIssue         from "./ContactIssue/ContactIssue";
 
 export default function ContactUs() {
 
     return (
         <>
-            <div className={`fullw ContactUs-bg`}>
+            <div className={``}>
 
                 <div>
                     <h1>Contacter Nous</h1>

@@ -67,53 +67,56 @@ export default function Login({setShowLog}) {
 
     return (
         <>
-            <h4>Connexion</h4>
-            <form id={`login`} onSubmit={login_submit}>
+            <div className={`PopUp-in-root`}>
+
+                <h4>Connexion</h4>
+                <form id={`login`} onSubmit={login_submit}>
 
 
-                <label  htmlFor="email">Email</label>
-                <input  type={`email`}
-                        id={`email`}
-                        name={`email`}
-                        placeholder={`you@exemple.com`}
-                        required
-                        />
+                    <label  htmlFor="email">Email</label>
+                    <input  type={`email`}
+                            id={`email`}
+                            name={`email`}
+                            placeholder={`you@exemple.com`}
+                            required
+                            />
 
-                <label  htmlFor="password">Password</label>
-                <input  type={`password`}
-                        id={`password`}
-                        name={`password`}
-                        placeholder={`1234btw`}
-                        required
-                        />
+                    <label  htmlFor="password">Password</label>
+                    <input  type={`password`}
+                            id={`password`}
+                            name={`password`}
+                            placeholder={`1234btw`}
+                            required
+                            />
 
-                <div className={`button-container`}>
+                    <div className={`button-container`}>
 
-                    <button type={`submit`} className={``}>
-                            Connexion
-                    </button>
+                        <button type={`submit`} className={``}>
+                                Connexion
+                        </button>
 
-                    <button type={`button`} className={``}
-                            onClick={register_mode}>
-                            Password lost
-                    </button>
-                    
-                    <button type={`button`} className={``}
-                            onClick={register_mode}>
-                            Register
-                    </button>
+                        <button type={`button`} className={``}
+                                onClick={register_mode}>
+                                Password lost
+                        </button>
+                        
+                        <button type={`button`} className={``}
+                                onClick={register_mode}>
+                                Register
+                        </button>
 
-                    <button type={`button`} className={``} target="_blank"
-                            onClick={handle_git}>
-                            <FaGithub/> GitHub
-                    </button>
+                        <button type={`button`} className={``} target="_blank"
+                                onClick={handle_git}>
+                                <FaGithub/> GitHub
+                        </button>
 
-                    {/* <button type={`button`} className={``} target="_blank"
-                            onClick={miss_pass_mode}>
-                            Password forgot ?
-                            </button> */}
-                </div>
-            </form>
+                        {/* <button type={`button`} className={``} target="_blank"
+                                onClick={miss_pass_mode}>
+                                Password forgot ?
+                                </button> */}
+                    </div>
+                </form>
+            </div>
         </>
     )
 }

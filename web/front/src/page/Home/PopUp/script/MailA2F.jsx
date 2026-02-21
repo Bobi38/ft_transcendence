@@ -74,26 +74,31 @@ export default function MailA2F({setShowLog}) {
 
     return (
         <>
+            <div className={`PopUp-in-root`}>
+              
+                <h4>MailA2F</h4>
+                
+                {!showCodeInput && (
+                    <button type={`button`} id={`mailverif`} className={``} onClick={maila2f_send_mail}>
+                      Envoyer mail de verification
+                    </button>
+                )}
 
-            {!showCodeInput && (
-                <button type={`button`} id={`mailverif`} className={``} onClick={maila2f_send_mail}>
-                  Envoyer mail de verification
-                </button>
-            )}
+                {showCodeInput && (
 
-            {showCodeInput && (
+                  <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
 
-              <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
+                    <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
 
-                <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
+                      <div className={`button-container`}>
+                          <button type={`submit`} className={``}>Valider</button>
+                          <button type={`button`} className={``} onClick={maila2f_send_mail}>Renvoyer un mail de verification</button>
+                      </div>
+                  </form>
 
-                  <div className={`button-container`}>
-                      <button type={`submit`} className={``}>Valider</button>
-                      <button type={`button`} className={``} onClick={maila2f_send_mail}>Renvoyer un mail de verification</button>
-                  </div>
-              </form>
+                )}
 
-            )}
+            </div>
       </>
   );
 }
