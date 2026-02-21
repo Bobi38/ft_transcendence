@@ -8,6 +8,9 @@ import "./HomeFooter.scss"
 
 /* Components */
 
+
+import { AUTH } from "FRONT/page/Home/Home.jsx"
+
 export default function HomeFooter({setShowLog}) {
 
     const navigate = useNavigate();
@@ -24,7 +27,7 @@ export default function HomeFooter({setShowLog}) {
         .then(data => {
 
             if (data.success) {
-                setShowLog()
+                setShowLog(AUTH.LOGIN)
             } else {
                 console.error("logout(2) failed");
             }
@@ -37,7 +40,7 @@ export default function HomeFooter({setShowLog}) {
 
     return (
         <>
-            <div className={``}>
+            <div className={`HomeFooter-container`}>
 
                     <Link   to={`/ContactUs`}
                             className={``}>
