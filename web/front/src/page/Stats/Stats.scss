@@ -1,17 +1,17 @@
-.Stats-container{
+.Stats-root{
+    /*bg*/
+    border-radius: 0.5rem;
+    background-color: blueviolet;
     height: 100%;
     width: 100%;
+    padding: 1rem;
+
 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;/*en haut*/
     text-align: center;
-    gap: 1rem;
-
-    /*bg*/
-    border-radius: 0.5rem;
-    background-color: blueviolet;
-
+    gap: 0.5rem;
 
     .Stats-btn{
         background-color: rgba(0, 0, 0, 0.150);
@@ -25,6 +25,10 @@
         &:hover{
             background-color: rgba(0, 0, 0, 0.3);
         }
+    }
+
+    .Stats-container{
+        flex: 1;
     }
 
 }

@@ -6,7 +6,7 @@ import "./StatsWiiGame.scss";
 export default function StatsWiiGame() {
     return (
         <>
-            <h2>Wii Game</h2>
+            <h4>Wii Game</h4>
             <div>
                 
             </div>

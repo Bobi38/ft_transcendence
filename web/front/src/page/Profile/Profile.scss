@@ -62,10 +62,12 @@
 
 
 #Profile-root {
-    background-color: blueviolet;
+    // mixin
     border-radius: 0.5rem;
-    padding: 1rem;
+    background-color: blueviolet;
+    width: 100%;
     height: 100%;
+    padding: 1rem;
     
     display: flex;
     flex-direction: column;
@@ -114,16 +116,16 @@
             }
         }
         
-        .form-info{
+        // .form-info{
 
-        }
+        // }
         
-        .change-password{
+        // .change-password{
 
-            .form-password{
+        //     .form-password{
     
-            }
-        }
+        //     }
+        // }
 
     }
 }
