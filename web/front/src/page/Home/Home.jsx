@@ -88,7 +88,7 @@ export default function Home() {
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
 		{ text:"Nothing", path: "/Nothing" },
 		{ text:"Morpion", path: "/Morpion" },
-		{ text:"Friends", path: "/FriendsList" },
+		{ text:"Nothing", path: "/Nothing" },
 	]
 
 	cards_content.forEach((el, index) => {
