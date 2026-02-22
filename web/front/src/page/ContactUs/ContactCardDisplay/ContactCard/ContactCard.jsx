@@ -1,12 +1,12 @@
 /* Css */
-import "./ContactIcone.scss";
+import "./ContactCard.scss";
 
 /* Components */
 // import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { Si42 } from "react-icons/si";
 
-export default function ContactIcone({ 
+export default function ContactCard({ 
     parent_style, 
     name = "default", 
     git = { url: "https://github.com", name: "ton nom de compte ta vu" },
@@ -24,18 +24,19 @@ export default function ContactIcone({
 
     return ( 
         <>
-            <div className={`${parent_style} full ContactIcone-padding translateY`}>
+            <div className={`${parent_style}`}>
 
-                <div className="ContactIcone-root">
+                <div className="ContactCard-root border-black">
 
-                    <div className="ContactIcone-div1">
+                    <div className="ContactCard-image border-red">
+
                         <img src={`${image}`}
-                            alt={`${name}'s avatar`} 
-                            width="275" height="275"
+                            alt={`${name}'s avatar`}
                             />
+                    
                     </div>
 
-                    <div className="ContactIcone-div2 ContactIcone-card ContactIcone-font">
+                    <div className="ContactCard-info border-yellow">
                         
                         <div>
                             <h2>{name}</h2>
@@ -59,6 +60,7 @@ export default function ContactIcone({
                     </div>
 
                 </div>
+
 
             </div>
         </>

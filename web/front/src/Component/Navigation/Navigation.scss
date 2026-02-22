@@ -2,6 +2,7 @@ $navbar_height: 13%;
 $children_height: 100% - $navbar_height;
 
 .Navigation-root {
+    overflow-x: hidden;
     height: 100%;
     width: 100%;
     display: flex;

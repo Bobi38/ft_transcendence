@@ -9,19 +9,12 @@ export default function ContactUs() {
 
     return (
         <>
-            <div className={``}>
+            <div className={`ContactUs-root`}>
 
-                <div>
-                    <h1>Contacter Nous</h1>
-                </div>
+                <h3>Contacter Nous</h3>
 
-                <ContactCardDisplay parent_style={`full ContactUs-padding`}/>
-
-                <div>
-                    <h2>Issue</h2>
-                </div>
-
-                <ContactIssue parent_style="iconecolor"/>
+                <ContactCardDisplay/>
+                <ContactIssue/>
 
             </div>
         </>

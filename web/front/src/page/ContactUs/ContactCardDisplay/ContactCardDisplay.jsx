@@ -2,17 +2,17 @@
 import "./ContactCardDisplay.scss";
 
 /* Components */
-import ContactIcone from "./ContactIcone/ContactIcone";
+import ContactCard from "./ContactCard/ContactCard";
     
-export default function ContactCardDisplay({ parent_style }) {
+export default function ContactCardDisplay() {
 
     
     return (
         <>
 
-            <div className={`${parent_style} ContactCardDisplay-root `}>
+            <div className={`ContactCardDisplay-root`}>
 
-                <ContactIcone parent_style="ContactCardDisplay-div1 center iconecolor"
+                <ContactCard parent_style="ContactCardDisplay-div1"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -21,7 +21,7 @@ export default function ContactCardDisplay({ parent_style }) {
                             />
 
                             
-                <ContactIcone parent_style="ContactCardDisplay-div2 center iconecolor"
+                <ContactCard parent_style="ContactCardDisplay-div2"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -30,7 +30,7 @@ export default function ContactCardDisplay({ parent_style }) {
                             />
 
                             
-                <ContactIcone parent_style="ContactCardDisplay-div3 center iconecolor"
+                <ContactCard parent_style="ContactCardDisplay-div3"
                             name="Florent Cretin"
                             git={{ url: "https://github.com/Lzozoflo", name: "LzozoFlo" }}
                             linkedin={{ url: "https://www.linkedin.com/in/florent-cretin-8b5b9021a/", name: "Florent Cretin"  }} 
@@ -39,7 +39,7 @@ export default function ContactCardDisplay({ parent_style }) {
                             />
 
                             
-                <ContactIcone parent_style="ContactCardDisplay-div4 center iconecolor"
+                <ContactCard parent_style="ContactCardDisplay-div4"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -48,7 +48,7 @@ export default function ContactCardDisplay({ parent_style }) {
                             />
 
                             
-                <ContactIcone parent_style="ContactCardDisplay-div5 center iconecolor"
+                <ContactCard parent_style="ContactCardDisplay-div5"
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}

@@ -1,0 +1,70 @@
+$root_width: 100%;
+$image_width: 350px;
+
+.ContactCard-root {
+
+    background-color: aqua;
+    padding: 0.5rem;
+
+    &:hover{
+        transform: translateY(-10px);
+    }
+
+    height: 100%;
+    width: $root_width;
+    display: flex;
+    flex-direction: row;
+
+    .ContactCard-image,
+    .ContactCard-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ContactCard-image {
+        width: $image_width;
+        img {
+            height: 100%;
+            width: 100%;
+        }
+    } 
+
+    .ContactCard-info {
+
+        flex-direction: column; 
+        justify-content: space-around; 
+
+        width: calc($root_width - $image_width);
+        padding: 1rem;
+
+        gap: 10px;
+        
+        font-size: 1.4rem;
+
+        @media (max-width:1500px) { 
+            font-size: 1.2rem;
+        }
+
+    }
+
+
+}
+
+@media (max-width:625px) { 
+
+    .ContactCard-root {
+        display: flex;
+        flex-direction: column;
+
+        .ContactCard-div1{
+           display: none;
+        }
+        .ContactCard-div2{
+            width: 100%; 
+            height: 100%;
+        }
+    }
+}
+
+

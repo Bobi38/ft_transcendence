@@ -25,4 +25,12 @@ export default defineConfig({
       'STYLE': path.resolve(__dirname, './src/style'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Permet d'importer sans les ./ complexes
+        includePaths: [path.resolve(__dirname, 'src/style')],
+      },
+    },
+  },
 });

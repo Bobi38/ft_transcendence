@@ -1,10 +1,12 @@
 /* Css */
 import "./ContactIssue.scss";
 
-export default function ContactIssue({ parent_style }) {
+export default function ContactIssue() {
     return (
         <>
-            <div className={`${parent_style} ContactIssue`}>
+            <div className={`ContactIssue`}>
+
+                <h2>Issue</h2>
                 <form className="full ContactIssue-form">
 
                     <label htmlFor="name">Noms</label>

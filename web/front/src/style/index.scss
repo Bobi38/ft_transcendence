@@ -1,3 +1,7 @@
+// @use './global/_border';
+// @use '_global.scss';
+// @use '_variable.scss';
+
+@use "./global/border";
 @use '_global.scss';
 @use '_variable.scss';
-
