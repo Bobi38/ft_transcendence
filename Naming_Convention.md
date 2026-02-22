@@ -43,7 +43,7 @@ Le format utilisé est : `ComponentName-utilisation`
 > **Exemple CSS :** `.UserCard-container { display: flex; }`
 > **Exemple HTML ID :** `<input id="LoginForm-password" />`
 
-### ⚙️ JavaScript & Database
+### ⚙️ JavaScript & Database & _variable.scss
 
 La convention appliquée est le : `snake_case`  
 

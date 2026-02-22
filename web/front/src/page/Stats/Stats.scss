@@ -1,12 +1,13 @@
-$root_height: 100%;
+@use "STYLE/variable" as var;
+
 $header_height: 15%;
-$container_height: $root_height - $header_height;
+$container_height: var.$root_height - $header_height;
 
 .Stats-root{
     /*bg*/
     border-radius: 0.5rem;
     background-color: blueviolet;
-    height: $root_height;
+    height: var.$root_height;
     width: 100%;
     padding: 1rem;
 

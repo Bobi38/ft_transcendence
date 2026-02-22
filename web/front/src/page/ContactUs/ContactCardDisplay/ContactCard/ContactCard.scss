@@ -1,8 +1,10 @@
-$root_width: 100%;
+@use "STYLE/variable" as var;
+
 $image_width: 350px;
 
 .ContactCard-root {
-
+    
+    border-radius: var.$border_radius_value;
     background-color: aqua;
     padding: 0.5rem;
 
@@ -11,7 +13,7 @@ $image_width: 350px;
     }
 
     height: 100%;
-    width: $root_width;
+    width: var.$root_width;
     display: flex;
     flex-direction: row;
 
@@ -25,6 +27,7 @@ $image_width: 350px;
     .ContactCard-image {
         width: $image_width;
         img {
+            border-radius: var.$border_radius_value;
             height: 100%;
             width: 100%;
         }
@@ -35,7 +38,7 @@ $image_width: 350px;
         flex-direction: column; 
         justify-content: space-around; 
 
-        width: calc($root_width - $image_width);
+        width: calc(var.$root_width - $image_width);
         padding: 1rem;
 
         gap: 10px;

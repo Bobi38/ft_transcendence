@@ -1,4 +1,4 @@
-@use "../variable" as var;
+@use "STYLE/variable" as var;
 
 %border-base        {
   border: var.$border_value solid black;
