@@ -7,14 +7,17 @@ $width_game_winrate: 100% - $width_history;
     flex-direction: row;
 
     .history , .game-winrate {
+        height: 100%;
         padding: 0.5rem;
     }
 
     .history {
-        padding-right: 0;
         width: $width_history;
+        padding-right: 0;
+
         overflow-y: auto;
         scrollbar-width: thin;
+
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -24,12 +27,10 @@ $width_game_winrate: 100% - $width_history;
     .game-winrate {
         width: $width_game_winrate;
 
-        
-        
-        
+
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        gap: 1rem;
 
 
         .wl-graph, .wl-ox, .wl-horizontal,
