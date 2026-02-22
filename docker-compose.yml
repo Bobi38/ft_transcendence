@@ -1,13 +1,11 @@
-version: '3.9'
-
 services:
   mysql:
     image: mysql:8.4
     container_name: mysql
     restart: always
     volumes:
-      - ./db/conf.cnf:/etc/mysql/conf.d/my.cnf
-      - ./db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
+      - ./conf/db/conf.cnf:/etc/mysql/conf.d/my.cnf
+      - ./conf/db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
     networks:
       - home
     environment:
@@ -53,11 +51,11 @@ services:
       DB_PORT:  3306
     volumes:
   # Backend
-      - ./web:/app                  # monte tout le backend
-      - /app/node_modules           # garde les modules de l'image
+      - ./web/back:/app/back                  # monte tout le backend
+      - /app/back/node_modules           # garde les modules de l'image
   # Frontend
-      - ./web/site/go:/app/site/go  # monte le frontend pour HMR
-      - /app/site/go/node_modules
+      - ./web/front:/app/front  # monte le frontend pour HMR
+      - /app/front/node_modules
     networks:
       - home
     restart: always
@@ -70,12 +68,11 @@ services:
 
 secrets:
   data_pswd:
-    file: ./secrets/data_pswd
+    file: ./conf/secrets/data_pswd
   cle_chat:
-    file: ./secrets/cle_chat
+    file: ./conf/secrets/cle_chat
   cle_pswd:
-    file: ./secrets/cle_pswd
-  
+    file: ./conf/secrets/cle_pswd
 
 networks:
   home:

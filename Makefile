@@ -1,12 +1,12 @@
 all:	secrets creat compose
 
-compose: 
+compose:
 	docker compose up -d
 
-down: 
+down:
 	docker compose down -v
 
-prune: 
+prune:
 	docker system prune -af --volumes
 
 volumes:
@@ -25,26 +25,26 @@ creat:
 	mkdir -p vol/db/data
  	chown root:root vol/db/data
 	chmod 755 vol/db/data
-	chmod +x myadmin/conff.sh
-	chmod +x db/conf.sh
+	chmod +x ./conf/myadmin/conf.sh
+	chmod +x ./conf/db/conf.sh
 
 logs:
 	docker logs web -f
 
 secrets:
-	@mkdir -p secrets
-	openssl rand -hex 2 > secrets/data_pswd
-	openssl rand -hex 2 > secrets/cle_pswd
-	openssl rand -hex 2 > secrets/cle_chat
-# 	openssl rand -hex 4 > secrets/wordpress_db_password
-# 	openssl rand -hex 4 > secrets/wordpress_admin_password
-# 	openssl rand -hex 4 > secrets/wordpress_user_password
-	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout secrets/nginx.key -out secrets/nginx.crt -subj "/CN=tvoisin.42.fr"
+	@mkdir -p ./conf/secrets
+	openssl rand -hex 2 > ./conf/secrets/data_pswd
+	openssl rand -hex 2 > ./conf/secrets/cle_pswd
+	openssl rand -hex 2 > ./conf/secrets/cle_chat
+# 	openssl rand -hex 4 > ./conf/secrets/wordpress_db_password
+# 	openssl rand -hex 4 > ./conf/secrets/wordpress_admin_password
+# 	openssl rand -hex 4 > ./conf/secrets/wordpress_user_password
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./conf/secrets/nginx.key -out ./conf/secrets/nginx.crt -subj "/CN=tvoisin.42.fr"
 
 fclean: clean
 	docker volume prune -f
 	docker network prune -f
-	rm -r secrets
+	rm -r ./conf/secrets
 	$(MAKE) volumes
 # 	hosts_remove
 

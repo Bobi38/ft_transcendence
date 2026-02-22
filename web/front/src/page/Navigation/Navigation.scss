@@ -1,0 +1,11 @@
+.Navigation-root {
+    height: 100vh;          /* plein écran */
+    display: flex;
+    flex-direction: column; /* nav en haut, reste en dessous */
+    padding: 1rem;
+    gap: 1.5rem;
+}
+
+.Navigation-renderScreenNav {
+    height: 100%;
+}

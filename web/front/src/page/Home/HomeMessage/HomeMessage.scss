@@ -1,0 +1,72 @@
+.HomeMessage-root{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+
+  .HomeMessage-message {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden auto;
+    scrollbar-width: thin;
+    width: 100%;
+
+    .HomeMessage-me,
+    .HomeMessage-other {
+      margin-top: 0.5rem;
+      border-radius: 3px;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      background-color: rgb(89, 189, 189);
+
+      &:hover {
+        background-color: rgb(79, 179, 179);
+      }
+
+      p {
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .HomeMessage-me {
+      text-align: right;
+    }
+    .HomeMessage-other {
+      text-align: left;
+    }
+
+  }
+
+    form {
+        width: 100%;
+        margin-top: 0.5rem;
+
+          .HomeMesssage-form {
+              display: flex;
+              gap: 0.5rem;
+              input {
+                  padding: 8px;
+                  flex: 1; // très important pour que l’input prenne l’espace
+              }
+
+              button {
+                  padding: 8px 12px;
+                  background-color: rgb(89, 91, 189);
+                  &:hover{
+                    background-color: rgb(112, 100, 201);
+                  }
+              }
+          }
+
+          @media (max-width: 600px) {
+            .HomeMesssage-form {
+                flex-direction: column;
+
+                button {
+                    width: 100%;
+                    margin-top: 8px;
+                }
+            }
+        }
+    }
+}

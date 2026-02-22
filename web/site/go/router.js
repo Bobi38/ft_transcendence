@@ -142,6 +142,7 @@ router.get('/getprofile', async(req, res) =>{
 });
 
 router.post('/login', async (req, res) => {
+  console.log("je suis dans login ");
   const { email, password } = req.body;
 
   try {
