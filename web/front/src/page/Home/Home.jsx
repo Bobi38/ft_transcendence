@@ -34,7 +34,7 @@ export default function Home() {
 
     const home_handler = async (event) => {
 
-        if (event.target.closest('.PopUp-root')) {
+        if (event && event.target && event.target.closest('.PopUp-root')) {
             console.log("home_handler(1) need to connect")
             return;
         }
@@ -43,7 +43,7 @@ export default function Home() {
         if (!resCo) {
             setShowLog(AUTH.LOGIN);
         } else {
-            if (event.target.id === "HomeChatsubmit"){
+            if (event && event.target && event.target.id === "HomeChatsubmit"){
                 const form = event.target.form
                 if (form) {
                     form.requestSubmit();

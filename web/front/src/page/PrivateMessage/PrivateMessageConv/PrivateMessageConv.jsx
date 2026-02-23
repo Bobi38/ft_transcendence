@@ -12,8 +12,7 @@ import "./PrivateMessageConv.scss";
 // navConv lui contient le login user
 export default function PrivateMessageConv({navConv, displayedMessages, setDisplayedMessages}) {    
 
-
-// const [input, setInput] = useState("");
+    const [input, setInput] = useState("");
 
 // async function add_message_private(timer, navConv){
 //     console.log("add_message_private(1) called")
@@ -83,26 +82,26 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
     // }, [navConv]);
 
     
-    // const handler_private = (e) => {
-    //     console.log("handler_private(1) called");
-    //     e.preventDefault();
-    //     const message = e.target[0].value;
-    //     console.log("handler_private(2) : ", message);
-    //     const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    //     const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
-    //     add_message_private(time, navConv);
-    //     SocketM.sendd(data);
-    //     setDisplayedMessages(prev => [...prev, data]);
-    //     setInput("");
-    // }
+    const handler_private = (e) => {
+        console.log("handler_private(1) called");
+        e.preventDefault();
+        const message = e.target[0].value;
+        console.log("handler_private(2) : ", message);
+        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
+        add_message_private(time, navConv);
+        SocketM.sendd(data);
+        setDisplayedMessages(prev => [...prev, data]);
+        setInput("");
+    }
 
     return (
         <>
             <div className={`PrivateMessageConv-root`}>
 
-                    <div><h5 className="center">{navConv}</h5></div>
+                    <h5>{navConv}</h5>
 
-                    {/* <div className="PrivateMessageConv-flex2">
+                    <div className="message">
                         <div>
 
                             {displayedMessages && displayedMessages.map((msg, index) => { return ( 
@@ -120,15 +119,13 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
 
                     </div>
 
-                    <div>
-                        <form onSubmit={handler_private}>
-                            <input type="text"
-                            value = {input}
-                            onChange={(e) => setInput(e.target.value)}
-                            />
-                            <button type="submit">button</button>
-                        </form>
-                    </div> */}
+                    <form onSubmit={handler_private}>
+                        <input type="text"
+                        value = {input}
+                        onChange={(e) => setInput(e.target.value)}
+                        />
+                        <button type="submit">button</button>
+                    </form>
 
             </div>
         </>
