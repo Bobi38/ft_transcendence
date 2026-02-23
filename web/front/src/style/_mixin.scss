@@ -5,3 +5,7 @@
 }
 @mixin fullw { width: 100%; }
 @mixin fullh { height: 100%; }
+
+
+// @use "STYLE/_mixin" as mix;
+// 	@include mix.full;
