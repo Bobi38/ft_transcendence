@@ -1,8 +1,8 @@
 import "./waitRoom.scss";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "reactmake ";
 import { SocketM } from "/app/front/tool/SocketManag.js";
 import { useEffect, useState} from "react";
-// import { useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 function Training(){
   return (
