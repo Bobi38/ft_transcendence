@@ -1,6 +1,6 @@
 @use "STYLE/variable" as var;
 
-%border-base        {
+%border-base {
   border: var.$border_value solid black;
 }
 
@@ -13,3 +13,4 @@
 .border-green     {  @extend %border-base;  border-color: green; }
 .border-cyan      {  @extend %border-base;  border-color: cyan;  }
 .border-brown     {  @extend %border-base;  border-color: brown; }
+

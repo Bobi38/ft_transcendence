@@ -1,12 +1,16 @@
+@use "STYLE/_mixin" as mix;
+
 $menu_height: 85%;
 $footer_height: 100% - $menu_height;
 
 $padding: 1rem;
 
 
+
+
+
 #Home-root {
-	height: 100%;
-	width: 100%;
+	@include mix.full;
 	background: blue;
 	padding: $padding;
     

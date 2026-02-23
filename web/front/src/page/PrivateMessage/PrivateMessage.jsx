@@ -1,8 +1,10 @@
+/* extern */
+import { useEffect, useState } from "react";
+
 /* Css */
 import "./PrivateMessage.scss";
 
 /* Components */
-import { useEffect, useState } from "react";
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 // import Amis from "./Amis/Amis.jsx"
 // import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
@@ -48,9 +50,9 @@ export default function PrivateMessage() {
             const repp = await rep.json();
             if (repp.success){
                 const chats = repp.message;
-                console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
-                console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
-                console.log("test join ", chats[0].user1.name);
+                console.log("fetch_conv_private(1) ", chats[0].PrivMesses[0].contenu)
+                console.log("fetch_conv_private(2) ", chats[1].PrivMesses[0].contenu)
+                console.log("fetch_conv_private(3) test join ", chats[0].user1.name);
                 //Chat est un tableau 0-1-2-3-....
                 //chaque partie du tableau est le dernier message d une conversation
                 //PrivMesses est un tableau d une taille de 1 car qu un seul message

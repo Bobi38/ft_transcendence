@@ -1,7 +1,7 @@
 import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from './fct.js';
-import {ManagRoom} from './morpion/ManagRoom.js';
+// import {ManagRoom} from './morpion/ManagRoom.js';
 import cookie from 'cookie' ;
 
 
