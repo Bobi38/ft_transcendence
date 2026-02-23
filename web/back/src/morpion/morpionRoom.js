@@ -5,11 +5,9 @@ class MorpionRoom extends Room {
     constructor (id) {
         super(id);
         this._type = "Morpion"
-        this._maxPlayers = 2;
-        this._player1 = null;
-        this._player2 = null;
-        this._howWin = null;
-        this._Ending = null;
+        this._max_players = 2;
+        this._how_win = null;
+        this._ending = null;
         this._time = null;
         this._map = null;
         this._loser = null;
@@ -25,6 +23,8 @@ class MorpionRoom extends Room {
             [0, 4, 8],
             [2, 4, 6],
         ];
+        this.player1 = null;
+        this.player2 = null;
     }
 
     selectPlayer1(id) {
@@ -33,14 +33,14 @@ class MorpionRoom extends Room {
             throw new Error("Le joueur n'est pas dans la room");
         }
 
-        if (players.length !== this._maxPlayers) {
+        if (players.length !== this._max_players) {
             throw new Error("Il faut exactement 2 joueurs pour sélectionner player1");
         }
 
         this.setlock(true);
         
-        this._player1 = this._players.get(id);
-        this._player2 = this._players.get(
+        this.player1 = this._players.get(id);
+        this.player2 = this._players.get(
             [...this._players.keys()].find(p => p !== id));
         this._chrono = Date.now();
     }
@@ -52,7 +52,7 @@ class MorpionRoom extends Room {
     getCurrentPlayer(current = true) {
         const moves = this.countMoves();
         const isStartTurn = (moves % 2 === 0) === current;
-        return isStartTurn ? this._player1 : this._player2;
+        return isStartTurn ? this.player1 : this.player2;
     }
 
     isValidPlay(index) {
@@ -75,12 +75,11 @@ class MorpionRoom extends Room {
 
         currentPlayer.clearTurnTimer();
 
-        const symbol = currentPlayer === this._player1 ? "X" : "O";
+        const symbol = currentPlayer === this.player1 ? "X" : "O";
         this._board[index] = symbol;
 
         const now = Date.now();
 
-        //init _chrono au debut de la partie
         if (this._chrono !== null) {
             const timeTour = now - this._chrono;
             currentPlayer.setPlayTime(timeTour);
@@ -91,10 +90,10 @@ class MorpionRoom extends Room {
         return true;
     }
 
-    setVictory(ending){
+    handleEndGame(ending){
         this.clearTimer();
 
-        this._Ending = ending;
+        this._ending = ending;
 
         this.majdb().catch(err =>
             console.error("Erreur sauvegarde DB:", err)
@@ -110,17 +109,20 @@ class MorpionRoom extends Room {
                 char === this._board[b] &&
                 char === this._board[c]
             ) {
-                this._winner = char === "X" ? this._player1 : this._player2;
-                this._loser = char === "X" ? this._player2 : this._player1;
-                this._howWin = "HVD"[Math.floor (i / 3)];
-                this.setVictory("W");
+                this._winner = char === "X" ? this.player1 : this.player2;
+                this._loser = char === "X" ? this.player2 : this.player1;
+                this._winner.send({message: "tu as gagne"}, this._board);
+                this._loser.send({message: "perdu"}, this._board);
+                this._how_win = "HVD"[Math.floor (i / 3)];
+                this.handleEndGame("W");
                 return true;
             }
             i++
         }
 
         if (!this._board.includes(" ")) {
-            this.setVictory("E");
+            this.sendAll({message: "egalite"}, this._board);
+            this.handleEndGame("E");
             return true;
         }
 
@@ -133,7 +135,7 @@ class MorpionRoom extends Room {
     startTurnTimer(player) {
         const action = () => {
             player.send({
-            mess: "⏰ Dépêche-toi de jouer !",
+            message: "⏰ Dépêche-toi de jouer !",
             board: this._board
             })
         };
@@ -149,13 +151,13 @@ class MorpionRoom extends Room {
 
     async majdb () {
         await GameMorp.create({
-            howWin: this._howWin,
+            howWin: this._how_win,
             dateGame: this._dateGame,
-            Ending: this._Ending,
-            player1: this._player1.getId(),
-            player2: this._player2.getId(),
-            time1: this._player1.getPlayTime(),
-            time2: this._player2.getPlayTime(),
+            Ending: this._ending,
+            player1: this.player1.getId(),
+            player2: this.player2.getId(),
+            time1: this.player1.getPlayTime(),
+            time2: this.player2.getPlayTime(),
             map: this.serializeBoard(),
             winner: this._winner,
             loser: this._loser

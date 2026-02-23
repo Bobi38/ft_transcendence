@@ -6,13 +6,17 @@ class Room {
         this._type = "default";
         this._id = id;
         this._players = new Map();
-        this._minPlayers = 0;
-        this._maxPlayers = null;
-        this._dateGame = new Date();
+        this._min_players = 0;
+        this._max_players = null;
+        this._date_game = new Date();
         this._locked = false;
         this._winner = null;
-        this.outTimer = null;
-        this._limitTime = 3600 * 1000;
+        this.out_timer = null;
+        this.limit_time = 3600 * 1000;
+    }
+
+    toString(){
+        return `${this._type} :${this._id}`;
     }
 
     addPlayer(playerId, socket) {
@@ -38,9 +42,9 @@ class Room {
     }
 
     isFull() {
-        if (this._maxPlayers === null) return false;
+        if (this._max_players === null) return false;
 
-        return this._players.size >= this._maxPlayers;
+        return this._players.size >= this._max_players;
     }
     
     isInRoom(id){
@@ -51,12 +55,12 @@ class Room {
         return this._id;
     }
 
-    getlock(){
+    getLock(){
         return this._locked;
     }
 
     setLock(state) {
-        if (state === true && this._players.size < this._minPlayers) {
+        if (state === true && this._players.size < this._min_players) {
             throw new Error("Nombre de joueurs minimum non atteint");
         }
 
@@ -76,16 +80,16 @@ class Room {
     }
 
     clearOutTimer() {
-        if (this.outTimer) {
-            clearTimeout(this.outTimer);
-            this.outTimer = null;
+        if (this.out_timer) {
+            clearTimeout(this.out_timer);
+            this.out_timer = null;
         }
     }
 
     startOutTimer(Action, millisec) {
         this.clearOutTimer();
 
-        this.outTimer = setTimeout(Action, millisec);
+        this.out_timer = setTimeout(Action, millisec);
     }
 }
 

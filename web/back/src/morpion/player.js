@@ -1,13 +1,12 @@
 export class Player{
     constructor(socket, id) {
-        this._nickName = null;
-        this._turnTimer = null;
-        this._nbTurn = 0;
-        this._playTime = 0;
+        this._nick_name = null;
+        this._turn_timer = null;
+        this._nb_turn = 0;
+        this._play_time = 0;
         this._socket = socket;
         this._id = id;
     }
-
 
     isConnected() {
         return this._socket && this._socket.readyState === 1;
@@ -27,7 +26,7 @@ export class Player{
     }
 
     toString(){
-        return this._nickName;
+        return this._nick_name;
     }
 
     getId(){
@@ -42,33 +41,33 @@ export class Player{
     }
 
     clearTurnTimer() {
-        if (this._turnTimer) {
-            clearTimeout(this._turnTimer);
-            this._turnTimer = null;
+        if (this._turn_timer) {
+            clearTimeout(this._turn_timer);
+            this._turn_timer = null;
         }
     }
 
     startTurnTimer(alertAction, millisec) {
         this.clearTurnTimer();
-        this._turnTimer = setTimeout(alertAction, millisec);
+        this._turn_timer = setTimeout(alertAction, millisec);
     }
 
     setPlayTime(millisec){
         if (millisec > 0){
-            this._playTime += millisec;
-            this._nbTurn++;
+            this._play_time += millisec;
+            this._nb_turn++;
         }
     }
 
     getPlayTime(){
-        return this._playTime;
+        return this._play_time;
     }
 
     getData(){
         return ({
             id: this._id,
-            time: this._playTime,
-            nbTurn: this._nbTurn
+            time: this._play_time,
+            nbTurn: this._nb_turn
          });
     }
 }
