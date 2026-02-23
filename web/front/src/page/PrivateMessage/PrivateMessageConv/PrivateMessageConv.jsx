@@ -2,7 +2,7 @@
 // import { useEffect, useState } from "react";
 
 /* back */
-// import { SocketM } from "/app/back/src/SocketManag.js";
+// import { SocketM } from "/app/front/tool/SocketManag.js";
 
 /* Css */
 import "./PrivateMessageConv.scss"; 
