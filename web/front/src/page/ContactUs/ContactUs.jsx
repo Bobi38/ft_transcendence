@@ -12,6 +12,7 @@ import ContactIssue         from "./ContactIssue/ContactIssue";
 export default function ContactUs() {
 
     return (
+        
         <>
             <div className={`ContactUs-root`}>
 
@@ -22,5 +23,7 @@ export default function ContactUs() {
 
             </div>
         </>
-    )
+
+    );
+
 }

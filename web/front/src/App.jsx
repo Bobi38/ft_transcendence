@@ -2,7 +2,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 /* back */
-// import checkCo from BACK/fct1.js
 
 /* Css */
 import './style/index.scss'
@@ -35,20 +34,20 @@ export default function App() {
 
 
             {/* Home */}
-            <Route path="/"                       element={<Home />} />
+            <Route path={`/`}                       element={<Home />} />
 
 
             {/* Navigation */}
-            <Route path="/ContactUs"              element={<Navigation>   <ContactUs/>          </Navigation>}/>
-            <Route path="/Morpion"                element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
-            <Route path="/PrivateMessage"         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
-            <Route path="/Profile"                element={<Navigation>   <Profile/>            </Navigation>}/>
-            <Route path="/Stats"                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path="/WaitRoom"               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
+            <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
+            <Route path={`/Morpion`}                element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
+            <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
+            <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
+            <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
+            <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
 
 
             {/* bad path */}
-            <Route path="/*"                      element={<Navigation>   <ErrorRedir/>         </Navigation>} />
+            <Route path={`/*`}                      element={<Navigation>   <ErrorRedir/>         </Navigation>} />
 
 
           </Routes>

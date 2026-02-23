@@ -17,7 +17,7 @@ export default function Login({setShowLog}) {
         };
 
         if (!data.email || !data.password) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
             return;
         }
 
@@ -40,18 +40,18 @@ export default function Login({setShowLog}) {
                 // setShowLog(AUTH.NONE); 
 
             } else {
-                showAlert("Erreur : " + result.message, "danger");
+                showAlert("login_submit(2) Erreur : " + result.message, "danger");
             }
         } catch (error) {
-            console.error("login_submit(1) Erreur serveur", error);
-            showAlert("Impossible de se connecter pour le moment", "danger");
+            console.error("login_submit(3) Erreur serveur", error);
+            showAlert("login_submit(4) Impossible de se connecter pour le moment", "danger");
         }
     };
 
 
 
     const register_mode = () => {
-        console.log("Passage en mode inscription:", AUTH.REGISTER);
+        console.log("register_mode(1) Passage en mode inscription:", AUTH.REGISTER);
         setShowLog(AUTH.REGISTER);
     }
 

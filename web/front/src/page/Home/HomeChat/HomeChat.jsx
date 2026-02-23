@@ -13,31 +13,34 @@ export default function HomeChat() {
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
-    async function  fetchMsg(){
-        console.log("fetchMsg(1) called");
+
+    async function  fetch_message(){
+
+        console.log("fetch_message(1) called");
         try {
-        const reponse = await fetch('/api/getchat', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: "include"
+            const reponse = await fetch('/api/getchat', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: "include"
             });
 
-        const rep = await reponse.json();
-        if (rep.success){
-            console.log("fetchMsg(2)" , rep.message);
+            const rep = await reponse.json();
+            if (rep.success){
+                console.log("fetch_message(2)" , rep.message);
 
-            setDisplayedMessages(rep.message);
+                setDisplayedMessages(rep.message);
 
-        }else{
-            alerte("message get from db failed");
-        }
+            } else {
+                alerte("fetch_message(3) message get from db failed");
+            }
+
         } catch (error) {
-            console.error("Error fetching messages:", error);
+            console.error("fetch_message(4) Error fetching messages:", error);
         }
     }
 
-    async function addmess(time){
-        console.log("addmess(): " + input);
+    async function add_message(time){
+        console.log("add_message(1): " + input);
         const reponse = await fetch('/api/addchat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -47,28 +50,28 @@ export default function HomeChat() {
 
         const rep = await reponse.json();
         if (rep.success){
-            console.log("message add to db")
+            console.log("add_message(2) message added in db")
         }
     }
 
     const init = async () => {
 
         const repco = await checkCo();
-        console.log("checkCo() in HomeChat useEffect:", repco);
+        console.log("init(1) checkCo() in HomeChat useEffect:", repco);
 
         if (!repco) {
-            console.log("User not connected, aborting useEffect");
+            console.log("init(2) User not connected, aborting useEffect");
             return;
         }
 
-        await fetchMsg();
+        await fetch_message();
 
         if (SocketM.nb() === 0) {
             SocketM.connect();
         }
 
         const handleChat = (data) => {
-            console.log("Message reçu via SocketM.onChat:", data);
+            console.log("init(3) Message reçu via SocketM.onChat:", data);
             setDisplayedMessages((prev) => [...prev, data]);
         };
 
@@ -83,11 +86,11 @@ export default function HomeChat() {
         init();
 	}, []);
 
-    const handleSubmit = (e) => {
+    const handle_submit = (e) => {
         e.preventDefault();
         if (input === "") return;
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        console.log("handleSubmit(): " + input);
+        console.log("handle_submit(1): " + input);
         //message 2 moi
 
         const data = {monMsg: true, type: "mess", message: input, timer: time};
@@ -95,8 +98,8 @@ export default function HomeChat() {
 
         const data2 = {...data, monMsg: false};
 
-        addmess(time);
-        console.log("send via WebSocket data2:", data2);
+        add_message(time);
+        console.log("handle_submit(2) send via WebSocket data2:", data2);
         SocketM.sendd(data2);
         setInput("");
     };
@@ -116,19 +119,19 @@ export default function HomeChat() {
             <div id={`HomeChat-root`}>
 
                     <h3>Global Chat</h3>
-                <div className="message">
+                <div className={`message-container`}>
 
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
                         <div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
 
                             {msg.monMsg ? (
-                                <div className="msg">
+                                <div className={`message`}>
                                     <div>{msg.timer}</div>
                                     <p>{msg.message}</p>
                                 </div>
                             ) : (
-                                <div className="msg">
+                                <div className={`message`}>
                                     <div><strong>{msg.login}</strong>{msg.timer}</div>
                                     <p>{msg.message}</p>
                                 </div>
@@ -147,7 +150,7 @@ export default function HomeChat() {
 
 
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handle_submit}>
                     <input
                         type="text"
                         value={input}

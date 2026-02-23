@@ -1,5 +1,5 @@
 /* extern */
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 /* back */
 
@@ -13,7 +13,6 @@ import { AUTH } from "FRONT/page/Home/Home.jsx"
 
 export default function HomeFooter({setShowLog}) {
 
-    const navigate = useNavigate();
     
     function logout() {
         console.log("logout(1) called")
@@ -40,7 +39,7 @@ export default function HomeFooter({setShowLog}) {
 
     return (
         <>
-            <div className={`HomeFooter-container`}>
+            <div className={`HomeFooter-root`}>
 
                     <Link   to={`/ContactUs`}
                             className={``}>

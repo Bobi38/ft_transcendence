@@ -1,5 +1,6 @@
-$navbar_height: 13%;
-$children_height: 100% - $navbar_height;
+@use "STYLE/variable" as var;
+
+$children_height: 100% - var.$navbar_height;
 
 .Navigation-root {
     overflow-x: hidden;
@@ -11,7 +12,7 @@ $children_height: 100% - $navbar_height;
     gap: 1rem;
     
     nav {
-        height: $navbar_height;
+        height: var.$navbar_height;
     }
 
     .children-container {

@@ -7,7 +7,7 @@
     text-align: center;
     background: lightskyblue;
 
-    .message {
+    .message-container {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -15,7 +15,7 @@
         overflow-y: auto;
         scrollbar-width: thin;
 
-        .msg {
+        .message {
             border-radius: 0.5rem;
             background-color: rgb(89, 189, 189);
 

@@ -27,7 +27,6 @@ export default function Home() {
 
     
     const [showLog, setShowLog] = useState(AUTH.NONE);
-    const navigate = useNavigate();
     
     const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
     
@@ -70,14 +69,6 @@ export default function Home() {
 
 
 
-
-
-
-
-
-
-
-
 	const cards = [];
 	const cards_content = [
 		{ text:"Weather", path: "/Weather" },
@@ -99,7 +90,8 @@ export default function Home() {
 
 	return (
 
-		<section id="Home-root">
+
+		<section id={`Home-root`}>
 
             <div className={`${is_popup}`} >
 
@@ -122,11 +114,11 @@ export default function Home() {
 
 			</div>
 
-			<div className={`footer`}>
+			<footer className={`footer`}>
 
 				<HomeFooter setShowLog={setShowLog}/>
 
-			</div>
+			</footer>
 
 		</section>
 	)

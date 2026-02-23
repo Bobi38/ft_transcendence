@@ -15,7 +15,7 @@ export default function PopUp({ setShowLog, showLog }) {
 
     return (
 
-        <div id={`PopUp`}>
+        <div id={`PopUp-root`}>
 
 
             <div id={`alert-container`}>

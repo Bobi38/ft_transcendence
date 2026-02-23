@@ -1,8 +1,16 @@
+/* extern */
+
+/* back */
+
 /* Css */
 import "./ContactIssue.scss";
 
+/* Components */
+
 export default function ContactIssue() {
+
     return (
+
         <>
             <div className={`ContactIssue-root`}>
 
@@ -42,5 +50,6 @@ export default function ContactIssue() {
                 </form>
             </div>
         </>
-    )
+
+    );
 }

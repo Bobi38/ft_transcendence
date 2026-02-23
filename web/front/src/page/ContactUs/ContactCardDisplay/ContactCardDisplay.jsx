@@ -12,7 +12,7 @@ export default function ContactCardDisplay() {
 
             <div className={`ContactCardDisplay-root`}>
 
-                <ContactCard parent_style="ContactCardDisplay-div1"
+                <ContactCard parent_style={`ContactCardDisplay-div1`}
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -21,7 +21,7 @@ export default function ContactCardDisplay() {
                             />
 
                             
-                <ContactCard parent_style="ContactCardDisplay-div2"
+                <ContactCard parent_style={`ContactCardDisplay-div2`}
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -30,7 +30,7 @@ export default function ContactCardDisplay() {
                             />
 
                             
-                <ContactCard parent_style="ContactCardDisplay-div3"
+                <ContactCard parent_style={`ContactCardDisplay-div3`}
                             name="Florent Cretin"
                             git={{ url: "https://github.com/Lzozoflo", name: "LzozoFlo" }}
                             linkedin={{ url: "https://www.linkedin.com/in/florent-cretin-8b5b9021a/", name: "Florent Cretin"  }} 
@@ -39,7 +39,7 @@ export default function ContactCardDisplay() {
                             />
 
                             
-                <ContactCard parent_style="ContactCardDisplay-div4"
+                <ContactCard parent_style={`ContactCardDisplay-div4`}
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
@@ -48,7 +48,7 @@ export default function ContactCardDisplay() {
                             />
 
                             
-                <ContactCard parent_style="ContactCardDisplay-div5"
+                <ContactCard parent_style={`ContactCardDisplay-div5`}
                             name={undefined}
                             git={undefined}
                             linkedin={undefined}
