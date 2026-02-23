@@ -1,4 +1,4 @@
-import {ManagRoom as manager} from '../ManagRoom.js';
+import {manager_room as manager} from '../ManagRoom.js';
 import WebSocket from 'ws';
 import User from '../models/user.js'
 

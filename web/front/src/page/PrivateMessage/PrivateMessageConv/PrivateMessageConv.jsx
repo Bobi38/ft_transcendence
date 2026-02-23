@@ -1,8 +1,8 @@
 /* extern */
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 /* back */
-// import { SocketM } from "/app/front/tool/SocketManag.js";
+import { SocketM } from "/app/front/tool/SocketManag.js";
 
 /* Css */
 import "./PrivateMessageConv.scss"; 
@@ -100,10 +100,9 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
         <>
             <div className={`PrivateMessageConv-root`}>
 
-{/*  */}
-                    {/* <div><h5 className="center">{navConv}</h5></div>
+                    <div><h5 className="center">{navConv}</h5></div>
 
-                    <div className="PrivateMessageConv-flex2">
+                    {/* <div className="PrivateMessageConv-flex2">
                         <div>
 
                             {displayedMessages && displayedMessages.map((msg, index) => { return ( 

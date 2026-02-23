@@ -1,15 +1,20 @@
+/* extern */
+import { useEffect, useState } from "react";
+
+/* back */
+import { SocketM } from "/app/front/tool/SocketManag.js";
+
 /* Css */
 import "./PrivateMessage.scss";
 
 /* Components */
-import { useEffect, useState } from "react";
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 // import Amis from "./Amis/Amis.jsx"
 // import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 
 export default function PrivateMessage() { 
     
-    // const [navInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
+    const [navInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
 
     const [navConv, setNavConv] = useState(null)                                                            // changer de conv private
     const [displayedConvPrivate, setDisplayedConvPrivate] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
@@ -32,9 +37,9 @@ export default function PrivateMessage() {
             if (repp.success)
                 setDisplayedMessages(message)
             else
-                console.log("fetch_private_message(1) error back ", repp.message);
+                console.log("fetch_private_message(2) error back ", repp.message);
         }catch(err){
-            console.log("fetch_private_message(1) error front ", err);
+            console.log("fetch_private_message(3) error front ", err);
         }
     }
 
@@ -48,9 +53,9 @@ export default function PrivateMessage() {
             const repp = await rep.json();
             if (repp.success){
                 const chats = repp.message;
-                console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
-                console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
-                console.log("test join ", chats[0].user1.name);
+                console.log("fetch_conv_private(1) ", chats[0].PrivMesses[0].contenu)
+                console.log("fetch_conv_private(2) ", chats[1].PrivMesses[0].contenu)
+                console.log("fetch_conv_private(3) test join ", chats[0].user1.name);
                 //Chat est un tableau 0-1-2-3-....
                 //chaque partie du tableau est le dernier message d une conversation
                 //PrivMesses est un tableau d une taille de 1 car qu un seul message
@@ -72,6 +77,7 @@ export default function PrivateMessage() {
     
 
     useEffect(() => {
+
         if (!navConv) return;
         async () => { fetch_private_message({navConv}) }
         if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
