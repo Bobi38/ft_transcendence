@@ -252,7 +252,7 @@ router.get('/profile', async(req, res) =>{
 router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
-    console.log("dans update profil", user);
+    console.log("API /updateProfil dans update profil", user);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });

@@ -1,2 +1,8 @@
 conf/secrets/*
 .vite
+node_modules
+.env
+
+error
+Error
+*nico*

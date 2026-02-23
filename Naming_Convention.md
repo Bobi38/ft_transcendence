@@ -32,13 +32,13 @@ Ce projet est une implémentation robuste suivant des standards de développemen
 
 Ce projet suit une convention de nommage stricte pour assurer la cohérence et la lisibilité à travers l'ensemble du code.
 
-### 📁 HTML & CSS (Non-JavaScript)
+### 📁 React "HTML & CSS" (Non-JavaScript)
 
 Le format utilisé est : `ComponentName-utilisation`  
 
 - **ComponentName** → PascalCase  
-- **utilisation** → lowercase  
 - **Séparateur** → trait d'union `-`  
+- **utilisation** → lowercase  
   
 > **Exemple CSS :** `.UserCard-container { display: flex; }`
 > **Exemple HTML ID :** `<input id="LoginForm-password" />`
