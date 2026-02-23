@@ -12,23 +12,6 @@ body, #root {
 }
 
 
-
-//   @include full;
-
-// @mixin full {
-//     height: 100%;
-//     width: 100%;
-// }
-// @mixin fullw { width: 100%; }
-// @mixin fullh { height: 100%; }
-
-.full {
-    height: 100%;
-    width: 100%;
-}
-.fullw { width: 100%; }
-.fullh { height: 100%; }
-
 .hidden {display: none;}
 .visible {display: block;}
 
@@ -38,4 +21,3 @@ body, #root {
     align-items: center;
     text-align: center;
 }
-
