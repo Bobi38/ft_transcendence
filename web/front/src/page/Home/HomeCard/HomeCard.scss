@@ -2,8 +2,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: lightgreen;
-    text-decoration: none;
-    color: inherit;
-}
+	transition: all 0.1s;
+    background: rgb(196, 230, 236);
+	box-shadow: 13px 14px 25px -7px rgba(0,0,0,0.2);
 
+
+	border:8px solid #0000;
+	border-radius:20px;
+	background:
+		radial-gradient(rgb(208, 253, 255), rgba(0, 0, 0, 0.08)) padding-box,//background
+		linear-gradient(30deg, rgb(150, 236, 251),rgb(70, 224, 251)) border-box;//border
+
+
+	text-align: center;
+	overflow-wrap: anywhere;
+
+
+	&:hover, &:focus {
+		outline: none;
+		box-shadow: 13px 14px 25px -7px rgba(0, 49, 185, 0.3);
+		border-radius: 25px;
+	}
+}

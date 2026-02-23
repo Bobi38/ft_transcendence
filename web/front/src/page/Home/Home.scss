@@ -1,28 +1,32 @@
 @use "STYLE/_mixin" as mix;
 
-$menu_height: 85%;
-$footer_height: 100% - $menu_height;
-
-$padding: 1rem;
-
-
-
-
+$padding: 1.7rem;
 
 #Home-root {
 	@include mix.full;
-	background: blue;
-	padding: $padding;
-    
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background: radial-gradient(#a3eeef, #ffffff 70%);
+
+
+	.scanlines {
+		position: fixed;
+		top: 0; left: 0; width: 100%; height: 100%;
+		background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(43, 0, 255, 0.015) 50%);
+		background-size: 100% 3px;
+		pointer-events: none;
+		z-index: 50;
+		opacity: 0.5;
+	}
+
 	.Home-PopUp {
 		position: absolute;
 		top:0;
 		left:0;
 		display: flex;
-		// include full
 		height: 100%;
 		width: 100%;
-		// include center
 		justify-content: center;
 		align-items: center;
 		text-align: center;
@@ -30,14 +34,13 @@ $padding: 1rem;
 
 	.menu {
 		padding: $padding;
-		height: $menu_height;
+		height: 85%;
 		display: flex;
 		flex-direction: row;
-		background: red;
 
 		.card-container {
-			width: 70%;
-			padding-right: $padding;
+			width: 65%;
+			padding: $padding * 0.75 $padding * 1.5 $padding * 0.75 0;//just magic
 			display: grid;
   			grid-template-columns: repeat(3, 1fr);
 			grid-column-gap: $padding;
@@ -47,16 +50,11 @@ $padding: 1rem;
 		button{
 			background-color: red;
 		}
+
 		.chat {
 			width: 30%;
 			padding: $padding;
 			background: lightblue;
 		}
 	}
-
-	.footer {
-		padding: $padding;
-		height: $footer_height;
-		background: white;
-    }
 }
