@@ -1,66 +1,58 @@
-/*------------------------------- grid ----------------------------------*/
+$menu_height: 85%;
+$footer_height: 100% - $menu_height;
 
-$grid_gap: 10px;
+$padding: 1rem;
 
-.Home-grid {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 2rem;
-    grid-template-rows: 1fr 1fr 1fr 0.8fr;
-    grid-column-gap: $grid_gap;
-    grid-row-gap: $grid_gap;
-	padding: 20px;
 
-    @media (max-width: 520px) {
-        grid-template-columns: 1fr 1fr 1fr 1rem;
-        grid-template-rows: 1fr 1fr 1fr 1fr 0.8fr;
-    };
+#Home-root {
+	height: 100%;
+	width: 100%;
+	background: blue;
+	padding: $padding;
     
-    .Home-div1  { grid-area: 1 / 1 / 2 / 2; } /* HomeIcone */
-    .Home-div2  { grid-area: 1 / 2 / 2 / 3; } /* HomeIcone */
-    .Home-div3  { grid-area: 1 / 3 / 2 / 4; } /* HomeIcone */
-    .Home-div4  { grid-area: 2 / 1 / 3 / 2; } /* HomeIcone */
-    .Home-div5  { grid-area: 2 / 2 / 3 / 3; } /* HomeIcone */
-    .Home-div6  { grid-area: 2 / 3 / 3 / 4; } /* HomeIcone */
-    .Home-div7  { grid-area: 3 / 1 / 4 / 2; } /* HomeIcone */
-    .Home-div8  { grid-area: 3 / 2 / 4 / 3; } /* HomeIcone */
-    .Home-div9  { grid-area: 3 / 3 / 4 / 4; } /* HomeIcone */
-    .Home-div10 { grid-area: 1 / 4 / 4 / 5; } /* HomeMessage */
-    .Home-div11 { grid-area: 4 / 1 / 5 / 6; } /* HomeFooter */
-    .Home-div12 { grid-area: 2 / 5 / 3 / 6; } /* HomeArrow */
-    
-    
-    @media (max-width: 520px) {
-        
-        .Home-div1  { grid-area: 1 / 1 / 2 / 2; } /* HomeIcone */
-        .Home-div2  { grid-area: 1 / 2 / 2 / 3; } /* HomeIcone */
-        .Home-div3  { grid-area: 1 / 3 / 2 / 4; } /* HomeIcone */
-        .Home-div4  { grid-area: 2 / 1 / 3 / 2; } /* HomeIcone */
-        .Home-div5  { grid-area: 2 / 2 / 3 / 3; } /* HomeIcone */
-        .Home-div6  { grid-area: 2 / 3 / 3 / 4; } /* HomeIcone */
-        .Home-div7  { grid-area: 3 / 1 / 4 / 2; } /* HomeIcone */
-        .Home-div8  { grid-area: 3 / 2 / 4 / 3; } /* HomeIcone */
-        .Home-div9  { grid-area: 3 / 3 / 4 / 4; } /* HomeIcone */
-        .Home-div10 { grid-area: 4 / 4 / 5 / 1 ; max-height: 500px} /* HomeMessage */
-        .Home-div11 { grid-area: 5 / 1 / 6 / 6; } /* HomeFooter */
-        .Home-div12 { grid-area: 1 / 5 / 6 / 6; } /* HomeArrow */
+	.Home-PopUp {
+		position: absolute;
+		top:0;
+		left:0;
+		display: flex;
+		// include full
+		height: 100%;
+		width: 100%;
+		// include center
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+
+	.menu {
+		padding: $padding;
+		height: $menu_height;
+		display: flex;
+		flex-direction: row;
+		background: red;
+
+		.card-continer {
+			width: 70%;
+			padding-right: $padding;
+			display: grid;
+  			grid-template-columns: repeat(3, 1fr);
+			grid-column-gap: $padding;
+			grid-row-gap: $padding;
+		}
+
+		button{
+			background-color: red;
+		}
+		.chat {
+			width: 30%;
+			padding: $padding;
+			background: lightblue;
+		}
+	}
+
+	.footer {
+		padding: $padding;
+		height: $footer_height;
+		background: white;
     }
-    
-}
-
-/*-----------------------------------------------------------------------*/
-
-.Home-iconemargin {
-    margin: 1rem;
-}
-
-.Home-iconedisplay{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.Home-pos {
-    position: absolute;
 }

@@ -109,7 +109,7 @@ function CheckName(req, res, next){
   next();
 }
 
-router.get('/sendmail', async (req, res) => {
+router.get('/send_mail', async (req, res) => {
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
@@ -122,7 +122,7 @@ router.get('/sendmail', async (req, res) => {
         user: "noreply.transc@gmail.com",
         pass: "ykxu xqcc hokp zkfg"
       }});
-    await transporter.sendMail({
+    await transporter.send_mail({
         from: "noreply.transc@gmail.com",
         to: result.mail,
         subject: "Votre code de connexion",
@@ -151,7 +151,7 @@ router.get('/recupPswd', async (req, res) => {
         user: "noreply.transc@gmail.com",
         pass: "ykxu xqcc hokp zkfg"
       }});
-    await transporter.sendMail({
+    await transporter.send_mail({
         from: "noreply.transc@gmail.com",
         to: result.mail,
         subject: "Votre code de connexion",
@@ -168,11 +168,11 @@ router.get('/recupPswd', async (req, res) => {
   }
 })
 
-router.post("/verifCode" , async (req, res) => {
+router.post("/maila2f_check_code" , async (req, res) => {
   try{
-    console.log("coucou")
+    console.log("API /maila2f_check_code called")
     const {code} = req.body;
-    console.log("je suis dans verif")
+    console.log("API /maila2f_check_code je suis dans verif")
     console.log(code);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
@@ -252,7 +252,7 @@ router.get('/profile', async(req, res) =>{
 router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
-    console.log("dans update profil", user);
+    console.log("API /updateProfil dans update profil", user);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
@@ -306,10 +306,8 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    console.log("ccccc suis la ");
+    console.log("Api /login called");
     const result = await User.findAll({ where: { mail: email } });
-    console.log("rafter");
-    console.log(result.length);
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'Email not find'});
     const DecrypPass = await bcrypt.compare(password, result[0].password);
@@ -318,13 +316,13 @@ router.post('/login', async (req, res) => {
     const iid = await Co.findAll({where: { userId: result[0].id}})
     if (iid.length != 0)
         return res.status(500).json({success:false, message: 'User already log'});
-      console.log(result[0].id," avant token");
+      console.log("Api /login " + result[0].id," avant token");
     const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
-    console.log("apres token");
+    console.log("Api /login " + "apres token");
     const re = await Co.create({token: token, userId: result[0].id});
-    console.log ("TAILLE= " , Co.length);
+    console.log("Api /login " + "TAILLE= " , Co.length);
     await result[0].update({co: true});
-    console.log("ID", result[0].id);
+    console.log("Api /login " + "ID", result[0].id);
     req.session.username = result[0].name;
     req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
@@ -338,7 +336,7 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
-  console.log("je suis la ");
+    console.log("Api /register called");
   const { name, password, email } = req.body;
   try {
     const find = await User.findAll({ where: { mail: email } });
@@ -348,11 +346,11 @@ router.post('/register', async (req, res) => {
       else
         return res.status(500).json({success: false, message: 'Email already used'});
     }
-    console.log("av");
+    console.log("Api /register av");
     const CrypPass = await bcrypt.hash(password, 10);
 
     const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
-    console.log("ID", result.insertId);
+    console.log("Api /register ID", result.insertId);
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
     majDb();
   } catch (err) {
@@ -363,7 +361,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/logout', async (req, res) => {
   try {
-    console.log("dans logout");
+    console.log("Api /logout called");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
@@ -388,7 +386,7 @@ router.post('/logout', async (req, res) => {
 
 router.post('/click', async (req, res) => {
   try {
-    console.log("dans click");
+    console.log("Api /click called");
     console.log(req.body);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
@@ -409,14 +407,14 @@ router.post('/click', async (req, res) => {
 
 router.get('/nclick', async (req, res) => {
   try {
-    // console.log("dans nclick");
+    // console.log("Api /nclick called");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const instantclicks = result[0].total_part;
-    // console.log("init CLICK", instantclicks);
+    // console.log("Api /nclick init", instantclicks);
     res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks });
   }
   catch (err) {
@@ -470,7 +468,7 @@ router.get('/getpriv', async (req, res) => {
 
 router.post('/addchat', async (req, res) => {
   try{
-    console.log("JE SUIS DANS ADDDDCHAT");
+    console.log("Api /addchat called");
     const chat = req.body;
     if (chat.send == "")
       res.status(201)({success: true});

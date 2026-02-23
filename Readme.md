@@ -16,7 +16,7 @@
 [tag_ressource_claude_transition]: https://claude.ai/public/artifacts/96fe632f-2869-4d78-99f4-20053d0ebf7c
 
 
-# ![icons][tag_icon_ts] Name ![icons][tag_icon_ts]
+#  𝔽t_transcendence 
  
 <details>
 <summary>
@@ -25,6 +25,7 @@
 
 
 - [𝔻escription](#description)
+- [ℕorme](#norme)
 - [𝕆bjectives](#objectives)
 - [🧪 𝕃earning 𝕋ests](#learningtest)
 - [📁 ℝepository Structure Tree](#rst)
@@ -75,14 +76,11 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam corporis
 
 <br>
 
-<h2 id="learningtest">🧪 𝕃earning 𝕋ests</h2>
+<h2 id="norme">ℕorme</h2>
 
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam corporis
- quas eligendi, voluptatem provident nisi est blanditiis dolorem nostrum 
- laboriosam commodi temporibus officia ad quis ipsa nesciunt veritatis 
- laudantium hic.
 
+- [📐 ℕaming ℂonvention](./Naming_Convention.md)
 
 
 - [🗓 𝕊ummary](#summary)
