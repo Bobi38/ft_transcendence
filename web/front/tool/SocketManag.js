@@ -1,11 +1,12 @@
 
 class SocketManag{
     constructor(){
+        console.log("Création de SocketManag");
         this.socket = null;
         this.reco = true;
         this.nbco = 0;
         this.listeners = {
-            chat: [],
+            chat: new Map(),
             game: [],
             room: [],
             priv: [],
@@ -13,10 +14,15 @@ class SocketManag{
     }
 
     connect(){
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            console.log("WebSocket déjà connecté.");
+            return;
+        }
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host; // Inclut le port si présent
         console.log(`${protocol}//${host}/ws`);
         this.socket = new WebSocket(`${protocol}//${host}/ws`);
+        console.log("Tentative de connexion au WebSocket...");
         this.socket.onopen = () => {
             this.sendd({type: "auth",  mess: null})
         }
@@ -26,6 +32,9 @@ class SocketManag{
             const dataa = JSON.parse(event.data);
             console.log("Message reçu via WebSocket:", dataa.type, dataa.mess);
             if (dataa.type === 'message') {
+                console.log("Message reçu de type message via WebSocket:", dataa.mess);
+                console.log("Listeners chat:", this.listeners.chat);
+                console.log("Nombre de listeners chat:", this.listeners.chat.size);
                 this.listeners.chat.forEach(cb => cb(dataa));
             }
             if (dataa.type === 'game') {
@@ -53,21 +62,29 @@ class SocketManag{
     }
     
     onPriv(cb) {
-        if (!this.listeners.priv.include(cb))
+        if (!this.listeners.priv.includes(cb))
             this.listeners.priv.push(cb);
     }
 
-    onChat(cb) {
-        if (!this.listeners.chat.includes(cb))
-            this.listeners.chat.push(cb);
+    onChat(cb, name) {
+        if (!this.listeners.chat.has(name)){
+            console.log("Ajout d'un listener chat:", cb);
+            console.log("Listeners chat avant ajout:", this.listeners.chat);
+            this.listeners.chat.set(name, cb);
+            console.log("Listeners chat après ajout:", this.listeners.chat);
+        }
     }
 
     offPriv(cb) {
         this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
     }
     
-    offChat(cb) {
-        this.listeners.chat = this.listeners.chat.filter(listener => listener !== cb);
+    // offChat(cb) {
+    //     this.listeners.chat = this.listeners.chat.filter(listener => listener !== cb);
+    // }
+
+    offChat(name) {
+        this.listeners.chat.delete(name);
     }
 
     offGame(cb) {
@@ -77,7 +94,7 @@ class SocketManag{
     offRoom(cb) {
         this.listeners.room = this.listeners.room.filter(listener => listener !== cb);
     }
-c 
+ 
     offPriv(cb){
         this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
     }

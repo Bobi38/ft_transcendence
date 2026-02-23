@@ -1,5 +1,7 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SocketM } from "../tool/SocketManag";
+import { useEffect } from "react";
 
 /* back */
 
@@ -24,8 +26,17 @@ import Truc          from    "FRONT/page/Game/Morpion/Morpion.jsx";
 
 
 
+
 export default function App() {
 
+  useEffect(() => {
+    SocketM.connect();
+    console.log("App.jsx useEffect(1) SocketM.connect() called");
+    return () => {
+      SocketM.disco();
+      console.log("App.jsx useEffect(2) SocketM.disconnect() called");
+    };
+  }, []);
     //fait le check co a la place de home et envoyer le result
 
   return (

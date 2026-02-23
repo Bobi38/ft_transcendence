@@ -17,15 +17,19 @@ function getCookie(name, cookieHeader) {
 export function initWebSocket(server) {
   const wss = new WebSocketServer({ server, path: '/ws' });
 
+  let idd = 0;
   console.log('WebSocket server initialized on path /ws');
   wss.on('connection', async (socket, req) => {
+    const iid = idd++;
+    socket.id = iid;
     console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
     console.log('URL:', req.url);
     console.log('Headers upgrade:', req.headers.upgrade);
+    console.log('Headers socket:', socket.id);
     console.log(req.headers.cookie)
     const token = getCookie('token', req.headers.cookie);
     if (!token) {
-      socket.close();
+      // socket.close();
       return;
     }
 
@@ -42,7 +46,7 @@ export function initWebSocket(server) {
     const useid = user.id;
     socket.userId = useid;
 
-    const exist = chat.finduser(useid);
+    const exist = chat.finduser(socket.id);
     if (exist){
       exist.socket = socket;
       console.log("user already exist");
@@ -75,7 +79,7 @@ export function initWebSocket(server) {
         if (data.type === 'mess'){
           console.log("je suis dans un type messsssssssss")
           const nono = socket.userId;
-          const na = chat.finduser(nono);
+          const na = chat.finduser(socket.id);
           const ni = na.username;
           console.log ("----" , nono , "----", ni);
           console.log("taille === ", chat.countUser());
@@ -84,9 +88,12 @@ export function initWebSocket(server) {
             console.log("idddd " + session.userId + "   "  +  nono + "-----" + socket.username);
             if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
                 console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
-                // session.socket.send(JSON.stringify({type: "message", id: userid, mess: "JE SUIS LE SERVER " + data.mess + " from " + userid }));
 
-                session.socket.send(JSON.stringify({type: 'message',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
+                session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+            }
+            if (session.socket.readyState === ws.OPEN && session.userId === nono){
+              console.log("MYSEFLF");
+              session.socket.send(JSON.stringify({type: 'message',monMsg: true, message: data.message, login: ni, timer: data.timer}));
             }
           }
         }
@@ -98,8 +105,9 @@ export function initWebSocket(server) {
           const send = chat.finduser(data.id);
           if (send && send.socket.readyState === ws.OPEN){
             console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
-            send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
+            send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
           }
+          socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
         }
 
         if (data.type === 'morpion'){
@@ -136,7 +144,7 @@ export function initWebSocket(server) {
           }
           if (data.act === "win"){
             //mettre a jour la db gagant/nombre de parties jouee
-            //clean room et managroom
+            //clean room et managerRoom
           }
         }
 
@@ -156,8 +164,8 @@ export function initWebSocket(server) {
       console.error('Erreur WebSocket:', error);
     });
     socket.on('close', () => {
-      console.log('Utilisateur déconnecté', socket.userId);
-      chat.removetok(socket.userId);
+      console.log('Utilisateur déconnecté', socket.id);
+      chat.removetokBySocketId(socket.id);
       manager_room.removePlayer(socket.userId);
   });
   });

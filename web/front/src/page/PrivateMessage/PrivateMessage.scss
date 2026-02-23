@@ -1,5 +1,8 @@
+@use "STYLE/_mixin" as mix;
+
 .PrivateMessage-root{
-    /* bg */
+	@include mix.full;
+    
     background: blueviolet;
     border-radius: 0.5rem;
     padding: 0.25rem;

@@ -96,4 +96,4 @@ class ManagerRoom {
     }
 }
 
-export const manager_room = new ManagerRoom();
+export const ManagRoom = new ManagerRoom();

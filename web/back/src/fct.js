@@ -21,7 +21,7 @@ class Chat {
     try {
         const user = await User.findByPk(userId);
       // const decoded = jwt.verify(token, secret);
-      this.sessions.set(token, { socket, userId, username: user.name });
+      this.sessions.set(socket.id, { socket, userId, username: user.name });
       // console.log("WS enregistré user", decoded.id);
       return token;
     } catch (err) {
@@ -29,11 +29,11 @@ class Chat {
       return null;
     }
   }
-  finduser(token) {
-    return this.sessions.get(token) || null;
+  finduser(socketid) {
+    return this.sessions.get(socketid) || null;
   }
-  removetok(token) {
-    this.sessions.delete(token);
+  removetokBySocketId(socketId) {
+    this.sessions.delete(socketId);
   }
   countUser(){
     return this.sessions.size;
