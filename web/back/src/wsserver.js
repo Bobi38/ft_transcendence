@@ -1,7 +1,7 @@
 import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from './fct.js';
-// import {ManagRoom} from './morpion/ManagRoom.js';
+import {manager_room} from './morpion/ManagRoom.js';
 import cookie from 'cookie' ;
 
 
@@ -101,13 +101,14 @@ export function initWebSocket(server) {
             send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: data.monMsg, message: data.message, login: ni, timer: data.timer}));
           }
         }
+
         if (data.type === 'morpion'){
           let message = "";
           console.log("je suis dans un type waitRoom");
           console.log("user id dans wait room " + socket.userId);
-          let room = ManagRoom.isInRoom(socket.userId);
+          let room = manager_room.isInRoom(socket.userId);
           if (!room)
-            room = ManagRoom.findoneplace(socket, socket.userId);
+            room = manager_room.findOnePlace(socket, socket.userId);
           if (room.isFull()){
             message = "yes";
           }
@@ -157,7 +158,7 @@ export function initWebSocket(server) {
     socket.on('close', () => {
       console.log('Utilisateur déconnecté', socket.userId);
       chat.removetok(socket.userId);
-      ManagRoom.removeplayer(socket.userId);
+      manager_room.removePlayer(socket.userId);
   });
   });
 }
