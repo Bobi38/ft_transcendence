@@ -1,0 +1,46 @@
+@use "STYLE/variable" as var;
+
+$header_height: 15%;
+$container_height: var.$root_height - $header_height;
+
+.Stats-root{
+    /*bg*/
+    border-radius: 0.5rem;
+    background-color: blueviolet;
+    height: var.$root_height;
+    width: 100%;
+    padding: 1rem;
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;/*en haut*/
+    text-align: center;
+    gap: 0.5rem;
+
+    .Stats-selection{
+
+        height: $header_height;
+
+        .Stats-btn{
+            background-color: rgba(0, 0, 0, 0.150);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            
+            &:hover{
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+        }
+    }
+        
+    .Stats-container{
+        height: $container_height;
+        width: 100%;
+        flex: 1;
+    }
+
+}

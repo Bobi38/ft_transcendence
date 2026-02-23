@@ -22,16 +22,17 @@ export default async function checkCo(){
 
         const rep = await response.json();
         if (rep.success){
-            console.log("User is connected");
+            console.log("checkCo(1) User is connected");
             return true;
         }
         else{
-            console.log("User is not connected");
+            console.log("checkCo(2) User is not connected");
             return false;
         }
+        // le 3eme pour maila2f
     }
     catch(err){
-        console.log("Error in checkCo function:", err);
+        console.log("checkCo(3) Error in checkCo function:", err);
         return false;
     }
 }

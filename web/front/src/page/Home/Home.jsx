@@ -1,88 +1,73 @@
-/* Css */
-import "/app/front/src/page/Home/Home.scss";
-import st from "./Home.module.scss";
-
-/* Components */
-import HomeFooter from '/app/front/src/page/Home/HomeFooter/HomeFooter.jsx';
-import HomeMessage from '/app/front/src/page/Home/HomeMessage/HomeMessage.jsx';
-import HomeIcone from '/app/front/src/page/Home/HomeIcone/HomeIcone.jsx';
-import HomeArrow from '/app/front/src/page/Home/HomeArrow/HomeArrow.jsx';
-import Log from "/app/front/src/page/Home/LogRegister/Jsx/Log.jsx"
-import Register from "/app/front/src/page/Home/LogRegister/Jsx/Register.jsx"
-import Qrcode from "/app/front/src/page/Home/LogRegister/Jsx/Qrcode.jsx"
-
-
-import checkCo from "/app/back/src/fct1.js"
+/* extern */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+/* back */
+import checkCo from "BACK/fct1.js"
+
+/* Css */
+import "./Home.scss";
+
+/* Components */
+import PopUp from "./PopUp/PopUp.jsx"
+import HomeChat from "./HomeChat/HomeChat.jsx";
+import HomeCard from "./HomeCard/HomeCard.jsx";
+import HomeFooter from "./HomeFooter/HomeFooter.jsx";
+
 
 export const AUTH = {
     NONE: 0,
     LOGIN: 1,
-    QRCODE: 2,
+    MAILA2F: 2,
     REGISTER: 3,
 };
 
-export default function Home(){
 
+export default function Home() {
+
+    
     const [showLog, setShowLog] = useState(AUTH.NONE);
-    // const [user, setUser] = useState(null);
-    const navigate = useNavigate();
+    
+    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
+    
 
 
-    // const fetchUserData = async () => {
+    const home_handler = async (event) => {
 
-    //     console.log("fetchUserData(1) called");
-    //     try {
-    //         const rep = await fetch("/api/user/profile");
-    //         const repjson = await rep.json();
-    //         if (repjson.success){
+        if (event.target.closest('#PopUp')) {
+            console.log("home_handler(1) need to connect")
+            return;
+        }
 
-    //             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
-    //             setUser(repjson.message);
+        const resCo = await checkCo();
+        if (!resCo) {
+            setShowLog(AUTH.LOGIN);
+        } else {
+            if (event.target.id === "HomeChatsubmit"){
+                const form = event.target.form
+                if (form) {
+                    form.requestSubmit();
+                }
+                return
+            }
+        }
+    };
 
-    //         }else{
-
-    //             console.error("fetchUserData(3) Error:", repjson.message);
-
-    //         }
-    //     } catch (error) {
-    //         console.error("fetchUserData(4) Error", error);
-    //     }
-
-    // };
 
     useEffect(() => {
 
-        const home_root = document.getElementById("home_root");
+        const home_root = document.getElementById("Home-root");
         if (!home_root) return;
 
-        const Home_handler = async (event) => {
+        home_handler();
 
-            if (event.target.closest('.LogRegister-flex1')) {
-                console.log("Home_handler(1) need to connect")
-                return;
-            }
-            const resCo = await checkCo();
-            if (!resCo) {
-                setShowLog(AUTH.LOGIN);
-            } else {
-                if (event.target.id === "HomeMessagesubmit"){
-                    const form = event.target.form
-                    if (form) {
-                        form.requestSubmit();
-                    }
-                    return
-                }
-            }
-        };
-
-        home_root.addEventListener("click", Home_handler);
-        return () => home_root.removeEventListener("click", Home_handler);
+        home_root.addEventListener("click", home_handler);
+        return () => home_root.removeEventListener("click", home_handler);
 
     }, []);
 
-    const home_login = showLog === AUTH.NONE ? "hidden" : "visible";
+
+
 
 	const cards = [];
 	const cards_content = [
@@ -94,107 +79,73 @@ export default function Home(){
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
 		{ text:"Nothing", path: "/Nothing" },
 		{ text:"Morpion", path: "/Morpion" },
-		{ text:"Friends", path: "/FriendsList" },
+		{ text:"Nothing", path: "/Nothing" },
 	]
 
-	let id = 0
-	cards_content.forEach((el)=>{
-		cards.push( <div key={id} className={st.card}>{el.text}</div> )
-		++id
+	cards_content.forEach((el, index) => {
+		cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
 	})
 
+    
+
 	return (
-		<div className={st.main_menu}>
-			<div className={st.menu}>
-				<div className={st.card_continer}>
-					{cards}
-				</div>
-				<div className={st.chat}>
-					im the chat
-				</div>
-			</div>
-			<div className={st.footer}>
-				im the footer
-			</div>
-		</div>
-
-	)
 
 
-    return (
-        <>
-            <div className='Home-grid' id="home_root">
+		<section id={`Home-root`}>
 
-                <div id="home-login" className={`Home-pos full ${home_login}`} >
+            <div className={`${is_popup}`} >
 
-                    {showLog === AUTH.LOGIN && <Log setShowLog={setShowLog} />}
-                    {showLog === AUTH.QRCODE && <Qrcode setShowLog={setShowLog} />}
-                    {showLog === AUTH.REGISTER && <Register setShowLog={setShowLog} />}
+                <div className={`${is_popup} Home-PopUp`} >
+
+
+                    {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
 
                 </div>
-                <>
-                    <HomeIcone      grid_id={`Home-div1`}
-                                    arg="/Weather"
-                                    text="Weather"/>
-
-                    <HomeIcone      grid_id={`Home-div2`}
-                                    // arg="/Intra"
-                                    text="Intra"
-                                    arg="https://profile.intra.42.fr"/>
-                                    {/* // link={`https://profile.intra.42.fr/users/${user.login42}`}/> */}
-
-                    <HomeIcone      grid_id={`Home-div3`}
-                                    arg="/WaitRoom"
-                                    text="WaitRoom"
-                                    />
-                </>
-
-                <>
-
-                    <HomeIcone      grid_id={`Home-div4`}
-                                    arg="/Stats"
-                                    text="Stats"
-                                    />
-
-                    <HomeIcone      grid_id={`Home-div5`}
-                                    arg="/jeux"
-                                    text="jeux"/>
-
-                    <HomeIcone      grid_id={`Home-div6`}
-                                    arg="/PrivateMessage"
-                                    text="Private Message"
-                                    />
-
-                </>
-
-                    <HomeArrow      grid_id={`Home-div12 Home-iconedisplay`}/>
-
-                <>
-                    <HomeIcone      grid_id={`Home-div7`}
-                                    arg="/Nothing"
-                                    // text="Nothing"
-                                    />
-
-                    <HomeIcone      grid_id={`Home-div8`}
-                                    arg="/Morpion"
-                                    text="Mini-games"
-                                    />
-
-                    <HomeIcone      grid_id={`Home-div9`}
-                                    arg="/Friends-List"
-                                    text="Friends-List"
-                                    />
-
-                </>
-
-
-                <HomeMessage        grid_id={`Home-div10`}/>
-
-                <HomeFooter         grid_id={`Home-div11`}
-                                    setShowLog={setShowLog}
-                                    />
 
             </div>
-        </>
-    )
+
+			<div className={`menu`}>
+
+				<div className={`card-continer`}>
+					{cards}
+				</div>
+
+                <HomeChat/>
+
+			</div>
+
+			<footer className={`footer`}>
+
+				<HomeFooter setShowLog={setShowLog}/>
+
+			</footer>
+
+		</section>
+	)
 }
+
+
+
+
+// const [user, setUser] = useState(null);
+// const fetchUserData = async () => {
+
+//     console.log("fetchUserData(1) called");
+//     try {
+//         const rep = await fetch("/api/user/profile");
+//         const repjson = await rep.json();
+//         if (repjson.success){
+
+//             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
+//             setUser(repjson.message);
+
+//         }else{
+
+//             console.error("fetchUserData(3) Error:", repjson.message);
+
+//         }
+//     } catch (error) {
+//         console.error("fetchUserData(4) Error", error);
+//     }
+
+// };
