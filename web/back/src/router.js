@@ -70,6 +70,7 @@ function maj_conv(id, conv, namelst){
       monMs = true;
     }
     else{
+      console.log("namelst ", namelst.length);
       const user = namelst.find(u => u.id === conv[i].SenderId);
       name = user ? user.name : "unknown";
       monMs = false;
@@ -314,12 +315,13 @@ router.post('/login', async (req, res) => {
     if (!DecrypPass)
         return res.status(500).json({success: false, message: 'Password not valid'});
     const iid = await Co.findAll({where: { userId: result[0].id}})
-    if (iid.length != 0)
-        return res.status(500).json({success:false, message: 'User already log'});
+    // if (iid.length != 0)
+    //     return res.status(500).json({success:false, message: 'User already log'});
       console.log("Api /login " + result[0].id," avant token");
     const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
     console.log("Api /login " + "apres token");
-    const re = await Co.create({token: token, userId: result[0].id});
+    if (iid.length === 0)
+      await Co.create({token: token, userId: result[0].id});
     console.log("Api /login " + "TAILLE= " , Co.length);
     await result[0].update({co: true});
     console.log("Api /login " + "ID", result[0].id);
@@ -522,7 +524,7 @@ router.get('/getchat', async (req, res) => {
     if (result.length === 0)
         return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const conv = await ChatG.findAll({order:[['id', 'DESC']], limit: 30});
-    const name = await User.findAll({attributes: ['id', 'name'], where: {co: true}});
+    const name = await User.findAll({attributes: ['id', 'name']});
     let ret = "";
     console.log("conv ", conv.length);
     if (conv.length - 1 != 0)
