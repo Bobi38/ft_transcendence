@@ -19,6 +19,7 @@ import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 
   // ./src/page/game
 import MorpionTraining  from    "FRONT/page/Game/Morpion/MorpionTraining.jsx";
+import Truc          from    "FRONT/page/Game/Morpion/Morpion.jsx";
 
 
 
@@ -43,7 +44,7 @@ export default function App() {
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
+            <Route path={`/WaitRoom`}               element={<Navigation>   <Truc/>           </Navigation>}/>
 
 
             {/* bad path */}

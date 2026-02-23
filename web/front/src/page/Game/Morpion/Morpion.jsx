@@ -6,7 +6,7 @@ function GoOUT(){
   return (
   <button onClick={() =>
     SocketM.sendd({
-        type: "truc",
+        type: "Morpion",
         mess: "je pars"
       })
     }
@@ -21,7 +21,7 @@ function RebootTruc() {
     <button
       onClick={() =>
         SocketM.sendd({
-          type: "truc",
+          type: "Morpion",
           mess: "reboot"
         })
       }
@@ -36,7 +36,7 @@ function Newpartie(){
     <button
       onClick={() =>
         SocketM.sendd({
-          type: "truc",
+          type: "Morpion",
           mess: "play"
         })
       }
@@ -57,7 +57,7 @@ function Square({ value, onSquareClick }) {
 function Board( { squares }) {
     function handleClick(i) {
       SocketM.sendd({
-        type: "truc",
+        type: "Morpion",
         mess: i,
       })
   }
@@ -84,6 +84,7 @@ function Board( { squares }) {
 }
 
 export default function Truc() {
+  console.log("je suis laaaaaaaaaaaaaaa");
   const [msg, setMsg] = useState("En attente...");
   const [board, setBoard] = useState(Array(9).fill(" "));
 
