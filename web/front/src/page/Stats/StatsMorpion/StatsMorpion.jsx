@@ -5,6 +5,45 @@ import "./StatsMorpion.scss";
     
 export default function StatsMorpion() {
 
+    /*
+    fct1 fetch histo
+        .Game LIMIT 5 = [
+            GameID:[1: 
+            {
+                howWin: ,
+                DateGame: ,
+                Time: [],
+                map:,
+                id:{
+                    meid:
+                    WinnerId:,
+                    Player: [],
+                    }
+            }
+            GameID:[1: 
+            {
+                howWin: ,
+                DateGame: ,
+                Time: [],
+                map:,
+                id:{
+                    meid:
+                    WinnerId:,
+                    Player: [],
+                    }
+            }
+        ]
+
+        .Stats = {
+        }
+    fct1 fetch stats
+    
+
+
+
+    useEffect(() => {
+        fetch('/statmopr',)
+        */
     
     return (
         <div className={`StatsMorpion-root`}>
