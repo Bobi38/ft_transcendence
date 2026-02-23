@@ -54,15 +54,13 @@ export default function HomeChat() {
         }
     }
 
+useEffect(() => {
+    let handleChat;
+
     const init = async () => {
-
         const repco = await checkCo();
-        console.log("init(1) checkCo() in HomeChat useEffect:", repco);
 
-        if (!repco) {
-            console.log("init(2) User not connected, aborting useEffect");
-            return;
-        }
+        if (!repco) return;
 
         await fetch_message();
 
@@ -70,22 +68,22 @@ export default function HomeChat() {
             SocketM.connect();
         }
 
-        const handleChat = (data) => {
-            console.log("init(3) Message reçu via SocketM.onChat:", data);
+        handleChat = (data) => {
+            console.log("Message reçu:", data);
             setDisplayedMessages((prev) => [...prev, data]);
         };
 
-        SocketM.onChat(handleChat);
-
-        return () => {
-            SocketM.offChat(handleChat);
-        };
+        SocketM.onChat(handleChat, "ChatG");
     };
 
-    useEffect(() => {
-        init();
-	}, []);
+    init();
 
+    return () => {
+        if (handleChat) {
+            SocketM.offChat("ChatG");
+        }
+    };
+}, []);
     const handle_submit = (e) => {
         e.preventDefault();
         if (input === "") return;
@@ -93,8 +91,8 @@ export default function HomeChat() {
         console.log("handle_submit(1): " + input);
         //message 2 moi
 
-        const data = {monMsg: true, type: "mess", message: input, timer: time};
-        setDisplayedMessages(prev => [...prev, data]);
+        const data = {type: "mess", message: input, timer: time};
+        // setDisplayedMessages(prev => [...prev, data]);
 
         const data2 = {...data, monMsg: false};
 
