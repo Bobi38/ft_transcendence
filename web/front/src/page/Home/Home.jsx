@@ -106,7 +106,7 @@ export default function Home() {
 
 			<div className={`menu`}>
 
-				<div className={`card-continer`}>
+				<div className={`card-container`}>
 					{cards}
 				</div>
 

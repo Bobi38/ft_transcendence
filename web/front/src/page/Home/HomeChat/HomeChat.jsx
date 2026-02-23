@@ -5,7 +5,7 @@ import "./HomeChat.scss";
 import { useEffect, useState } from "react";
 
 
-import { SocketM } from '/app/back/src/SocketManag.js';
+import { SocketM } from "/app/front/tool/SocketManag.js";
 import checkCo from "/app/back/src/fct1.js";
 
 export default function HomeChat() {
@@ -66,7 +66,7 @@ export default function HomeChat() {
 
         await fetch_message();
 
-        if (SocketM.nb() === 0) {
+        if (SocketM.getState() === "closed") {
             SocketM.connect();
         }
 
