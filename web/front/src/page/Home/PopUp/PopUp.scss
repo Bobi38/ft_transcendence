@@ -1,4 +1,4 @@
-#PopUp-root {
+.PopUp-root {
 
     display: flex;
     flex-direction: row;
@@ -10,7 +10,7 @@
         .success { color: green; }
     }
 
-    .PopUp-in-root {
+    .script-in-root {
         display: flex;
         flex-direction: column;
 

@@ -60,14 +60,14 @@ export default function Login({setShowLog}) {
         window.location.href = "/api/github";
     };
     
-    const miss_pass_mode = () => {
-        console.log("Passage en mode inscription:", AUTH.REGISTER);
-        setShowLog(AUTH.REGISTER);
-    }
+    // const miss_pass_mode = () => {
+    //     console.log("Passage en mode inscription:", AUTH.REGISTER);
+    //     setShowLog(AUTH.REGISTER);
+    // }
 
     return (
         <>
-            <div className={`PopUp-in-root`}>
+            <div className={`script-in-root`}>
 
                 <h4>Connexion</h4>
                 <form id={`login`} onSubmit={login_submit}>

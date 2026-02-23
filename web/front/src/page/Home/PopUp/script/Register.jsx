@@ -51,7 +51,7 @@ export default function Register({setShowLog}) {
 
     return (
         <>
-            <div className={`PopUp-in-root`}>
+            <div className={`script-in-root`}>
 
                 <h4>Register</h4>
                 

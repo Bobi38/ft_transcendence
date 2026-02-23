@@ -74,7 +74,7 @@ export default function MailA2F({setShowLog}) {
 
     return (
         <>
-            <div className={`PopUp-in-root`}>
+            <div className={`script-in-root`}>
               
                 <h4>MailA2F</h4>
                 

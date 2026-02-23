@@ -9,7 +9,7 @@ import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 
 export default function PrivateMessage() { 
     
-    const [navInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
+    // const [navInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
 
     const [navConv, setNavConv] = useState(null)                                                            // changer de conv private
     const [displayedConvPrivate, setDisplayedConvPrivate] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
@@ -32,13 +32,13 @@ export default function PrivateMessage() {
             if (repp.success)
                 setDisplayedMessages(message)
             else
-                console.log("fetch_private_message(1) fail ", repp.message);
+                console.log("fetch_private_message(1) error back ", repp.message);
         }catch(err){
-            console.log("fetch_private_message(1) error ", err);
+            console.log("fetch_private_message(1) error front ", err);
         }
     }
 
-    async function fetchConvPrivate (){
+    async function fetch_conv_private (){
         try{
             const rep = await fetch('/api/fetchConv', {
                 method: "GET",
@@ -60,14 +60,14 @@ export default function PrivateMessage() {
                 // puis setDisplayedConvPrivate
             }
             else
-                console.log("error fectchConv back ", repp.message);
+                console.log("fetch_conv_private(1) error back ", repp.message);
         }catch(err){
-            console.log("error fetchConv front ", err);
+            console.log("fetch_conv_private(2) error front ", err);
         }
     }
     
     useEffect(() => {
-        (async () => {await fetchConvPrivate();})();
+        (async () => {await fetch_conv_private();})();
     }, []);
     
 

@@ -32,12 +32,12 @@ export default function Profile() {
         const confirmepassword = e.target.confirmepassword.value.trim();
 
         if (!password || !confirmepassword) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("handle_pass(1) Veuillez remplir tous les champs", "danger");
             return;
         }
 
         if (password !== confirmepassword) {
-            showAlert("Les mots de passe ne correspondent pas", "danger");
+            showAlert("handle_pass(2) Les mots de passe ne correspondent pas", "danger");
             return;
         }
 
@@ -54,11 +54,11 @@ export default function Profile() {
 
             const repp = await rep.json();
             if (repp.success)
-                showAlert("Mot de passe mis à jour avec succès", "success");
+                showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
             else
-                console.log ("err passmaj" , repp.message);
+                console.log ("handle_pass(4) err passmaj" , repp.message);
         }catch(err){
-            console.log(err);
+            console.log("handle_pass(5) ",err);
         }
     }
 
@@ -66,12 +66,12 @@ export default function Profile() {
         e.preventDefault();
 
         if (!user.login || !user.login42 || !user.tel || !user.location || !user.email || !user.tel) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("handle_submit(1) Veuillez remplir tous les champs", "danger");
             return;
         }
 
         if (user.tel[0] !== '+' || user.tel[1] !== '3' || user.tel[2] !== '3' || user.tel.length < 10) {
-            showAlert("Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
+            showAlert("handle_submit(2) Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
             return;
         }
 
@@ -86,12 +86,12 @@ export default function Profile() {
             });
             const repjson = await rep.json();
             if (repjson.success){
-                showAlert("Profil mis à jour avec succès", "success");
+                showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
             }else{
-                console.error("Error updating profile:", repjson.message);
+                console.error("handle_submit(4) Error updating profile:", repjson.message);
             }
         } catch (error) {
-            console.error("Error updating profile:", error);
+            console.error("handle_submit(5) Error updating profile:", error);
         }
     };
 
