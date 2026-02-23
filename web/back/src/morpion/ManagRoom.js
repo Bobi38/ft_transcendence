@@ -1,6 +1,11 @@
 import MorpionRoom from "./morpionRoom.js";
 import Room from "./Room.js";
 
+const roomTypes = {
+    Morpion: MorpionRoom,
+    default: Room,
+};
+
 class ManagerRoom {
     constructor(){
         this._count = (Date.now() % 50001) + 57;
@@ -19,14 +24,13 @@ class ManagerRoom {
         return this._count.toString(36);
     }
 
-    createRoom(type) {
-        let newRoom;
-        if (type === "Morpion")
-            newRoom = new MorpionRoom(this.incrementCount());
-        else
-            newRoom = new Room(this.incrementCount());
-        this._rooms.set(newRoom.getId(), newRoom);
-        return newRoom;
+    createRoom(type = "default") {
+        const RoomClass = roomTypes[type] || roomTypes.default;
+        const new_room = new RoomClass(this.incrementCount());
+
+
+        this._rooms.set(new_room.getId(), new_room);
+        return new_room;
     }
 
     getRoom(id) {
@@ -55,7 +59,7 @@ class ManagerRoom {
         for (const room of this._rooms.values()) {
             if (room.isType(type)
                     && !room.isFull()
-                    && !room.getlock()) {
+                    && !room.getLock()) {
                 room.addPlayer(playerId, socket);
                 return room;
             }
@@ -65,7 +69,7 @@ class ManagerRoom {
         return newRoom;
     }
 
-    removeplayer(playerId, mess = "bye bye") {
+    removePlayer(playerId, mess = "bye bye") {
         for (const room of this._rooms.values()) {
             if (room.removePlayer(playerId, mess) === 0) {
                 this.removeRoom(room.getId());
@@ -88,8 +92,8 @@ class ManagerRoom {
 
         game.outTimer = setTimeout(() => {
             game.remove("* TIME OUT *");
-        }, game.limitTime);
+        }, game.limit_time);
     }
 }
 
-export const managerRoom = new ManagerRoom();
+export const manager_room = new ManagerRoom();
