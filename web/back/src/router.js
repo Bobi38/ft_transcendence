@@ -26,6 +26,8 @@ import PrivMess from './models/privmess.js';
 import PrivChat from './models/privchat.js';
 import Friend from './models/friend.js';
 import PswEmail from './models/PssWrdEmail.js';
+import StatMorp from './models/StatMorp.js';
+import GameMorp from './models/GameMorp.js';
 
 
 const router = express.Router();
@@ -626,6 +628,53 @@ router.post('/fetchConv', async (req, res) => {
     return res.status(500).json({success: false, message: err});
   }
 });
+
+router.get('/fetchStatMorp', async (req, res) => {
+  try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({where: {id: decoded.id}, include:[{model: StatMorp, as:'StatMorp'}]});
+    const stat ={
+      AllGame: result.StatMorp.nbGame,
+      AllWin: result.StatMorp.Win,
+      AllLost: result.StatMorp.Lost,
+      AllDraw: result.StatMorp.Draw,
+      AllAbort: result.StatMorp.Abort,
+      Diag:{
+        Win: result.StatMorp.WinDiag,
+        Lost: result.StatMorp.LostDiag,
+      },
+      Vert:{
+        Win: result.StatMorp.WinVert,
+        Lost: result.StatMorp.LostVert,
+      },
+      Horiz:{
+        Win: result.StatMorp.WinHoriz,
+        Lost: result.StatMorp.LostHoriz,
+      },
+      WinCroix: result.StatMorp.WinCroix,
+      WinCercle: result.StatMorp.WinCercle,
+      LostCroix: result.StatMorp.LostCroix,
+      LostCercle: result.StatMorp.LostCercle,
+    }
+    return res.status(201).json({success: true, stat_user: stat});
+  }catch(err){
+    return res.status(500).json({success: false, message: "err back fetchStatMorp " , err });
+  }
+})
+
+router.post('/getGameMorp', async (req, res) => {
+  try{
+    const {pas} = req.body;
+    const past = 5 * Number(pas);
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
+    return res.status(201).json({success: true, data: result});
+  }catch(err){
+    return res.status(500).json({success:false, message: "err "})
+  }
+})
 
 
 // router.get('/getFriend', async (req, res) => {
