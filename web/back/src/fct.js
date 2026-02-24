@@ -8,6 +8,8 @@ import User from './models/user.js';
 import ChatG from './models/test.js';
 import PrivChat from './models/privchat.js';
 import PrivMess from './models/privmess.js';
+import StatMorp from './models/StatMorp.js';
+import HistoryMorp from './models/HistoryMorp.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
@@ -90,6 +92,35 @@ async function CreatPrivMess(){
   await fullmess("El ultimo numero ", Conv3);
 }
 
+async function CreatStat(){
+    await HistoryMorp.create({  Map:"OX--XO-XO", 
+                                Result:"has_result", 
+                                WinnerId:1, 
+                                Id1:1, 
+                                OX1:0, 
+                                Id2:2, 
+                                OX1:1
+    });
+
+    await StatMorp.create({ idUser:1,
+                            nbGame:1,
+                            Win:5,
+                            Lost:5,
+                            Draw:0,
+                            Abort:0,
+                            WinDiag:2,
+                            WinHoriz:2,
+                            WinVert:6,
+                            LoseDiag:0,
+                            LoseHoriz:0,
+                            LoseVert:0,
+                            WinCercle:5,
+                            WinCroix:5,
+                            LostCercle:0,
+                            LostCroix:0,
+    });
+}
+
 async function addDb(){
   const count = await User.count();
     if (count === 0){
@@ -102,7 +133,9 @@ async function addDb(){
       await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
       majDb();
       await CreatPrivMess();
-      majDb;
+      majDb();
+      await CreatStat();
+      majDb();
     }
 }
 

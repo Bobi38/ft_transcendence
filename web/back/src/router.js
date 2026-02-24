@@ -629,39 +629,84 @@ router.post('/fetchConv', async (req, res) => {
   }
 });
 
+
 router.get('/fetchStatMorp', async (req, res) => {
+  try{
+      const token = req.cookies.token;
+      const decoded = jwt.verify(token, secret);
+      const result = await User.findOne({where: {id: decoded.id}, include:[{model: StatMorp, as:'StatMorp'}]});
+      const stat = {
+          AllGame: result.StatMorp.nbGame,
+          AllWin: result.StatMorp.Win,
+          AllLost: result.StatMorp.Lost,
+          AllDraw: result.StatMorp.Draw,
+          AllAbort: result.StatMorp.Abort,
+          Diag:{
+            Win: result.StatMorp.WinDiag,
+            Lost: result.StatMorp.LostDiag,
+          },
+          Vert:{
+            Win: result.StatMorp.WinVert,
+            Lost: result.StatMorp.LostVert,
+          },
+          Horiz:{
+            Win: result.StatMorp.WinHoriz,
+            Lost: result.StatMorp.LostHoriz,
+          },
+          WinCroix: result.StatMorp.WinCroix,
+          WinCercle: result.StatMorp.WinCercle,
+          LostCroix: result.StatMorp.LostCroix,
+          LostCercle: result.StatMorp.LostCercle,
+      }
+      return res.status(201).json({success: true, stat_user: stat});
+  }catch(err){
+      return res.status(500).json({success: false, message: "err back fetchStatMorp " , err });
+  }
+})
+
+//test flo wouhou on oui.
+import HistoryMorp from './models/HistoryMorp.js';
+
+router.get('/get_morpion_stat', async (req, res) => {
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
-    const result = await User.findOne({where: {id: decoded.id}, include:[{model: StatMorp, as:'StatMorp'}]});
-    const stat ={
-      AllGame: result.StatMorp.nbGame,
-      AllWin: result.StatMorp.Win,
-      AllLost: result.StatMorp.Lost,
-      AllDraw: result.StatMorp.Draw,
-      AllAbort: result.StatMorp.Abort,
-      Diag:{
-        Win: result.StatMorp.WinDiag,
-        Lost: result.StatMorp.LostDiag,
-      },
-      Vert:{
-        Win: result.StatMorp.WinVert,
-        Lost: result.StatMorp.LostVert,
-      },
-      Horiz:{
-        Win: result.StatMorp.WinHoriz,
-        Lost: result.StatMorp.LostHoriz,
-      },
-      WinCroix: result.StatMorp.WinCroix,
-      WinCercle: result.StatMorp.WinCercle,
-      LostCroix: result.StatMorp.LostCroix,
-      LostCercle: result.StatMorp.LostCercle,
+    console.log("je suis dedans 1");
+    const resultStats = await StatMorp.findOne({where: {idUser: decoded.id}});
+    console.log("2");
+    const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: 0, order:[['id', 'DESC']]})
+    console.log("all requet good");
+    const stat = {
+        AllGame: resultStats.nbGame,
+        AllWin: resultStats.Win,
+        AllLost: resultStats.Lost,
+        AllDraw: resultStats.Draw,
+        AllAbort: resultStats.Abort,
+        Diag:{
+          Win: resultStats.WinDiag,
+          Lost: resultStats.LostDiag,
+        },
+        Vert:{
+          Win: resultStats.WinVert,
+          Lost: resultStats.LostVert,
+        },
+        Horiz:{
+          Win: resultStats.WinHoriz,
+          Lost: resultStats.LostHoriz,
+        },
+        WinCroix: resultStats.WinCroix,
+        WinCercle: resultStats.WinCercle,
+        LostCroix: resultStats.LostCroix,
+        LostCercle: resultStats.LostCercle,
     }
-    return res.status(201).json({success: true, stat_user: stat});
+    console.log("3");
+    return res.status(201).json({success: true, stat_user: stat, history: resultHistory});
+
   }catch(err){
-    return res.status(500).json({success: false, message: "err back fetchStatMorp " , err });
+    return res.status(500).json({success: false, message: err });
   }
 })
+
 
 router.post('/getGameMorp', async (req, res) => {
   try{
@@ -714,3 +759,5 @@ telephone
 date de naissance
 photo
 */
+
+//rdata[0].
