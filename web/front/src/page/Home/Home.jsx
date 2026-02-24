@@ -25,16 +25,44 @@ export const AUTH = {
 
 export default function Home() {
 
-    
     const [showLog, setShowLog] = useState(AUTH.NONE);
-    
+
     const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
-    
 
 
     const home_handler = async (event) => {
 
-        if (event.target.closest('.PopUp-root')) {
+		//sorry idk where to put this, but here that worked
+		const cards = document.querySelectorAll('.card-effect');
+		cards.forEach(card => {
+			const tiltLimit = 20;
+
+			card.addEventListener('mousemove', (e) => {
+				const rect = card.getBoundingClientRect();
+				const x = e.clientX - rect.left;
+				const y = e.clientY - rect.top;
+				const xPercent = (x / rect.width) - 0.5;
+				const yPercent = (y / rect.height) - 0.5;
+
+				const rotateX = yPercent * -tiltLimit;
+				const rotateY = xPercent * tiltLimit;
+
+				card.style.transform = `
+				rotateX(${rotateX}deg)
+				rotateY(${rotateY}deg)
+				scale3d(1.05, 1.05, 1.05)
+				translateY(-3px)
+				`;
+			});
+
+			// Reset rotation when mouse leaves
+			card.addEventListener('mouseleave', () => {
+				card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+			});
+		});
+
+
+        if (event && event.target && event.target.closest('.PopUp-root')) {
             console.log("home_handler(1) need to connect")
             return;
         }
@@ -43,7 +71,7 @@ export default function Home() {
         if (!resCo) {
             setShowLog(AUTH.LOGIN);
         } else {
-            if (event.target.id === "HomeChatsubmit"){
+            if (event && event.target && event.target.id === "HomeChatsubmit"){
                 const form = event.target.form
                 if (form) {
                     form.requestSubmit();
@@ -86,13 +114,12 @@ export default function Home() {
 		cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
 	})
 
-    
 
 	return (
 
 
 		<section id={`Home-root`}>
-
+			<div className="scanlines"></div>
             <div className={`${is_popup}`} >
 
                 <div className={`${is_popup} Home-PopUp`} >
@@ -114,11 +141,7 @@ export default function Home() {
 
 			</div>
 
-			<footer className={`footer`}>
-
-				<HomeFooter setShowLog={setShowLog}/>
-
-			</footer>
+			<HomeFooter setShowLog={setShowLog}/>
 
 		</section>
 	)
