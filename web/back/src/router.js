@@ -427,7 +427,7 @@ router.get('/nclick', async (req, res) => {
 });
 
 
-router.post('/addpriv', async (req, res) => {
+router.post('/add_message_private', async (req, res) => {
   try{
     const data = req.body;
     const tok1 = req.cookies.token;
@@ -439,14 +439,14 @@ router.post('/addpriv', async (req, res) => {
     const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-    await PrivMess.create({idSend: id1.id, conv: data.mess, ChatId: findchat.id, time: data.time});
+    await PrivMess.create({idSend: id1.id, conv: data.message, ChatId: findchat.id, time: data.time});
     res.status(201).json({success: true});
   }catch(err){
     res.status(500).json({success: false, message: err});
   }
 });
 
-router.get('/getpriv', async (req, res) => {
+router.get('/get_chat_private', async (req, res) => {
   try{
     const {tok2} = req.body;
     const tok1 = req.cookies.token;
@@ -469,16 +469,16 @@ router.get('/getpriv', async (req, res) => {
 })
 
 
-router.post('/addchat', async (req, res) => {
+router.post('/add_message_global', async (req, res) => {
   try{
-    console.log("Api /addchat called");
+    console.log("Api /add_message_global called");
     const chat = req.body;
     if (chat.send == "")
       res.status(201)({success: true});
     const tok = req.cookies.token
     const id = jwt.verify(tok, secret);
     console.log (id.id, " " , chat.message);
-    await ChatG.create({contenu: chat.message, SenderId: id.id, time: chat.timer });
+    await ChatG.create({contenu: chat.message, SenderId: id.id, time: chat.time });
     console.log("buuuuug");
     // console.log('chat= ', chat);
     // const achat = await ChatG.findByPk(1);
@@ -496,9 +496,9 @@ router.post('/addchat', async (req, res) => {
   }
 })
 
-// router.get('/getchat', async (req, res) => {
+// router.get('/get_chat_global', async (req, res) => {
 //   try {
-//     console.log("dans GETCHAT-----");
+//     console.log("dans get_chat_global-----");
 //     const token = req.cookies.token;
 //     const decoded = jwt.verify(token, secret);
 //     const result = await User.findAll({ where: { id: decoded.id } });
@@ -516,9 +516,9 @@ router.post('/addchat', async (req, res) => {
 
 
 
-router.get('/getchat', async (req, res) => {
+router.get('/get_chat_global', async (req, res) => {
   try {
-    console.log("dans GETCHAT-----");
+    console.log("dans get_chat_global-----");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });

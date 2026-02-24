@@ -28,7 +28,7 @@ export default function PrivateMessage() {
         const tok2 = navConv;
 
         try{
-            const rep = await fetch('/api/getpriv', {
+            const rep = await fetch('/api/get_chat_private', {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
