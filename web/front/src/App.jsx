@@ -18,6 +18,7 @@ import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
 import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
+import Test             from    "./test.jsx";
 
   // ./src/page/game
 import MorpionTraining  from    "FRONT/page/Game/Morpion/MorpionTraining.jsx";
@@ -55,6 +56,7 @@ export default function App() {
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
             <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
+            <Route path={`/Test`}               element={<Navigation>   <Test/>           </Navigation>}/>
 
 
             {/* bad path */}

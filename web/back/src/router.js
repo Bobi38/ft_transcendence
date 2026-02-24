@@ -672,7 +672,7 @@ router.post('/getGameMorp', async (req, res) => {
     const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
     return res.status(201).json({success: true, data: result});
   }catch(err){
-    return res.status(500).json({success:false, message: "err "})
+    return res.status(500).json({success:false, message: "err ", err})
   }
 })
 
