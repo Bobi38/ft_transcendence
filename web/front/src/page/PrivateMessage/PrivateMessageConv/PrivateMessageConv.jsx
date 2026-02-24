@@ -14,82 +14,87 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
 
     const [input, setInput] = useState("");
 
-// async function add_message_private(timer, navConv){
-//     console.log("add_message_private(1) called")
-//     const data={
-//         time: timer,
-//         id: navConv,
-//         mess: input,
-//     }
-//     try{
-//         const rep = await fetch('/api/addpriv',{
-//             method: "POST",
-//             headers: {'Content-Type': 'application/json'},
-//             credentials: "include",
-//             body: JSON.stringify(data),
-//         });
+    async function fetch_private_message({navConv}) {
+        console.log("fetch_private_message(1) called: ", navConv);
 
-//         const repp = await rep.json();
-//         if(repp.success)
-//             console.log("add_message_private(2) success")
-//         else
-//             console.log("add_message_private(3) fail", repp.message)
-//     }catch(err){
-//         console.log("add_message_private(4) error", err)
-//     }
-// }
+        const tok2 = navConv;
 
-// async function fetch_private_message({navConv}){
-//     console.log("fetch_private_message(1) called: ", navConv);
-
-//     const tok2 = navConv;
-
-//     try{
-//         const rep = await fetch('/api/getpriv', {
-//             method: "POST",
-//             headers: {'Content-Type': 'application/json'},
-//             credentials: "include",
-//             body: JSON.stringify({tok2}),
-//         });
-//         const repp = await rep.json();
-//         if (repp.success)
-//             setDisplayedMessages(message)
-//         else
-//             console.log("fetch_private_message(2) fail: ", repp.message);
-//     }catch(err){
-//         console.log("fetch_private_message(3) error: ", err);
-//     }
-// }
+        try{
+            const rep = await fetch('/api/getpriv', {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+                body: JSON.stringify({tok2}),
+            });
+            const repjson = await rep.json();
+            if (repjson.success)
+                setDisplayedMessages(message)
+            else
+                console.log("fetch_private_message(2) error back: ", repjson.message);
+        }catch(err){
+            console.log("fetch_private_message(3) error front: ", err);
+        }
+    }
     
-    // useEffect(() => {
-    //     async () => { fetch_private_message({navConv}) }
-    //     if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
-    //         SocketM.connect();
-    //     }
+    useEffect(() => {
 
-    //     const handlePrivMessage = (data) => {
-    //         console.log("Message privé reçu via WebSocket:", data);
-    //         if (data.login === navConv)
-    //             setDisplayedMessages(prevMessages => [...prevMessages, data]);
-    //         // else
-    //         //     setDisplayedConv
-    //     }
-    //     SocketM.onPriv(navConv, handlePrivMessage);
+        async () => { fetch_private_message({navConv}) }
 
-    //     return () => {
-    //         SocketM.offPriv(handlePrivMessage);
-    //     };
-    // }, [navConv]);
+        if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
+            SocketM.connect();
+        }
+
+        const handle_private_message = (data) => {
+            console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
+            if (data.login === navConv)
+                setDisplayedMessages(prevMessages => [...prevMessages, data]);
+        }
+        SocketM.onPriv(navConv, handle_private_message);
+
+        return () => {
+            SocketM.offPriv(handle_private_message);
+        };
+    }, [navConv]);
+
+
+    async function add_message_private(timer, navConv){
+
+        console.log("add_message_private(1) called")
+        const data = {
+            time: timer,
+            id: navConv,
+            mess: input,
+        }
+        try{
+            const rep = await fetch('/api/addpriv',{
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+                body: JSON.stringify(data),
+            });
+
+            const repjson = await rep.json();
+            if(repjson.success)
+                console.log("add_message_private(2) success")
+            else
+                console.log("add_message_private(3) fail", repjson.message)
+        }catch(err){
+            console.log("add_message_private(4) error", err)
+        }
+    }
+
+
 
     
     const handler_private = (e) => {
-        console.log("handler_private(1) called");
+        console.log("handler_private(1) called: ", e.target[0].value);
         e.preventDefault();
-        const message = e.target[0].value;
-        console.log("handler_private(2) : ", message);
+        
+
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
         add_message_private(time, navConv);
+        
+        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
         SocketM.sendd(data);
         setDisplayedMessages(prev => [...prev, data]);
         setInput("");

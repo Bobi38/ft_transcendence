@@ -19,6 +19,7 @@ export default function PrivateMessage() {
     const [navConv, setNavConv] = useState(null)                                                            // changer de conv private
     const [displayedConvPrivate, setDisplayedConvPrivate] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
     const [displayedMessages, setDisplayedMessages] = useState([]);
+    const [input, setInput] = useState("");
 
 
     async function fetch_private_message({navConv}){
@@ -33,11 +34,11 @@ export default function PrivateMessage() {
                 credentials: "include",
                 body: JSON.stringify({tok2}),
             });
-            const repp = await rep.json();
-            if (repp.success)
+            const repjson = await rep.json();
+            if (repjson.success)
                 setDisplayedMessages(message)
             else
-                console.log("fetch_private_message(2) error back ", repp.message);
+                console.log("fetch_private_message(2) error back ", repjson.message);
         }catch(err){
             console.log("fetch_private_message(3) error front ", err);
         }
@@ -50,9 +51,9 @@ export default function PrivateMessage() {
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",                
             });
-            const repp = await rep.json();
-            if (repp.success){
-                const chats = repp.message;
+            const repjson = await rep.json();
+            if (repjson.success){
+                const chats = repjson.message;
                 console.log("fetch_conv_private(1) ", chats[0].PrivMesses[0].contenu)
                 console.log("fetch_conv_private(2) ", chats[1].PrivMesses[0].contenu)
                 console.log("fetch_conv_private(3) test join ", chats[0].user1.name);
@@ -65,7 +66,7 @@ export default function PrivateMessage() {
                 // puis setDisplayedConvPrivate
             }
             else
-                console.log("fetch_conv_private(1) error back ", repp.message);
+                console.log("fetch_conv_private(1) error back ", repjson.message);
         }catch(err){
             console.log("fetch_conv_private(2) error front ", err);
         }
