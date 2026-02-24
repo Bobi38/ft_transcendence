@@ -80,8 +80,6 @@ function maj_conv(id, conv, namelst){
   return tableau;
 };
 
-
-
 router.use(async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path:", req.path);

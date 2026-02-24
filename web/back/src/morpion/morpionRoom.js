@@ -25,7 +25,7 @@ class MorpionRoom extends Room {
         ];
         this.player1 = null;
         this.player2 = null;
-    }
+    }   
 
     selectPlayer1(id) {
         const players = [...this._players.keys()];
@@ -37,7 +37,7 @@ class MorpionRoom extends Room {
             throw new Error("Il faut exactement 2 joueurs pour sélectionner player1");
         }
 
-        this.setlock(true);
+        this.setLock(true);
         
         this.player1 = this._players.get(id);
         this.player2 = this._players.get(
@@ -63,6 +63,7 @@ class MorpionRoom extends Room {
     }
 
     play(currentPlayer, index) {
+        console.log(String(currentPlayer));
         if (currentPlayer !== this.getCurrentPlayer()) {
             currentPlayer.send("Ce n'est pas ton tour", this._board);
             return false;

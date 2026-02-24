@@ -49,29 +49,32 @@ class ManagerRoom {
     isInRoom(playerId) {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
+                console.log("IsInRoom : deja present");
                 return room;
             }
         }
+        console.log("IsInRoom : joueur inconnu");
         return null;
     }
 
-    findOnePlace(socket, playerId, type = null) {
+    findOnePlace(socket, type = null, currentId) {
         for (const room of this._rooms.values()) {
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
-                room.addPlayer(playerId, socket);
+                room.addPlayer(currentId, socket);
                 return room;
             }
         }
         const newRoom = this.createRoom(type);
-        newRoom.addPlayer(playerId, socket);
+        newRoom.addPlayer(currentId, socket);
         return newRoom;
     }
 
     removePlayer(playerId, mess = "bye bye") {
         for (const room of this._rooms.values()) {
-            if (room.removePlayer(playerId, mess) === 0) {
+            room.removePlayer(playerId, mess)
+            if (room.length() === 0) {
                 this.removeRoom(room.getId());
             }
         }

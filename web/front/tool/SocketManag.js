@@ -52,11 +52,10 @@ class SocketManag{
         this.socket.onerror = (error) => {
             console.log("errr socket" + error);
         }
-        this.socket.onclose = () => {
-            // alert ('deco');
+        this.socket.onclose = () => {          
             if (this.reco)
                 this.nbco++;
-                setTimeout(() => this.connect(), 50);
+                setTimeout(() => this.connect(), 300);
         }
         this.nbco++;
     }
@@ -114,7 +113,13 @@ class SocketManag{
 
     sendd (data){
         console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
-        if (this.socket && this.socket.readyState == WebSocket.OPEN){
+
+        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+            console.log("proble de socket :envoie impossible");
+            return;
+        }
+        else
+        {
             console.log("envoi du message via WebSocket:", data);
             this.socket.send(JSON.stringify(data));
         }

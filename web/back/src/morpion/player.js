@@ -34,7 +34,7 @@ export class Player{
     }
 
     disconnect(message) {
-        this.clearTimeout();
+        this.clearTurnTimer();
 
         if (message)
             this.send(message);

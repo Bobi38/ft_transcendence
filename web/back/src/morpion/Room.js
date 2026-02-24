@@ -19,13 +19,19 @@ class Room {
         return `${this._type} :${this._id}`;
     }
 
-    addPlayer(playerId, socket) {
+    addPlayer(socket, PlayerId) {
         if (this._locked) return false;
         if (this.isFull()) return false;
-
-        this._players.set(playerId, new Player(socket, playerId));
+        // console.log("socket.userId =", PlayerId);
+        this._players.set(PlayerId, new Player(socket, PlayerId));
+        // console.log("liste des player", [...this._players.keys()]);
         return true;
     }
+
+    length(){
+        return this._players.size;
+    }
+        
 
     removePlayer(playerId, mess = null) {
         const player = this._players.get(playerId);
@@ -48,6 +54,7 @@ class Room {
     }
     
     isInRoom(id){
+        // console.log([...this._players.keys()], "on cherche ", id);
         return this._players.has(id);
     }
 

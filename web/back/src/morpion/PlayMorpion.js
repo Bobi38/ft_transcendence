@@ -2,49 +2,62 @@ import { manager_room } from './ManagRoom.js';
 
 const cooldowns = new Map();
 
-export function playMorpion(data, socket){
-    if (cooldowns.has(socket)) return;
+export function playMorpion(message, socket){
+    const id = socket.userId
+    console.log(`ggggggggggg   playMorpion   ggggggggggggggg`,  id)
+    if (cooldowns.has(id)) return;
 
-    cooldowns.set(socket, true);
-    setTimeout(() => cooldowns.delete(socket), 200);
+    cooldowns.set(id, true);
+    setTimeout(() => cooldowns.delete(id), 200);
 
     console.log("ca communique avec morpion")
-    if (data.message === "reboot") {
-        console.log("demande reboot recue");
+    if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
         return;
     }
 
-    if (data.message === "je pars") {
-        console.log("abondon de ", socket.id);
-        manager_room.removePlayer(socket.id);
+    if (message === "je pars") {
+        console.log("abondon de ", id);
+        manager_room.removePlayer(id);
         return;
     }
 
-    let game = manager_room.isInRoom(socket.id)
+    let game = manager_room.isInRoom(id)
 
     if (!game){
-        game = manager_room.findOnePlace(socket, socket.id, "Morpion")
+        console.log("nouveau joeur prend une place");
+        game = manager_room.findOnePlace(socket, "Morpion", id);
+        console.log(`nouveau joueur dans ${game}`);
 
         if (!game) {
-            console.log("Impossible de trouver ou créer une partie");
-            return;
+            console.log("Impossible de trouver ou créer une partie");   
         }
+        return;
     }
 
-    if (!game.getLock()){
+    if(!game.getLock()){
+        if (game.play(id, message)) {
+            if(game.checkVictory()){
+                console.log(`fin de la partie de ${game}`);
+                manager_room.removeRoom(game.getId());
+            }
+            return ;
+        }        
+        console.log("toujours en attente");
+        socket.send({message: "il faut attendre"})
+        return ;
+    }
+
+    console.log("st ce que la partie estlock ? ");
+    if (game.getLock()){
+        console.log("non");
         console.log(`debut de partie de ${game}`);
-        game.selectPlayer1(socket.id);
+        game.selectPlayer1(id);
         game.player1.send({message: "a toi de jouer"});
         game.player2.send({message: "en attente joueur 1"});
         game.startTurnTimer(game.player1);
         return ;
     }
+    console.log("oui, on joue ????");
 
-    if (game.play(socket.id, data.message)) {
-        if(game.checkVictory()){
-            console.log(`fin de la partie de ${game}`);
-            manager_room.removeRoom(game.getId());
-        }
-    }
 }

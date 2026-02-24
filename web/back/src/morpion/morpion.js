@@ -1,9 +1,9 @@
-import {manager_room as manager} from '../ManagRoom.js';
+import {manager_room as manager, manager_room} from './ManagRoom.js';
 
 const cooldowns = new Map();
 
 export function morpionGame(cmd, socket) {
-
+    console.log("ca va les filles")
     if (cooldowns.get(socket) === cmd) return;
     cooldowns.set(socket, cmd);
     setTimeout(() => cooldowns.delete(socket), 1000);
@@ -13,12 +13,13 @@ export function morpionGame(cmd, socket) {
         return ;
     }
 
-    if (data.mess === "je pars") {
-        handleTrucDisconnect(socket);
+    if (cmd === "je pars") {
+        console.log("j ai bien recu le messag ed ede[art");
+        manager.removePlayer(socket);
         return;
     }
 
-    if (data.mess === "play") {
+    if (cmd === "play") {
         connectNewGame(socket);
         return;
     }
@@ -26,7 +27,7 @@ export function morpionGame(cmd, socket) {
     const game = manager.findGame(socket);
 
     if (game) {
-        const index = +data.mess;
+        const index = +cmd;
         if (!game.play(socket, index)) return;
 
         const result = game.checkVictory();
