@@ -12,6 +12,7 @@ import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 // import Amis from "./Amis/Amis.jsx"
 // import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 
+
 export default function PrivateMessage() { 
     
     const [navInfo, setNavInfo] = useState(1)                                                         // info  Amis / Ajouter un Amis
@@ -22,25 +23,28 @@ export default function PrivateMessage() {
     const [input, setInput] = useState("");
 
 
-    async function fetch_private_message({navConv}){
+    async function fetch_private_message({navConv}) {
         console.log("fetch_private_message(1) called: ", navConv);
 
         const tok2 = navConv;
 
         try{
-            const rep = await fetch('/api/get_chat_private', {
+            const reponse = await fetch('/api/get_chat_private', {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 body: JSON.stringify({tok2}),
             });
-            const repjson = await rep.json();
-            if (repjson.success)
-                setDisplayedMessages(message)
-            else
-                console.log("fetch_private_message(2) error back ", repjson.message);
-        }catch(err){
-            console.log("fetch_private_message(3) error front ", err);
+            const repjson = await reponse.json();
+            if (repjson.success){
+
+                setDisplayedMessages(message);
+                
+                console.log("fetch_private_message(2) success: " , repjson.message);
+            } else
+                console.error("fetch_private_message(3) Error back");
+        }catch(error){
+            console.error("fetch_private_message(4) Error front: ", err);
         }
     }
 
@@ -80,13 +84,16 @@ export default function PrivateMessage() {
     useEffect(() => {
 
         if (!navConv) return;
+
         async () => { fetch_private_message({navConv}) }
-        if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
+
+
+        if (SocketM.getState() === "closed") {
             SocketM.connect();
         }
 
-        const handle_priv_message = (data) => {
-            console.log("Message privé reçu via WebSocket:", data);
+        const handle_private_message = (data) => {
+            console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.login === navConv)
                 setDisplayedMessages(prevMessages => [...prevMessages, data]);
             else
@@ -95,11 +102,12 @@ export default function PrivateMessage() {
                 // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
         
         }
-        SocketM.onPriv(handle_priv_message);
+        SocketM.onPriv(handle_private_message);
 
         return () => {
-            SocketM.offPriv(handle_priv_message);
+            SocketM.offPriv(handle_private_message);
         };
+
     }, [navConv]);
     
     return (

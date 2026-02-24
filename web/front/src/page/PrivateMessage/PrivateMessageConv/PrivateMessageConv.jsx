@@ -14,31 +14,60 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
 
     const [input, setInput] = useState("");
 
-    async function fetch_private_message({navConv}) {
-        console.log("fetch_private_message(1) called: ", navConv);
+    // async function fetch_private_message({navConv}) {
+    //     console.log("fetch_private_message(1) called: ", navConv);
 
-        const tok2 = navConv;
+    //     const tok2 = navConv;
 
-        try{
-            const reponse = await fetch('/api/get_chat_private', {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-                body: JSON.stringify({tok2}),
-            });
-            const repjson = await reponse.json();
-            if (repjson.success){
+    //     try{
+    //         const reponse = await fetch('/api/get_chat_private', {
+    //             method: "POST",
+    //             headers: {'Content-Type': 'application/json'},
+    //             credentials: "include",
+    //             body: JSON.stringify({tok2}),
+    //         });
+    //         const repjson = await reponse.json();
+    //         if (repjson.success){
 
-                setDisplayedMessages(message);
+    //             setDisplayedMessages(message);
                 
-                console.log("fetch_private_message(2) success: " , repjson.message);
-            } else
-                console.error("fetch_private_message(3) Error back");
-        }catch(error){
-            console.error("fetch_private_message(4) Error front: ", err);
-        }
-    }
+    //             console.log("fetch_private_message(2) success: " , repjson.message);
+    //         } else
+    //             console.error("fetch_private_message(3) Error back");
+    //     }catch(error){
+    //         console.error("fetch_private_message(4) Error front: ", err);
+    //     }
+    // }
     
+
+
+
+
+    // useEffect(() => {
+
+    //     async () => { fetch_private_message({navConv}) }
+
+
+    //     if (SocketM.getState() === "closed") {
+    //         SocketM.connect();
+    //     }
+
+    //     const handle_private_message = (data) => {
+
+    //         console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
+    //         if (data.login === navConv)
+    //             setDisplayedMessages(prevMessages => [...prevMessages, data]);
+    //     }
+    //     SocketM.onPriv(navConv, handle_private_message);
+
+    //     return () => {
+    //         SocketM.offPriv(handle_private_message);
+    //     };
+    // }, [navConv]);
+
+
+
+
     async function add_private_message(time, navConv){
         console.log("add_private_message(1) called: ", input)
         const data = {
@@ -64,35 +93,6 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
             console.error("add_private_message(4) Error front", err)
         }
     }
-
-
-
-
-    useEffect(() => {
-
-        async () => { fetch_private_message({navConv}) }
-
-        if (SocketM.nb() === 0 && SocketM.getState() !== WebSocket.OPEN) {
-            SocketM.connect();
-        }
-
-
-        const handle_private_message = (data) => {
-
-            console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.login === navConv)
-                setDisplayedMessages(prevMessages => [...prevMessages, data]);
-        }
-        SocketM.onPriv(navConv, handle_private_message);
-
-        return () => {
-            SocketM.offPriv(handle_private_message);
-        };
-    }, [navConv]);
-
-
-
-
 
 
     
