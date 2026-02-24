@@ -14,90 +14,100 @@ export default function HomeChat() {
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
 
-    async function  fetch_message(){
+    async function  fetch_global_message(){
 
-        console.log("fetch_message(1) called");
+        console.log("fetch_global_message(1) called");
         try {
-            const reponse = await fetch('/api/getchat', {
+            const reponse = await fetch('/api/get_chat_global', {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: "include"
             });
 
-            const rep = await reponse.json();
-            if (rep.success){
-                console.log("fetch_message(2)" , rep.message);
+            const repjson = await reponse.json();
+            if (repjson.success){
+                
+                setDisplayedMessages(repjson.message);
+                
+                console.log("fetch_global_message(2) success: " , repjson.message);
+            } else 
+                console.error("fetch_global_message(3) Error back");
+        } catch (error) {
+            console.error("fetch_global_message(4) Error front:", error);
+        }
+    }
 
-                setDisplayedMessages(rep.message);
+    async function add_message_global(time){
+        console.log("add_message_global(1) called: ", input);
+        const data = {
+            message: input,
+            time: time 
+        }
 
-            } else {
-                alerte("fetch_message(3) message get from db failed");
+        try{
+            const reponse = await fetch('/api/add_message_global', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: "include",
+                    body: JSON.stringify(data),
+                });
+
+            const repjson = await reponse.json();
+            if (repjson.success){
+                console.log("add_message_global(2) message added in db")
+            } else
+                console.error("add_message_global(3) Error back", repjson.message)
+        }catch(err){
+            console.error("add_message_global(4) Error front", err)
+        }
+    }
+
+    useEffect(() => {
+        let handle_global_message;
+
+        async () => {
+            const repco = await checkCo();
+            if (!repco) return;
+
+
+            await fetch_global_message();
+
+            if (SocketM.getState() === "closed") {
+                SocketM.connect();
             }
 
-        } catch (error) {
-            console.error("fetch_message(4) Error fetching messages:", error);
-        }
-    }
+            handle_global_message = (data) => {
+                console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
+                setDisplayedMessages((prev) => [...prev, data]);
+            };
 
-    async function add_message(time){
-        console.log("add_message(1): " + input);
-        const reponse = await fetch('/api/addchat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: "include",
-                body: JSON.stringify({ message: input, timer: time }),
-            });
-
-        const rep = await reponse.json();
-        if (rep.success){
-            console.log("add_message(2) message added in db")
-        }
-    }
-
-useEffect(() => {
-    let handleChat;
-
-    const init = async () => {
-        const repco = await checkCo();
-
-        if (!repco) return;
-
-        await fetch_message();
-
-        if (SocketM.getState() === "closed") {
-            SocketM.connect();
-        }
-
-        handleChat = (data) => {
-            console.log("Message reçu:", data);
-            setDisplayedMessages((prev) => [...prev, data]);
+            SocketM.onChat(handle_global_message, "ChatG");
         };
 
-        SocketM.onChat(handleChat, "ChatG");
-    };
+        // init();
 
-    init();
+        return () => {
+            if (handle_global_message) {
+                SocketM.offChat("ChatG");
+            }
+        };
+    }, []);
 
-    return () => {
-        if (handleChat) {
-            SocketM.offChat("ChatG");
-        }
-    };
-}, []);
     const handle_submit = (e) => {
         e.preventDefault();
+        console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
-        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        console.log("handle_submit(1): " + input);
-        //message 2 moi
 
+        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
         const data = {type: "mess", message: input, timer: time};
-        // setDisplayedMessages(prev => [...prev, data]);
+        
+        console.log("handle_submit(2): " ,data);
 
         const data2 = {...data, monMsg: false};
 
-        add_message(time);
-        console.log("handle_submit(2) send via WebSocket data2:", data2);
+        add_message_global(time);
+        
+        console.log("handle_submit(3) send via WebSocket data2:", data2);
         SocketM.sendd(data2);
         setInput("");
     };

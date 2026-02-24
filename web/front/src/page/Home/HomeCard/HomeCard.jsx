@@ -5,7 +5,8 @@ import checkCo from "BACK/fct1.js"
 import "./HomeCard.scss";
 
 /* Components */
-    
+
+
 export default function HomeCard({children, path}) {
 
 	const HomeCard_clicked = async (path) => {
@@ -22,13 +23,11 @@ export default function HomeCard({children, path}) {
     }
 
     return (
-        <>
-            <button onClick={() => {HomeCard_clicked(path)}} className={`HomeCard`}>
+            <button onClick={() => {HomeCard_clicked(path)}} className={`HomeCard card-effect`}>
                 <p>
                     {children}
                 </p>
             </button>
-        </>
     )
 }
 

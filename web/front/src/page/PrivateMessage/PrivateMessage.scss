@@ -47,7 +47,7 @@
     .border-left {
         border-left: 3px solid black;
     }
-    // .display-screen{
-
-    // }
+    .display-screen{
+	    @include mix.full;
+    }
 }
