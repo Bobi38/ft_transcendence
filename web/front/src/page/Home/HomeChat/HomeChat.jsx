@@ -93,8 +93,6 @@ export default function HomeChat() {
         };
     }, []);
 
-    oups
-    
     const handle_submit = (e) => {
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
