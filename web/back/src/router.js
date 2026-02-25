@@ -616,7 +616,7 @@ router.get('/fetchConv', async (req, res) => {
         const decoded = jwt.verify(token, secret);
         const result = await User.findOne({ where: { id: decoded.id } });
         console.log("rest   ", result.id);
-        const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+        const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name', 'co'] },{ model: User, as: 'user2', attributes: ['id', 'name', 'co'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
         console.log("API fetchConv chat 1 ", chats[0].PrivMesses[0].contenu)
         console.log("API fetchConv chat 2 ", chats[1].PrivMesses[0].contenu)
         console.log("API fetchConv test join ", chats[0].user1.name);
@@ -719,7 +719,7 @@ router.get('/add_friend:name', async (req, res) => {
 	try{
 		const name = parseInt(req.params.name) || null;
 		if (!name)
-			return res.status(500).json({success: false, message: "exist"});
+			return res.status(500).json({success: false, message: "no name"});
 		const token = req.cookies.token;
     	const decoded = jwt.verify(token, secret);
 		const result = await User.findOne({ where: { id: decoded.id } });
