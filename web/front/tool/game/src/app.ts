@@ -78,7 +78,7 @@ class App {
 
         const havokInstance = await HavokPhysics();
         const havokPlugin = new HavokPlugin(true, havokInstance);
-        this._scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
+        this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
         
         await this._environment.load();
         await this._loadCharacterAssets(scene);
@@ -98,10 +98,10 @@ class App {
         this._player = new Player(this.assets, scene, shadow, this._input)
         
         const ball = MeshBuilder.CreateSphere("ball", {diameter: 1}, this._scene);
-        ball.position = new Vector3(0,3,4);
+        ball.position = new Vector3(0,3,7);
         const ballAggregate = new PhysicsAggregate(ball,
             PhysicsShapeType.SPHERE,
-            {mass: 1, restitution: 0.8, friction: 0.1},
+            {mass: 1, restitution: 1, friction: 0},
             this._scene);
         shadow.addShadowCaster(ball);
         ballAggregate.body.setMotionType(PhysicsMotionType.DYNAMIC);

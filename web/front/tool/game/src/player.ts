@@ -11,6 +11,7 @@ export class Player extends TransformNode {
     public mouseSpeedBuffer = [];
     public mouseBufferSize: number = 5;
     public prevMousePos = Vector2.Zero();
+    public mouseDirBuffer = [];
 
     public mesh: Mesh;
     public racket: TransformNode;
@@ -40,9 +41,13 @@ export class Player extends TransformNode {
         colRacketBody.getCollisionObservable().add((event) => {
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
-            const hitDirection = event.normal.scale(-1);
+            const hitForward = 0.5;
+            const mouseDirAvg = (this.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
+            mouseDirAvg.scaleInPlace(1/this.mouseBufferSize).normalize();
+            const hitDirection = new Vector3(mouseDirAvg.x, mouseDirAvg.y, hitForward).normalize();
+            console.log(mouseDirAvg);
             const mouseAvgSpeed = this.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this.mouseBufferSize;
-            const power = Scalar.SmoothStep(0, 200, mouseAvgSpeed) / 20;
+            const power = Scalar.SmoothStep(0, 200, mouseAvgSpeed) / 10;
             console.log(power);
 
             ballBody.applyImpulse(hitDirection.scale(power), event.point);
@@ -66,26 +71,37 @@ export class Player extends TransformNode {
     private _updateFromMouse() {
         const mousePos = new Vector2(this.scene.pointerX, this.scene.pointerY);
         const mouseSpeed = Vector2.Distance(mousePos, this.prevMousePos);
+        const mouseDir = mousePos.subtract(this.prevMousePos);
+        this.mouseDirBuffer.push(mouseDir);
         this.mouseSpeedBuffer.push(mouseSpeed);
         if (this.mouseSpeedBuffer.length > this.mouseBufferSize) {
             this.mouseSpeedBuffer.shift();
         }
+        if (this.mouseDirBuffer.length > this.mouseBufferSize) {
+            this.mouseDirBuffer.shift();
+        }
         this.prevMousePos = mousePos;
 
-        const plane = Plane.FromPositionAndNormal(new Vector3(0,0,5), new Vector3(0,0,1));
+        const plane = Plane.FromPositionAndNormal(new Vector3(0,0,3), new Vector3(0,0,1));
         const ray = this.scene.createPickingRay(this.scene.pointerX, this.scene.pointerY,
             null, this.camera);
         const distance = ray.intersectsPlane(plane);
         if (distance) {
             const worldPointerPos : Vector3 = ray.origin.add(ray.direction.scale(distance));
             const relativePos : Vector3 = worldPointerPos.subtract(this.hand_node.absolutePosition);
-            if (relativePos.length() > 3.5) {
-                relativePos.normalize().multiplyInPlace(new Vector3(3.5,3.5,3.5));
+
+            const maxRadius = 5;
+            if (relativePos.length() > maxRadius) {
+                relativePos.normalize().scaleInPlace(maxRadius);
+                //relativePos.normalize().multiplyInPlace(new Vector3(3.5,3.5,3.5));
+            }
+            else {
+                relativePos.normalize().scaleInPlace(maxRadius);
             }
             const oldPos = this.racket.position;
             this.racket.position = relativePos;
 
-            const localAxisY = relativePos.clone().normalize();
+            const localAxisY = relativePos.clone().normalize(); 
             let movementDir = relativePos.subtract(oldPos);
             let localAxisX : Vector3;
             if (movementDir.length() < 0.01)
