@@ -65,7 +65,7 @@ export default function HomeChat() {
     useEffect(() => {
         let handle_global_message;
 
-        async () => {
+        const init = async () => {
             const repco = await checkCo();
             if (!repco) return;
 
@@ -84,7 +84,7 @@ export default function HomeChat() {
             SocketM.onChat(handle_global_message, "ChatG");
         };
 
-        // init();
+        init();
 
         return () => {
             if (handle_global_message) {

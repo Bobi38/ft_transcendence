@@ -18,6 +18,10 @@ class SocketManag{
             console.log("WebSocket déjà connecté.");
             return;
         }
+        if (this.socket && this.socket.readyState === WebSocket.CONNECTING){
+            console.log("WebSocket statu CONNECTING")
+            return ;
+        }
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host; // Inclut le port si présent
         console.log(`${protocol}//${host}/ws`);

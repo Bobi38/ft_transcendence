@@ -431,17 +431,22 @@ router.get('/nclick', async (req, res) => {
 
 router.post('/add_message_private', async (req, res) => {
   try{
+	console.log("in add 1");
     const data = req.body;
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
     const id2 = await User.findOne({ where: { name: data.id}});
+	console.log("in add 2");
     if (res1 === 0 || id2 === 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
+    let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-    await PrivMess.create({idSend: id1.id, conv: data.message, ChatId: findchat.id, time: data.time});
+	console.log("in add 3");
+	console.log("dATA ", data.message, id1.id, findchat.id, data.time);
+    await PrivMess.create({SenderId: id1.id, contenu: data.message, ChatId: findchat.id, time: data.time});
+	console.log("GOOOOOD");
     res.status(201).json({success: true});
   }catch(err){
     res.status(500).json({success: false, message: err});
@@ -699,12 +704,14 @@ const result = await User.findAll({
 					include: [{
 						model: User,
 						as: 'Friends',
+						attributes: ['id', 'name', 'co'],
 						through: { where: { State: true }, attributes: [] },
 						required: false
           },
 					{
 						model: User,
 						as: 'FriendOf',
+						attributes: ['id', 'name', 'co'],
 						through: { where: { State: true }, attributes: [] },
 						required: false
 					},]});
