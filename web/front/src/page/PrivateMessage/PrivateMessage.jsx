@@ -9,8 +9,8 @@ import "./PrivateMessage.scss";
 
 /* Components */
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
-// import Amis from "./Amis/Amis.jsx"
-// import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
+import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
+import Amis from "./Amis/Amis.jsx"
 
 
 export default function PrivateMessage() { 
@@ -190,7 +190,7 @@ export default function PrivateMessage() {
                 <div className={`info`}>
 
                     <div className={`bloc-friend-addfriend`}>
-                        <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter Amis</div>
+                        <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
                         <div className={`border-bottom`}></div>
                         <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
                     </div>
@@ -228,7 +228,7 @@ export default function PrivateMessage() {
                 <div className={`display-screen`}>
                     <div className={`border-left`}></div>
 
-                    {goToAction && goToAction == 1 ? <AjouterAmis /> : <Amis /> }
+                    {goToAction && (goToAction == 1 ? <AjouterAmis /> : <Amis />)}
                     {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
                 
                 </div>
