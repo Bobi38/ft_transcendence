@@ -21,7 +21,9 @@
     "qrcode": "1.5.4",
     "sequelize": "^6.37.1",
     "validator": "^13.15.26",
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "colyseus": "^0.17.0",
+    "@colyseus/schema": "^4.0.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",

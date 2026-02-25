@@ -15,6 +15,12 @@ export default defineConfig({
       '/ws': { // si tu utilises WebSocket
         target: 'ws://localhost:9000',
         ws: true,
+        changeOrigin: true,
+      },
+      '/game': {
+        target: 'ws://localhost:9000',
+        ws: true,
+        changeOrigin: true,
       },
     },
   },

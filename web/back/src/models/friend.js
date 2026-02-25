@@ -12,6 +12,14 @@ const Friend = sequelize.define('friend', {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+  },
+  State: {
+    type: DataTypes.BOOLEEN,
+    defaultValue: false,
+  },
+  WhoAsk: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }
 }, {
   tableName: 'friend',
@@ -26,5 +34,6 @@ const Friend = sequelize.define('friend', {
 
 User.belongsToMany(User, {through: Friend,as: 'Friends',foreignKey: 'Friend1',otherKey: 'Friend2'});
 User.belongsToMany(User, {through: Friend,as: 'FriendOf',foreignKey: 'Friend2',otherKey: 'Friend1'});
+Friend.belongsTo(User, { as: 'Requester', foreignKey: 'WhoAsk' });
 
 export default Friend;
