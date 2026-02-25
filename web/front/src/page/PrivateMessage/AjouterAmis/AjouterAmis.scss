@@ -2,9 +2,38 @@
 //    var.$border_value;
 
 @use "STYLE/_mixin" as mix;
-   @include mix.full;
+//    @include mix.full;
 
 .AjouterAmis-root{
     @include mix.full;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .add{
+        @include mix.fullw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        // form{
+        //     display: flex;
+        //     input{
+        //         flex: 1
+        //     }
+        // }
+    }
+    .response{
+        @include mix.full;
+        .one-response{
+            padding: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
 
+            .div-btn{
+                display: flex;
+                flex-direction: row;
+            }
+        }
+    }
 }

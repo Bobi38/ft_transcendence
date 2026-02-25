@@ -15,7 +15,7 @@ import Amis from "./Amis/Amis.jsx"
 
 export default function PrivateMessage() { 
     
-    const [goToAction, setGoToAction] = useState(3)                                                   // info  Amis / Ajouter un Amis
+    const [goToAction, setGoToAction] = useState(2)                                                   // info  Amis / Ajouter un Amis
     const [goToConv, setGoToConv] = useState(null)                                                    // changer de conv private
     const [displayedInfoConv, setDisplayedInfoConv] = useState([{login: "titi"},{login: "tata"}]);    // la liste des conv private
 
@@ -191,12 +191,13 @@ export default function PrivateMessage() {
 
                     <div className={`bloc-friend-addfriend`}>
                         <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
-                        <div className={`border-bottom`}></div>
+                        {/* <div className={`border-bottom`}></div> */}
+                        <hr/>
                         <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}
-                    <div className={`border-bottom-big`}></div>
+                    <hr className={`big`}/>
     {/* ------------------------------------------------------------------------------ */}
 
                     <div className={`bloc-friend-message`}>
@@ -221,14 +222,14 @@ export default function PrivateMessage() {
 {/* ------------------------------------------------------------------------------------------- */}
 
     {/* ------------------------------------------------------------------------------ */}
-                <div className={`border-left`}></div>
+                <hr className={`big`}/>
     {/* ------------------------------------------------------------------------------ */}
 
 {/* ------------------------------------------------------------------------------------------- */}
                 <div className={`display-screen`}>
                     <div className={`border-left`}></div>
 
-                    {goToAction && (goToAction == 1 ? <AjouterAmis /> : <Amis />)}
+                    {goToAction && goToAction == 1 ? <AjouterAmis /> : <Amis />}
                     {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
                 
                 </div>
