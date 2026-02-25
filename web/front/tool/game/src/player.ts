@@ -1,4 +1,4 @@
-import { Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector3 } from "@babylonjs/core";
+import { Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 
 export class Player extends TransformNode {
@@ -7,6 +7,10 @@ export class Player extends TransformNode {
     public scene: Scene;
     private _input;
     private _moveDirection: Vector3;
+
+    public mouseSpeedBuffer = [];
+    public mouseBufferSize: number = 5;
+    public prevMousePos = Vector2.Zero();
 
     public mesh: Mesh;
     public racket: TransformNode;
@@ -31,6 +35,18 @@ export class Player extends TransformNode {
         colRacketBody.shape = colRacketShape;
         colRacketBody.setMassProperties({mass: 1});
         colRacketBody.disablePreStep = false;
+        colRacketBody.setCollisionCallbackEnabled(true);
+
+        colRacketBody.getCollisionObservable().add((event) => {
+            console.log("impulse added");
+            const ballBody = event.collidedAgainst;
+            const hitDirection = event.normal.scale(-1);
+            const mouseAvgSpeed = this.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this.mouseBufferSize;
+            const power = Scalar.SmoothStep(0, 200, mouseAvgSpeed) / 20;
+            console.log(power);
+
+            ballBody.applyImpulse(hitDirection.scale(power), event.point);
+        });
 
         // this.racketAggregate = new PhysicsAggregate(scene.getNodeByName("rocketRoot") as TransformNode,
         //     PhysicsShapeType.BOX,
@@ -48,6 +64,14 @@ export class Player extends TransformNode {
     }
 
     private _updateFromMouse() {
+        const mousePos = new Vector2(this.scene.pointerX, this.scene.pointerY);
+        const mouseSpeed = Vector2.Distance(mousePos, this.prevMousePos);
+        this.mouseSpeedBuffer.push(mouseSpeed);
+        if (this.mouseSpeedBuffer.length > this.mouseBufferSize) {
+            this.mouseSpeedBuffer.shift();
+        }
+        this.prevMousePos = mousePos;
+
         const plane = Plane.FromPositionAndNormal(new Vector3(0,0,5), new Vector3(0,0,1));
         const ray = this.scene.createPickingRay(this.scene.pointerX, this.scene.pointerY,
             null, this.camera);

@@ -103,6 +103,7 @@ class App {
             PhysicsShapeType.SPHERE,
             {mass: 1, restitution: 0.8, friction: 0.1},
             this._scene);
+        shadow.addShadowCaster(ball);
         ballAggregate.body.setMotionType(PhysicsMotionType.DYNAMIC);
     }
 
