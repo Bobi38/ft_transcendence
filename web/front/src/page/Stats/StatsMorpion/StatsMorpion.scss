@@ -8,20 +8,25 @@ $width_game_winrate: 100% - $width_history;
     display: flex;
     flex-direction: row;
 
-    .history , .game-winrate {
+    .history-container , .game-winrate {
         height: 100%;
-        padding: 0.5rem;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 5px;
     }
 
-    .history {
+    .history-container {
         width: $width_history;
         padding-right: 0;
 
         overflow-y: auto;
         scrollbar-width: thin;
+        display: flex;
+        flex-direction: column;
+        
+        .history-card-container{
+            flex: 1;
+        }
 
     }
     
