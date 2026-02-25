@@ -139,6 +139,9 @@ app.use(session({
 }))
 app.use('/api', router);
 
+// import newrouter from './routes/index.js';
+// app.use('/newapi', newrouter);
+
 if (isDev) {
   
   console.log("JE SUIS DEVVVVVVVVVv")

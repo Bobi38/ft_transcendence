@@ -84,15 +84,18 @@ export default function StatsMorpion() {
     //     }
     // }
 
-     async function fetch_stats() {
+     async function fetch_stats(page_nb) {
+
         console.log("fetch_stats(1) called");
 
         try{
-            const reponse = await fetch('/api/get_morpion_stat', {
+            const reponse = await fetch(`/api/get_morpion_stat/${page_nb}`, {
+            // const reponse = await fetch(`/api/get_morpion_stat?page=${page_nb}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
             });
+            console.log("fetch_stats(1.5) ", reponse);
             const repjson = await reponse.json();
             if (repjson.success){
                 console.log("fetch_stats(2) success stat_user: " , repjson.stat_user);
@@ -100,10 +103,12 @@ export default function StatsMorpion() {
             } else
                 console.error("fetch_stats(4) Error back ", repjson.message);
         }catch(error){
-            console.error("fetch_stats(5) Error front: ", err);
+            console.error("fetch_stats(5) Error front: ", error);
         }
     }
-fetch_stats();
+
+    fetch_stats(1);
+
     return (
         <div className={`StatsMorpion-root border-base`}>
 
