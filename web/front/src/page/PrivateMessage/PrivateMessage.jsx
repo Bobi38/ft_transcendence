@@ -44,12 +44,12 @@ export default function PrivateMessage() {
         }
     }
 
-    async function add_friend(){ //socket?
+    async function add_friend(name){ //socket?
         // console.log("fetch_all_connected(1) called");
         try{
 
-            const rep = await fetch('/api/add_friend', {
-                method: "POST",
+            const rep = await fetch('/api/add_friend/${name}', {
+                method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 //body: 
