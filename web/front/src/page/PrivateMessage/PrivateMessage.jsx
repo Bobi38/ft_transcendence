@@ -17,14 +17,14 @@ export default function PrivateMessage() {
     
     const [goToAction, setGoToAction] = useState(1)                                                   // info  Amis / Ajouter un Amis
     const [goToConv, setGoToConv] = useState(null)                                                    // changer de conv private
-    const [displayedInfoConv, setDisplayedInfoConv] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
+    const [displayedInfoConv, setDisplayedInfoConv] = useState([{login: "titi"},{login: "tata"}]);    // la liste des conv private
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
     const [input, setInput] = useState("");
     
     
     async function fetch_go_to_conv_private (){
-        console.log("fetch_go_to_conv_private(1) called");
+        // console.log("fetch_go_to_conv_private(1) called");
         try{
 
             const rep = await fetch('/api/fetchConv', {
@@ -33,15 +33,15 @@ export default function PrivateMessage() {
                 credentials: "include",
             });
             
-            console.log("fetch_go_to_conv_private(2) after fetch");
+            // console.log("fetch_go_to_conv_private(2) after fetch");
             const repjson = await rep.json();
             if (repjson.success){
-                console.log("fetch_go_to_conv_private(3) success");
+                // console.log("fetch_go_to_conv_private(3) success");
 
                 const chats = repjson.message;
-                console.log("fetch_go_to_conv_private(info) ", chats[0].PrivMesses[0].contenu)
-                console.log("fetch_go_to_conv_private(info) ", chats[1].PrivMesses[0].contenu)
-                console.log("fetch_go_to_conv_private(info) test join ", chats[0].user1.name);
+                // console.log("fetch_go_to_conv_private(info) ", chats[0].PrivMesses[0].contenu)
+                // console.log("fetch_go_to_conv_private(info) ", chats[1].PrivMesses[0].contenu)
+                // console.log("fetch_go_to_conv_private(info) test join ", chats[0].user1.name);
                 //Chat est un tableau 0-1-2-3-....
                 //chaque partie du tableau est le dernier message d une conversation
                 //PrivMesses est un tableau d une taille de 1 car qu un seul message
@@ -50,10 +50,10 @@ export default function PrivateMessage() {
                 // il faudra donc checker chaque chat[i] pour savoir si me est .user1 ou .user2 et mettre a jour la colonne des conversation
                 // puis setDisplayedInfoConv
             }else {
-                console.log("fetch_go_to_conv_private(4) error back ", repjson.message);
+                // console.log("fetch_go_to_conv_private(4) error back ", repjson.message);
             }
         }catch(err){
-            console.log("fetch_go_to_conv_private(5) error front ", err);
+            // console.log("fetch_go_to_conv_private(5) error front ", err);
         }
     }
     
@@ -69,14 +69,16 @@ export default function PrivateMessage() {
 
 
 
-    async function fetch_private_message({goToConv}) {
+    async function fetch_private_message(goToConv) {
+
+        console.log("fetch_private_message(0.5) called: ", goToConv);
 
         if (!goToConv) return;
 
         console.log("fetch_private_message(1) called: ", goToConv);
 
         const token = goToConv;
-
+        console.log("goToConv: ",goToConv)
         try{
             const reponse = await fetch('/api/get_chat_private', {
                 method: "POST",
@@ -96,10 +98,11 @@ export default function PrivateMessage() {
     }
 
 
-
     useEffect(() => {
 
-        async () => { fetch_private_message({goToConv}) }
+        console.log("useEffect on est la ", goToConv);
+        fetch_private_message(goToConv);
+        // async () => { await fetch_private_message({goToConv}) }
 
 
         // if (SocketM.getState() && SocketM.getState() === "closed") {
@@ -109,11 +112,11 @@ export default function PrivateMessage() {
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.login === goToConv)
-                setDisplayedMessages(prevMessages => [...prevMessages, data]);
-            else
-                setDisplayedInfoConv();
-                //ici nous recevrons un message ne venant pas de la conversation qui est ouverte
-                // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
+                setDisplayedMessages(prev => [...prev, data]);
+        fetch_go_to_conv_private(); // no need for async IIFE here 
+            // (async () => {await fetch_go_to_conv_private();})();// its ok for now
+            //ici nous recevrons un message ne venant pas de la conversation qui est ouverte
+            // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
         
         }
         SocketM.onPriv(handle_private_message);
