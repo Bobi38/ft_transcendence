@@ -630,7 +630,7 @@ router.post('/fetchConv', async (req, res) => {
 });
 
 
-
+//const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
 router.get('/get_morpion_stat/:page', async (req, res) => {
     try{
         console.log("API get_morpion_stat(1) called");

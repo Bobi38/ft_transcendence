@@ -143,10 +143,15 @@ app.use('/api', router);
 // app.use('/newapi', newrouter);
 
 if (isDev) {
-  
-  console.log("JE SUIS DEVVVVVVVVVv")
-  app.use('/', async (req,res) => createProxyMiddleware({target: 'http://localhost:5173',changeOrigin: true, ws: true,})
-    );
+  console.log("JE SUIS DEV");
+
+  const viteProxy = createProxyMiddleware({
+    target: 'http://localhost:5173',
+    changeOrigin: true,
+    ws: true,
+  });
+
+  app.use('/', viteProxy);
 } else {
   console.log("JE SUIS PROOOOOOOOOODDDDDDDDDDDd")
   // 🔹 En prod : servir le dist
