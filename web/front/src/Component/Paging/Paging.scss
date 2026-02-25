@@ -7,11 +7,10 @@
 .Paging-root{
 
     width: var.$root_width;
-    height: var.$root_height;
+    height: 28px;
 
     nav {
-        // border-top: 1px solid #eeeeee;
-        font: 1.2rem sans-serif;
+        font: 1rem sans-serif;
         
         display: flex;
         justify-content: center;
@@ -21,16 +20,14 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            display: flex;
 
-            li {
-                margin: 0 1px;
-            }
+            display: flex;
+            gap: 1px;
 
             button {
 
                 display: block;
-                padding: 0.5rem 1rem;
+                padding: 0.25rem 0.5rem;
                 border: 1px solid #999999;
                 border-radius: 0.2rem;
                 text-decoration: none;
