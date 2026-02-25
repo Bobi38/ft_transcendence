@@ -21,6 +21,7 @@ export default defineConfig({
   resolve: {
     alias: {
       'FRONT': path.resolve(__dirname, './src'),
+      'COMP': path.resolve(__dirname, './src/Component'),
       'BACK': path.resolve(__dirname, '/app/back/src'),
       'STYLE': path.resolve(__dirname, './src/style'),
     },

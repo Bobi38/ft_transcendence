@@ -1,8 +1,15 @@
+/* extern */
+import { useEffect, useState } from "react";
+
+/* back */
+// import checkCo from "BACK/fct1.js"
+
 /* Css */
 import "./StatsMorpion.scss";
 
 /* Components */
-    
+import Paging from "COMP/Paging/Paging.jsx";    
+
 export default function StatsMorpion() {
 
     // const data = {
@@ -84,7 +91,10 @@ export default function StatsMorpion() {
     //     }
     // }
 
-     async function fetch_stats(page_nb) {
+    const [currentPage, setCurrentPage] = useState("");
+
+
+    async function fetch_stats(page_nb) {
 
         console.log("fetch_stats(1) called");
 
@@ -114,47 +124,7 @@ export default function StatsMorpion() {
 
                 <div className={`history border-red`}>
 
-                    {/* <h1>history function call</h1> */}
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-                    <div className={`border-blue `}>history</div>
-
+                    <Paging currentPage={currentPage} setCurrentPage={setCurrentPage}/>
                 </div>
 
 {/* ------------------------------------------------------------------------ */}
