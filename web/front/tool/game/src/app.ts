@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsAggregate, PhysicsShapeType, PhysicsMotionType } from "@babylonjs/core";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -95,12 +95,23 @@ class App {
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
 
-        this._player = new Player(this.assets, scene, shadow, this._input);
+        this._player = new Player(this.assets, scene, shadow, this._input)
+        
+        const ball = MeshBuilder.CreateSphere("ball", {diameter: 1}, this._scene);
+        ball.position = new Vector3(0,3,4);
+        const ballAggregate = new PhysicsAggregate(ball,
+            PhysicsShapeType.SPHERE,
+            {mass: 1, restitution: 0.8, friction: 0.1},
+            this._scene);
+        ballAggregate.body.setMotionType(PhysicsMotionType.DYNAMIC);
     }
 
     private async _loadCharacterAssets(scene: Scene) {
         async function loadCharacter(): Promise<{mesh: Mesh}> {
             let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, scene);
+
+            body.isVisible = false;
+
             body.position = new Vector3(0,1.5,0);
             let bodymtl = new StandardMaterial("red", scene);
             bodymtl.diffuseColor = Color3.Red();
@@ -114,12 +125,18 @@ class App {
             stick.position._y = 0.4;
             const racket = MeshBuilder.CreateCylinder("racket", {diameter: 1, height: 0.2});
             racket.position._y = 0.7;
-            racket.rotation = new Vector3(Math.PI / 2, 0, 0);
-
+            //racket.rotation = new Vector3(Math.PI / 2, 0, 0);
+            racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
+            
+            let racketRoot = new TransformNode("racketRoot", scene);
+    
             racket.parent = stick;
             stick.parent = hand;
-            hand.parent = hand_node;
+            hand.parent = racketRoot;
+            racketRoot.parent = hand_node;
             hand_node.parent = body;
+
+            
             return { mesh: body};
         }
         return loadCharacter().then((assets) => {

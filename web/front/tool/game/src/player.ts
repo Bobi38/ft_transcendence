@@ -1,4 +1,4 @@
-import { Axis, Mesh, PhysicsAggregate, PhysicsMotionType, PhysicsShapeType, Plane, Quaternion, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector3 } from "@babylonjs/core";
+import { Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 
 export class Player extends TransformNode {
@@ -9,7 +9,8 @@ export class Player extends TransformNode {
     private _moveDirection: Vector3;
 
     public mesh: Mesh;
-    public racket: Mesh;
+    public racket: TransformNode;
+    public racketAggregate: PhysicsAggregate;
     public hand_node: TransformNode;
 
     constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, input? : PlayerInput) {
@@ -19,15 +20,27 @@ export class Player extends TransformNode {
         this.mesh.parent = this;
         this._setupPlayerCamera();
 
-        this.racket = (scene.getMeshByName("hand") as Mesh);
+        this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
         this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
         shadowGenerator.addShadowCaster(assets.mesh, true);
         this._input = input;
 
-        //const racketAggregate = new PhysicsAggregate(this.racket,
-        //    PhysicsShapeType.BOX,
-        //    {mass: 0, restitution: 1.2, friction: 0.5}, this.scene);
-        //racketAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
+        const colRacketShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(),
+            new Vector3(1.5, 2.5, 0.5), scene);
+        const colRacketBody = new PhysicsBody(this.racket, PhysicsMotionType.ANIMATED, false, scene);
+        colRacketBody.shape = colRacketShape;
+        colRacketBody.setMassProperties({mass: 1});
+        colRacketBody.disablePreStep = false;
+
+        // this.racketAggregate = new PhysicsAggregate(scene.getNodeByName("rocketRoot") as TransformNode,
+        //     PhysicsShapeType.BOX,
+        //     {extents: new Vector3(1.5, 2.5, 1), 
+        //     mass: 0, restitution: 1.2, friction: 0.5}, this.scene);
+        // this.racketAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
+        // this.racketAggregate.body.disablePreStep = false;
+
+        const physicsViewer = new PhysicsViewer(this.scene);
+        physicsViewer.showBody(colRacketBody);
     }
 
     private _updateFromControls() {
