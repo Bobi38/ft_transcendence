@@ -80,7 +80,7 @@ export default function PrivateMessage() {
         // console.log("fetch_all_connected(1) called");
         try{
 
-            const rep = await fetch('/api/add_friend/${name}', {
+            const rep = await fetch('/api/dlt_friend/${name}', {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
@@ -98,7 +98,7 @@ export default function PrivateMessage() {
                 // cted(3) error back ", repjson.message);
             }
             if(repjson.message === "relation"){
-                console,log("people are already friend");
+                console,log("people are not friend");
             }
             else{
                 console.log("errrrror back ", repjson.message);

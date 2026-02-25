@@ -736,6 +736,26 @@ router.get('/add_friend:name', async (req, res) => {
 	}
 })
 
+router.get('/dlt_friend:name', async (req, res) => {
+	try{
+		const name = parseInt(req.params.name) || null;
+		if (!name)
+			return res.status(500).json({success: false, message: "no name"});
+		const token = req.cookies.token;
+    	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+		const nfriend = await User.findOne({where: {name: name}});
+		if (!nfriend)
+			return res.status(500).json({success: false, message: "exist"});
+		const relation = await Friend.destroy({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
+		if (relation === 0)
+			return res.status(500).json({success: false, message: "relation"});
+		return res.status(201).json({success: true});
+	}catch(err){
+		return res.status(500).json({success: false, message: "err back add_friend ", err});
+	}
+})
+
 export {secret_chat};
 export {secret};
 export { checktok };
