@@ -11,12 +11,12 @@ import "./Paging.scss";
 
 
     
-export default function Paging({currentPage , setCurrentPage}) {
+export default function Paging({currentPage , setNewPage}) {
 
     const change_page = (arg) => {
         
         console.log("change_page(1) go to:", arg)
-        setCurrentPage(arg)
+        setNewPage(arg)
     }
 
     return (
