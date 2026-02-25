@@ -13,6 +13,91 @@ import "./AjouterAmis.scss";
 
 export default function AjouterAmis() {
 
+    async function add_friend(name){ //socket?
+        // console.log("add_friend(1) called");
+        try{
+
+            const rep = await fetch(`/api/add_friend?name=${name}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            
+            // console.log("add_friend(2) after fetch");
+            const repjson = await rep.json();
+            if (repjson.success){
+                console.log("good");
+            }
+            if (repjson.message === "exist"){
+                console.log("people not exist");
+                // console.log("fetch_all_conne
+                // cted(3) error back ", repjson.message);
+            }
+            if(repjson.message === "relation"){
+                console,log("people are already friend");
+            }
+            else{
+                console.log("errrrror back ", repjson.message);
+            }
+        }catch(err){
+            console.log("add_friend(4) error front ", err);
+        }
+    }
+
+
+
+    async function fetch_all_request_friend(){ // with co or not
+        console.log("fetch_all_request_friend(1) called");
+        try{
+
+            const rep = await fetch('/api/all_request_friend', {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            
+            // console.log("fetch_all_request_friend(2) after fetch");
+            const repjson = await rep.json();
+
+            if (repjson.success){
+                // setResponseFriendArray(repjson.message)
+                console.log("success")
+
+            }else {
+                console.log("fetch_all_request_friend(3) error back ", repjson.message);
+            }
+        }catch(err){
+            console.log("fetch_all_request_friend(4) error front ", err);
+        }
+    }
+
+
+    async function fetch_response_friend_request(){ // with co or not
+        console.log("fetch_all_request_friend(1) called");
+        try{
+
+            const rep = await fetch('/api/all_request_friend', {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            
+            // console.log("fetch_all_request_friend(2) after fetch");
+            const repjson = await rep.json();
+
+            if (repjson.success){
+                // setResponseFriendArray(repjson.message)
+                console.log("success")
+
+            }else {
+                console.log("fetch_all_request_friend(3) error back ", repjson.message);
+            }
+        }catch(err){
+            console.log("fetch_all_request_friend(4) error front ", err);
+        }
+    }
+
+
     const [addFriend, setAddFriend] = useState(null);
     const [responseFriend, setResponseFriend] = useState(null);
     const [responseFriendArray, setResponseFriendArray] = useState([{ login: "titi" },{ login: "tata" }]);

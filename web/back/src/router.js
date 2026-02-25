@@ -698,26 +698,27 @@ const result = await User.findAll({
 					where: { id: decoded.id },
 					include: [{
 						model: User,
-						as: 'Friends',     // <--- ici
+						as: 'Friends',
 						through: { where: { State: true }, attributes: [] },
-						required: false},
+						required: false
+          },
 					{
 						model: User,
 						as: 'FriendOf',
 						through: { where: { State: true }, attributes: [] },
 						required: false
-					}]});
+					},]});
     console.log("2 f");
     console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
-    return res.status(201).json({success: true, f: result});
+    return res.status(201).json({success: true, message: result});
   }catch(err){
     return res.status(500).json({success: false, message: "err all_friend back ", err});
   }
 })
 
-router.get('/add_friend:name', async (req, res) => {
+router.get('/add_friend', async (req, res) => {
 	try{
-		const name = parseInt(req.params.name) || null;
+		const name = parseInt(req.query.name) || null;
 		if (!name)
 			return res.status(500).json({success: false, message: "no name"});
 		const token = req.cookies.token;
@@ -736,9 +737,9 @@ router.get('/add_friend:name', async (req, res) => {
 	}
 })
 
-router.get('/dlt_friend:name', async (req, res) => {
+router.get('/dlt_friend', async (req, res) => {
 	try{
-		const name = parseInt(req.params.name) || null;
+		const name = parseInt(req.query.name) || null;
 		if (!name)
 			return res.status(500).json({success: false, message: "no name"});
 		const token = req.cookies.token;
