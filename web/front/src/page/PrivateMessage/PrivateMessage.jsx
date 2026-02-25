@@ -44,12 +44,12 @@ export default function PrivateMessage() {
         }
     }
 
-    async function add_friend(){ //socket?
+    async function add_friend(name){ //socket?
         // console.log("fetch_all_connected(1) called");
         try{
 
-            const rep = await fetch('/api/add_friend', {
-                method: "POST",
+            const rep = await fetch('/api/add_friend/${name}', {
+                method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 //body: 
@@ -58,11 +58,53 @@ export default function PrivateMessage() {
             // console.log("fetch_all_connected(2) after fetch");
             const repjson = await rep.json();
             if (repjson.success){
-            }else {
-                // console.log("fetch_all_connected(3) error back ", repjson.message);
+                console.log("good");
+            }
+            if (repjson.message === "exist"){
+                console.log("people not exist");
+                // console.log("fetch_all_conne
+                // cted(3) error back ", repjson.message);
+            }
+            if(repjson.message === "relation"){
+                console,log("people are already friend");
+            }
+            else{
+                console.log("errrrror back ", repjson.message);
             }
         }catch(err){
-            // console.log("fetch_all_connected(4) error front ", err);
+            console.log("fetch_all_connected(4) error front ", err);
+        }
+    }
+
+    async function dlt_friend(name){ //socket?
+        // console.log("fetch_all_connected(1) called");
+        try{
+
+            const rep = await fetch('/api/dlt_friend/${name}', {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+                //body: 
+            });
+            
+            // console.log("fetch_all_connected(2) after fetch");
+            const repjson = await rep.json();
+            if (repjson.success){
+                console.log("good");
+            }
+            if (repjson.message === "exist"){
+                console.log("people not exist");
+                // console.log("fetch_all_conne
+                // cted(3) error back ", repjson.message);
+            }
+            if(repjson.message === "relation"){
+                console,log("people are not friend");
+            }
+            else{
+                console.log("errrrror back ", repjson.message);
+            }
+        }catch(err){
+            console.log("fetch_all_connected(4) error front ", err);
         }
     }
 

@@ -616,7 +616,7 @@ router.get('/fetchConv', async (req, res) => {
         const decoded = jwt.verify(token, secret);
         const result = await User.findOne({ where: { id: decoded.id } });
         console.log("rest   ", result.id);
-        const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+        const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name', 'co'] },{ model: User, as: 'user2', attributes: ['id', 'name', 'co'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
         console.log("API fetchConv chat 1 ", chats[0].PrivMesses[0].contenu)
         console.log("API fetchConv chat 2 ", chats[1].PrivMesses[0].contenu)
         console.log("API fetchConv test join ", chats[0].user1.name);
@@ -715,20 +715,46 @@ const result = await User.findAll({
   }
 })
 
-// router.get('/add_friend', async (req, res) => {
-// 	try{
-// 		const name = parseInt(req.params.name) || null;
-// 		if (!name)
-// 			return res.status(500).json({success: false, message: "exist"});
-// 		const token = req.cookies.token;
-//     	const decoded = jwt.verify(token, secret);
-// 		const result = await User.findOne({ where: { id: decoded.id } });
-// 		const nfriend = await User.findOne({where: {name: name}});
-// 		if (!nfriend)
-// 			return res.status(500).json({success: false, message: "exist"});
-// 		const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
-// 	}
-// })
+router.get('/add_friend:name', async (req, res) => {
+	try{
+		const name = parseInt(req.params.name) || null;
+		if (!name)
+			return res.status(500).json({success: false, message: "no name"});
+		const token = req.cookies.token;
+    	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+		const nfriend = await User.findOne({where: {name: name}});
+		if (!nfriend)
+			return res.status(500).json({success: false, message: "exist"});
+		const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
+		if (relation.length > 0)
+			return res.status(500).json({success: false, message: "relation"});
+		await Friend.create({Friend1: decoded.id, Friend2: nfriend.id, State: false, WhoAsk: decoded.id});
+		return res.status(201).json({success: true});
+	}catch(err){
+		return res.status(500).json({success: false, message: "err back add_friend ", err});
+	}
+})
+
+router.get('/dlt_friend:name', async (req, res) => {
+	try{
+		const name = parseInt(req.params.name) || null;
+		if (!name)
+			return res.status(500).json({success: false, message: "no name"});
+		const token = req.cookies.token;
+    	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+		const nfriend = await User.findOne({where: {name: name}});
+		if (!nfriend)
+			return res.status(500).json({success: false, message: "exist"});
+		const relation = await Friend.destroy({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
+		if (relation === 0)
+			return res.status(500).json({success: false, message: "relation"});
+		return res.status(201).json({success: true});
+	}catch(err){
+		return res.status(500).json({success: false, message: "err back add_friend ", err});
+	}
+})
 
 export {secret_chat};
 export {secret};
