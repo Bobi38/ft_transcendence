@@ -77,7 +77,9 @@ export class App {
         const environment = new Environment(scene);
         this._environment = environment;
 
-        const havokInstance = await HavokPhysics();
+        const havokInstance = await HavokPhysics({
+            locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
+        });
         const havokPlugin = new HavokPlugin(true, havokInstance);
         this._scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
         

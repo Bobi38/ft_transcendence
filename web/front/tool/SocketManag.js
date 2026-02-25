@@ -123,10 +123,9 @@ class SocketManag{
     disco(){
         this.reco = false;
         this.id = null;
-        if (this.socket){
+        if (this.socket.readyState == WebSocket.OPEN)
             this.socket.close();
-            this.socket = null;
-        }
+        this.socket = null;
     }
     getState(){
         if (this.socket)

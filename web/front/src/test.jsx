@@ -3,7 +3,7 @@ import { App as GameApp } from "./game/app.ts";
 
 export default function Test() {
     console.log("ocuocu");
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
