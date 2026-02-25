@@ -15,13 +15,68 @@ import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 
 export default function PrivateMessage() { 
     
-    const [goToAction, setGoToAction] = useState(1)                                                   // info  Amis / Ajouter un Amis
+    const [goToAction, setGoToAction] = useState(3)                                                   // info  Amis / Ajouter un Amis
     const [goToConv, setGoToConv] = useState(null)                                                    // changer de conv private
     const [displayedInfoConv, setDisplayedInfoConv] = useState([{login: "titi"},{login: "tata"}]);    // la liste des conv private
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
     const [input, setInput] = useState("");
     
+    async function fetch_all_friend(){ // with co or not
+        // console.log("fetch_all_friend(1) called");
+        try{
+
+            const rep = await fetch('/api/all_friend', {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            
+            // console.log("fetch_all_friend(2) after fetch");
+            const repjson = await rep.json();
+            if (repjson.success){
+            }else {
+                // console.log("fetch_all_friend(3) error back ", repjson.message);
+            }
+        }catch(err){
+            // console.log("fetch_all_friend(4) error front ", err);
+        }
+    }
+
+    async function add_friend(){ //socket?
+        // console.log("fetch_all_connected(1) called");
+        try{
+
+            const rep = await fetch('/api/', {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            
+            // console.log("fetch_all_connected(2) after fetch");
+            const repjson = await rep.json();
+            if (repjson.success){
+            }else {
+                // console.log("fetch_all_connected(3) error back ", repjson.message);
+            }
+        }catch(err){
+            // console.log("fetch_all_connected(4) error front ", err);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     async function fetch_go_to_conv_private (){
         // console.log("fetch_go_to_conv_private(1) called");
@@ -113,7 +168,7 @@ export default function PrivateMessage() {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.login === goToConv)
                 setDisplayedMessages(prev => [...prev, data]);
-        fetch_go_to_conv_private(); // no need for async IIFE here 
+            fetch_go_to_conv_private(); // no need for async IIFE here 
             // (async () => {await fetch_go_to_conv_private();})();// its ok for now
             //ici nous recevrons un message ne venant pas de la conversation qui est ouverte
             // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
@@ -135,9 +190,9 @@ export default function PrivateMessage() {
                 <div className={`info`}>
 
                     <div className={`bloc-friend-addfriend`}>
-                        <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Amis</div>
+                        <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter Amis</div>
                         <div className={`border-bottom`}></div>
-                        <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Ajouter un Amis</div>
+                        <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}
@@ -173,13 +228,7 @@ export default function PrivateMessage() {
                 <div className={`display-screen`}>
                     <div className={`border-left`}></div>
 
-                    {/* {{goToAction &&
-
-                    switch (goToAction)
-                    <Amis /> 
-                    <AjouterAmis />
-
-                    }} */}
+                    {goToAction && goToAction == 1 ? <AjouterAmis /> : <Amis /> }
                     {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
                 
                 </div>

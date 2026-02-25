@@ -460,7 +460,7 @@ router.post('/get_chat_private', async (req, res) => {
         if (findchat === 0)
             return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
         const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
-        const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id,co: true}});
+        const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id}});
         let ret = "";
         if (conv.length - 1 != 0)
             ret = maj_conv(id1.id, conv, name);
