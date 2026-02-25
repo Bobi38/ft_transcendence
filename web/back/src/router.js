@@ -448,26 +448,26 @@ router.post('/add_message_private', async (req, res) => {
   }
 });
 
-router.get('/get_chat_private', async (req, res) => {
-  try{
-    const {tok2} = req.body;
-    const tok1 = req.cookies.token;
-    const id1 = jwt.verify(tok1, secret);
-    const id2 = await User.findOne({ where: { name: tok2}});
-    if (id2 === 0)
-      return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
-    if (findchat === 0)
-        return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
-    const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
-    const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id,co: true}});
-    let ret = "";
-    if (conv.length - 1 != 0)
-      ret = maj_conv(id1.id, conv, name);
-    res.status(201).json({success: true, message: ret});
-  }catch(err){
-    res.status(500).json({success: false, message: err});
-  }
+router.post('/get_chat_private', async (req, res) => {
+    try{
+        const {token} = req.body;
+        const my_token = req.cookies.token;
+        const id1 = jwt.verify(my_token, secret);
+        const id2 = await User.findOne({ where: { name: token}});
+        if (id2 === 0)
+            return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+        const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
+        if (findchat === 0)
+            return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
+        const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
+        const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id}});
+        let ret = "";
+        if (conv.length - 1 != 0)
+            ret = maj_conv(id1.id, conv, name);
+        res.status(201).json({success: true, message: ret});
+    }catch(err){
+        res.status(500).json({success: false, message: err});
+    }
 })
 
 
@@ -609,24 +609,22 @@ router.get('/github/callback', async (req, res) => {
 });
 
 
-router.post('/fetchConv', async (req, res) => {
-  try{
-    const {input} = req.body
-    console.log("in fectch ", input)
-    // const token = req.cookies.token;
-    // const decoded = jwt.verify(token, secret);
-    // const result = await User.findOne({ where: { id: decoded.id } });
-    const result = await User.findOne({where :{name: input}});
-    console.log("rest   ", result.id);
-    const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
-    console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
-    console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
-    console.log("test join ", chats[0].user1.name);
-    return res.status(201).json({success: true, message: chats});
-  }catch(err){
-    console.log(err);
-    return res.status(500).json({success: false, message: err});
-  }
+router.get('/fetchConv', async (req, res) => {
+    console.log("API fetchConv called")
+    try{
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, secret);
+        const result = await User.findOne({ where: { id: decoded.id } });
+        console.log("rest   ", result.id);
+        const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+        console.log("API fetchConv chat 1 ", chats[0].PrivMesses[0].contenu)
+        console.log("API fetchConv chat 2 ", chats[1].PrivMesses[0].contenu)
+        console.log("API fetchConv test join ", chats[0].user1.name);
+        return res.status(201).json({success: true, message: chats});
+    }catch(err){
+        console.log("API fetchConv error: ",err);
+        return res.status(500).json({success: false, message: err});
+    }
 });
 
 

@@ -1,6 +1,6 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SocketM } from "../tool/SocketManag";
+import SocketM  from "../tool/SocketManag";
 import { useEffect } from "react";
 
 /* back */
@@ -30,7 +30,8 @@ import MorpionTraining  from    "FRONT/page/Game/Morpion/MorpionTraining.jsx";
 export default function App() {
 
   useEffect(() => {
-    SocketM.connect();
+    if (!SocketM.getState() || SocketM.getState() === "closed")
+      SocketM.connect();
     console.log("App.jsx useEffect(1) SocketM.connect() called");
     return () => {
       SocketM.disco();

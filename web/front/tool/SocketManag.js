@@ -128,10 +128,13 @@ class SocketManag{
         this.socket = null;
     }
     getState(){
+        console.log("i m in GETSTATE SOCKET");
         if (this.socket)
             return this.socket.readyState;
         return null;
     }
 }
 
-export const SocketM = new SocketManag();
+const SocketM = new SocketManag();
+
+export default SocketM;

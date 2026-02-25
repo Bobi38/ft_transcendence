@@ -1,0 +1,50 @@
+@use "STYLE/variable" as var;
+//    var.$border_value;
+
+// @use "STYLE/_mixin" as mix;
+//    @include mix.full;
+
+.Paging-root{
+
+    width: var.$root_width;
+    height: 28px;
+
+    nav {
+        font: 1rem sans-serif;
+        
+        display: flex;
+        justify-content: center;
+        
+        .pagination {
+
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            display: flex;
+            gap: 1px;
+
+            button {
+
+                display: block;
+                padding: 0.25rem 0.5rem;
+                border: 1px solid #999999;
+                border-radius: 0.2rem;
+                text-decoration: none;
+
+            }
+
+            button[aria-current="page"] {
+
+                background-color: #333333;
+                color: white;
+                
+            }
+        }
+    }
+}
+
+
+
+
+

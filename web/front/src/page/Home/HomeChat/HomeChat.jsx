@@ -5,7 +5,7 @@ import "./HomeChat.scss";
 import { useEffect, useState } from "react";
 
 
-import { SocketM } from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/front/tool/SocketManag.js";
 import checkCo from "/app/back/src/fct1.js";
 
 export default function HomeChat() {
@@ -72,9 +72,9 @@ export default function HomeChat() {
 
             await fetch_global_message();
 
-            if (SocketM.getState() === "closed") {
-                SocketM.connect();
-            }
+            // if (SocketM.getState() && SocketM.getState() === "closed") {
+            //     SocketM.connect();
+            // }
 
             handle_global_message = (data) => {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
