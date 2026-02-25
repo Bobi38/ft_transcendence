@@ -2,22 +2,22 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import { SocketM } from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/front/tool/SocketManag.js";
 
 /* Css */
 import "./PrivateMessageConv.scss"; 
 
 /* Components */
 
-// navConv lui contient le login user
-export default function PrivateMessageConv({navConv, displayedMessages, setDisplayedMessages}) {    
+// login lui contient le login user
+export default function PrivateMessageConv({login, displayedMessages, setDisplayedMessages}) {    
 
     const [input, setInput] = useState("");
 
-    // async function fetch_private_message({navConv}) {
-    //     console.log("fetch_private_message(1) called: ", navConv);
+    // async function fetch_private_message({login}) {
+    //     console.log("fetch_private_message(1) called: ", login);
 
-    //     const tok2 = navConv;
+    //     const tok2 = login;
 
     //     try{
     //         const reponse = await fetch('/api/get_chat_private', {
@@ -45,7 +45,7 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
 
     // useEffect(() => {
 
-    //     async () => { fetch_private_message({navConv}) }
+    //     async () => { fetch_private_message({login}) }
 
 
     //     if (SocketM.getState() === "closed") {
@@ -55,25 +55,25 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
     //     const handle_private_message = (data) => {
 
     //         console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-    //         if (data.login === navConv)
+    //         if (data.login === login)
     //             setDisplayedMessages(prevMessages => [...prevMessages, data]);
     //     }
-    //     SocketM.onPriv(navConv, handle_private_message);
+    //     SocketM.onPriv(login, handle_private_message);
 
     //     return () => {
     //         SocketM.offPriv(handle_private_message);
     //     };
-    // }, [navConv]);
+    // }, [login]);
 
 
 
 
-    async function add_private_message(time, navConv){
+    async function add_private_message(time, login){
         console.log("add_private_message(1) called: ", input)
         const data = {
             message: input,
             time: time,
-            id: navConv,
+            id: login,
         }
 
         try{
@@ -102,13 +102,13 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
         if (input === "") return;
         
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: navConv}
+        const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: login}
 
         console.log("handle_submit(2): ", data);
 
         const data2 = {...data, monMsg: false};
 
-        add_private_message(time, navConv);
+        add_private_message(time, login);
 
         console.log("handle_submit(3) send via WebSocket data2:", data2);
         SocketM.sendd(data2);
@@ -119,7 +119,7 @@ export default function PrivateMessageConv({navConv, displayedMessages, setDispl
         <>
             <div className={`PrivateMessageConv-root`}>
 
-                    <h5>{navConv}</h5>
+                    <h5>{login}</h5>
 
                     <div className="message">
                         <div>
