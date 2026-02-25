@@ -198,7 +198,6 @@ export default function PrivateMessage() {
 
                     <div className={`bloc-friend-addfriend`}>
                         <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
-                        {/* <div className={`border-bottom`}></div> */}
                         <hr/>
                         <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
                         <div className="bloc-left" onClick={handletest}>test</div>
@@ -237,7 +236,8 @@ export default function PrivateMessage() {
                 <div className={`display-screen`}>
                     <div className={`border-left`}></div>
 
-                    {goToAction && goToAction == 1 ? <AjouterAmis /> : <Amis />}
+                    {goToAction === 1 && <AjouterAmis />}
+                    {goToAction === 2 && <Amis />}
                     {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
                 
                 </div>

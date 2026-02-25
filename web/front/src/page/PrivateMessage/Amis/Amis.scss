@@ -1,0 +1,19 @@
+// @use "STYLE/variable" as var;
+//    var.$border_value;
+
+@use "STYLE/_mixin" as mix;
+//    @include mix.full;
+
+.Amis-root{
+    @include mix.full;
+    padding: 0.1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    .one-friend{
+        padding: 1rem;
+
+    }
+
+}
