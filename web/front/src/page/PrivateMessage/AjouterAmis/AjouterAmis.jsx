@@ -19,7 +19,7 @@ export default function AjouterAmis() {
 
     
     return (
-        <div className={`AjouterAmis-root border-base`}>
+        <div className={`AjouterAmis-root border-blue`}>
                 <div className={`add border-red`}>
                     <form onSubmit={(e) => {e.preventDefault(); console.log("demande envoyer", addFriend)}}>
                         <input  type="text"
