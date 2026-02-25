@@ -15,33 +15,33 @@ import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 
 export default function PrivateMessage() { 
     
-    const [goToAction, setGoToAction] = useState(1)                                                         // info  Amis / Ajouter un Amis
-    const [goToConv, setGoToConv] = useState(null)                                                            // changer de conv private
+    const [goToAction, setGoToAction] = useState(1)                                                   // info  Amis / Ajouter un Amis
+    const [goToConv, setGoToConv] = useState(null)                                                    // changer de conv private
     const [displayedInfoConv, setDisplayedInfoConv] = useState([{login: "titou"},{login: "flo"}]);    // la liste des conv private
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
     const [input, setInput] = useState("");
     
     
-    async function fetch_conv_private (){
-        console.log("fetch_conv_private(1) called");
+    async function fetch_go_to_conv_private (){
+        console.log("fetch_go_to_conv_private(1) called");
         try{
 
             const rep = await fetch('/api/fetchConv', {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
-                credentials: "include",                
+                credentials: "include",
             });
             
-            console.log("fetch_conv_private(2) after fetch");
+            console.log("fetch_go_to_conv_private(2) after fetch");
             const repjson = await rep.json();
             if (repjson.success){
-                console.log("fetch_conv_private(3) success");
+                console.log("fetch_go_to_conv_private(3) success");
 
                 const chats = repjson.message;
-                console.log("fetch_conv_private(info) ", chats[0].PrivMesses[0].contenu)
-                console.log("fetch_conv_private(info) ", chats[1].PrivMesses[0].contenu)
-                console.log("fetch_conv_private(info) test join ", chats[0].user1.name);
+                console.log("fetch_go_to_conv_private(info) ", chats[0].PrivMesses[0].contenu)
+                console.log("fetch_go_to_conv_private(info) ", chats[1].PrivMesses[0].contenu)
+                console.log("fetch_go_to_conv_private(info) test join ", chats[0].user1.name);
                 //Chat est un tableau 0-1-2-3-....
                 //chaque partie du tableau est le dernier message d une conversation
                 //PrivMesses est un tableau d une taille de 1 car qu un seul message
@@ -50,16 +50,16 @@ export default function PrivateMessage() {
                 // il faudra donc checker chaque chat[i] pour savoir si me est .user1 ou .user2 et mettre a jour la colonne des conversation
                 // puis setDisplayedInfoConv
             }else {
-                console.log("fetch_conv_private(4) error back ", repjson.message);
+                console.log("fetch_go_to_conv_private(4) error back ", repjson.message);
             }
         }catch(err){
-            console.log("fetch_conv_private(5) error front ", err);
+            console.log("fetch_go_to_conv_private(5) error front ", err);
         }
     }
     
-    // useEffect(() => {
-    //     (async () => {await fetch_conv_private();})();
-    // }, []);
+    useEffect(() => {
+        (async () => {await fetch_go_to_conv_private();})();
+    }, []);
 
 
 
@@ -98,8 +98,6 @@ export default function PrivateMessage() {
 
 
     useEffect(() => {
-
-        if (!goToConv) return;
 
         async () => { fetch_private_message({goToConv}) }
 
@@ -145,7 +143,7 @@ export default function PrivateMessage() {
 
                     <div className={`bloc-friend-message`}>
                         
-                        {/* {displayedInfoConv && displayedInfoConv.map((msg, index) => (
+                        {displayedInfoConv && displayedInfoConv.map((msg, index) => (
                             <>
 
                                 <div key={index} className={`bloc-left`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
@@ -157,7 +155,7 @@ export default function PrivateMessage() {
                                 <div className={`border-bottom`}></div>
 
                             </>
-                        ))} */}
+                        ))}
 
                     </div>
 
@@ -179,7 +177,7 @@ export default function PrivateMessage() {
                     <AjouterAmis />
 
                     }} */}
-                    {/* {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> } */}
+                    {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
                 
                 </div>
 
