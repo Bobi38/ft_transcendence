@@ -123,8 +123,12 @@ export default function StatsMorpion() {
         <div className={`StatsMorpion-root border-base`}>
 
                 <div className={`history-container border-red`}>
-                    <div className={`history-card-container`}></div>
-                    <Paging currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+
+                    <div className={`history-card-container`}>
+
+                    </div>
+                    <Paging currentPage={currentPage} setNewPage={setCurrentPage}/>
+
                 </div>
 
 {/* ------------------------------------------------------------------------ */}
