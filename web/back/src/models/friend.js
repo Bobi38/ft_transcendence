@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
 import User from './user.js';
 
-const Friend = sequelize.define('friend', {
+const Friend = sequelize.define('Friend', {
   Friend1: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -14,7 +14,7 @@ const Friend = sequelize.define('friend', {
     primaryKey: true,
   },
   State: {
-    type: DataTypes.BOOLEEN,
+    type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
   WhoAsk: {
@@ -22,7 +22,7 @@ const Friend = sequelize.define('friend', {
     allowNull: false,
   }
 }, {
-  tableName: 'friend',
+  tableName: 'Friend',
   timestamps: false,
   indexes: [
     {

@@ -2,7 +2,7 @@
 //    var.$border_value;
 
 @use "STYLE/_mixin" as mix;
-   @include mix.full;
+//    @include mix.full;
 
 .AjouterAmis-root{
     @include mix.full;

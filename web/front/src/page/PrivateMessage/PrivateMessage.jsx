@@ -23,7 +23,7 @@ export default function PrivateMessage() {
     const [input, setInput] = useState("");
     
     async function fetch_all_friend(){ // with co or not
-        // console.log("fetch_all_friend(1) called");
+        console.log("fetch_all_friend(1) called");
         try{
 
             const rep = await fetch('/api/all_friend', {
@@ -35,11 +35,12 @@ export default function PrivateMessage() {
             // console.log("fetch_all_friend(2) after fetch");
             const repjson = await rep.json();
             if (repjson.success){
+                console.log("success")
             }else {
-                // console.log("fetch_all_friend(3) error back ", repjson.message);
+                console.log("fetch_all_friend(3) error back ", repjson.message);
             }
         }catch(err){
-            // console.log("fetch_all_friend(4) error front ", err);
+            console.log("fetch_all_friend(4) error front ", err);
         }
     }
 
@@ -47,10 +48,11 @@ export default function PrivateMessage() {
         // console.log("fetch_all_connected(1) called");
         try{
 
-            const rep = await fetch('/api/', {
-                method: "GET",
+            const rep = await fetch('/api/add_friend', {
+                method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
+                //body: 
             });
             
             // console.log("fetch_all_connected(2) after fetch");
@@ -181,6 +183,11 @@ export default function PrivateMessage() {
         };
 
     }, [goToConv]);
+
+    const handletest = async () =>{
+        console.log("couocu");
+        await fetch_all_friend();
+    }
     
     return (
         <>
@@ -193,6 +200,7 @@ export default function PrivateMessage() {
                         <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
                         <div className={`border-bottom`}></div>
                         <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
+                        <div className="bloc-left" onClick={handletest}>test</div>
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}

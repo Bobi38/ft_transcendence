@@ -683,13 +683,51 @@ router.get('/get_morpion_stat/:page', async (req, res) => {
 })
 
 
-// router.get('/getFriend', async (req, res) => {
-//   try{
-//     const token = req.cookies.token;
-//     const decoded = jwt.verify(token, secret);
-//     const result = await User.findAll({ where: { id: decoded.id } });
+router.get('/all_friend', async (req, res) => {
+  try{
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    console.log("1 f");
+//     const result = await User.findByPk(decoded.id, {
+//   include: [
+//     { model: User, as: 'Friends', through: { where: { State: true }, attributes: [] } },
+//     { model: User, as: 'FriendOf', through: { where: { State: true }, attributes: [] } }
+//   ]
+// });
+const result = await User.findAll({
+					where: { id: decoded.id },
+					include: [{
+						model: User,
+						as: 'Friends',     // <--- ici
+						through: { where: { State: true }, attributes: [] },
+						required: false},
+					{
+						model: User,
+						as: 'FriendOf',
+						through: { where: { State: true }, attributes: [] },
+						required: false
+					}]});
+    console.log("2 f");
+    console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
+    return res.status(201).json({success: true, f: result});
+  }catch(err){
+    return res.status(500).json({success: false, message: "err all_friend back ", err});
+  }
+})
 
-//   }
+// router.get('/add_friend', async (req, res) => {
+// 	try{
+// 		const name = parseInt(req.params.name) || null;
+// 		if (!name)
+// 			return res.status(500).json({success: false, message: "exist"});
+// 		const token = req.cookies.token;
+//     	const decoded = jwt.verify(token, secret);
+// 		const result = await User.findOne({ where: { id: decoded.id } });
+// 		const nfriend = await User.findOne({where: {name: name}});
+// 		if (!nfriend)
+// 			return res.status(500).json({success: false, message: "exist"});
+// 		const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
+// 	}
 // })
 
 export {secret_chat};

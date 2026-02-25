@@ -108,7 +108,7 @@ import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import {Server as ColyServ} from "colyseus";
-import { GameRoom } from './colyseus/GameRoom.js';
+// import { GameRoom } from './colyseus/GameRoom.js';
 import router, { checktok } from './router.js';
 import { majDb } from './fct.js';
 import { initWebSocket } from './wsserver.js';
@@ -169,8 +169,8 @@ if (isDev) {
     console.log("DB mise à jour avec succès");
 
     const server = http.createServer(app);
-    const colyseusServer = new ColyServ({ server });
-    colyseusServer.define('game_room', GameRoom);
+    // const colyseusServer = new ColyServ({ server });
+    // colyseusServer.define('game_room', GameRoom);
     initWebSocket(server);
     addDb();
     server.listen(PORT, '0.0.0.0', () => {
