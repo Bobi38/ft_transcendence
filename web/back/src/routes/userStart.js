@@ -1,9 +1,21 @@
-import router from './index.js';
 
-import User from '../models/user.js';
-import Co from '../models/connect.js';
+import 
+newrouter, 
+{
+  User,
+  Co,
+  // ChatG,
+  // PrivMess,
+  // PrivChat,
+  // Friend,
+  // PswEmail,
+  // StatMorp,
+  // GameMorp,
+  // HistoryMorp,
+}from './index.js'
 
-router.post('/login', async (req, res) => {
+
+newrouter.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -37,7 +49,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.post('/register', async (req, res) => {
+newrouter.post('/register', async (req, res) => {
     console.log("Api /register called");
   const { name, password, email } = req.body;
   try {
@@ -61,7 +73,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/logout', async (req, res) => {
+newrouter.post('/logout', async (req, res) => {
   try {
     console.log("Api /logout called");
     const token = req.cookies.token;

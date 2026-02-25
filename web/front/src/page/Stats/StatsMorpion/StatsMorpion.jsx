@@ -84,57 +84,82 @@ export default function StatsMorpion() {
     //     }
     // }
 
-    return (
-        <div className={`StatsMorpion-root`}>
+     async function fetch_stats(page_nb) {
 
-                <div className={`history`}>
+        console.log("fetch_stats(1) called");
+
+        try{
+            const reponse = await fetch(`/api/get_morpion_stat/${page_nb}`, {
+            // const reponse = await fetch(`/api/get_morpion_stat?page=${page_nb}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            console.log("fetch_stats(1.5) ", reponse);
+            const repjson = await reponse.json();
+            if (repjson.success){
+                console.log("fetch_stats(2) success stat_user: " , repjson.stat_user);
+                console.log("fetch_stats(3) success history: " , repjson.history);
+            } else
+                console.error("fetch_stats(4) Error back ", repjson.message);
+        }catch(error){
+            console.error("fetch_stats(5) Error front: ", error);
+        }
+    }
+
+    fetch_stats(1);
+
+    return (
+        <div className={`StatsMorpion-root border-base`}>
+
+                <div className={`history border-red`}>
 
                     {/* <h1>history function call</h1> */}
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
+                    <div className={`border-blue `}>history</div>
 
                 </div>
 
 {/* ------------------------------------------------------------------------ */}
 
-            <div className={`game-winrate`}>
+            <div className={`game-winrate border-yellow`}>
                     
                     <div className={`border wl-graph`}>
                         <p>Graph</p>

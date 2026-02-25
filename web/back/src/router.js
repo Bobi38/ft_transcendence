@@ -14,7 +14,7 @@ import os from 'os';
 import session from 'express-session';
 import QRCode from 'qrcode';
 import {authenticator} from 'otplib';
-import { time } from 'console';
+import { error, time } from 'console';
 
 import pool from './pool.js';
 import {majDb}  from './fct.js';
@@ -629,51 +629,59 @@ router.post('/fetchConv', async (req, res) => {
   }
 });
 
-router.get('/fetchStatMorp', async (req, res) => {
-  try{
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await User.findOne({where: {id: decoded.id}, include:[{model: StatMorp, as:'StatMorp'}]});
-    const stat ={
-      AllGame: result.StatMorp.nbGame,
-      AllWin: result.StatMorp.Win,
-      AllLost: result.StatMorp.Lost,
-      AllDraw: result.StatMorp.Draw,
-      AllAbort: result.StatMorp.Abort,
-      Diag:{
-        Win: result.StatMorp.WinDiag,
-        Lost: result.StatMorp.LostDiag,
-      },
-      Vert:{
-        Win: result.StatMorp.WinVert,
-        Lost: result.StatMorp.LostVert,
-      },
-      Horiz:{
-        Win: result.StatMorp.WinHoriz,
-        Lost: result.StatMorp.LostHoriz,
-      },
-      WinCroix: result.StatMorp.WinCroix,
-      WinCercle: result.StatMorp.WinCercle,
-      LostCroix: result.StatMorp.LostCroix,
-      LostCercle: result.StatMorp.LostCercle,
-    }
-    return res.status(201).json({success: true, stat_user: stat});
-  }catch(err){
-    return res.status(500).json({success: false, message: "err back fetchStatMorp " , err });
-  }
-})
 
-router.post('/getGameMorp', async (req, res) => {
-  try{
-    const {pas} = req.body;
-    const past = 5 * Number(pas);
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
-    return res.status(201).json({success: true, data: result});
-  }catch(err){
-    return res.status(500).json({success:false, message: "err ", err})
-  }
+//const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
+router.get('/get_morpion_stat/:page', async (req, res) => {
+    try{
+        console.log("API get_morpion_stat(1) called");
+        const page = parseInt(req.params.page) || -1;
+        console.log("API get_morpion_stat(1) params ", page);
+        // if (page == -1) throw error
+
+
+// router.get('/get_morpion_stat', async (req, res) => {
+        // const page = parseInt(req.query.page) || -1;
+        // console.log("API get_morpion_stat(1) query ", page);
+        // if (page == -1) throw error
+
+
+
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, secret);
+        console.log("API get_morpion_stat(2)");
+        const resultStats = await StatMorp.findOne({where: {idUser: decoded.id}});
+        console.log("API get_morpion_stat(3)");
+        // const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: page - 1, order:[['id', 'DESC']]})
+        // console.log("API get_morpion_stat(4)");
+        const stat = {
+            AllGame: resultStats.nbGame,
+            AllWin: resultStats.Win,
+            AllLost: resultStats.Lost,
+            AllDraw: resultStats.Draw,
+            AllAbort: resultStats.Abort,
+            Diag:{
+              Win: resultStats.WinDiag,
+              Lost: resultStats.LostDiag,
+            },
+            Vert:{
+              Win: resultStats.WinVert,
+              Lost: resultStats.LostVert,
+            },
+            Horiz:{
+              Win: resultStats.WinHoriz,
+              Lost: resultStats.LostHoriz,
+            },
+            WinCroix: resultStats.WinCroix,
+            WinCercle: resultStats.WinCercle,
+            LostCroix: resultStats.LostCroix,
+            LostCercle: resultStats.LostCercle,
+        }
+        console.log("API get_morpion_stat(5)");
+        return res.status(201).json({success: true, stat_user: stat, history: undefined});
+
+    }catch(err){
+        return res.status(500).json({success: false, message: err });
+    }
 })
 
 
@@ -714,3 +722,5 @@ telephone
 date de naissance
 photo
 */
+
+//rdata[0].

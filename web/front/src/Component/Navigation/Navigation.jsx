@@ -12,13 +12,14 @@ import NavBar from "FRONT/Component/NavBar/NavBar.jsx";
 
     
 export default function Navigation({ children }) {
+    
+    const navigate = useNavigate();
 
     const connection_check = async () => {
         if (screen == "ErrorRedir"){return}
 
         const res = await checkCo();
         if (!res){
-            const navigate = useNavigate();
             navigate('/');
         }
     };
@@ -33,7 +34,6 @@ export default function Navigation({ children }) {
         <>
             <section className={`Navigation-root`}> {/* 100vh */}
 
-                <NavBar/>
 
                 <div className={`children-container`}>
 
@@ -41,6 +41,8 @@ export default function Navigation({ children }) {
 
                 </div>
             
+                <NavBar/>
+
             </section>
         </>
 
