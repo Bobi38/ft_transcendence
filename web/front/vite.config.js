@@ -23,6 +23,7 @@ export default defineConfig({
       'FRONT': path.resolve(__dirname, './src'),
       'BACK': path.resolve(__dirname, '/app/back/src'),
       'STYLE': path.resolve(__dirname, './src/style'),
+      'MEDIA': path.resolve(__dirname, '/app/media'),
     },
   },
   css: {

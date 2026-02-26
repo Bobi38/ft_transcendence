@@ -1,7 +1,7 @@
-@use "STYLE/variable" as var;
+@use "STYLE/variable" as *;
 
 %border-base {
-  border: var.$border_value solid black;
+  border: $border_value solid black;
 }
 
 

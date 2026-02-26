@@ -7,13 +7,12 @@ import { Link } from "react-router-dom";
 import "./HomeFooter.scss"
 
 /* Components */
-
+import Button from "FRONT/Component/Button/Button"
 
 import { AUTH } from "FRONT/page/Home/Home.jsx"
 
 export default function HomeFooter({setShowLog}) {
 
-    
     function logout() {
         console.log("logout(1) called")
 
@@ -41,11 +40,9 @@ export default function HomeFooter({setShowLog}) {
         <>
             <div className={`HomeFooter-root`}>
 
-                    <Link   to={`/ContactUs`}
-                            className={``}>
-                            Contact us
-                    </Link>
-
+				<Button path={`/ContactUs`}>
+					Contact us
+				</Button>
 
                     <div className={``}>
 

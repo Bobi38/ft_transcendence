@@ -1,5 +1,5 @@
-// @use "STYLE/variable" as var;
-//    var.$border_value;
+// @use "STYLE/variable" as *;
+//    $border_value;
 
 @use "STYLE/_mixin" as mix;
 //    @include mix.full;

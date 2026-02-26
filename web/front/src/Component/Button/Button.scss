@@ -1,3 +1,15 @@
-.type0{
-    background-color: blue;
+@use "STYLE/_variable" as *;
+
+.button {
+	background-color: $active;
+	padding: 1rem 1.5rem;
+	border-radius: 50px;
+	border: 4px $active-dark solid;
+	color: white;
+	transition: all 0.2s;
+
+	&:hover, &:focus {
+		scale: 1.08;
+		border-color: $active-light;
+	}
 }
