@@ -18,6 +18,10 @@ class SocketManag{
             console.log("WebSocket déjà connecté.");
             return;
         }
+        if (this.socket && this.socket.readyState === WebSocket.CONNECTING){
+            console.log("WebSocket statu CONNECTING")
+            return ;
+        }
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host; // Inclut le port si présent
         console.log(`${protocol}//${host}/ws`);
@@ -123,16 +127,18 @@ class SocketManag{
     disco(){
         this.reco = false;
         this.id = null;
-        if (this.socket){
+        if (this.socket.readyState == WebSocket.OPEN)
             this.socket.close();
-            this.socket = null;
-        }
+        this.socket = null;
     }
     getState(){
+        console.log("i m in GETSTATE SOCKET");
         if (this.socket)
             return this.socket.readyState;
         return null;
     }
 }
 
-export const SocketM = new SocketManag();
+const SocketM = new SocketManag();
+
+export default SocketM;

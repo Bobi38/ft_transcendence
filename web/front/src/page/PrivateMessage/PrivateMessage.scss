@@ -9,11 +9,12 @@
     
     display: flex;
     flex-direction: row;
-    
-    .border-bottom {
-        border-bottom: 1px solid black;
-        padding-bottom: 0.5rem;
-        margin-bottom: 0.5rem;
+
+    hr {
+        border: 0.5px solid black;
+    }
+    .big {
+        border: 2px solid black;
     }
     .bloc-left {
         border-radius: 0.25rem;
@@ -34,14 +35,12 @@
         .bloc-friend-addfriend {
             padding-right: 1rem;
             padding-left: 1rem;
-
+            display: flex;
+            flex-direction: column;
+            gap:0.5rem;
 
         }
-        .border-bottom-big {
-            border-bottom: 3px solid black;
-            padding-bottom: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
+
 
     }
     .border-left {

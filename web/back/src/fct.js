@@ -8,6 +8,9 @@ import User from './models/user.js';
 import ChatG from './models/test.js';
 import PrivChat from './models/privchat.js';
 import PrivMess from './models/privmess.js';
+import StatMorp from './models/StatMorp.js';
+import HistoryMorp from './models/HistoryMorp.js';
+import Friend from './models/friend.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
@@ -90,19 +93,60 @@ async function CreatPrivMess(){
   await fullmess("El ultimo numero ", Conv3);
 }
 
+async function CreatStat(){
+    await HistoryMorp.create({  Map:"OX--XO-XO", 
+                                Result:"has_result", 
+                                WinnerId:1, 
+                                Id1:1, 
+                                OX1:0, 
+                                Id2:2, 
+                                OX1:1
+    });
+
+    await StatMorp.create({ idUser:1,
+                            nbGame:1,
+                            Win:5,
+                            Lost:5,
+                            Draw:0,
+                            Abort:0,
+                            WinDiag:2,
+                            WinHoriz:2,
+                            WinVert:6,
+                            LoseDiag:0,
+                            LoseHoriz:0,
+                            LoseVert:0,
+                            WinCercle:5,
+                            WinCroix:5,
+                            LostCercle:0,
+                            LostCroix:0,
+    });
+}
+
+async function CreatFriend(){
+  await Friend.create({Friend1: 1, Friend2: 2, State: true, WhoAsk: 1});
+  await Friend.create({Friend1: 1, Friend2: 3, State: true, WhoAsk: 3});
+  await Friend.create({Friend1: 4, Friend2: 1, State: false, WhoAsk: 4});
+  await Friend.create({Friend1: 5, Friend2: 1, State: true, WhoAsk: 1});
+}
+
 async function addDb(){
   const count = await User.count();
     if (count === 0){
       majDb();
       const CrypPass = await bcrypt.hash('tt', 10);
       const CrypPassNi = await bcrypt.hash('12', 10);
-      await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 100});
-      await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
-      await User.create({name: 'tata', password: CrypPass, mail: 'tata@test.c', co: false, win: 0, total_part: 0});
-      await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
+      const toto = await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 100});
+      const titi = await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
+      const tata = await User.create({name: 'tata', password: CrypPass, mail: 'tata@test.c', co: false, win: 0, total_part: 0});
+      const tutu = await User.create({name: 'tutu', password: CrypPass, mail: 'tutu@test.c', co: false, win: 0, total_part: 0});
+      const ni = await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
       majDb();
       await CreatPrivMess();
-      majDb;
+      majDb();
+      await CreatStat();
+      majDb();
+      await CreatFriend();
+      majDb();
     }
 }
 
