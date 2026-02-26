@@ -7,6 +7,7 @@ import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
 import HavokPhysics from "@babylonjs/havok";
+import { Ball } from "./ball";
 
 class App {
     private _canvas: HTMLCanvasElement;
@@ -16,6 +17,7 @@ class App {
     private _input: PlayerInput;
     private _player: Player;
     private MAX_SPEED: number = 40;
+    private _ball: Ball;
     public assets;
 
 
@@ -88,7 +90,7 @@ class App {
     }
 
     private async _initializeGameAsync(scene: Scene): Promise<void> {
-        let light = new PointLight('PointLight', new Vector3(0,5,5), scene);
+        let light = new PointLight('PointLight', new Vector3(0,5,0), scene);
         light.diffuse = new Color3(1,1,1);
         light.intensity = 1;
         light.radius = 0.1;
@@ -98,25 +100,11 @@ class App {
 
         this._player = new Player(this.assets, scene, shadow, this._input)
         
-        const ball = MeshBuilder.CreateSphere("ball", {diameter: 1}, this._scene);
-        ball.position = new Vector3(0,3,7);
-        const ballAggregate = new PhysicsAggregate(ball,
-            PhysicsShapeType.SPHERE,
-            {mass: 1, restitution: 1, friction: 0},
-            this._scene);
-        shadow.addShadowCaster(ball);
-        ballAggregate.body.setMotionType(PhysicsMotionType.DYNAMIC);
-
-        scene.onBeforePhysicsObservable.add(() => {
-            const ballVelocity = ballAggregate.body.getLinearVelocity();
-            const ballSpeed = ballVelocity.length();
-            const smoothingFactor = 0.95;
-            if (ballSpeed > this.MAX_SPEED)
-            {
-                const target = ballSpeed / this.MAX_SPEED;
-                const scale = Scalar.Lerp(1, target, 1 - smoothingFactor);
-                ballVelocity.scaleInPlace(scale);
-                ballAggregate.body.setLinearVelocity(ballVelocity);
+        this._ball = new Ball(new Vector3(0, 3, 7), 1, this.MAX_SPEED, shadow, this._scene);
+        this._scene.onBeforeRenderObservable.add(() => {
+            if (this._ball.getMeshPosition()._z < -23) {
+                this._ball.dispose();
+                this._ball = new Ball(new Vector3(0,3,7), 1, this.MAX_SPEED, shadow, this._scene);
             }
         });
     }
