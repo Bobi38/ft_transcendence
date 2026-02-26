@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsAggregate, PhysicsShapeType, PhysicsMotionType } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsAggregate, PhysicsShapeType, PhysicsMotionType, Scalar } from "@babylonjs/core";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -15,6 +15,7 @@ class App {
     private _environment: Environment;
     private _input: PlayerInput;
     private _player: Player;
+    private MAX_SPEED: number = 40;
     public assets;
 
 
@@ -105,6 +106,19 @@ class App {
             this._scene);
         shadow.addShadowCaster(ball);
         ballAggregate.body.setMotionType(PhysicsMotionType.DYNAMIC);
+
+        scene.onBeforePhysicsObservable.add(() => {
+            const ballVelocity = ballAggregate.body.getLinearVelocity();
+            const ballSpeed = ballVelocity.length();
+            const smoothingFactor = 0.95;
+            if (ballSpeed > this.MAX_SPEED)
+            {
+                const target = ballSpeed / this.MAX_SPEED;
+                const scale = Scalar.Lerp(1, target, 1 - smoothingFactor);
+                ballVelocity.scaleInPlace(scale);
+                ballAggregate.body.setLinearVelocity(ballVelocity);
+            }
+        });
     }
 
     private async _loadCharacterAssets(scene: Scene) {

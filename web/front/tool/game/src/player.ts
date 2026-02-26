@@ -1,4 +1,4 @@
-import { Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 
 export class Player extends TransformNode {
@@ -39,16 +39,18 @@ export class Player extends TransformNode {
         colRacketBody.setCollisionCallbackEnabled(true);
 
         colRacketBody.getCollisionObservable().add((event) => {
+            if (event.type != PhysicsEventType.COLLISION_STARTED)
+                return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
             const hitForward = 0.5;
             const mouseDirAvg = (this.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
             mouseDirAvg.scaleInPlace(1/this.mouseBufferSize).normalize();
-            const hitDirection = new Vector3(mouseDirAvg.x, mouseDirAvg.y, hitForward).normalize();
-            console.log(mouseDirAvg);
+            const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, hitForward).normalize();
+            console.log(hitDirection);
             const mouseAvgSpeed = this.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this.mouseBufferSize;
             const power = Scalar.SmoothStep(0, 200, mouseAvgSpeed) / 10;
-            console.log(power);
+            console.log(mouseAvgSpeed, power);
 
             ballBody.applyImpulse(hitDirection.scale(power), event.point);
         });
