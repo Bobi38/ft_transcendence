@@ -9,13 +9,27 @@ import Friend from '../models/friend.js';
 import PswEmail from '../models/PssWrdEmail.js';
 import StatMorp from '../models/StatMorp.js';
 import GameMorp from '../models/GameMorp.js';
+import HistoryMorp from '../models/HistoryMorp.js';
 
-const router = express.Router();
+const newrouter = express.Router();
 
 
 
 
-export {secret_chat};
-export {secret};
-export { checktok };
-export default router;
+export {
+    // secret_chat,
+    // secret,
+    // checktok,
+    User,
+    Co,
+    ChatG,
+    PrivMess,
+    PrivChat,
+    Friend,
+    PswEmail,
+    StatMorp,
+    GameMorp,
+    HistoryMorp,
+};
+
+export default newrouter;

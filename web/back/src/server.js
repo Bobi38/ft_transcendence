@@ -107,7 +107,8 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-
+import {Server as ColyServ} from "colyseus";
+// import { GameRoom } from './colyseus/GameRoom.js';
 import router, { checktok } from './router.js';
 import { majDb } from './fct.js';
 import { initWebSocket } from './wsserver.js';
@@ -139,11 +140,19 @@ app.use(session({
 }))
 app.use('/api', router);
 
+// import newrouter from './routes/index.js';
+// app.use('/newapi', newrouter);
+
 if (isDev) {
-  
-  console.log("JE SUIS DEVVVVVVVVVv")
-  app.use('/', async (req,res) => createProxyMiddleware({target: 'http://localhost:5173',changeOrigin: true, ws: true,})
-    );
+  console.log("JE SUIS DEV");
+
+  const viteProxy = createProxyMiddleware({
+    target: 'http://localhost:5173',
+    changeOrigin: true,
+    ws: true,
+  });
+
+  app.use('/', viteProxy);
 } else {
   console.log("JE SUIS PROOOOOOOOOODDDDDDDDDDDd")
   // 🔹 En prod : servir le dist
@@ -160,6 +169,8 @@ if (isDev) {
     console.log("DB mise à jour avec succès");
 
     const server = http.createServer(app);
+    // const colyseusServer = new ColyServ({ server });
+    // colyseusServer.define('game_room', GameRoom);
     initWebSocket(server);
     addDb();
     server.listen(PORT, '0.0.0.0', () => {

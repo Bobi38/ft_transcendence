@@ -105,7 +105,7 @@ export default function Home() {
 		{ text:"Stats", path: "/Stats" },
 		{ text:"Game", path: "/Game" },
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
-		{ text:"Nothing", path: "/Nothing" },
+		{ text:"test GAME", path: "/Test" },
 		{ text:"Morpion", path: "/Morpion" },
 		{ text:"Nothing", path: "/Nothing" },
 	]
