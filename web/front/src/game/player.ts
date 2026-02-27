@@ -1,4 +1,4 @@
-import { Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 
 export class Player extends TransformNode {
@@ -15,7 +15,7 @@ export class Player extends TransformNode {
 
     public mesh: Mesh;
     public racket: TransformNode;
-    public racketAggregate: PhysicsAggregate;
+    public racketBody: PhysicsBody;
     public hand_node: TransformNode;
 
     constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, input? : PlayerInput) {
@@ -27,7 +27,11 @@ export class Player extends TransformNode {
 
         this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
         this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
-        shadowGenerator.addShadowCaster(assets.mesh, true);
+        shadowGenerator.addShadowCaster(this.mesh, false);
+        shadowGenerator.addShadowCaster(scene.getMeshByName("racket"), false);
+        shadowGenerator.addShadowCaster(scene.getMeshByName("hand"), false);
+        shadowGenerator.addShadowCaster(scene.getMeshByName("stick"), false);
+    
         this._input = input;
 
         const colRacketShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(),
@@ -37,6 +41,7 @@ export class Player extends TransformNode {
         colRacketBody.setMassProperties({mass: 1});
         colRacketBody.disablePreStep = false;
         colRacketBody.setCollisionCallbackEnabled(true);
+        this.racketBody = colRacketBody;
 
         colRacketBody.getCollisionObservable().add((event) => {
             if (event.type != PhysicsEventType.COLLISION_STARTED)
@@ -117,11 +122,14 @@ export class Player extends TransformNode {
             const localAxisZ = Vector3.Cross(localAxisX, localAxisY).normalize();
             const targetRotation = Quaternion.RotationQuaternionFromAxis(localAxisX, localAxisY, localAxisZ);
 
+            let lerpedRotation : Quaternion;
             if (!this.racket.rotationQuaternion) {
-                this.racket.rotationQuaternion = targetRotation;
+                lerpedRotation = targetRotation;
             } else {
                 Quaternion.SlerpToRef(this.racket.rotationQuaternion, targetRotation, 0.3, this.racket.rotationQuaternion);
+                //lerpedRotation = Quaternion.Slerp(this.racket.rotationQuaternion, targetRotation, 0.3);
             }
+            //this.racketBody.setTargetTransform(relativePos, lerpedRotation);
         }
     }
 
