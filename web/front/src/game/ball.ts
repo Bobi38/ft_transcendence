@@ -5,6 +5,7 @@ export class Ball {
     private _aggregate: PhysicsAggregate;
     private _maxSpeed: number;
     private _scene: Scene;
+    private _shadow: ShadowGenerator;
     private _physicsObserver;
 
     constructor(position: Vector3, diameter: number, maxSpeed: number, shadow: ShadowGenerator, scene: Scene) {
@@ -13,7 +14,8 @@ export class Ball {
 
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
         this._mesh.position = position;
-        shadow.addShadowCaster(this._mesh);
+        this._shadow = shadow;
+        this._shadow.addShadowCaster(this._mesh);
 
         this._aggregate = new PhysicsAggregate(this._mesh, PhysicsShapeType.SPHERE, 
             {mass: 1, restitution: 1, friction: 0}, this._scene);
@@ -37,6 +39,7 @@ export class Ball {
     }
 
     public dispose() {
+        this._shadow.removeShadowCaster(this._mesh);
         this._scene.onBeforePhysicsObservable.remove(this._physicsObserver);
         this._aggregate.dispose();
         this._mesh.dispose();

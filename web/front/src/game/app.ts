@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsAggregate, PhysicsShapeType, PhysicsMotionType, Scalar } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion} from "@babylonjs/core";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -96,7 +96,9 @@ export class App {
         let light = new PointLight('PointLight', new Vector3(0,5,0), scene);
         light.diffuse = new Color3(1,1,1);
         light.intensity = 1;
-        light.radius = 0.1;
+        //light.radius = 0.1;
+        //light.radius = 0; 
+        //light.includedOnlyMeshes = [];
 
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
@@ -127,9 +129,14 @@ export class App {
             hand_node.position = new Vector3(0.4, 2, 1);
             const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.5});
             hand.material = bodymtl;
+
+            let racketmtl = new StandardMaterial("white", scene);
+            racketmtl.diffuseColor = new Color3(0.4,0.2,0);
             let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.2, height: 0.8});
             stick.position._y = 0.4;
+            stick.material = racketmtl;
             const racket = MeshBuilder.CreateCylinder("racket", {diameter: 1, height: 0.2});
+            racket.material = racketmtl;
             racket.position._y = 0.7;
             //racket.rotation = new Vector3(Math.PI / 2, 0, 0);
             racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
