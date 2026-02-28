@@ -104,8 +104,8 @@ export default function AjouterAmis() {
 
     
     return (
-        <div className={`AjouterAmis-root border-blue`}>
-                <div className={`add border-red`}>
+        <div className={`AjouterAmis-root border-3`}>
+                <div className={`add border-1`}>
                     <form onSubmit={(e) => {e.preventDefault(); console.log("demande envoyer", addFriend)}}>
                         <input  type="text"
                                 onChange={(e) => setAddFriend(e.target.value)}/>
@@ -115,9 +115,9 @@ export default function AjouterAmis() {
 
                 <hr/>
 
-                <div className={`response border-yellow`}>
+                <div className={`response border-4`}>
                     {responseFriendArray && responseFriendArray.map((msg, index) => (
-                        <div key={index} className="one-response border-green">
+                        <div key={index} className="one-response border-2">
                             <h5>{msg.login ? msg.login : "titi"}</h5>
 
                             <div className="div-btn">

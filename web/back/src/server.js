@@ -175,7 +175,7 @@ if (isDev) {
     addDb();
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
-      if (isDev) console.log(`Proxying front to Vite at http://localhost:5173`);
+      if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
     });
   } catch (err) {
     console.error("Erreur lors de l'initialisation du serveur :", err);

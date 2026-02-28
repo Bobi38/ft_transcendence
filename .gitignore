@@ -1,8 +1,7 @@
 conf/secrets/*
+.env
+*rror
+*nico*
 .vite
 node_modules
-.env
-
-error
-Error
-*nico*
+package-lock.json

@@ -1,4 +1,4 @@
-// @use "STYLE/variable" as var;
+// @use "STYLE/variable" as *;
 //    var.$border_value;
 
 @use "STYLE/_mixin" as mix;
@@ -6,11 +6,12 @@
 
 .Amis-root{
     @include mix.full;
-    padding: 0.1rem;
+    padding: 0.5rem;
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 3px;
     .one-friend{
         @include mix.fullw;
         text-align: center;

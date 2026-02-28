@@ -30,6 +30,9 @@ creat:
 
 logs:
 	docker logs web -f
+	
+logs_alert_flo:
+	docker logs web -f --tail 0
 
 secrets:
 	@mkdir -p ./conf/secrets

@@ -88,9 +88,9 @@ export default function Amis() {
     const [responseFriend, setResponseFriend] = useState();
 
     return (
-        <div className={`Amis-root border-blue`}>
+        <div className={`Amis-root border-0`}>
             {responseFriendArray && responseFriendArray.map((msg, index) => (
-                <div key={index} className="one-friend border-green">
+                <div key={index} className="one-friend border-1">
                     <h5>{msg.login ? msg.login : "titi"}</h5>
 
                     {/* <div className="div-btn">

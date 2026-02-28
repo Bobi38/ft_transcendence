@@ -614,20 +614,64 @@ router.get('/github/callback', async (req, res) => {
 });
 
 
-router.get('/fetchConv', async (req, res) => {
-    console.log("API fetchConv called")
+router.get('/fetch_conv', async (req, res) => {
+    console.log("API fetch_conv called")
     try{
         const token = req.cookies.token;
+        if (!token) return res.status(401).json({ success: false, message: "Token manquant" });
         const decoded = jwt.verify(token, secret);
         const result = await User.findOne({ where: { id: decoded.id } });
-        console.log("rest   ", result.id);
-        const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name', 'co'] },{ model: User, as: 'user2', attributes: ['id', 'name', 'co'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
-        console.log("API fetchConv chat 1 ", chats[0].PrivMesses[0].contenu)
-        console.log("API fetchConv chat 2 ", chats[1].PrivMesses[0].contenu)
-        console.log("API fetchConv test join ", chats[0].user1.name);
-        return res.status(201).json({success: true, message: chats});
+        if (!result) return res.status(404).json({ success: false, message: "Utilisateur introuvable" });
+        
+        console.log("rest   ", result.id);   
+      const chats = await PrivChat.findAll({
+        where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },
+        attributes: ['id'], // On ne garde que l'ID du chat
+        include: [
+          { 
+            model: User, 
+            as: 'user1', 
+            attributes: ['id', 'name', 'co'] 
+          },
+          { 
+            model: User, 
+            as: 'user2', 
+            attributes: ['id', 'name', 'co'] 
+          },
+          {
+            model: PrivMess,
+            as: 'PrivMesses',
+            attributes: ['contenu', 'time'], // On limite les champs du message
+            limit: 1,
+            order: [['id', 'DESC']]
+          }
+        ],
+        order: [['id', 'DESC']]
+      });
+
+      // Nettoyage pour n'avoir qu'un objet plat par discussion
+      const cleanChats = chats.map(chat => {
+        const isUser1 = chat.user1.id === result.id;
+        const interlocuteur = isUser1 ? chat.user2 : chat.user1;
+        const lastMsg = chat.PrivMesses[0] || null;
+
+        return {
+          UserId: chat.id,
+          login: interlocuteur.name,
+          isOnline: interlocuteur.co,
+          lastMessage: lastMsg ? lastMsg.contenu : '',
+          time: lastMsg ? lastMsg.time : null
+        };
+      });
+        // const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name', 'co'] },{ model: User, as: 'user2', attributes: ['id', 'name', 'co'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+        console.log("API fetch_conv chat 0.5 ", chats)
+        console.log("API fetch_conv chat 1 ", chats[0].dataValues)
+        console.log("API fetch_conv chat 1 ", chats[0].PrivMesses[0].contenu)
+        console.log("API fetch_conv chat 2 ", chats[1].PrivMesses[0].contenu)
+        console.log("API fetch_conv test join ", chats[0].user1.name);
+        return res.status(201).json({success: true, message: cleanChats});
     }catch(err){
-        console.log("API fetchConv error: ",err);
+        console.log("API fetch_conv error: ",err);
         return res.status(500).json({success: false, message: err});
     }
 });

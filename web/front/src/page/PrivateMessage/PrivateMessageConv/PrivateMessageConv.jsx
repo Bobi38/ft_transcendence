@@ -117,16 +117,16 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 
     return (
         <>
-            <div className={`PrivateMessageConv-root border-blue`}>
+            <div className={`PrivateMessageConv-root border-0`}>
 
                     <h5>{login}</h5>
 
-                    <div className="message">
+                    <div className="message border-1">
                         <div>
 
                             {displayedMessages && displayedMessages.map((msg, index) => { return ( 
 
-                                <div key={index} className={`border-green`}>
+                                <div key={index} className={`border-2`}>
 
                                     <h3>{msg.login}</h3>
                                     <p>{msg.message}</p>
