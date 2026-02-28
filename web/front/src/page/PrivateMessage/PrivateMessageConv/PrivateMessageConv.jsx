@@ -128,6 +128,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 
                                 <div key={index} className={`border-2`}>
 
+                                    {index != 0 && <hr/>}
                                     <h3>{msg.login}</h3>
                                     <p>{msg.message}</p>
 

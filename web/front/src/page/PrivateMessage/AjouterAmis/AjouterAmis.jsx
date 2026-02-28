@@ -107,9 +107,9 @@ export default function AjouterAmis() {
         <div className={`AjouterAmis-root border-3`}>
                 <div className={`add border-1`}>
                     <form onSubmit={(e) => {e.preventDefault(); console.log("demande envoyer", addFriend)}}>
-                        <input  type="text"
+                        <input  type={`text`}
                                 onChange={(e) => setAddFriend(e.target.value)}/>
-                        <button type="submit">add Friend</button>
+                        <button type={`submit`}>add Friend</button>
                     </form>
                </div>
 
@@ -117,12 +117,15 @@ export default function AjouterAmis() {
 
                 <div className={`response border-4`}>
                     {responseFriendArray && responseFriendArray.map((msg, index) => (
-                        <div key={index} className="one-response border-2">
-                            <h5>{msg.login ? msg.login : "titi"}</h5>
+                        <div key={index}>
+                            {index != 0 && <hr/>}
+                            <div className={`one-response border-2`}>
+                                <h5>{msg.login ? msg.login : "titi"}</h5>
 
-                            <div className="div-btn">
-                                <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>true</button>
-                                <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>false</button>
+                                <div className={`div-btn`}>
+                                    <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>true</button>
+                                    <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>false</button>
+                                </div>
                             </div>
                         </div>
                     ))}
