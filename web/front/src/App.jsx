@@ -63,7 +63,7 @@ init();
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
             <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
-            <Route path={`/Test`}               element={<Navigation>   <Test/>           </Navigation>}/>
+            <Route path={`/Test`}                   element={<Test/>}/>
 
 
             {/* bad path */}

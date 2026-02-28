@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import checkCo from "BACK/fct1.js"
+// import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./AjouterAmis.scss";
@@ -13,8 +13,8 @@ import "./AjouterAmis.scss";
 
 export default function AjouterAmis() {
 
-    async function add_friend(name){ //socket?
-        // console.log("add_friend(1) called");
+    async function add_friend(name){
+        console.log("add_friend(1) called: ", name);
         try{
 
             const rep = await fetch(`/api/add_friend?name=${name}`, {
@@ -25,21 +25,18 @@ export default function AjouterAmis() {
             
             // console.log("add_friend(2) after fetch");
             const repjson = await rep.json();
-            if (repjson.success){
-                console.log("good");
+            if (repjson.success) {
+                console.log("add_friend(info) good");
+            } else {
+                if (repjson.message === undefined) {
+                    console.log("add_friend(info) people not exist");
+                } else if (repjson.message === name) {
+                    console,log("add_friend(info) people are already friend");
+                } else {
+                    console.log("add_friend(3) error back ", repjson.message);
+                }
             }
-            if (repjson.message === "exist"){
-                console.log("people not exist");
-                // console.log("fetch_all_conne
-                // cted(3) error back ", repjson.message);
-            }
-            if(repjson.message === "relation"){
-                console,log("people are already friend");
-            }
-            else{
-                console.log("errrrror back ", repjson.message);
-            }
-        }catch(err){
+        } catch(err) {
             console.log("add_friend(4) error front ", err);
         }
     }
@@ -47,7 +44,7 @@ export default function AjouterAmis() {
 
 
     async function fetch_all_request_friend(){ // with co or not
-        console.log("fetch_all_request_friend(1) called");
+        // console.log("fetch_all_request_friend(1) called");
         try{
 
             const rep = await fetch('/api/all_request_friend', {
@@ -61,7 +58,7 @@ export default function AjouterAmis() {
 
             if (repjson.success){
                 // setResponseFriendArray(repjson.message)
-                console.log("success")
+                console.log("fetch_all_request_friend(info) success")
 
             }else {
                 console.log("fetch_all_request_friend(3) error back ", repjson.message);
@@ -73,7 +70,7 @@ export default function AjouterAmis() {
 
 
     async function fetch_response_friend_request(){ // with co or not
-        console.log("fetch_all_request_friend(1) called");
+        console.log("fetch_response_friend_request(1) called");
         try{
 
             const rep = await fetch('/api/all_request_friend', {
@@ -82,7 +79,7 @@ export default function AjouterAmis() {
                 credentials: "include",
             });
             
-            // console.log("fetch_all_request_friend(2) after fetch");
+            // console.log("fetch_response_friend_request(2) after fetch");
             const repjson = await rep.json();
 
             if (repjson.success){
@@ -90,47 +87,59 @@ export default function AjouterAmis() {
                 console.log("success")
 
             }else {
-                console.log("fetch_all_request_friend(3) error back ", repjson.message);
+                console.log("fetch_response_friend_request(3) error back ", repjson.message);
             }
         }catch(err){
-            console.log("fetch_all_request_friend(4) error front ", err);
+            console.log("fetch_response_friend_request(4) error front ", err);
         }
     }
 
 
-    const [addFriend, setAddFriend] = useState(null);
     const [responseFriend, setResponseFriend] = useState(null);
     const [responseFriendArray, setResponseFriendArray] = useState([{ login: "titi" },{ login: "tata" }]);
 
+    const handel_form = (e) =>{
+        console.log("handel_form(1) called")
+        e.preventDefault(); 
+        const el_add_friend = document.getElementById("add-friend")
+        console.log("handel_form(2) demande envoyer", el_add_friend.value)
+        // add_friend(el_add_friend.value)
+        
+        {
+            console.log("handel_form(info) clear input value")
+            el_add_friend.value = ""
+        }
+    }
     
     return (
-        <div className={`AjouterAmis-root border-3`}>
-                <div className={`add border-1`}>
-                    <form onSubmit={(e) => {e.preventDefault(); console.log("demande envoyer", addFriend)}}>
-                        <input  type={`text`}
-                                onChange={(e) => setAddFriend(e.target.value)}/>
-                        <button type={`submit`}>add Friend</button>
-                    </form>
-               </div>
 
-                <hr/>
+        <div className={`AjouterAmis-root border-0`}>
+            <div className={`add border-1`}>
+                <form onSubmit={(e) => {handel_form(e)}}>
+                    <input  type={`text`} id={`add-friend`}/>
+                    <button type={`submit`}>add Friend</button>
+                </form>
+            </div>
 
-                <div className={`response border-4`}>
-                    {responseFriendArray && responseFriendArray.map((msg, index) => (
-                        <div key={index}>
-                            {index != 0 && <hr/>}
-                            <div className={`one-response border-2`}>
-                                <h5>{msg.login ? msg.login : "titi"}</h5>
+            <hr/>
 
-                                <div className={`div-btn`}>
-                                    <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>true</button>
-                                    <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>false</button>
-                                </div>
+            <div className={`response border-1`}>
+                {responseFriendArray && responseFriendArray.map((msg, index) => (
+                    <div key={index}>
+                        {index != 0 && <hr/>}
+                        <div className={`one-response border-2`}>
+                            <h5>{msg.login ? msg.login : "titi"}</h5>
+
+                            <div className={`div-btn border-3`}>
+                                <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>true</button>
+                                <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>false</button>
                             </div>
                         </div>
-                    ))}
+                    </div>
+                ))}
 
-                </div>
+            </div>
         </div>
+
     )
 }
