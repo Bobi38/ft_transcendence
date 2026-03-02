@@ -17,7 +17,7 @@ export default function AjouterAmis() {
         // console.log("add_friend(1) called");
         try{
 
-            const rep = await fetch(`/api/add_friend?name=${name}`, {
+            const rep = await fetch(`/api/friend/add_friend?name=${name}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
@@ -50,7 +50,7 @@ export default function AjouterAmis() {
         console.log("fetch_all_request_friend(1) called");
         try{
 
-            const rep = await fetch('/api/all_request_friend', {
+            const rep = await fetch('/api/friend/all_request_friend', {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
@@ -76,7 +76,7 @@ export default function AjouterAmis() {
         console.log("fetch_all_request_friend(1) called");
         try{
 
-            const rep = await fetch('/api/all_request_friend', {
+            const rep = await fetch('/api/friend/all_request_friend', {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",

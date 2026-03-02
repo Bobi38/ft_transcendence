@@ -14,7 +14,7 @@ export default function MailA2F({setShowLog}) {
 
         console.log("maila2f_send_mail(1) called");
         try {
-          const rep = await fetch("/api/send_mail", {
+          const rep = await fetch("/api/secu/send_mail", {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -48,7 +48,7 @@ export default function MailA2F({setShowLog}) {
 
 
     try{
-      const rep = await fetch("/api/maila2f_check_code", {
+      const rep = await fetch("/api/secu/maila2f_check_code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

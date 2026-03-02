@@ -14,7 +14,7 @@ function showAlert(message, type = "danger") {
 
 export default async function checkCo(){
     try{
-        const response = await fetch('/api/checkco', {
+        const response = await fetch('/api/secu/checkco', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"

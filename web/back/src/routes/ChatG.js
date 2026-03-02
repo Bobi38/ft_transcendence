@@ -1,5 +1,6 @@
 import {encrypt} from '../crypt.js';
-import {express, maj_conv, jwt} from './index.js';
+import {express, maj_conv, secret} from './index.js';
+import jwt from 'jsonwebtoken';
 import {User, ChatG} from './index.js';
 
 const router = express.Router();
@@ -36,6 +37,7 @@ router.post('/add_message_global', async (req, res) => {
     const id = jwt.verify(tok, secret);
     console.log (id.id, " " , chat.message);
     const mess = encrypt(chat.message);
+    console.log("encr ", mess)
     await ChatG.create({contenu: mess, SenderId: id.id, time: chat.time });
     console.log("buuuuug");
     return res.status(201).json({success: true});

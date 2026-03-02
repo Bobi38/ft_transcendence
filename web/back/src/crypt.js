@@ -1,8 +1,10 @@
 import fs from 'fs';
+import crypto from 'crypto';
 
 const secret_chat = fs.readFileSync('/run/secrets/cle_chat', 'utf-8').trim();
 
 export function encrypt(text) {
+  console.log("in crypt ", text);
   const iv = crypto.randomBytes(16);
   const key = crypto.createHash('sha256').update(secret_chat).digest();
 

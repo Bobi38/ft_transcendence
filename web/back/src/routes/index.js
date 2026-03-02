@@ -16,9 +16,11 @@ export { default as session } from 'express-session';
 export { default as QRCode } from 'qrcode';
 export { authenticator } from 'otplib';
 export { error, time } from 'console';
+export { majDb } from '../fct.js'
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 import User  from '../models/user.js';
 import Co  from '../models/connect.js';
@@ -82,15 +84,16 @@ export function maj_conv(id, conv, namelst){
 
 
 
-router.use(async (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path:", req.method, req.originalUrl);
-  console.log("Middleware auth for path:", req.path);
+  console.log("Middleware auth for path WHAT:", req.path);
   console.log("Headers:", req.headers.origin);
-  if (!token && req.path !== '/' && req.path !== '/login' && req.path !== '/register' && req.path !== '/github' && req.path !== '/github/callback') {
+  console.log("tototo ", token);
+  if (!token && req.path !== '/' && req.path !== '/api/auth/login' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' && req.path !== '/api/oauth2/github/callback') {
     return res.status(401).json({ success: false, redirect: true});
   }
-  if (req.path === '/' || req.path === '/login' || req.path === '/register' || req.path === '/github' || req.path === '/github/callback') {
+  if (req.path === '/' || req.path === '/api/auth/login' || req.path === '/api/auth/register' || req.path === '/api/oauth2/github' || req.path === '/api/oauth2/github/callback') {
     console.log("Public route, no auth required");
     return next() ;
   }
@@ -103,7 +106,7 @@ router.use(async (req, res, next) => {
 
   console.log("token valid");
   next();
-});
+}
 
 function CheckName(req, res, next){
   console.log("je suis dan middel checkname");

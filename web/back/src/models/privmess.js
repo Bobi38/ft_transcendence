@@ -22,7 +22,7 @@ const PrivMess = sequelize.define('PrivMess', {
   },
 }, {
   tableName: 'PrivMess',
-  timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas
+  timestamps: false, // désactive cre atedAt / updatedAt si tu n’en veux pas
   indexes: [
   {
     fields: ['ChatId']

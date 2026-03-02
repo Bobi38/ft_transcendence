@@ -28,7 +28,7 @@ export default function PrivateMessage() {
         // console.log("fetch_go_to_conv_private(1) called");
         try{
 
-            const rep = await fetch('/api/fetchConv', {
+            const rep = await fetch('/api/chatP/fetchConv', {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
@@ -81,7 +81,7 @@ export default function PrivateMessage() {
         const token = goToConv;
         console.log("goToConv: ",goToConv)
         try{
-            const reponse = await fetch('/api/get_chat_private', {
+            const reponse = await fetch('/api/chatP/get_chat_private', {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",

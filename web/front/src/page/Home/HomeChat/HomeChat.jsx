@@ -18,7 +18,7 @@ export default function HomeChat() {
 
         console.log("fetch_global_message(1) called");
         try {
-            const reponse = await fetch('/api/get_chat_global', {
+            const reponse = await fetch('/api/chatG/get_chat_global', {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: "include"
@@ -45,7 +45,7 @@ export default function HomeChat() {
         }
 
         try{
-            const reponse = await fetch('/api/add_message_global', {
+            const reponse = await fetch('/api/chatG/add_message_global', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: "include",

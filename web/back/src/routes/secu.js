@@ -1,8 +1,13 @@
 import {fs, bcrypt, express, jwt, crypto, authenticator, nodemailer, secret, secret_tok_2fa } from './index.js';
 
-import {User} from './index.js';
+import {User, PswEmail} from './index.js';
 
 const router = express.Router();
+
+router.get('/checkco', async(req, res) =>{
+  console.log("dans checkco");
+  res.status(201).json({success:true, message: "good token and good co"});
+})
 
 router.get('/send_mail', async (req, res) => {
   try{

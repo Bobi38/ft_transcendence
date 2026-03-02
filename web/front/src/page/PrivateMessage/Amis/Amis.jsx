@@ -21,7 +21,7 @@ export default function Amis() {
         console.log("fetch_all_friend(1) called");
         try{
 
-            const rep = await fetch('/api/all_friend', {
+            const rep = await fetch('/api/friend/all_friend', {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
@@ -52,7 +52,7 @@ export default function Amis() {
         // console.log("fetch_all_connected(1) called");
         try{
 
-            const rep = await fetch(`/api/dlt_friend?name=${name}`, {
+            const rep = await fetch(`/api/friend/dlt_friend?name=${name}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",

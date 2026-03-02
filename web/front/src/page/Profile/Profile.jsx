@@ -45,7 +45,7 @@ export default function Profile() {
             Pass: password,
         }
         try{
-            const rep = await fetch("/api/majPass", {
+            const rep = await fetch("/api/profile/majPass", {
                 method: "POST",
                 headers : {"Content-Type" : "application/json",},
                 credentials: "include",
@@ -76,7 +76,7 @@ export default function Profile() {
         }
 
         try{
-            const rep = await fetch("/api/updateProfil", {
+            const rep = await fetch("/api/profile/updateProfil", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,7 +99,7 @@ export default function Profile() {
         
         console.log("fetch_user_data(1) called");
         try {
-            const rep = await fetch("/api/profile" ,{
+            const rep = await fetch("/api/profile/profile" ,{
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

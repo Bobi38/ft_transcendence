@@ -107,7 +107,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import {Server as ColyServ} from "colyseus";
+// import {Server as ColyServ} from "colyseus";
 // import { GameRoom } from './colyseus/GameRoom.js';
 import router from './routes/index.js';
 // import router from './router.js';
@@ -125,6 +125,7 @@ import './models/privmess.js';
 
 
 //router
+import { authMiddleware } from './routes/index.js';
 import authroute from './routes/auth.js'
 import oauth2route from './routes/Oauth2.js'
 import securoute from './routes/secu.js'
@@ -149,6 +150,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+
+app.use(authMiddleware);
 // app.use('/api', router);
 app.use('/api/auth', authroute);
 app.use('/api/oauth2', oauth2route);

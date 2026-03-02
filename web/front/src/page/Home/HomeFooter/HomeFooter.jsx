@@ -18,7 +18,7 @@ export default function HomeFooter({setShowLog}) {
     function logout() {
         console.log("logout(1) called")
 
-        fetch('/api/logout', {
+        fetch('/api/auth/logout', {
             method: 'GET',//TODO TITOU post sans body?
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"

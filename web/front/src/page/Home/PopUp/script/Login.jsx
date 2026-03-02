@@ -22,7 +22,7 @@ export default function Login({setShowLog}) {
         }
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -57,7 +57,7 @@ export default function Login({setShowLog}) {
 
     
     const handle_git = () => {
-        window.location.href = "/api/github";
+        window.location.href = "/api/oauth2/github";
     };
     
     // const miss_pass_mode = () => {

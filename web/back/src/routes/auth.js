@@ -13,12 +13,12 @@ import
   // HistoryMorp,
 }from './index.js'
 
-import { bcrypt, jwt, express, secret } from './index.js';
+import { bcrypt, jwt, express, secret} from './index.js';
 
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
-  console.log("je suis dans login")
+  console.log("je suis dans la nouvelle route login")
   const { email, password } = req.body;
 
   try {
@@ -40,11 +40,11 @@ router.post('/login', async (req, res) => {
     console.log("Api /login " + "TAILLE= " , Co.length);
     await result[0].update({co: true});
     console.log("Api /login " + "ID", result[0].id);
-    req.session.username = result[0].name;
-    req.session.nameNeedUpdate = false;
+    // req.session.username = result[0].name;
+    // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
     res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id, tooken: token});
-    majDb();
+    // majDb();
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Erreur MySQL' });
@@ -69,7 +69,7 @@ router.post('/register', async (req, res) => {
     const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
     console.log("Api /register ID", result.insertId);
     res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
-    majDb();
+    // majDb();
   } catch (err) {
     console.error(err);
     res.status(500).json({success: false, message: 'Erreur MySQL' });
@@ -89,7 +89,7 @@ router.get('/logout', async (req, res) => {
     res.clearCookie('token');
     res.status(201).json({ success: true, message: 'Utilisateur deconnecte' });
     
-    majDb();
+    // majDb();
   } catch (err) {function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);

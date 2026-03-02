@@ -23,7 +23,7 @@ export default function Register({setShowLog}) {
         }
         console.log(data.name + " " + data.email + " " + data.password);
         try {
-            const reponse = await fetch('/api/register', {
+            const reponse = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
