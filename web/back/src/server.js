@@ -109,7 +109,7 @@ import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 // import {Server as ColyServ} from "colyseus";
 // import { GameRoom } from './colyseus/GameRoom.js';
-import router from './routes/index.js';
+// import router from './routes/index.js';
 // import router from './router.js';
 import { majDb } from './fct.js';
 import { initWebSocket } from './wsserver.js';
