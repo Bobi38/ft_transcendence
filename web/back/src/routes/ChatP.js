@@ -59,12 +59,12 @@ router.get('/fetch_conv', async (req, res) => {
           return res.status(401).json({ success: false, message: "Token manquant" });
         const decoded = jwt.verify(token, secret);
         const result = await User.findOne({ where: { id: decoded.id } });
-        console.log("API fetch_conv test join()");
+        console.log("API fetch_conv test join(1)");
         if (!result) 
           return res.status(404).json({ success: false, message: "Utilisateur introuvable" });
         
         // console.log("rest   ", result.id);   
-        console.log("API fetch_conv test join()");
+        console.log("API fetch_conv test join(2)");
       const chats = await PrivChat.findAll({
         where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },
         attributes: ['id'], // On ne garde que l'ID du chat
@@ -90,8 +90,21 @@ router.get('/fetch_conv', async (req, res) => {
         order: [['id', 'DESC']]
       });
 
-        console.log("API fetch_conv test join()");
-      const cleanChats = chats.map(chat => {
+        console.log("API fetch_conv test join(3)");
+        for(const chat of chats){
+            if (chat.PrivMesses[0].contenu && chat.PrivMesses[0].contenu.length > 0){
+                const enc = chat.PrivMesses[0].contenu;
+                try{
+                    const dec = decrypt(enc)
+                    chat.PrivMesses[0].contenu = dec;
+                }catch(err){
+                    return res.status(500).json({success:false, message: "error decrypt ", err});
+                }
+            }
+        }
+
+        console.log("API fetch_conv test join(4)");
+        const cleanChats = chats.map(chat => {
         const isUser1 = chat.user1.id === result.id;
         const interlocuteur = isUser1 ? chat.user2 : chat.user1;
         const lastMsg = chat.PrivMesses[0] || null;
