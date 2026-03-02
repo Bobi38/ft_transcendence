@@ -583,7 +583,7 @@ router.get('/fetch_conv', async (req, res) => {
         where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },
         attributes: ['id'], // On ne garde que l'ID du chat
         include: [
-          { 
+          {
             model: User, 
             as: 'user1', 
             attributes: ['id', 'name', 'co'] 
