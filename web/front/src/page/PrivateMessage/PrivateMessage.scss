@@ -17,6 +17,7 @@
         border: 2px solid black;
     }
     .info {
+	    @include mix.full;
         display: flex;
         flex-direction: column;
         width: 20%;
