@@ -8,85 +8,82 @@ import { useEffect, useState } from "react";
 import "./AjouterAmis.scss";
 
 /* Components */
+import useFetch from "HOOKS/useFetch.jsx";
+
+    // async function namefct(){
+    //     if (!goToConv)
+    //         return;
+
+        // const url = `/api/auth/login`;
+
+        // console.log(`${url}`)
+
+    //     const repjson = await useFetch(`${url}`, {
+    //         method: "POST",
+    //         headers: {'Content-Type': 'application/json'},
+    //         credentials: "include",
+    //     })
+    //     if (!repjson)
+    //         return;
+    
+    
 
 
+    // }
 
 export default function AjouterAmis() {
-
-    const fetchtype = {
+    const fetch_type = {
         method: "GET",
         headers: {'Content-Type': 'application/json'},
         credentials: "include",
     }
 
     async function add_friend(name){
-        console.log("add_friend(1) called: ", name);
-        try{
+        if (!goToConv)
+            return;
 
-            const rep = await fetch(`/api/friend/add_friend?name=${name}`, fetchtype);
-            
-            // console.log("add_friend(2) after fetch");
-            const repjson = await rep.json();
-            if (repjson.success) {
-                console.log("add_friend(info) good");
+        const url = `/api/friend/add_friend?name=${name}`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, fetch_type, null , function(repjson) {
+            if (repjson.message === undefined) {
+                console.log("add_friend callbackfail(info) people not exist");
+            } else if (repjson.message === name) {
+                console,log("add_friend callbackfail(info) people are already friend");
             } else {
-                if (repjson.message === undefined) {
-                    console.log("add_friend(info) people not exist");
-                } else if (repjson.message === name) {
-                    console,log("add_friend(info) people are already friend");
-                } else {
-                    console.log("add_friend(3) error back ", repjson.message);
-                }
+                console.log("add_friend callbackfail(info) error back ", repjson.message);
             }
-        } catch(err) {
-            console.log("add_friend(4) error front ", err);
-        }
+        })
+        if (!repjson)
+            return;
+        console.log("add_friend(info) good");
     }
-
 
 
     async function fetch_all_request_friend(){
-        // console.log("fetch_all_request_friend(1) called");
-        try{
+        const url = `/api/friend/all_request_friend`;
 
-            const rep = await fetch('/api/friend/all_request_friend',fetchtype);
-            
-            // console.log("fetch_all_request_friend(2) after fetch");
-            const repjson = await rep.json();
+        console.log(`${url}`)
 
-            if (repjson.success){
-                setResponseFriendArray(repjson.message)
-                console.log("fetch_all_request_friend(info) success")
-
-            }else {
-                console.log("fetch_all_request_friend(3) error back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_all_request_friend(4) error front ", err);
-        }
+        const repjson = await useFetch(`${url}`, fetch_type)
+        if (!repjson)
+            return;
+        setResponseFriendArray(repjson.message)
     }
 
-
+    
     async function fetch_response_friend_request(){
-        console.log("fetch_response_friend_request(1) called");
-        try{
+        const url = `/api/friend/all_request_friend`;
 
-            const rep = await fetch('/api/friend/all_request_friend', fetchtype);
-            
-            // console.log("fetch_response_friend_request(2) after fetch");
-            const repjson = await rep.json();
+        console.log(`${url}`)
 
-            if (repjson.success){
-                setResponseFriendArray(repjson.message)
-                console.log("success")
-
-            }else {
-                console.log("fetch_response_friend_request(3) error back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_response_friend_request(4) error front ", err);
-        }
+        const repjson = await useFetch(`${url}`, fetch_type)
+        if (!repjson)
+            return;
+        setResponseFriendArray(repjson.message)
     }
+    
 
 
     // useEffect(() => {fetch_all_request_friend()}, []);

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import "./Amis.scss";
 
 /* Components */
+import useFetch from "HOOKS/useFetch.jsx";
 
 
     
@@ -50,35 +51,27 @@ export default function Amis({setGoToAction, setGoToConv}) {
 
 
 
-    async function dlt_friend(name){ //socket?
-        // console.log("fetch_all_connected(1) called");
-        try{
-
-            const rep = await fetch(`/api/friend/dlt_friend?name=${name}`, {
+    async function dlt_friend(name){
+        if (!name)
+            return;
+        const url = `/api/friend/dlt_friend?name=${name}`;
+        console.log(`${url}`)
+        const repjson = await useFetch(`${url}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
+            }, null , function(repjson) {
+                if (repjson.message === "exist") {
+                    console.log("dlt_friend callbackfail(info) people not exist");
+                } else if (repjson.message === "relation") {
+                    console,log("dlt_friend callbackfail(info) people are not friend");
+                } else {
+                    console.log("dlt_friend callbackfail(info) error back ", repjson.message);
+                }
             });
-            
-            // console.log("fetch_all_connected(2) after fetch");
-            const repjson = await rep.json();
-            if (repjson.success){
-                console.log("good");
-            }
-            if (repjson.message === "exist"){
-                console.log("people not exist");
-                // console.log("fetch_all_conne
-                // cted(3) error back ", repjson.message);
-            }
-            if(repjson.message === "relation"){
-                console,log("people are not friend");
-            }
-            else{
-                console.log("errrrror back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_all_connected(4) error front ", err);
-        }
+        if (!repjson)
+            return;
+        console.log("good");
     }
 
 

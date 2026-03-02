@@ -1,4 +1,4 @@
-export default async function useFetch(url, type_request){
+export default async function useFetch(url, type_request, callbacksucces = null, callbackfail = null){
     console.log("useFetch(1) url:", url);
     try {
 
@@ -12,10 +12,16 @@ export default async function useFetch(url, type_request){
             return repjson;
             
         } else {
+            if (callbackfail){
+                callbackfail(repjson);
+                return null
+            }
             console.log("useFetch(4) error back:", repjson.message);
+            return null
         }
     }catch(error){
         console.log("useFetch(5) error front :", error);
+        return null;
     }
 }
     // async function namefct(){
@@ -33,8 +39,5 @@ export default async function useFetch(url, type_request){
     //     })
     //     if (!repjson)
     //         return;
-    
-    
-
     // }
-// import useFetch from "HOOKS/.jsx";
+// import useFetch from "HOOKS/useFetch.jsx";
