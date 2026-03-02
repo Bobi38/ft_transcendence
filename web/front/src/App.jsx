@@ -19,10 +19,10 @@ import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
 import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
-import Test             from    "./test.jsx";
+import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 
   // ./src/page/game
-import MorpionTraining  from    "FRONT/page/Game/Morpion/MorpionTraining.jsx";
+import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 
 
 
@@ -63,7 +63,7 @@ init();
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
             <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
-            <Route path={`/Test`}                   element={<Test/>}/>
+            <Route path={`/Test`}               element={<Pong3D/>}/>
 
 
             {/* bad path */}

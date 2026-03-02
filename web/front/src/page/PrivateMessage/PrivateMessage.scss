@@ -31,12 +31,8 @@
             hr {
                 border: 1px solid black;
                 @include mix.fullw;
-            }
-        }
-        .bloc-friend-addfriend {align-items: center;}
-        .bloc-last-conv-friend {
-            gap: 3px;
-            .bloc-left {
+            }            
+            .bloc-left {@include mix.fullw;
                 display: flex;
                 flex-direction: column;
                 border-radius: 0.25rem;
@@ -45,6 +41,12 @@
                 &:hover{
                     background-color: rgba(0, 0, 0, 0.2);
                 }
+            }
+        }
+        .bloc-friend-addfriend {align-items: center;}
+        .bloc-last-conv-friend {
+            gap: 3px;
+            .bloc-left {
                 p{
                     font-size: 0.5rem;
                 }
