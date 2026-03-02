@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
+// import { useSocket } from "../../../tool/SocketContext";
 import  SocketM  from "/app/front/tool/SocketManag.js";
 
 /* Css */
@@ -68,7 +69,7 @@ export default function PrivateMessage() {
 
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.login === goToConv)
+            if (data.login === goToConv || data.monMsg == true)
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();
         

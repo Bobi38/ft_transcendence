@@ -11,9 +11,9 @@ import "./HomeChat.scss";
 /* Components */
 import useFetch from "HOOKS/useFetch";
 
-
 export default function HomeChat() {
 
+    // const SocketM = useSocket();
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
 

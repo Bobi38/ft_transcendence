@@ -20,41 +20,50 @@ export function initWebSocket(server) {
   let idd = 0;
   console.log('WebSocket server initialized on path /ws');
   wss.on('connection', async (socket, req) => {
-    const iid = idd++;
-    socket.id = iid;
-    console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-    console.log('URL:', req.url);
-    console.log('Headers upgrade:', req.headers.upgrade);
-    console.log('Headers socket:', socket.id);
-    console.log(req.headers.cookie)
-    const token = getCookie('token', req.headers.cookie);
-    if (!token) {
+    try{
+      const iid = idd++;
+      socket.id = iid;
+      console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
+      console.log('URL:', req.url);
+      console.log('Headers upgrade:', req.headers.upgrade);
+      console.log('Headers socket:', socket.id);
+      console.log(req.headers.cookie)
+      const token = getCookie('token', req.headers.cookie);
+      if (!token) {
       // socket.close();
-      return;
-    }
+        return;
+      }
 
-    let user;
-    try {
-      user = chat.decoded(token);
-    } catch {
-      socket.close();
-      return;
-    }
+      let user;
+      try {
+        user = chat.decoded(token);
+      } catch {
+        socket.close();
+        return;
+      }
 
-    if (!user) {socket.close(); return; }
-    console.log("uuu-------", user);
-    const useid = user.id;
-    socket.userId = useid;
+      if (!user) {socket.close(); return; }
+      console.log("uuu-------", user);
+      const useid = user.id;
+      socket.userId = useid;
 
-    const exist = chat.finduser(socket.id);
-    if (exist){
-      exist.socket = socket;
-      console.log("user already exist");
-    }
-    else{
-      console.log("new user, add to chat sessions");
-      await chat.addtok(useid, socket, useid);
-      socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
+      const exist = chat.finduser(socket.id);
+      const id = chat.finduserId(socket.userId);
+      if (exist){
+        exist.socket = socket;
+        console.log("user already exist exist");
+      }
+      if (id){
+        id.socket = socket
+        console.log("user already exist id");
+      }
+      else{
+        console.log("new user, add to chat sessions");
+        await chat.addtok(useid, socket, useid);
+        socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
+      }
+    }catch(err){
+      console.log("err debut wsss ", err);
     }
     console.log("taille =" , chat.countUser());
     socket.on('message', (message) => {
@@ -100,15 +109,18 @@ export function initWebSocket(server) {
         if (data.type === 'priv_mess'){
           console.log("je suis dans un type priv_messsssssssss")
           const nono = socket.userId;
-          const na = chat.finduser(nono);
+          const na = chat.finduserId(nono);
           const ni = na.username;
-          const send = chat.finduser(data.id);
+          const send = chat.findname(data.to);
+          console.log("name" , ni, " ", data.to)
           if (send && send.socket.readyState === ws.OPEN){
             console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
             send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
           }
           socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
         }
+        if (data.type === "logout")
+          socket.GoLogout = true;
 
         if (data.type === 'morpion'){
           let message = "";
@@ -164,9 +176,22 @@ export function initWebSocket(server) {
       console.error('Erreur WebSocket:', error);
     });
     socket.on('close', () => {
-      console.log('Utilisateur déconnecté', socket.id);
-      chat.removetokBySocketId(socket.id);
-      manager_room.removePlayer(socket.userId);
+      if (socket.GoLogout = true){
+        console.log('Utilisateur déconnecté', socket.id);
+        chat.removetokBySocketId(socket.id);
+        manager_room.removePlayer(socket.userId);
+      }
+      else{
+        setTimeout(() => {
+          const id = socket.userId
+          const reco = chat.finduserId(id)
+          if (!reco){
+            console.log('Utilisateur ne s est pas reco', socket.id);
+            chat.removetokBySocketId(socket.id);
+            manager_room.removePlayer(socket.userId);
+          }
+        }, 2500)
+      }
   });
   });
 }
