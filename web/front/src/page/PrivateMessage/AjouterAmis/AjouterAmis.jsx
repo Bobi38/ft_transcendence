@@ -100,7 +100,6 @@ export default function AjouterAmis() {
 
     const handel_form = (e) =>{
         console.log("handel_form(1) called")
-        e.preventDefault(); 
         const el_add_friend = document.getElementById("add-friend")
         console.log("handel_form(2) demande envoyer", el_add_friend.value)
         // add_friend(el_add_friend.value)
@@ -115,7 +114,7 @@ export default function AjouterAmis() {
 
         <div className={`AjouterAmis-root border-0`}>
             <div className={`add border-1`}>
-                <form onSubmit={(e) => {handel_form(e)}}>
+                <form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
                     <input  type={`text`} id={`add-friend`}/>
                     <button type={`submit`}>add Friend</button>
                 </form>

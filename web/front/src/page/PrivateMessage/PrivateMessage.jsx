@@ -123,10 +123,10 @@ export default function PrivateMessage() {
 
     }, [goToConv]);
 
-    const handletest = async () =>{
-        console.log("couocu");
-        await fetch_all_friend();
-    }
+    // const handletest = async () =>{
+    //     console.log("couocu");
+    //     await fetch_all_friend();
+    // }
     
     return (
         <>
