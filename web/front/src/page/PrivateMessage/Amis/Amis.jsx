@@ -11,7 +11,7 @@ import "./Amis.scss";
 
 
     
-export default function Amis() {
+export default function Amis({setGoToAction, setGoToConv}) {
 
 
     console.log("Amis Components called")
@@ -93,12 +93,12 @@ export default function Amis() {
         <div className={`Amis-root border-0`}>
             {responseFriendArray && responseFriendArray.map((msg, index) => (
                 <div key={index} className="one-friend border-1">
-                    <h5>{msg.login ? msg.login : "titi"}</h5>
+                    <h5>{msg.login}</h5>
 
-                    {/* <div className="div-btn">
-                        <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>mp</button>
-                        <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>supprimer</button>
-                    </div> */}
+                    <div className="div-btn">
+                        <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>mp</button>
+                        <button onClick={() => {setResponseFriend({login: msg.login, response: "c'est pas encore fait bg" })}}>supprimer</button>
+                    </div>
                 </div>
             ))}
             {!responseFriendArray && <p>HaHa ta pas de pote!</p> }

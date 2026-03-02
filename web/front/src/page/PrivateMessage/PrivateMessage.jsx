@@ -159,7 +159,7 @@ export default function PrivateMessage() {
                     <div className={`border-left`}></div>
 
                     {goToAction === 1 && <AjouterAmis />}
-                    {goToAction === 2 && <Amis />}
+                    {goToAction === 2 && <Amis setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
                     {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
                 
                 </div>
