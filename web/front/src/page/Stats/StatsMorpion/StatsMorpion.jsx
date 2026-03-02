@@ -1,8 +1,15 @@
+/* extern */
+import { useEffect, useState } from "react";
+
+/* back */
+// import checkCo from "BACK/fct1.js"
+
 /* Css */
 import "./StatsMorpion.scss";
 
 /* Components */
-    
+import Paging from "COMP/Paging/Paging.jsx";    
+
 export default function StatsMorpion() {
 
     // const data = {
@@ -84,57 +91,49 @@ export default function StatsMorpion() {
     //     }
     // }
 
+    const [currentPage, setCurrentPage] = useState("");
+
+
+    async function fetch_stats(page_nb) {
+
+        console.log("fetch_stats(1) called");
+
+        try{
+            const reponse = await fetch(`/api/get_morpion_stat/${page_nb}`, {
+            // const reponse = await fetch(`/api/get_morpion_stat?page=${page_nb}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            console.log("fetch_stats(1.5) ", reponse);
+            const repjson = await reponse.json();
+            if (repjson.success){
+                console.log("fetch_stats(2) success stat_user: " , repjson.stat_user);
+                console.log("fetch_stats(3) success history: " , repjson.history);
+            } else
+                console.error("fetch_stats(4) Error back ", repjson.message);
+        }catch(error){
+            console.error("fetch_stats(5) Error front: ", error);
+        }
+    }
+
+    fetch_stats(1);
+
     return (
-        <div className={`StatsMorpion-root`}>
+        <div className={`StatsMorpion-root border-base`}>
 
-                <div className={`history`}>
+                <div className={`history-container border-1`}>
 
-                    {/* <h1>history function call</h1> */}
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
-                    <div className={`border `}>history</div>
+                    <div className={`history-card-container`}>
+
+                    </div>
+                    <Paging currentPage={currentPage} setNewPage={setCurrentPage}/>
 
                 </div>
 
 {/* ------------------------------------------------------------------------ */}
 
-            <div className={`game-winrate`}>
+            <div className={`game-winrate border-4`}>
                     
                     <div className={`border wl-graph`}>
                         <p>Graph</p>

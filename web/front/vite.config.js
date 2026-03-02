@@ -15,14 +15,22 @@ export default defineConfig({
       '/ws': { // si tu utilises WebSocket
         target: 'ws://localhost:9000',
         ws: true,
+        changeOrigin: true,
+      },
+      '/game': {
+        target: 'ws://localhost:9000',
+        ws: true,
+        changeOrigin: true,
       },
     },
   },
   resolve: {
     alias: {
       'FRONT': path.resolve(__dirname, './src'),
+      'COMP': path.resolve(__dirname, './src/Component'),
       'BACK': path.resolve(__dirname, '/app/back/src'),
       'STYLE': path.resolve(__dirname, './src/style'),
+      'MEDIA': path.resolve(__dirname, '/app/media'),
     },
   },
   css: {

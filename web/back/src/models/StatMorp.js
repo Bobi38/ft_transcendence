@@ -57,6 +57,22 @@ const StatMorp = sequelize.define('StatMorp', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    WinCercle:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    WinCroix:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    LostCercle:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    LostCroix:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
 }, {
   tableName: 'StatMorp',
   timestamps: false,

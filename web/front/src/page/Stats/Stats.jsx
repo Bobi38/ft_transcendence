@@ -31,8 +31,8 @@ export default function Stats() {
                 <div className={`Stats-selection`}>
 
                     {!selected && <h3>Stats</h3>}
-                    {selected === "WiiGame" && <h4>Wii Game</h4>}
-                    {selected === "Morpion" && <h4>Morpion</h4>}
+                    {selected === "WiiGame" && <h3>Wii Game</h3>}
+                    {selected === "Morpion" && <h3>Morpion</h3>}
 
                     <button className={`Stats-btn`} onClick={() => stats_handle("WiiGame")}>Wii Game</button>
                     <button className={`Stats-btn`} onClick={() => stats_handle("Morpion")}>Morpion</button>

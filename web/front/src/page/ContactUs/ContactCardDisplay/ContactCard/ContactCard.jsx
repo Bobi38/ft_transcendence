@@ -28,9 +28,9 @@ export default function ContactCard({
         <>
             <div className={`${parent_style}`}>
 
-                <div className={`ContactCard-root border-black`}>
+                <div className={`ContactCard-root border-0`}>
 
-                    <div className={`ContactCard-image border-red`}>
+                    <div className={`ContactCard-image border-1`}>
 
                         <img src={`${image}`}
                             alt={`${name}'s avatar`}
@@ -38,7 +38,7 @@ export default function ContactCard({
                     
                     </div>
 
-                    <div className={`ContactCard-info border-yellow`}>
+                    <div className={`ContactCard-info border-4`}>
                         
                         <div>
                             <h2>{name}</h2>

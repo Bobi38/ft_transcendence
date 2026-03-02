@@ -3,34 +3,30 @@ import "./Button.scss";
 
 /* Components */
     
-export default function Button({ children, type_css , parent_css}) {
+export default function Button({children, path}) {
 
-    const css = () =>{
+	if (path)
+	{
 
-        switch (type_css){
-            case 0:
-                return "type0"
-            default:
-                return ""
-        }
-    }
+		return (
+			<a className={`button`} href={path}>
+				{children}
+			</a>
+		);
+	}
+	else
     return (
-        <>
 
-            <button className={`${css()} ${parent_css ? parent_css: ""}`}>
+		<button className={`button`}>
+			{children}
+		</button>
 
-                {children}
-                
-            </button>
-
-        </>
-    )
+	)
 }
 
 
 // Components de referance
 
-    
 // export default function Button({ children, type_css }) {
 
 //     const css = () =>{

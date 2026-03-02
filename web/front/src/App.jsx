@@ -1,7 +1,8 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SocketM } from "../tool/SocketManag";
+import SocketM  from "../tool/SocketManag";
 import { useEffect } from "react";
+import checkCo from "BACK/fct1.js"
 
 /* back */
 
@@ -18,6 +19,7 @@ import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
 import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
+import Test             from    "./test.jsx";
 
   // ./src/page/game
 import MorpionTraining  from    "FRONT/page/Game/Morpion/MorpionTraining.jsx";
@@ -30,11 +32,17 @@ import Morpion          from    "FRONT/page/Game/Morpion/Morpion.jsx";
 export default function App() {
 
   useEffect(() => {
-    SocketM.connect();
+    const init = async () => {
+            const repco = await checkCo();
+            if (!repco) return;
+    if (!SocketM.getState() || SocketM.getState() === "closed")
+      SocketM.connect();
     console.log("App.jsx useEffect(1) SocketM.connect() called");
+}
+init();
     return () => {
-      SocketM.disco();
-      console.log("App.jsx useEffect(2) SocketM.disconnect() called");
+      // SocketM.disco();
+      // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
     };
   }, []);
     //fait le check co a la place de home et envoyer le result

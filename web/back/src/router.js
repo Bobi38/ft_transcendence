@@ -14,7 +14,7 @@ import os from 'os';
 import session from 'express-session';
 import QRCode from 'qrcode';
 import {authenticator} from 'otplib';
-import { time } from 'console';
+import { error, time } from 'console';
 
 import pool from './pool.js';
 import {majDb}  from './fct.js';
@@ -26,6 +26,8 @@ import PrivMess from './models/privmess.js';
 import PrivChat from './models/privchat.js';
 import Friend from './models/friend.js';
 import PswEmail from './models/PssWrdEmail.js';
+import StatMorp from './models/StatMorp.js';
+import GameMorp from './models/GameMorp.js';
 
 
 const router = express.Router();
@@ -44,7 +46,7 @@ async function checktok(tokenn) {
   if (!tokenn) {       // <-- vérifie d’abord si le token existe
     console.log("no token provided");
     return 1;          // 1 = invalide
-  }
+}
 
   try {
     const decoded = jwt.verify(tokenn, secret); // ok, token existe
@@ -425,58 +427,63 @@ router.get('/nclick', async (req, res) => {
 });
 
 
-router.post('/addpriv', async (req, res) => {
+router.post('/add_message_private', async (req, res) => {
   try{
+	console.log("in add 1");
     const data = req.body;
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
     const id2 = await User.findOne({ where: { name: data.id}});
+	console.log("in add 2");
     if (res1 === 0 || id2 === 0)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
+    let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (findchat === 0)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-    await PrivMess.create({idSend: id1.id, conv: data.mess, ChatId: findchat.id, time: data.time});
+	console.log("in add 3");
+	console.log("dATA ", data.message, id1.id, findchat.id, data.time);
+    await PrivMess.create({SenderId: id1.id, contenu: data.message, ChatId: findchat.id, time: data.time});
+	console.log("GOOOOOD");
     res.status(201).json({success: true});
   }catch(err){
     res.status(500).json({success: false, message: err});
   }
 });
 
-router.get('/getpriv', async (req, res) => {
-  try{
-    const {tok2} = req.body;
-    const tok1 = req.cookies.token;
-    const id1 = jwt.verify(tok1, secret);
-    const id2 = await User.findOne({ where: { name: tok2}});
-    if (id2 === 0)
-      return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
-    if (findchat === 0)
-        return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
-    const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
-    const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id,co: true}});
-    let ret = "";
-    if (conv.length - 1 != 0)
-      ret = maj_conv(id1.id, conv, name);
-    res.status(201).json({success: true, message: ret});
-  }catch(err){
-    res.status(500).json({success: false, message: err});
-  }
+router.post('/get_chat_private', async (req, res) => {
+    try{
+        const {token} = req.body;
+        const my_token = req.cookies.token;
+        const id1 = jwt.verify(my_token, secret);
+        const id2 = await User.findOne({ where: { name: token}});
+        if (id2 === 0)
+            return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
+        const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
+        if (findchat === 0)
+            return res.status(500).json({success: false, message: 'ERROR CONV NOT FOUND'});
+        const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
+        const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id}});
+        let ret = "";
+        if (conv.length - 1 != 0)
+            ret = maj_conv(id1.id, conv, name);
+        res.status(201).json({success: true, message: ret});
+    }catch(err){
+        res.status(500).json({success: false, message: err});
+    }
 })
 
 
-router.post('/addchat', async (req, res) => {
+router.post('/add_message_global', async (req, res) => {
   try{
-    console.log("Api /addchat called");
+    console.log("Api /add_message_global called");
     const chat = req.body;
     if (chat.send == "")
       res.status(201)({success: true});
     const tok = req.cookies.token
     const id = jwt.verify(tok, secret);
     console.log (id.id, " " , chat.message);
-    await ChatG.create({contenu: chat.message, SenderId: id.id, time: chat.timer });
+    await ChatG.create({contenu: chat.message, SenderId: id.id, time: chat.time });
     console.log("buuuuug");
     // console.log('chat= ', chat);
     // const achat = await ChatG.findByPk(1);
@@ -494,9 +501,9 @@ router.post('/addchat', async (req, res) => {
   }
 })
 
-// router.get('/getchat', async (req, res) => {
+// router.get('/get_chat_global', async (req, res) => {
 //   try {
-//     console.log("dans GETCHAT-----");
+//     console.log("dans get_chat_global-----");
 //     const token = req.cookies.token;
 //     const decoded = jwt.verify(token, secret);
 //     const result = await User.findAll({ where: { id: decoded.id } });
@@ -514,9 +521,9 @@ router.post('/addchat', async (req, res) => {
 
 
 
-router.get('/getchat', async (req, res) => {
+router.get('/get_chat_global', async (req, res) => {
   try {
-    console.log("dans GETCHAT-----");
+    console.log("dans get_chat_global-----");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
@@ -605,35 +612,207 @@ router.get('/github/callback', async (req, res) => {
 });
 
 
-router.post('/fetchConv', async (req, res) => {
-  try{
-    const {input} = req.body
-    console.log("in fectch ", input)
-    // const token = req.cookies.token;
-    // const decoded = jwt.verify(token, secret);
-    // const result = await User.findOne({ where: { id: decoded.id } });
-    const result = await User.findOne({where :{name: input}});
-    console.log("rest   ", result.id);
-    const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name'] },{ model: User, as: 'user2', attributes: ['id', 'name'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
-    console.log("chattt 1 ", chats[0].PrivMesses[0].contenu)
-    console.log("chattt 2 ", chats[1].PrivMesses[0].contenu)
-    console.log("test join ", chats[0].user1.name);
-    return res.status(201).json({success: true, message: chats});
-  }catch(err){
-    console.log(err);
-    return res.status(500).json({success: false, message: err});
-  }
+router.get('/fetch_conv', async (req, res) => {
+    console.log("API fetch_conv called")
+    try{
+        const token = req.cookies.token;
+        if (!token) return res.status(401).json({ success: false, message: "Token manquant" });
+        const decoded = jwt.verify(token, secret);
+        const result = await User.findOne({ where: { id: decoded.id } });
+        if (!result) return res.status(404).json({ success: false, message: "Utilisateur introuvable" });
+        
+        console.log("rest   ", result.id);   
+      const chats = await PrivChat.findAll({
+        where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },
+        attributes: ['id'], // On ne garde que l'ID du chat
+        include: [
+          { 
+            model: User, 
+            as: 'user1', 
+            attributes: ['id', 'name', 'co'] 
+          },
+          { 
+            model: User, 
+            as: 'user2', 
+            attributes: ['id', 'name', 'co'] 
+          },
+          {
+            model: PrivMess,
+            as: 'PrivMesses',
+            attributes: ['contenu', 'time'], // On limite les champs du message
+            limit: 1,
+            order: [['id', 'DESC']]
+          }
+        ],
+        order: [['id', 'DESC']]
+      });
+
+      // Nettoyage pour n'avoir qu'un objet plat par discussion
+      const cleanChats = chats.map(chat => {
+        const isUser1 = chat.user1.id === result.id;
+        const interlocuteur = isUser1 ? chat.user2 : chat.user1;
+        const lastMsg = chat.PrivMesses[0] || null;
+
+        return {
+          UserId: chat.id,
+          login: interlocuteur.name,
+          isOnline: interlocuteur.co,
+          lastMessage: lastMsg ? lastMsg.contenu : '',
+          time: lastMsg ? lastMsg.time : null
+        };
+      });
+        // const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name', 'co'] },{ model: User, as: 'user2', attributes: ['id', 'name', 'co'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
+        console.log("API fetch_conv chat 0.5 ", chats)
+        console.log("API fetch_conv chat 1 ", chats[0].dataValues)
+        console.log("API fetch_conv chat 1 ", chats[0].PrivMesses[0].contenu)
+        console.log("API fetch_conv chat 2 ", chats[1].PrivMesses[0].contenu)
+        console.log("API fetch_conv test join ", chats[0].user1.name);
+        return res.status(201).json({success: true, message: cleanChats});
+    }catch(err){
+        console.log("API fetch_conv error: ",err);
+        return res.status(500).json({success: false, message: err});
+    }
 });
 
 
-// router.get('/getFriend', async (req, res) => {
+//const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
+router.get('/get_morpion_stat/:page', async (req, res) => {
+    try{
+        console.log("API get_morpion_stat(1) called");
+        const page = parseInt(req.params.page) || -1;
+        console.log("API get_morpion_stat(1) params ", page);
+        // if (page == -1) throw error
+
+
+// router.get('/get_morpion_stat', async (req, res) => {
+        // const page = parseInt(req.query.page) || -1;
+        // console.log("API get_morpion_stat(1) query ", page);
+        // if (page == -1) throw error
+
+
+
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, secret);
+        console.log("API get_morpion_stat(2)");
+        const resultStats = await StatMorp.findOne({where: {idUser: decoded.id}});
+        console.log("API get_morpion_stat(3)");
+        // const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: page - 1, order:[['id', 'DESC']]})
+        // console.log("API get_morpion_stat(4)");
+        const stat = {
+            AllGame: resultStats.nbGame,
+            AllWin: resultStats.Win,
+            AllLost: resultStats.Lost,
+            AllDraw: resultStats.Draw,
+            AllAbort: resultStats.Abort,
+            Diag:{
+              Win: resultStats.WinDiag,
+              Lost: resultStats.LostDiag,
+            },
+            Vert:{
+              Win: resultStats.WinVert,
+              Lost: resultStats.LostVert,
+            },
+            Horiz:{
+              Win: resultStats.WinHoriz,
+              Lost: resultStats.LostHoriz,
+            },
+            WinCroix: resultStats.WinCroix,
+            WinCercle: resultStats.WinCercle,
+            LostCroix: resultStats.LostCroix,
+            LostCercle: resultStats.LostCercle,
+        }
+        console.log("API get_morpion_stat(5)");
+        return res.status(201).json({success: true, stat_user: stat, history: undefined});
+
+    }catch(err){
+        return res.status(500).json({success: false, message: err });
+    }
+})
+
+
+// router.get('/all_friend', async (req, res) => {
 //   try{
 //     const token = req.cookies.token;
 //     const decoded = jwt.verify(token, secret);
-//     const result = await User.findAll({ where: { id: decoded.id } });
-
+//     console.log("1 f");
+// //     const result = await User.findByPk(decoded.id, {
+// //   include: [
+// //     { model: User, as: 'Friends', through: { where: { State: true }, attributes: [] } },
+// //     { model: User, as: 'FriendOf', through: { where: { State: true }, attributes: [] } }
+// //   ]
+// // });
+// const result = await User.findAll({
+// 					where: { id: decoded.id },
+// 					include: [{
+// 						model: User,
+// 						as: 'Friends',els
+// 						attributes: ['id', 'name', 'co'],
+// 						through: { where: { State: true }, attributes: [] },
+// 						required: false
+//           },
+// 					{
+// 						model: User,
+// 						as: 'FriendOf',
+// 						attributes: ['id', 'name', 'co'],
+// 						through: { where: { State: true }, attributes: [] },
+// 						required: false
+// 					},]});
+//     console.log("2 f");
+//     console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
+//     return res.status(201).json({success: true, message: result});
+//   }catch(err){
+//     return res.status(500).json({success: false, message: "err all_friend back ", err});
 //   }
 // })
+
+router.get('/add_friend', async (req, res) => {
+	try{
+		const name = req.query.name;
+		if (!name)
+			return res.status(400).json({success: false, message: "no name"});
+
+		const token = req.cookies.token;
+  	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+
+    const name_friend = await User.findOne({where: {name: name}});
+		if (!name_friend)
+			return res.status(404).json({success: false, message: undefined});
+
+    const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: result.id}]}})
+		if (relation.length > 0)
+			return res.status(409).json({success: false, message: name});
+
+    await Friend.create({Friend1: decoded.id, Friend2: name_friend.id, State: false, WhoAsk: decoded.id});
+		return res.status(201).json({success: true});
+	}catch(err){
+		return res.status(500).json({success: false, message: "err back add_friend ", err});
+	}
+})
+
+router.get('/dlt_friend', async (req, res) => {
+	try{
+		const name = parseInt(req.query.name) || null;
+		if (!name)
+			return res.status(400).json({success: false, message: "no name"});
+
+		const token = req.cookies.token;
+  	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+
+    const name_friend = await User.findOne({where: {name: name}});
+		if (!name_friend)
+			return res.status(404).json({success: false, message: "exist"});
+
+    const relation = await Friend.destroy({where: {[Op.or]: [{Friend1: result.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: result.id}]}})
+		if (relation === 0)
+			return res.status(409).json({success: false, message: "relation"});
+
+    return res.status(201).json({success: true});
+	}catch(err){
+		return res.status(500).json({success: false, message: "err back add_friend ", err});
+	}
+})
 
 export {secret_chat};
 export {secret};
@@ -663,3 +842,5 @@ telephone
 date de naissance
 photo
 */
+
+//rdata[0].
