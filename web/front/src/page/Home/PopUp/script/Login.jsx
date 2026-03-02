@@ -10,7 +10,7 @@ import "FRONT/page/Home/PopUp/PopUp.scss";
 /* Components */
 import { AUTH } from "FRONT/page/Home/Home.jsx"
 
-import useFetch from "HOOKS/useFetch";
+import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Login({setShowLog}) {
 

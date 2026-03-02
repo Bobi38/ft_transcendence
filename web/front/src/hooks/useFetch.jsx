@@ -37,4 +37,4 @@ export default async function useFetch(url, type_request){
     
 
     // }
-// import useFetch from "HOOKS/useFetch";
+// import useFetch from "HOOKS/.jsx";
