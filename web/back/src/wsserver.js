@@ -69,10 +69,10 @@ export function initWebSocket(server) {
     socket.on('message', (message) => {
       try{
         const data = JSON.parse(message.toString());
-        console.log('=== MESSAGE REÇU ===');
+        // console.log('=== MESSAGE REÇU ===');
         console.log('Type:', data.type);
-        console.log('Contenu:', data.mess);
-        console.log('===================');
+        // console.log('Contenu:', data.mess);
+        // console.log('===================');
         // if (data.type === 'auth'){
         //   iid = socket.userId;
         //   const use = chat.finduser(iid);
