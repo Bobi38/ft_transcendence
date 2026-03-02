@@ -1,5 +1,5 @@
 import {decrypt, encrypt} from '../crypt.js';
-import {express, maj_conv, jwt, Op, secret, where} from './index.js';
+import {express, maj_conv, jwt, Op, secret} from './index.js';
 import {User, PrivChat, PrivMess} from './index.js';
 
 const router = express.Router();
@@ -58,15 +58,21 @@ router.get('/fetch_conv', async (req, res) => {
         if (!token) 
           return res.status(401).json({ success: false, message: "Token manquant" });
         const decoded = jwt.verify(token, secret);
+        console.log("decoded ", decoded, decoded.id);
         const result = await User.findOne({ where: { id: decoded.id } });
         console.log("API fetch_conv test join()");
         if (!result) 
           return res.status(404).json({ success: false, message: "Utilisateur introuvable" });
         
-        // console.log("rest   ", result.id);   
+        console.log("rest   ", result.id);   
         console.log("API fetch_conv test join()");
       const chats = await PrivChat.findAll({
-        where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },
+        where: { 
+          [Op.or]: [
+            { id1: result.id },
+            { id2: result.id }
+          ] 
+        },
         attributes: ['id'], // On ne garde que l'ID du chat
         include: [
           { 
