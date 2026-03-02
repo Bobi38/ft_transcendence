@@ -715,7 +715,7 @@ router.get('/get_morpion_stat/:page', async (req, res) => {
 // 						as: 'FriendOf',
 // 						attributes: ['id', 'name', 'co'],
 // 						through: { where: { State: true }, attributes: [] },
-// 						required: false
+// 						r11:55:05equired: false
 // 					},]});
 //     console.log("2 f");
 //     console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
