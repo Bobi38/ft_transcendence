@@ -15,10 +15,10 @@ import Amis from "./Amis/Amis.jsx"
 
 export default function PrivateMessage() {
     
-    const [goToAction, setGoToAction] = useState(2)                                                   // info  Amis / Ajouter un Amis
-    const [goToConv, setGoToConv] = useState(null)                                                    // changer de conv private
+    const [goToAction, setGoToAction] = useState(2)                                                     // info  Amis / Ajouter un Amis
+    const [goToConv, setGoToConv] = useState(null)                                                      // changer de conv private
 
-    const [displayedInfoConv, setDisplayedInfoConv] = useState([]);    // la liste des conv private
+    const [displayedInfoConv, setDisplayedInfoConv] = useState([]);                                     // la liste des conv private
     /* {UserId: 1, login: 'tata', isOnline: false, lastMessage: 'e', time: '09:05:07'} */
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
@@ -136,15 +136,14 @@ export default function PrivateMessage() {
                         {displayedInfoConv && displayedInfoConv.map((msg,index) => (
                             <div key={index}>
                                 {index != 0 && <hr/>}
-                                <div>
                                     
-                                    <div className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
-                                        <div className={`header-last-conv border-4`}>
-                                            <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
-                                        </div>
-                                        <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
+                                <div className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
+                                    <div className={`header-last-conv border-4`}>
+                                        <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
                                     </div>
+                                    <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
                                 </div>
+
                             </div>
                         ))}
                     </div>
