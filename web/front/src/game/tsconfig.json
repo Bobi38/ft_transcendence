@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    
     "target": "es6",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -11,6 +15,6 @@
         "dom",
         "es6"
     ],
-    "rootDir": "src"
+    "rootDir": "./"
   }
 }

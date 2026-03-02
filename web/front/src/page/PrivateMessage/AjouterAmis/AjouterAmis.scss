@@ -24,6 +24,7 @@
     }
     .response{
         @include mix.full;
+        padding: 0.5rem;
         .one-response{
             padding: 1rem;
             display: flex;

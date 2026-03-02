@@ -30,6 +30,7 @@ export default defineConfig({
       'COMP': path.resolve(__dirname, './src/Component'),
       'BACK': path.resolve(__dirname, '/app/back/src'),
       'STYLE': path.resolve(__dirname, './src/style'),
+      'MEDIA': path.resolve(__dirname, '/app/media'),
     },
   },
   css: {

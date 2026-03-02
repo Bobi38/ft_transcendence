@@ -11,18 +11,10 @@
     flex-direction: row;
 
     hr {
-        border: 0.5px solid black;
+        border: 1px solid black;
     }
     .big {
         border: 2px solid black;
-    }
-    .bloc-left {
-        border-radius: 0.25rem;
-        padding: 0.5rem;
-        cursor: pointer;
-        &:hover{
-            background-color: rgba(0, 0, 0, 0.2);
-        }
     }
     .info {
         display: flex;
@@ -31,20 +23,55 @@
         overflow: hidden auto;
         scrollbar-width: thin;
         
-
-        .bloc-friend-addfriend {
-            padding-right: 1rem;
-            padding-left: 1rem;
+        .bloc-friend-addfriend, .bloc-last-conv-friend {
+            padding: 0.5rem;
             display: flex;
             flex-direction: column;
-            gap:0.5rem;
-
+            gap: 3px;
+            hr {
+                border: 1px solid black;
+                @include mix.fullw;
+            }            
+            .bloc-left {@include mix.fullw;
+                display: flex;
+                flex-direction: column;
+                border-radius: 0.25rem;
+                padding: 0.5rem;
+                cursor: pointer;
+                &:hover{
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
+            }
+        }
+        .bloc-friend-addfriend {align-items: center;}
+        .bloc-last-conv-friend {
+            gap: 3px;
+            .bloc-left {
+                p{
+                    font-size: 0.5rem;
+                }
+                .truncate ,h4{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin: 0;
+                }
+                .header-last-conv{
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    h4 {
+                        width: 70%;
+                    }
+                    span{
+                        width: 30%;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
         }
 
 
-    }
-    .border-left {
-        border-left: 3px solid black;
     }
     .display-screen{
 	    @include mix.full;

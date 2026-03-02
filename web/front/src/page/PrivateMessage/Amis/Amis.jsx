@@ -14,37 +14,39 @@ import "./Amis.scss";
 export default function Amis() {
 
 
+    console.log("Amis Components called")
+
     const [responseFriendArray, setResponseFriendArray] = useState([{ login: "titi" },{ login: "tata" }]);
 
 
-    async function fetch_all_friend(){ // with co or not
-        console.log("fetch_all_friend(1) called");
-        try{
+    // async function fetch_all_friend(){ // with co or not
+    //     console.log("fetch_all_friend(1) called");
+    //     try{
 
-            const rep = await fetch('/api/friend/all_friend', {
-                method: "GET",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
+            // const rep = await fetch('/api/friend/all_friend', {
+            //     method: "GET",
+            //     headers: {'Content-Type': 'application/json'},
+            //     credentials: "include",
+            // });
             
-            // console.log("fetch_all_friend(2) after fetch");
-            const repjson = await rep.json();
-            console.log("fetch_all_friend(2.5) repjson: ",repjson.message);
+    //         // console.log("fetch_all_friend(2) after fetch");
+    //         const repjson = await rep.json();
+    //         console.log("fetch_all_friend(2.5) repjson: ",repjson.message);
 
-            if (repjson.success){
-                // setResponseFriendArray(repjson.message)
-                console.log("success")
-                console.log(repjson.message[0].Friends[0].name);
-                console.log(repjson.message[0].Friends[1].name);
-                console.log(repjson.message[0].FriendOf[0].name);
+    //         if (repjson.success){
+    //             // setResponseFriendArray(repjson.message)
+    //             console.log("success")
+    //             console.log(repjson.message[0].Friends[0].name);
+    //             console.log(repjson.message[0].Friends[1].name);
+    //             console.log(repjson.message[0].FriendOf[0].name);
 
-            }else {
-                console.log("fetch_all_friend(3) error back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_all_friend(4) error front ", err);
-        }
-    }
+    //         }else {
+    //             console.log("fetch_all_friend(3) error back ", repjson.message);
+    //         }
+    //     }catch(err){
+    //         console.log("fetch_all_friend(4) error front ", err);
+    //     }
+    // }
 
 
 
@@ -81,16 +83,16 @@ export default function Amis() {
 
 
     useEffect(() => {
-        fetch_all_friend();
+        // fetch_all_friend();
     }, []);
 
 
     const [responseFriend, setResponseFriend] = useState();
 
     return (
-        <div className={`Amis-root border-blue`}>
+        <div className={`Amis-root border-0`}>
             {responseFriendArray && responseFriendArray.map((msg, index) => (
-                <div key={index} className="one-friend border-green">
+                <div key={index} className="one-friend border-1">
                     <h5>{msg.login ? msg.login : "titi"}</h5>
 
                     {/* <div className="div-btn">

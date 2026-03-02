@@ -1,16 +1,16 @@
-@use "STYLE/variable" as var;
+@use "STYLE/variable" as *;
 
 %border-base {
-  border: var.$border_value solid black;
+  border: $border_value solid black;
 }
 
 
-.border-black     {  @extend %border-base; }
+.border-0         {  @extend %border-base; }
 
-.border-red       {  @extend %border-base;  border-color: red;   }
-.border-yellow    {  @extend %border-base;  border-color: yellow;}
-.border-blue      {  @extend %border-base;  border-color: blue;  }
-.border-green     {  @extend %border-base;  border-color: green; }
-.border-cyan      {  @extend %border-base;  border-color: cyan;  }
-.border-brown     {  @extend %border-base;  border-color: brown; }
+.border-1         {  @extend %border-base;  border-color: red;   }
+.border-2         {  @extend %border-base;  border-color: green; }
+.border-3         {  @extend %border-base;  border-color: blue;  }
+.border-4         {  @extend %border-base;  border-color: yellow;}
+.border-5         {  @extend %border-base;  border-color: cyan;  }
+.border-6         {  @extend %border-base;  border-color: brown; }
 

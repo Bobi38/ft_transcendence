@@ -1,10 +1,10 @@
-@use "STYLE/variable" as var;
+@use "STYLE/variable" as *;
 
 .NavBar-container {
     display: flex;
     justify-content: space-evenly;
     background: rgb(174, 36, 36);
-    border-radius: var.$border_radius_value;
+    border-radius: $border_radius_value;
     padding: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     height: 100%;
@@ -14,7 +14,7 @@
         display: flex;
         align-items: center;
         padding: 1rem;
-        border-radius: var.$border_radius_value;
+        border-radius: $border_radius_value;
         text-decoration: none;
         color: white;
         background-color: #667eea;

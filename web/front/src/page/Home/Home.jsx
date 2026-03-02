@@ -33,33 +33,33 @@ export default function Home() {
     const home_handler = async (event) => {
 
 		//sorry idk where to put this, but here that worked
-		const cards = document.querySelectorAll('.card-effect');
-		cards.forEach(card => {
-			const tiltLimit = 20;
+		//const cards = document.querySelectorAll('.card-effect');
+		//cards.forEach(card => {
+		//	const tiltLimit = 20;
 
-			card.addEventListener('mousemove', (e) => {
-				const rect = card.getBoundingClientRect();
-				const x = e.clientX - rect.left;
-				const y = e.clientY - rect.top;
-				const xPercent = (x / rect.width) - 0.5;
-				const yPercent = (y / rect.height) - 0.5;
+		//	card.addEventListener('mousemove', (e) => {
+		//		const rect = card.getBoundingClientRect();
+		//		const x = e.clientX - rect.left;
+		//		const y = e.clientY - rect.top;
+		//		const xPercent = (x / rect.width) - 0.5;
+		//		const yPercent = (y / rect.height) - 0.5;
 
-				const rotateX = yPercent * -tiltLimit;
-				const rotateY = xPercent * tiltLimit;
+		//		const rotateX = yPercent * -tiltLimit;
+		//		const rotateY = xPercent * tiltLimit;
 
-				card.style.transform = `
-				rotateX(${rotateX}deg)
-				rotateY(${rotateY}deg)
-				scale3d(1.05, 1.05, 1.05)
-				translateY(-3px)
-				`;
-			});
+		//		card.style.transform = `
+		//		rotateX(${rotateX}deg)
+		//		rotateY(${rotateY}deg)
+		//		scale3d(1.05, 1.05, 1.05)
+		//		translateY(-3px)
+		//		`;
+		//	});
 
-			// Reset rotation when mouse leaves
-			card.addEventListener('mouseleave', () => {
-				card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-			});
-		});
+		//	// Reset rotation when mouse leaves
+		//	card.addEventListener('mouseleave', () => {
+		//		card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+		//	});
+		//});
 
 
         if (event && event.target && event.target.closest('.PopUp-root')) {

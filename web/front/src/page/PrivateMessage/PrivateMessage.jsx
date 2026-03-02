@@ -13,11 +13,13 @@ import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 import Amis from "./Amis/Amis.jsx"
 
 
-export default function PrivateMessage() { 
+export default function PrivateMessage() {
     
     const [goToAction, setGoToAction] = useState(2)                                                   // info  Amis / Ajouter un Amis
     const [goToConv, setGoToConv] = useState(null)                                                    // changer de conv private
-    const [displayedInfoConv, setDisplayedInfoConv] = useState([{login: "titi"},{login: "tata"}]);    // la liste des conv private
+
+    const [displayedInfoConv, setDisplayedInfoConv] = useState([]);    // la liste des conv private
+    /* {UserId: 1, login: 'tata', isOnline: false, lastMessage: 'e', time: '09:05:07'} */
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
     const [input, setInput] = useState("");
@@ -25,7 +27,7 @@ export default function PrivateMessage() {
 
     
     async function fetch_go_to_conv_private (){
-        // console.log("fetch_go_to_conv_private(1) called");
+        console.log("fetch_go_to_conv_private(1) called");
         try{
 
             const rep = await fetch('/api/chatP/fetchConv', {
@@ -40,26 +42,19 @@ export default function PrivateMessage() {
                 // console.log("fetch_go_to_conv_private(3) success");
 
                 const chats = repjson.message;
-                // console.log("fetch_go_to_conv_private(info) ", chats[0].PrivMesses[0].contenu)
-                // console.log("fetch_go_to_conv_private(info) ", chats[1].PrivMesses[0].contenu)
-                // console.log("fetch_go_to_conv_private(info) test join ", chats[0].user1.name);
-                //Chat est un tableau 0-1-2-3-....
-                //chaque partie du tableau est le dernier message d une conversation
-                //PrivMesses est un tableau d une taille de 1 car qu un seul message
-                //dans chaque message il y a le nom des deux personnes dans la conversation= .user1 et .user2
-                // un des deux c'est me
-                // il faudra donc checker chaque chat[i] pour savoir si me est .user1 ou .user2 et mettre a jour la colonne des conversation
-                // puis setDisplayedInfoConv
+                console.log("fetch_go_to_conv_private(info)", chats);
+                setDisplayedInfoConv(chats)
+                
             }else {
-                // console.log("fetch_go_to_conv_private(4) error back ", repjson.message);
+                console.log("fetch_go_to_conv_private(4) error back ", repjson.message);
             }
         }catch(err){
-            // console.log("fetch_go_to_conv_private(5) error front ", err);
+            console.log("fetch_go_to_conv_private(5) error front ", err);
         }
     }
     
     useEffect(() => {
-        (async () => {await fetch_go_to_conv_private();})();
+        fetch_go_to_conv_private()
     }, []);
 
 
@@ -72,7 +67,7 @@ export default function PrivateMessage() {
 
     async function fetch_private_message(goToConv) {
 
-        console.log("fetch_private_message(0.5) called: ", goToConv);
+        // console.log("fetch_private_message(0.5) called: ", goToConv);
 
         if (!goToConv) return;
 
@@ -103,21 +98,12 @@ export default function PrivateMessage() {
 
         console.log("useEffect on est la ", goToConv);
         fetch_private_message(goToConv);
-        // async () => { await fetch_private_message({goToConv}) }
-
-
-        // if (SocketM.getState() && SocketM.getState() === "closed") {
-        //     SocketM.connect();
-        // }
 
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.login === goToConv)
                 setDisplayedMessages(prev => [...prev, data]);
-            fetch_go_to_conv_private(); // no need for async IIFE here 
-            // (async () => {await fetch_go_to_conv_private();})();// its ok for now
-            //ici nous recevrons un message ne venant pas de la conversation qui est ouverte
-            // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
+            fetch_go_to_conv_private();
         
         }
         SocketM.onPriv(handle_private_message);
@@ -128,47 +114,40 @@ export default function PrivateMessage() {
 
     }, [goToConv]);
 
-    const handletest = async () =>{
-        console.log("couocu");
-        await fetch_all_friend();
-    }
     
     return (
         <>
-            <div className={`PrivateMessage-root`}>
+            <div className={`PrivateMessage-root border-0`}>
 
 {/* ------------------------------------------------------------------------------------------- */}
-                <div className={`info`}>
+                <div className={`info border-1`}>
 
-                    <div className={`bloc-friend-addfriend`}>
-                        <div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
+                    <div className={`bloc-friend-addfriend border-2`}>
+                        <div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
                         <hr/>
-                        <div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
-                        <div className="bloc-left" onClick={handletest}>test</div>
+                        <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}
                     <hr className={`big`}/>
     {/* ------------------------------------------------------------------------------ */}
 
-                    <div className={`bloc-friend-message`}>
-                        
-                        {displayedInfoConv && displayedInfoConv.map((msg, index) => (
-                            <>
-
-                                <div key={index} className={`bloc-left`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
-
-                                    <h4>{msg.login}</h4>
-
+                    <div className={`bloc-last-conv-friend border-2`}>
+                        {displayedInfoConv && displayedInfoConv.map((msg,index) => (
+                            <div key={index}>
+                                {index != 0 && <hr/>}
+                                <div>
+                                    
+                                    <div className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
+                                        <div className={`header-last-conv border-4`}>
+                                            <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
+                                        </div>
+                                        <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
+                                    </div>
                                 </div>
-
-                                <div className={`border-bottom`}></div>
-
-                            </>
+                            </div>
                         ))}
-
                     </div>
-
                 </div>
 {/* ------------------------------------------------------------------------------------------- */}
 
@@ -177,7 +156,7 @@ export default function PrivateMessage() {
     {/* ------------------------------------------------------------------------------ */}
 
 {/* ------------------------------------------------------------------------------------------- */}
-                <div className={`display-screen`}>
+                <div className={`display-screen border-2`}>
                     <div className={`border-left`}></div>
 
                     {goToAction === 1 && <AjouterAmis />}
@@ -189,5 +168,7 @@ export default function PrivateMessage() {
 {/* ------------------------------------------------------------------------------------------- */}
             </div> {/* PrivateMessage-root */}
         </>
+        
     )
 }
+

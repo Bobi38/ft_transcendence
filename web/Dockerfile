@@ -43,6 +43,9 @@ COPY ./front/package*.json ./
 RUN npm install
 
 
+WORKDIR /app
+COPY ./media ./media
+
 WORKDIR /app/back
 # Copie tout
 COPY . .

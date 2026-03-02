@@ -79,6 +79,7 @@ export default function Login({setShowLog}) {
                             name={`email`}
                             placeholder={`you@exemple.com`}
                             required
+                            // value={`toto@test.c`}//--
                             />
 
                     <label  htmlFor="password">Password</label>
@@ -87,6 +88,7 @@ export default function Login({setShowLog}) {
                             name={`password`}
                             placeholder={`1234btw`}
                             required
+                            // value={`tt`}//--
                             />
 
                     <div className={`button-container`}>

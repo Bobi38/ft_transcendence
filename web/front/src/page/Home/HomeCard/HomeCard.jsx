@@ -23,12 +23,15 @@ export default function HomeCard({children, path}) {
     }
 
     return (
-            <button onClick={() => {HomeCard_clicked(path)}} className={`HomeCard card-effect`}>
-                <p>
-                    {children}
-                </p>
-            </button>
-    )
+
+		<button onClick={() => {HomeCard_clicked(path)}} className={`HomeCard card-effect`}>
+			{/*<img src="/app/media/aeroplane.svg" alt="grossepute" /> TODOOO*/}
+			<p>
+				{children}
+			</p>
+		</button>
+
+	)
 }
 
 

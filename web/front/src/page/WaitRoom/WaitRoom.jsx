@@ -42,7 +42,7 @@ export default function WaitRoom() {
             // const location = input;
             // const api = "http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + location;
             // console.log("look api " , api);
-        //     const rep = await fetch('/api/fetchConv' ,{
+        //     const rep = await fetch('/api/fetch_conv' ,{
         //         method: "POST",
         //         headers: {
         //             "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export default function WaitRoom() {
     //     e.preventDefault();
     //     console.log("in handltest ", input);
     //     try{
-    //         const rep = await fetch('/api/fetchConv' ,{
+    //         const rep = await fetch('/api/fetch_conv' ,{
     //             method: "POST",
     //             headers: {
     //                 "Content-Type": "application/json",

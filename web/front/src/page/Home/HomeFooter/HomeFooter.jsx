@@ -1,6 +1,7 @@
 /* extern */
 import { Link } from "react-router-dom";
 import  SocketM  from "../../../../tool/SocketManag.js"
+import { useEffect, useState } from "react";
 
 /* back */
 
@@ -8,13 +9,13 @@ import  SocketM  from "../../../../tool/SocketManag.js"
 import "./HomeFooter.scss"
 
 /* Components */
-
-
 import { AUTH } from "FRONT/page/Home/Home.jsx"
+import Button from "FRONT/Component/Button/Button.jsx"
+import useClock from "FRONT/hooks/useClock.jsx";
+
 
 export default function HomeFooter({setShowLog}) {
 
-    
     function logout() {
         console.log("logout(1) called")
 
@@ -39,20 +40,21 @@ export default function HomeFooter({setShowLog}) {
         });
     }
 
+
+    const time = useClock();
+
     return (
         <>
             <div className={`HomeFooter-root`}>
 
-                    <Link   to={`/ContactUs`}
-                            className={``}>
-                            Contact us
-                    </Link>
-
+				<Button path={`/ContactUs`}>
+					Contact us
+				</Button>
 
                     <div className={``}>
 
                         <div className={``}>
-                            8:42
+                            {time}
                         </div>
 
                         <button className={``}

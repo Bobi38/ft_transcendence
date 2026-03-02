@@ -122,7 +122,7 @@ export default function StatsMorpion() {
     return (
         <div className={`StatsMorpion-root border-base`}>
 
-                <div className={`history-container border-red`}>
+                <div className={`history-container border-1`}>
 
                     <div className={`history-card-container`}>
 
@@ -133,7 +133,7 @@ export default function StatsMorpion() {
 
 {/* ------------------------------------------------------------------------ */}
 
-            <div className={`game-winrate border-yellow`}>
+            <div className={`game-winrate border-4`}>
                     
                     <div className={`border wl-graph`}>
                         <p>Graph</p>

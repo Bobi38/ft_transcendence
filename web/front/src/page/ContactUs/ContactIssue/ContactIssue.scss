@@ -1,13 +1,13 @@
-@use "STYLE/variable" as var;
+@use "STYLE/variable" as *;
 
 .ContactIssue-root{
-    border-radius: var.$border_radius_value;
+    border-radius: $border_radius_value;
     background-color:cornflowerblue;
     margin-bottom: 2rem;
     padding: 1rem;
     
     &:hover{
-        box-shadow: var.$shadow;
+        box-shadow: $shadow;
     }
 
     display: flex;
@@ -33,7 +33,7 @@
         
         & input, & select, & textarea{
             // border: none;
-            border-radius: var.$border_radius_value;
+            border-radius: $border_radius_value;
             font-size: 1.5rem;
             height: 3rem;
         }

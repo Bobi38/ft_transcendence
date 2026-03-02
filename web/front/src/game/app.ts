@@ -2,11 +2,12 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion} from "@babylonjs/core";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
 import HavokPhysics from "@babylonjs/havok";
+import { Ball } from "./ball";
 
 export class App {
     private _canvas: HTMLCanvasElement;
@@ -15,6 +16,8 @@ export class App {
     private _environment: Environment;
     private _input: PlayerInput;
     private _player: Player;
+    private MAX_SPEED: number = 40;
+    private _ball: Ball;
     public assets;
 
 
@@ -81,7 +84,7 @@ export class App {
             locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
         });
         const havokPlugin = new HavokPlugin(true, havokInstance);
-        this._scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
+        this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
         
         await this._environment.load();
         await this._loadCharacterAssets(scene);
@@ -90,20 +93,33 @@ export class App {
     }
 
     private async _initializeGameAsync(scene: Scene): Promise<void> {
-        let light = new PointLight('PointLight', new Vector3(0,5,5), scene);
+        let light = new PointLight('PointLight', new Vector3(0,5,0), scene);
         light.diffuse = new Color3(1,1,1);
         light.intensity = 1;
-        light.radius = 0.1;
+        //light.radius = 0.1;
+        //light.radius = 0; 
+        //light.includedOnlyMeshes = [];
 
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
 
-        this._player = new Player(this.assets, scene, shadow, this._input);
+        this._player = new Player(this.assets, scene, shadow, this._input)
+        
+        this._ball = new Ball(new Vector3(0, 3, 7), 1, this.MAX_SPEED, shadow, this._scene);
+        this._scene.onBeforeRenderObservable.add(() => {
+            if (this._ball.getMeshPosition()._z < -23) {
+                this._ball.dispose();
+                this._ball = new Ball(new Vector3(0,3,7), 1, this.MAX_SPEED, shadow, this._scene);
+            }
+        });
     }
 
     private async _loadCharacterAssets(scene: Scene) {
         async function loadCharacter(): Promise<{mesh: Mesh}> {
             let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, scene);
+
+            body.isVisible = false;
+
             body.position = new Vector3(0,1.5,0);
             let bodymtl = new StandardMaterial("red", scene);
             bodymtl.diffuseColor = Color3.Red();
@@ -113,16 +129,27 @@ export class App {
             hand_node.position = new Vector3(0.4, 2, 1);
             const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.5});
             hand.material = bodymtl;
+
+            let racketmtl = new StandardMaterial("white", scene);
+            racketmtl.diffuseColor = new Color3(0.4,0.2,0);
             let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.2, height: 0.8});
             stick.position._y = 0.4;
+            stick.material = racketmtl;
             const racket = MeshBuilder.CreateCylinder("racket", {diameter: 1, height: 0.2});
+            racket.material = racketmtl;
             racket.position._y = 0.7;
-            racket.rotation = new Vector3(Math.PI / 2, 0, 0);
-
+            //racket.rotation = new Vector3(Math.PI / 2, 0, 0);
+            racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
+            
+            let racketRoot = new TransformNode("racketRoot", scene);
+    
             racket.parent = stick;
             stick.parent = hand;
-            hand.parent = hand_node;
+            hand.parent = racketRoot;
+            racketRoot.parent = hand_node;
             hand_node.parent = body;
+
+            
             return { mesh: body};
         }
         return loadCharacter().then((assets) => {
