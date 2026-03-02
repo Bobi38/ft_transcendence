@@ -1,10 +1,9 @@
 
 import 
-newrouter, 
 {
   User,
   Co,
-  // ChatG,
+  // ChatG
   // PrivMess,
   // PrivChat,
   // Friend,
@@ -14,8 +13,12 @@ newrouter,
   // HistoryMorp,
 }from './index.js'
 
+import { bcrypt, jwt, express, secret } from './index.js';
 
-newrouter.post('/login', async (req, res) => {
+const router = express.Router();
+
+router.post('/login', async (req, res) => {
+  console.log("je suis dans login")
   const { email, password } = req.body;
 
   try {
@@ -49,7 +52,7 @@ newrouter.post('/login', async (req, res) => {
 });
 
 
-newrouter.post('/register', async (req, res) => {
+router.post('/register', async (req, res) => {
     console.log("Api /register called");
   const { name, password, email } = req.body;
   try {
@@ -73,7 +76,7 @@ newrouter.post('/register', async (req, res) => {
   }
 });
 
-newrouter.post('/logout', async (req, res) => {
+router.get('/logout', async (req, res) => {
   try {
     console.log("Api /logout called");
     const token = req.cookies.token;
@@ -97,3 +100,5 @@ newrouter.post('/logout', async (req, res) => {
     res.status(500).json({ success: false, message: 'Erreur MySQL' });
   }
 });
+
+export default router;

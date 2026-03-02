@@ -16,7 +16,6 @@ import QRCode from 'qrcode';
 import {authenticator} from 'otplib';
 import { error, time } from 'console';
 
-import pool from './pool.js';
 import {majDb}  from './fct.js';
 
 import User  from './models/user.js';
@@ -364,7 +363,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/logout', async (req, res) => {
+router.get('/logout', async (req, res) => {
   try {
     console.log("Api /logout called");
     const token = req.cookies.token;
@@ -389,46 +388,6 @@ router.post('/logout', async (req, res) => {
   }
 });
 
-router.post('/click', async (req, res) => {
-  try {
-    console.log("Api /click called");
-    console.log(req.body);
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await User.findAll({ where: { id: decoded.id } });
-    if (result.length === 0)
-        return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const instantclicks = result[0].total_part;
-    // console.log("instantclicks :", instantclicks);
-    await result[0].update({total_part: instantclicks + 1});
-    majDb();
-    res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks + 1 });
-  }
-  catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Erreur MySQL' });
-  }
-});
-
-router.get('/nclick', async (req, res) => {
-  try {
-    // console.log("Api /nclick called");
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await User.findAll({ where: { id: decoded.id } });
-    if (result.length === 0)
-        return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
-    const instantclicks = result[0].total_part;
-    // console.log("Api /nclick init", instantclicks);
-    res.status(201).json({ success: true, message: 'Click recu', clicks: instantclicks });
-  }
-  catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Erreur MySQL' });
-  }
-});
-
-
 router.post('/add_message_private', async (req, res) => {
   try{
 	console.log("in add 1");
@@ -438,10 +397,10 @@ router.post('/add_message_private', async (req, res) => {
     const res1 = await User.findOne({ where: {id: id1.id}});
     const id2 = await User.findOne({ where: { name: data.id}});
 	console.log("in add 2");
-    if (res1 === 0 || id2 === 0)
+    if (!res1 || !id2)
       return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
-    if (findchat === 0)
+    if (!findchat)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
 	console.log("in add 3");
 	console.log("dATA ", data.message, id1.id, findchat.id, data.time);
@@ -546,10 +505,6 @@ router.get('/get_chat_global', async (req, res) => {
   }
 });
 
-router.post('/welcome', async (req, res) => {
-  // console.log("COOOOUUUUUUU_________________");
-  res.status(201).json({ success: true, message: 'Bienvenue' });
-});
 
 router.get('/github',  async (req, res) => {
   console.log("dans github");

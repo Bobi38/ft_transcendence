@@ -1,5 +1,6 @@
 /* extern */
 import { Link } from "react-router-dom";
+import  SocketM  from "../../../../tool/SocketManag.js"
 
 /* back */
 
@@ -18,7 +19,7 @@ export default function HomeFooter({setShowLog}) {
         console.log("logout(1) called")
 
         fetch('/api/logout', {
-            method: 'POST',//TODO TITOU post sans body?
+            method: 'GET',//TODO TITOU post sans body?
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
         })
@@ -27,6 +28,7 @@ export default function HomeFooter({setShowLog}) {
 
             if (data.success) {
                 setShowLog(AUTH.LOGIN)
+                SocketM.disco();
             } else {
                 console.error("logout(2) failed");
             }
