@@ -98,21 +98,12 @@ export default function PrivateMessage() {
 
         console.log("useEffect on est la ", goToConv);
         fetch_private_message(goToConv);
-        // async () => { await fetch_private_message({goToConv}) }
-
-
-        // if (SocketM.getState() && SocketM.getState() === "closed") {
-        //     SocketM.connect();
-        // }
 
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.login === goToConv)
                 setDisplayedMessages(prev => [...prev, data]);
-            fetch_go_to_conv_private(); // no need for async IIFE here 
-            // (async () => {await fetch_go_to_conv_private();})();// its ok for now
-            //ici nous recevrons un message ne venant pas de la conversation qui est ouverte
-            // il faudra donc recuperer le message et le name/id pour remonter le message en haut de la colonne 
+            fetch_go_to_conv_private();
         
         }
         SocketM.onPriv(handle_private_message);
@@ -123,10 +114,6 @@ export default function PrivateMessage() {
 
     }, [goToConv]);
 
-    // const handletest = async () =>{
-    //     console.log("couocu");
-    //     await fetch_all_friend();
-    // }
     
     return (
         <>
@@ -139,7 +126,6 @@ export default function PrivateMessage() {
                         <div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
                         <hr/>
                         <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
-                        {/* <div className="bloc-left border-3" onClick={handletest}>test</div> */}
                     </div>
 
     {/* ------------------------------------------------------------------------------ */}
