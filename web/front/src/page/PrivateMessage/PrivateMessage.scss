@@ -27,9 +27,9 @@
             padding: 0.5rem;
             display: flex;
             flex-direction: column;
-            gap: 3px;
             hr {
                 border: 1px solid black;
+                margin: 3px 0;
                 @include mix.fullw;
             }            
             .bloc-left {@include mix.fullw;
@@ -45,7 +45,6 @@
         }
         .bloc-friend-addfriend {align-items: center;}
         .bloc-last-conv-friend {
-            gap: 3px;
             .bloc-left {
                 p{
                     font-size: 0.5rem;

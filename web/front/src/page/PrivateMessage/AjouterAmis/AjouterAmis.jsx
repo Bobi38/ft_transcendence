@@ -45,7 +45,7 @@ export default function AjouterAmis() {
 
 
 
-    async function fetch_all_request_friend(){ // with co or not
+    async function fetch_all_request_friend(){
         // console.log("fetch_all_request_friend(1) called");
         try{
 
@@ -89,12 +89,6 @@ export default function AjouterAmis() {
     }
 
 
-    const [responseFriend, setResponseFriend] = useState(null);
-    useEffect(() => {
-        // console.log("requestfriend finish", responseFriend)
-        // send => responseFriend
-    }, [responseFriend]);
-
     // useEffect(() => {fetch_all_request_friend()}, []);
 
 
@@ -109,6 +103,12 @@ export default function AjouterAmis() {
         el_add_friend.value = ""
     }
     
+    const handel_response = (arg) =>{
+        console.log("requestfriend finish", arg)
+        // send => responseFriend
+    }
+
+
     return (
 
         <div className={`AjouterAmis-root border-0`}>
@@ -132,8 +132,8 @@ export default function AjouterAmis() {
                             <h5>{msg.login}</h5>
 
                             <div className={`div-btn border-3`}>
-                                <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>true</button>
-                                <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>false</button>
+                                <button onClick={() => {handel_response({login: msg.login, response: true })}}>true</button>
+                                <button onClick={() => {handel_response({login: msg.login, response: false })}}>false</button>
                             </div>
 
                         </div>

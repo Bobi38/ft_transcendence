@@ -77,7 +77,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         }
 
         try{
-            const reponse = await fetch('/api/add_message_private',{
+            const reponse = await fetch('/api/chatP/add_message_private',{
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
