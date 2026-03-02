@@ -22,17 +22,17 @@ export function playMorpion(message, socket){
         return;
     }
 
-    if (message === "playfirst") {
-        console.log("j ai recu le message pour jouer le premier");
-        // a dev
-        socket.send(JSON.stringify({type: "game", message: "pas encore gerer"}))
-        return;
-    }
-
     if (message === "je veux jouer") {
         console.log("nouvelle demande");
         const game = manager_room.findOnePlace(socket, "Morpion", id);
         socket.send(JSON.stringify({type: "game", message: game.getId()}))
+        return;
+    }
+
+    if (message === "playfirst") {
+        console.log("j ai recu le message pour jouer le premier");
+        // a dev
+        socket.send(JSON.stringify({type: "game", message: "pas encore gerer"}))
         return;
     }
 
@@ -58,7 +58,7 @@ export function playMorpion(message, socket){
             return ;
         }        
         console.log("toujours en attente");
-        socket.send({message: "il faut attendre"})
+        socket.send({type: "game", message: "il faut attendre"})
         return ;
     }
 

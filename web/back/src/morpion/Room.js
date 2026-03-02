@@ -22,10 +22,21 @@ class Room {
     addPlayer(socket, PlayerId) {
         if (this._locked) return false;
         if (this.isFull()) return false;
-        // console.log("socket.userId =", PlayerId);
+
         this._players.set(PlayerId, new Player(socket, PlayerId));
-        // console.log("liste des player", [...this._players.keys()]);
+ 
         return true;
+    }
+
+    removePlayer(playerId, message) {
+        console.log("Players dans la room (avant suppression):", Array.from(this._players.keys()));
+        const player = this._players.get(playerId);
+
+        if (!player) return -1;
+
+        player.disconnect(message);
+        this._players.delete(playerId);
+        return this._players.size
     }
 
     toString(){
@@ -36,16 +47,6 @@ class Room {
         return this._players.size;
     }
 
-    removePlayer(playerId, mess = null) {
-        console.log("Players dans la room :", Array.from(this._players.keys()));
-        const player = this._players.get(playerId);
-
-        if (!player) return -1;
-
-        player.disconnect(mess);
-        this._players.delete(playerId);
-        return this._players.size
-    }
 
     isType(type){
         return (type === this._type)

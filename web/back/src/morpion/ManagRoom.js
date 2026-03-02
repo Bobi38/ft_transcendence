@@ -70,11 +70,16 @@ class ManagerRoom {
         return newRoom;
     }
 
-    removePlayer(playerId, mess = "bye bye") {
+    removePlayer(playerId, message = "bye bye") {
         for (const room of this._rooms.values()) {
-            room.removePlayer(playerId, mess)
-            if (room.length() === 0) {
-                this.removeRoom(room.getId());
+            if (room.isInRoom(playerId)) {
+                room.removePlayer(playerId, message);
+
+                if (room.length() === 0) {
+                    this.removeRoom(room.getId());
+                }
+
+                return;
             }
         }
     }
