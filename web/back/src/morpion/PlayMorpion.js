@@ -26,6 +26,18 @@ export function playMorpion(message, socket){
         console.log("nouvelle demande");
         const game = manager_room.findOnePlace(socket, "Morpion", id);
         socket.send(JSON.stringify({type: "game", message: game.getId()}))
+        try{
+            game.setLock(true);
+            game.startGame(id);
+
+            game.notifyTurn(
+                { message: "À toi de jouer", turn: true },
+                { message: "Tour adverse", turn: false });
+        }
+        catch (err) {
+            game._turn = id;
+            socket.send(JSON.stringify({type: "game", message: "en attente de joueur"}))
+        }
         return;
     }
 
@@ -38,6 +50,8 @@ export function playMorpion(message, socket){
 
     let game = manager_room.isInRoom(id)
 
+    if (!game) return;
+
     if (!game){
         console.log("nouveau joeur prend une place");
         game = manager_room.findOnePlace(socket, "Morpion", id);
@@ -49,17 +63,15 @@ export function playMorpion(message, socket){
         return;
     }
 
-    if(!game.getLock()){
+    if(game.getLock()){
+        console.log("le jeu est lock - ca joue");
         if (game.play(id, message)) {
             if(game.checkVictory()){
                 console.log(`fin de la partie de ${game}`);
                 manager_room.removeRoom(game.getId());
             }
             return ;
-        }        
-        console.log("toujours en attente");
-        socket.send({type: "game", message: "il faut attendre"})
-        return ;
+        }
     }
 
     console.log("st ce que la partie estlock ? ");
@@ -67,8 +79,8 @@ export function playMorpion(message, socket){
         console.log("non");
         console.log(`debut de partie de ${game}`);
         game.selectPlayer1(id);
-        game.player1.send({message: "a toi de jouer"});
-        game.player2.send({message: "en attente joueur 1"});
+        game.player1.send("a toi de jouer");
+        game.player2.send("en attente joueur 1");
         game.startTurnTimer(game.player1);
         return ;
     }

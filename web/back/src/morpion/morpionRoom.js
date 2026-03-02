@@ -4,8 +4,11 @@ import GameMorp from "../models/GameMorp.js";
 class MorpionRoom extends Room {
     constructor (id) {
         super(id);
-        this._type = "Morpion"
+        this._type = "Morpion";
         this._max_players = 2;
+        this._min_players = 2;
+        this._first_player = false;
+        this._turn = null;
         this._how_win = null;
         this._ending = null;
         this._time = null;
@@ -27,6 +30,49 @@ class MorpionRoom extends Room {
         this.player2 = null;
     }   
 
+    setFirstPlayer(){
+        if (this._locked) return;
+
+        this._first_player = true;
+    }
+
+    switchTurn() {
+        const [p1, p2] = [...this._players.keys()];
+        this._turn = this._turn === p1 ? p2 : p1;
+    }
+
+    startGame(firstPlayerId) {
+        if (!this._players.has(firstPlayerId)) {
+            throw new Error("Invalid player");
+        }
+
+        if (this._first_player)
+            this._turn = firstPlayerId;
+
+        this._chrono = Date.now();
+    }
+
+    notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
+        if (!this._turn) return;
+
+        for (const [id, player] of this._players.entries()) {
+            const basePayload = {
+                board: this._board
+            };
+
+            player.send(
+                id === this._turn
+                    ? { ...basePayload, ...payloadCurrent }
+                    : { ...basePayload, ...payloadOthers }
+            );
+        }
+    }
+// utilisation :
+// this.notifyTurn(
+//     { message: "À toi de jouer", turn: true },
+//     { message: "Tour adverse", turn: false }
+// );
+
     selectPlayer1(id) {
         const players = [...this._players.keys()];
         if (!players.includes(id)) {
@@ -36,12 +82,14 @@ class MorpionRoom extends Room {
         if (players.length !== this._max_players) {
             throw new Error("Il faut exactement 2 joueurs pour sélectionner player1");
         }
-
-        this.setLock(true);
         
         this.player1 = this._players.get(id);
         this.player2 = this._players.get(
             [...this._players.keys()].find(p => p !== id));
+
+        if (!this._first_player)
+            [this.player1, this.player2] = [this.player2, this.player1];
+
         this._chrono = Date.now();
     }
 
@@ -140,7 +188,7 @@ class MorpionRoom extends Room {
             })
         };
 
-        player.startTurnTimer(action, 4000);
+        player.startTurnTimer(action, 8000);
     }
 
     serializeBoard() {

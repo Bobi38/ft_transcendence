@@ -6,7 +6,7 @@ class Room {
         this._type = "default";
         this._id = id;
         this._players = new Map();
-        this._min_players = 0;
+        this._min_players = 1000;
         this._max_players = null;
         this._date_game = new Date();
         this._locked = false;
@@ -40,13 +40,12 @@ class Room {
     }
 
     toString(){
-        return `${this._type} :${this._id}`;
+        return `${this._type} :${this._id} | Locked: ${this._locked} | Players: ${Array.from(this._players.keys()).join(", ")}`;
     }
 
     length(){
         return this._players.size;
     }
-
 
     isType(type){
         return (type === this._type)
