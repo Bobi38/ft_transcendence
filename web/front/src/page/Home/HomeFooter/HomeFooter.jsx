@@ -1,5 +1,6 @@
 /* extern */
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 /* back */
 
@@ -7,9 +8,10 @@ import { Link } from "react-router-dom";
 import "./HomeFooter.scss"
 
 /* Components */
-import Button from "FRONT/Component/Button/Button"
-
 import { AUTH } from "FRONT/page/Home/Home.jsx"
+import Button from "FRONT/Component/Button/Button.jsx"
+import useClock from "FRONT/hooks/useClock.jsx";
+
 
 export default function HomeFooter({setShowLog}) {
 
@@ -36,6 +38,9 @@ export default function HomeFooter({setShowLog}) {
         });
     }
 
+
+    const time = useClock();
+
     return (
         <>
             <div className={`HomeFooter-root`}>
@@ -47,7 +52,7 @@ export default function HomeFooter({setShowLog}) {
                     <div className={``}>
 
                         <div className={``}>
-                            8:42
+                            {time}
                         </div>
 
                         <button className={``}

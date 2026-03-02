@@ -646,7 +646,7 @@ router.get('/fetch_conv', async (req, res) => {
             order: [['id', 'DESC']]
           }
         ],
-        order: [['id', 'DESC']]
+        // order: [['id', 'DESC']]
       });
 
       // Nettoyage pour n'avoir qu'un objet plat par discussion
@@ -664,11 +664,14 @@ router.get('/fetch_conv', async (req, res) => {
         };
       });
         // const chats = await PrivChat.findAll({where: {[Op.or]: [{ id1: result.id },{ id2: result.id }]},include: [  { model: User, as: 'user1', attributes: ['id', 'name', 'co'] },{ model: User, as: 'user2', attributes: ['id', 'name', 'co'] },{model: PrivMess,limit: 1,order: [['id', 'DESC']]}]});
-        console.log("API fetch_conv chat 0.5 ", chats)
-        console.log("API fetch_conv chat 1 ", chats[0].dataValues)
-        console.log("API fetch_conv chat 1 ", chats[0].PrivMesses[0].contenu)
-        console.log("API fetch_conv chat 2 ", chats[1].PrivMesses[0].contenu)
+        // console.log("API fetch_conv chat 0.5 ", chats)
+        // console.log("API fetch_conv chat 1 ", chats[0].dataValues)
+        // console.log("API fetch_conv chat 1 ", chats[0].PrivMesses[0].name)
+        // console.log("API fetch_conv chat 2 ", chats[1].PrivMesses[0].name)
         console.log("API fetch_conv test join ", chats[0].user1.name);
+        console.log("API fetch_conv test join ", chats[0].user2.name);
+        console.log("API fetch_conv test join ", chats[1].user1.name);
+        console.log("API fetch_conv test join ", chats[1].user2.name);
         return res.status(201).json({success: true, message: cleanChats});
     }catch(err){
         console.log("API fetch_conv error: ",err);
