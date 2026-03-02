@@ -14,13 +14,15 @@ export function morpionGame(cmd, socket) {
     }
 
     if (cmd === "je pars") {
-        console.log("j ai bien recu le messag ed ede[art");
+        console.log("j ai recu le message depart");
         manager.removePlayer(socket);
         return;
     }
 
-    if (cmd === "play") {
-        connectNewGame(socket);
+    if (cmd === "playfirst") {
+        console.log("j ai recu le message pour jouer le premier");
+        // a dev
+        send(socket, "ok tu joueras en premier");
         return;
     }
 

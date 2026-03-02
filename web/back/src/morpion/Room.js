@@ -15,8 +15,8 @@ class Room {
         this.limit_time = 3600 * 1000;
     }
 
-    toString(){
-        return `${this._type} :${this._id}`;
+    getPlayer(idPlayer) {
+        return this._players.get(idPlayer) || null;
     }
 
     addPlayer(socket, PlayerId) {
@@ -28,14 +28,18 @@ class Room {
         return true;
     }
 
+    toString(){
+        return `${this._type} :${this._id}`;
+    }
+
     length(){
         return this._players.size;
     }
-        
 
     removePlayer(playerId, mess = null) {
+        console.log("Players dans la room :", Array.from(this._players.keys()));
         const player = this._players.get(playerId);
-        
+
         if (!player) return -1;
 
         player.disconnect(mess);
@@ -74,16 +78,16 @@ class Room {
         this._locked = state;
     }
 
-    sendAll(mess) {
-        if (!mess) return;
+    sendAll(message) {
+        if (!message) return;
 
-        this._players.forEach(player => {player.send(mess);});
+        this._players.forEach(player => {player.send(message);});
     }
 
-    remove(mess = null) {
+    remove(message = null) {
         this.clearOutTimer();
 
-        this._players.forEach(p => {p.disconnect(mess)});
+        this._players.forEach(p => {p.disconnect(message)});
     }
 
     clearOutTimer() {

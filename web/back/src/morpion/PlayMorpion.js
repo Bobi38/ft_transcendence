@@ -10,7 +10,7 @@ export function playMorpion(message, socket){
     cooldowns.set(id, true);
     setTimeout(() => cooldowns.delete(id), 200);
 
-    console.log("ca communique avec morpion")
+    console.log("ca communique avec morpion", message)
     if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
         return;
@@ -19,6 +19,20 @@ export function playMorpion(message, socket){
     if (message === "je pars") {
         console.log("abondon de ", id);
         manager_room.removePlayer(id);
+        return;
+    }
+
+    if (message === "playfirst") {
+        console.log("j ai recu le message pour jouer le premier");
+        // a dev
+        socket.send(JSON.stringify({type: "game", message: "pas encore gerer"}))
+        return;
+    }
+
+    if (message === "je veux jouer") {
+        console.log("nouvelle demande");
+        const game = manager_room.findOnePlace(socket, "Morpion", id);
+        socket.send(JSON.stringify({type: "game", message: game.getId()}))
         return;
     }
 

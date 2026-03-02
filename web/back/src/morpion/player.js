@@ -16,13 +16,25 @@ export class Player{
         if (!this._socket || this._socket.readyState !== 1) return;
 
         try {
+            const payload =
+                typeof data === "string"
+                    ? { message: data }
+                    : data;
+
             this._socket.send(JSON.stringify({
-                type: "room",
-                ...data
+                type: "game",
+                ...payload
             }));
         } catch (err) {
             console.error("WebSocket send error:", err);
         }
+    }
+
+    disconnect(message) {
+        this.clearTurnTimer();
+
+        if (message)
+            this.send(message);
     }
 
     toString(){
@@ -31,13 +43,6 @@ export class Player{
 
     getId(){
         return this._id;
-    }
-
-    disconnect(message) {
-        this.clearTurnTimer();
-
-        if (message)
-            this.send(message);
     }
 
     clearTurnTimer() {

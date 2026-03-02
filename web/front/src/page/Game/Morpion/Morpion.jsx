@@ -16,6 +16,20 @@ function GoOUT(){
   );
 }
 
+function NouvellePartie(){
+  return (
+  <button onClick={() =>
+    SocketM.sendd({
+        type: "game",
+        message: "je veux jouer"
+      })
+    }
+  > 
+    Nouvelle Partie
+  </button>
+  );
+}
+
 function RebootTruc() {
   return (
     <button
@@ -37,7 +51,7 @@ function SelectFirst(){
       onClick={() =>
         SocketM.sendd({
           type: "game",
-          message: "play"
+          message: "playfirst"
         })
       }
     >
@@ -84,7 +98,7 @@ function Board( { squares }) {
 }
 
 export default function Morpion() {
-  console.log("je suis laaaaaaaaaaaaaaa");
+  console.log("ici cest front FunctionMorpion");
   const [msg, setMsg] = useState("En attente...");
   const [board, setBoard] = useState(Array(9).fill(" "));
 
@@ -101,6 +115,7 @@ export default function Morpion() {
     console.log("after co");
 
     const handleTest = (data) => {
+      console.log(data)
       setMsg(data.message);
       if (data.board)
         setBoard(data.board);
@@ -123,6 +138,7 @@ export default function Morpion() {
       <div className="game-board">
         <Board squares={board}/>
       </div>
+      <div>< NouvellePartie /></div>
     </>
   );
 }

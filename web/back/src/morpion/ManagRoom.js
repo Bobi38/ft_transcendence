@@ -8,26 +8,25 @@ const roomTypes = {
 
 class ManagerRoom {
     constructor(){
-        this._count = (Date.now() % 50001) + 57;
+        this._roomId = (Date.now() % 50001) + 57;
         this._rooms = new Map();
     }
 
-    incrementCount(){
-        if (this._count > 2000000000)
-            this._count = (Date.now() % 50001) + 57;
+    newRoomId(){
+        if (this._roomId > 2000000000)
+            this._roomId = (Date.now() % 50001) + 57;
 
-        let increment = this._count;
+        let increment = this._roomId;
         increment = ((increment % 31) + 1) * ((increment % 7) + 1);
 
-        this._count += increment;
+        this._roomId += increment;
 
-        return this._count.toString(36);
+        return this._roomId.toString(36);
     }
 
     createRoom(type = "default") {
         const RoomClass = roomTypes[type] || roomTypes.default;
-        const new_room = new RoomClass(this.incrementCount());
-
+        const new_room = new RoomClass(this.newRoomId());
 
         this._rooms.set(new_room.getId(), new_room);
         return new_room;
@@ -62,12 +61,12 @@ class ManagerRoom {
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
-                room.addPlayer(currentId, socket);
+                room.addPlayer(socket, currentId);
                 return room;
             }
         }
         const newRoom = this.createRoom(type);
-        newRoom.addPlayer(currentId, socket);
+        newRoom.addPlayer(socket, currentId);
         return newRoom;
     }
 

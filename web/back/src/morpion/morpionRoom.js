@@ -65,12 +65,12 @@ class MorpionRoom extends Room {
     play(currentPlayer, index) {
         console.log(String(currentPlayer));
         if (currentPlayer !== this.getCurrentPlayer()) {
-            currentPlayer.send("Ce n'est pas ton tour", this._board);
+            this.getPlayer(currentPlayer).send("Ce n'est pas ton tour", this._board);
             return false;
         }
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send("Coup invalide", this._board);
+            this.getPlayer(currentPlayer).send("Coup invalide", this._board);
             return false;
         }
 
@@ -83,7 +83,7 @@ class MorpionRoom extends Room {
 
         if (this._chrono !== null) {
             const timeTour = now - this._chrono;
-            currentPlayer.setPlayTime(timeTour);
+            this.getPlayer(currentPlayer).setPlayTime(timeTour);
         }
 
         this._chrono = now;
@@ -132,7 +132,6 @@ class MorpionRoom extends Room {
         return false;
     }
 
-    // avertissement avant timeoout
     startTurnTimer(player) {
         const action = () => {
             player.send({
@@ -153,7 +152,7 @@ class MorpionRoom extends Room {
     async majdb () {
         await GameMorp.create({
             howWin: this._how_win,
-            dateGame: this._dateGame,
+            dateGame: this._date_Game,
             Ending: this._ending,
             player1: this.player1.getId(),
             player2: this.player2.getId(),
