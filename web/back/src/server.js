@@ -161,8 +161,6 @@ app.use('/api/chatP', chatProute);
 app.use('/api/friend', friendroute);
 app.use('/api/profile', Profilroute);
 
-// import newrouter from './routes/index.js';
-// app.use('/newapi', newrouter);
 
 if (isDev) {
   console.log("JE SUIS DEV");
