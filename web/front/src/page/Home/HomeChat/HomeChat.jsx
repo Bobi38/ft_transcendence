@@ -4,12 +4,13 @@ import "./HomeChat.scss";
 /* Components */
 import { useEffect, useState } from "react";
 
-
+// import { useSocket } from "../../../../tool/SocketContext";
 import  SocketM  from "/app/front/tool/SocketManag.js";
 import checkCo from "/app/back/src/fct1.js";
 
 export default function HomeChat() {
 
+    // const SocketM = useSocket();
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
