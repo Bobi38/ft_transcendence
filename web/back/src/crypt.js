@@ -17,14 +17,25 @@ export function encrypt(text) {
 }
 
 export function decrypt(text) {
-  const [ivHex, encryptedText] = text.split(':');
-  const iv = Buffer.from(ivHex, 'hex');
-  const key = crypto.createHash('sha256').update(secret_chat).digest();
+  try {
+    if (!text) throw new Error("No text provided");
 
-  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+    const parts = text.split(':');
+    if (parts.length !== 2) throw new Error("Text format invalid, expected iv:encrypted");
 
-  let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
+    const [ivHex, encryptedText] = parts;
+    const iv = Buffer.from(ivHex, 'hex');
+    if (iv.length !== 16) throw new Error("Invalid IV length, must be 16 bytes");
 
-  return decrypted;
+    const key = crypto.createHash('sha256').update(secret_chat).digest();
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+
+    let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return decrypted; // <-- ne pas oublier de retourner
+  } catch(err) {
+    console.log("error decrypt:", err);
+    return null;
+  }
 }

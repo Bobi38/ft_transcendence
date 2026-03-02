@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
+import { encrypt } from './crypt.js';
 
 //model
 import sequelize from './models/index.js';
@@ -72,7 +73,7 @@ async function majDb(retry = 5) {
 
 async function fullmess(mess, Conv){
   for (let i = 0; i < 5; i++){
-    const con = mess + i;
+    const con = encrypt(mess + i);
     if (i % 2 == 0)
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id1, contenu: con, time: new Date()})
     else
@@ -88,6 +89,7 @@ async function CreatPrivMess(){
   const Conv1 = await PrivChat.create({id1: toto.id, id2:tata.id});
   const Conv2 = await PrivChat.create({id1: titi.id, id2:tata.id});
   const Conv3 = await PrivChat.create({id1: toto.id, id2:titi.id});
+
   await fullmess("message numero ", Conv1);
   await fullmess("mess number ", Conv2);
   await fullmess("El ultimo numero ", Conv3);
