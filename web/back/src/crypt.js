@@ -17,14 +17,21 @@ export function encrypt(text) {
 }
 
 export function decrypt(text) {
+  // console.log("decrypt(1) text:",text)
   const [ivHex, encryptedText] = text.split(':');
+  // console.log("decrypt(2) ivHex:",ivHex)
+  // console.log("decrypt(3) encryptedText:",encryptedText)
   const iv = Buffer.from(ivHex, 'hex');
+  // console.log("decrypt(4) iv:",iv)
   const key = crypto.createHash('sha256').update(secret_chat).digest();
+  // console.log("decrypt(5) key:", key)
 
   const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
 
+  // console.log("decrypt(6)")
   let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
+  // console.log("decrypt(7)")
 
   return decrypted;
 }
