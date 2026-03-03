@@ -19,7 +19,6 @@ import
 
 const router = express.Router();
 
-
 router.get('/fetchStatMorp', async (req, res) => {
   try{
       const token = req.cookies.token;

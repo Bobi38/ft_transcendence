@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import { SocketProvider } from "../tool/SocketContext"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import checkCo from "BACK/fct1.js"
 
 /* back */
@@ -25,6 +25,7 @@ import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 // ./src/page/all_game
 import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
+import Morpion          from    "FRONT/page/all_game/Morpion/Morpion.jsx";
 
 
 
@@ -67,8 +68,7 @@ export default function App() {
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
-            <Route path={`/Test`}               element={<Pong3D/>}/>
+            <Route path={`/WaitRoom`}               element={<Navigation>   <Morpion/>           </Navigation>}/>
 
 
             {/* bad path */}

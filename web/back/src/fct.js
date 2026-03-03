@@ -98,6 +98,8 @@ async function fullmess(mess, Conv){
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id1, contenu: con, time: new Date()})
     else
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id2, contenu: con, time: new Date()})
+    Conv.lastmess = new Date();
+    await Conv.save();
   }
 }
 
@@ -122,7 +124,7 @@ async function CreatStat(){
                                 Id1:1, 
                                 OX1:0, 
                                 Id2:2, 
-                                OX1:1
+                                OX2:1
     });
 
     await StatMorp.create({ idUser:1,

@@ -2,6 +2,7 @@ import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from './fct.js';
 import {manager_room} from './morpion/ManagRoom.js';
+import { playMorpion as morpion } from './morpion/PlayMorpion.js';
 import cookie from 'cookie' ;
 
 
@@ -23,11 +24,11 @@ export function initWebSocket(server) {
     try{
       const iid = idd++;
       socket.id = iid;
-      console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-      console.log('URL:', req.url);
-      console.log('Headers upgrade:', req.headers.upgrade);
-      console.log('Headers socket:', socket.id);
-      console.log(req.headers.cookie)
+      // console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
+      // console.log('URL:', req.url);
+      // console.log('Headers upgrade:', req.headers.upgrade);
+      // console.log('Headers socket:', socket.id);
+      // console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
       if (!token) {
       // socket.close();
@@ -43,9 +44,10 @@ export function initWebSocket(server) {
       }
 
       if (!user) {socket.close(); return; }
-      console.log("uuu-------", user);
+      // console.log("uuu-------", user);
       const useid = user.id;
       socket.userId = useid;
+      socket.GoLogout = false;
 
       const exist = chat.finduser(socket.id);
       const id = chat.finduserId(socket.userId);
@@ -53,13 +55,14 @@ export function initWebSocket(server) {
         exist.socket = socket;
         console.log("user already exist exist");
       }
-      if (id){
+      else if (id){
         id.socket = socket
         console.log("user already exist id");
       }
       else{
-        console.log("new user, add to chat sessions");
+        // console.log("new user, add to chat sessions");
         await chat.addtok(useid, socket, useid);
+        socket.isAlive = true
         socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
       }
     }catch(err){
@@ -69,10 +72,10 @@ export function initWebSocket(server) {
     socket.on('message', (message) => {
       try{
         const data = JSON.parse(message.toString());
-        console.log('=== MESSAGE REÇU ===');
-        console.log('Type:', data.type);
-        console.log('Contenu:', data.mess);
-        console.log('===================');
+        // console.log('=== MESSAGE REÇU ===');
+        // console.log('Type:', data.type);
+        // console.log('Contenu:', data.mess);
+        // console.log('===================');
         // if (data.type === 'auth'){
         //   iid = socket.userId;
         //   const use = chat.finduser(iid);
@@ -106,6 +109,7 @@ export function initWebSocket(server) {
             }
           }
         }
+
         if (data.type === 'priv_mess'){
           console.log("je suis dans un type priv_messsssssssss")
           const nono = socket.userId;
@@ -122,7 +126,14 @@ export function initWebSocket(server) {
         if (data.type === "logout")
           socket.GoLogout = true;
 
+        if (data.type === 'game') {
+          console.log(`game : recu ${data.message}`);
+          morpion(data.message, socket, socket.userId);
+          return ;
+        }
+
         if (data.type === 'morpion'){
+          console.log("probleme num1 si tu me vois, personne ne doit connaitre ce type");
           let message = "";
           console.log("je suis dans un type waitRoom");
           console.log("user id dans wait room " + socket.userId);
@@ -146,6 +157,7 @@ export function initWebSocket(server) {
           }
         }
         if (data.type === "in-game"){
+          console.log("probleme num2 si tu me vois, personne ne doit connaitre ce type");
           if (data.act === "role"){
             //objectif est de repartir les roles pour savoir qui commence et qui aura les O ou les X
             //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois
@@ -159,6 +171,8 @@ export function initWebSocket(server) {
             //clean room et managerRoom
           }
         }
+        if (data.type === "pong")
+          socket.isAlive = true
 
       }catch (err){
         console.log("err serv ws= " + err);
@@ -172,12 +186,18 @@ export function initWebSocket(server) {
     //     console.log('Nombre de clients connectés :', clients.length);
     // });
 
+    socket.on('pong', () =>{
+      console.log("i m in PONG")
+      socket.isAlive = true;
+    })
     socket.on('error', (error) => {
       console.error('Erreur WebSocket:', error);
     });
-    socket.on('close', () => {
-      if (socket.GoLogout = true){
-        console.log('Utilisateur déconnecté', socket.id);
+    socket.on('close', (code ,reason) => {
+      console.log("CLOSE EVENT", code, reason);
+      console.log("bool deco ", socket.GoLogout)
+      if (socket.GoLogout == true){
+        console.log('Utilisateur déconnNNNNecté', socket.id);
         chat.removetokBySocketId(socket.id);
         manager_room.removePlayer(socket.userId);
       }
@@ -194,7 +214,25 @@ export function initWebSocket(server) {
       }
   });
   });
+  setInterval(() => {
+    console.log('Intervalle ping : je vérifie toutes les sockets');
+    for (const session of chat.sessions.values()){
+      const so = session.socket;
+      console.log(session.socket.id);
+      if (!so.isAlive) {
+        console.log('Socket morte', so.id);
+        chat.removetokBySocketId(so.id);
+        manager_room.removePlayer(so.userId);
+        so.terminate();
+      } else {
+        session.socket.isAlive = false;
+        session.socket.send(JSON.stringify({ type: 'ping' }));
+      }
+    }
+  }, 15000);
 }
+
+
 
 // export function initWebSocket(server) {
 //   const wss = new WebSocketServer({ server, path: '/ws' });

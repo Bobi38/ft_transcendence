@@ -23,6 +23,8 @@ router.post('/add_message_private', async (req, res) => {
     const crypt = encrypt(data.message);
     console.log(crypt)
     await PrivMess.create({SenderId: id1.id, contenu: crypt, ChatId: findchat.id, time: data.time});
+    findchat.lastmess = new Date();
+    await findchat.save()
     console.log("GOOOOOD");
     res.status(201).json({success: true});
   }catch(err){
@@ -124,7 +126,7 @@ router.get('/fetch_conv', async (req, res) => {
             order: [['id', 'DESC']]
           }
         ],
-        order: [['id', 'DESC']]
+        order: [['lastmess', 'DESC']]
       });
 
         console.log("API fetch_conv test join(3)");
