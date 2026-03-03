@@ -55,8 +55,6 @@ export default function HomeChat() {
         let handle_global_message;
 
         const init = async () => {
-            const repco = await checkCo();
-            if (!repco) return;
 
 
             await fetch_global_message();
