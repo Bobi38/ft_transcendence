@@ -20,10 +20,10 @@ import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
 import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
-import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 
-  // ./src/page/game
+// ./src/page/all_game
 import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
+import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 
 
 
@@ -31,20 +31,21 @@ import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx
 
 export default function App() {
 
-  useEffect(() => {
-    const init = async () => {
-      const repco = await checkCo();
-      if (!repco) return;
-      if (!SocketM.getState() || SocketM.getState() === "closed")
-        SocketM.connect();
-      console.log("App.jsx useEffect(1) SocketM.connect() called");
-    }
-    init();
-    return () => {
-      // SocketM.disco();
-      // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
-    };
-  }, []);
+    useEffect(() => {
+        const init = async () => {
+            const repco = await checkCo();
+            if (!repco)
+                return;
+            if (!SocketM.getState() || SocketM.getState() === "closed")
+                SocketM.connect();
+            console.log("App.jsx useEffect(1) SocketM.connect() called");
+        }
+        init();
+        return () => {
+          // SocketM.disco();
+          // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
+        };
+    }, []);
     //fait le check co a la place de home et envoyer le result
 
   return (

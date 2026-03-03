@@ -8,6 +8,10 @@ export default async function useFetch(url, type_request, callbacksucces = null,
         const repjson = await response.json();
         if (repjson.success) {
 
+            if (callbacksucces){
+                callbacksucces(repjson);
+                return repjson
+            }
             console.log("useFetch(3) success repjson:", repjson);
             return repjson;
             

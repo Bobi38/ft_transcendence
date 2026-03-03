@@ -10,6 +10,7 @@ import "./Profile.scss";
 
 /* Components */
 import AddressAutocomplete from "./AddressAutocomplete/AddressAutocomplete.jsx";
+import useFetch from "HOOKS/useFetch.jsx";
 
 
 export default function Profile() {
@@ -41,25 +42,21 @@ export default function Profile() {
             return;
         }
 
-        const data ={
-            Pass: password,
-        }
-        try{
-            const rep = await fetch("/api/profile/majPass", {
-                method: "POST",
-                headers : {"Content-Type" : "application/json",},
-                credentials: "include",
-                body: JSON.stringify(data)
-            });
 
-            const repp = await rep.json();
-            if (repp.success)
-                showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
-            else
-                console.log ("handle_pass(4) err passmaj" , repp.message);
-        }catch(err){
-            console.log("handle_pass(5) ",err);
-        }
+        const url = `/api/profile/majPass`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers : {"Content-Type" : "application/json",},
+            credentials: "include",
+            body: JSON.stringify({Pass: password})
+        });
+        if (!repjson)
+            return;
+        showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
+        
     }
 
     const handle_submit = async (e) => {
