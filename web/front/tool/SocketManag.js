@@ -28,7 +28,7 @@ class SocketManag{
         this.socket = new WebSocket(`${protocol}//${host}/ws`);
         console.log("Tentative de connexion au WebSocket...");
         this.socket.onopen = () => {
-            this.sendd({type: "auth",  mess: null})
+            this.sendd(JSON.stringify({type: "auth",  mess: null}))
         }
 
         this.socket.onmessage = (event) => {
@@ -53,9 +53,9 @@ class SocketManag{
                 this.listeners.priv.forEach(cb => cb(dataa));
             }
             if (dataa.type === 'ping'){
-                // alert("receive PING")
+                console.log("receive PING")
                 const data = {
-                    type: 'pong'
+                    type: 'pong',
                 }
                 this.sendd(data)
             }
@@ -64,7 +64,7 @@ class SocketManag{
             console.log("errr socket" + error);
         }
         this.socket.onclose = () => {
-            // alert ('deco');
+            console.log('on front deco');
             if (this.reco)
                 this.nbco++;
                 setTimeout(() => this.connect(), 50);
@@ -124,15 +124,20 @@ class SocketManag{
     }
 
     sendd (data){
-        console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
-        if (this.socket && this.socket.readyState == WebSocket.OPEN){
-            console.log("envoi du message via WebSocket:", data);
-            this.socket.send(JSON.stringify(data));
+        try{
+            console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
+            if (this.socket.readyState == WebSocket.OPEN){
+                console.log("envoi du message via WebSocket:", data);
+                this.socket.send(JSON.stringify(data));
+            }
+        }catch(err){
+            console.log("error dans send " + err);
         }
     }
     
     disco(){
-        this.sendd({type: "logout"})
+
+        this.sendd(JSON.stringify({type: "logout"}))
         this.reco = false;
         this.id = null;
         if (this.socket.readyState == WebSocket.OPEN)

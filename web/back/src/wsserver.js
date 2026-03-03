@@ -47,27 +47,28 @@ export function initWebSocket(server) {
       const useid = user.id;
       socket.userId = useid;
       socket.GoLogout = false;
+      socket.cleanedUp = false;
+      socket.isAlive = true;
 
       const exist = chat.finduser(socket.id);
       const id = chat.finduserId(socket.userId);
       if (exist){
         exist.socket = socket;
-        console.log("user already exist exist");
+        // console.log("user already exist exist");
       }
       else if (id){
         id.socket = socket
-        console.log("user already exist id");
+        // console.log("user already exist id");
       }
       else{
         // console.log("new user, add to chat sessions");
         await chat.addtok(useid, socket, useid);
-        socket.isAlive = true
-        socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
+        // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
       }
     }catch(err){
       console.log("err debut wsss ", err);
     }
-    console.log("taille =" , chat.countUser());
+    // console.log("taille =" , chat.countUser());
     socket.on('message', (message) => {
       try{
         const data = JSON.parse(message.toString());
@@ -88,18 +89,17 @@ export function initWebSocket(server) {
         //   return ;
         // }
         if (data.type === 'mess'){
-          console.log("je suis dans un type messsssssssss")
+          console.log("je suis dans un type messsssssssss " , socket.id)
           const nono = socket.userId;
-          const na = chat.finduser(socket.id);
+          const na = chat.finduserId(socket.userId)
           const ni = na.username;
           console.log ("----" , nono , "----", ni);
           console.log("taille === ", chat.countUser());
           for (const session of chat.sessions.values()){
             console.log("session ", session.userId);
-            console.log("idddd " + session.userId + "   "  +  nono + "-----" + socket.username);
-            if (session.socket.readyState === ws.OPEN && session.userId != nono){ //&& session.userId != nono.id
+            console.log("idddd " + session.userId + "   "  +  nono + "-----");
+            if (session.socket.readyState === ws.OPEN && session.userId != nono){
                 console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
-
                 session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: data.timer}));
             }
             if (session.socket.readyState === ws.OPEN && session.userId === nono){
@@ -180,27 +180,38 @@ export function initWebSocket(server) {
       console.log("i m in PONG")
       socket.isAlive = true;
     })
-    socket.on('error', (error) => {
-      console.error('Erreur WebSocket:', error);
+    socket.on('error', (err) => {
+      // if (err.code === 'WS_ERR_INVALID_CLOSE_CODE' || err.code === 'WS_ERR_INVALID_UTF8') return;
+      console.warn('WebSocket Error:', err.message);
     });
-    socket.on('close', (code ,reason) => {
-      console.log("CLOSE EVENT", code, reason);
-      console.log("bool deco ", socket.GoLogout)
-      if (socket.GoLogout == true){
-        console.log('Utilisateur déconnNNNNecté', socket.id);
-        chat.removetokBySocketId(socket.id);
-        manager_room.removePlayer(socket.userId);
-      }
-      else{
-        setTimeout(() => {
-          const id = socket.userId
-          const reco = chat.finduserId(id)
-          if (!reco){
-            console.log('Utilisateur ne s est pas reco', socket.id);
-            chat.removetokBySocketId(socket.id);
-            manager_room.removePlayer(socket.userId);
-          }
-        }, 2500)
+    socket.on('close', () => {
+      // console.log("user deco ");
+      try{
+        if (socket.cleanedUp) return; // déjà traité
+        socket.cleanedUp = true;
+
+        const id = socket.userId;
+        if (!id) return;
+      // console.log("CLOSE EVENT", code, reason);
+      // console.log("bool deco ", socket.GoLogout)
+        if (socket.GoLogout == true){
+          console.log('Utilisateur déconnNNNNecté', socket.id);
+          chat.removetokBySocketId(socket.id);
+          manager_room.removePlayer(socket.userId);
+        }
+        else{
+          setTimeout(() => {
+            const id = socket.userId
+            const reco = chat.finduserId(id)
+            if (!reco){
+              console.log('Utilisateur ne s est pas reco', socket.id);
+              chat.removetokBySocketId(socket.id);
+              manager_room.removePlayer(socket.userId);
+            }
+          }, 2500)
+        }
+      }catch(err){
+        console.log("error close in ws back ", err);
       }
   });
   });
@@ -213,7 +224,7 @@ export function initWebSocket(server) {
         console.log('Socket morte', so.id);
         chat.removetokBySocketId(so.id);
         manager_room.removePlayer(so.userId);
-        so.terminate();
+        // so.terminate();
       } else {
         session.socket.isAlive = false;
         session.socket.send(JSON.stringify({ type: 'ping' }));

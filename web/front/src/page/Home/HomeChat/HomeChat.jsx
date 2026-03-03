@@ -35,10 +35,10 @@ export default function HomeChat() {
     async function add_message_global(time){
         if (!time) return
         
-        console.log("/api/chatG/get_chat_global time:", time)
+        console.log("/api/chatG/add_message_global time:", time)
 
 
-        const repjson = await useFetch('/api/chatG/get_chat_global',{
+        const repjson = await useFetch('/api/chatG/add_message_global',{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include",
@@ -68,6 +68,11 @@ export default function HomeChat() {
             handle_global_message = (data) => {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
                 setDisplayedMessages((prev) => [...prev, data]);
+                // setDisplayedMessages((prev) => {
+                //     const updatedMessages = [...prev, {monMsg: data.monMsg, message: data.message, login: data.login, timer: data.timer}];
+                //     console.log("Updated messages:", updatedMessages);
+                //     return updatedMessages;
+                // });
             };
 
             SocketM.onChat(handle_global_message, "ChatG");
@@ -76,9 +81,9 @@ export default function HomeChat() {
         init();
 
         return () => {
-            if (handle_global_message) {
-                SocketM.offChat("ChatG");
-            }
+            // if (handle_global_message) {
+            //     SocketM.offChat("ChatG");
+            // }
         };
     }, []);
 
