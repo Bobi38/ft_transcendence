@@ -72,7 +72,7 @@ export class Player{
         return ({
             id: this._id,
             time: this._play_time,
-            nbTurn: this._nb_turn
+            nb_turn: this._nb_turn
          });
     }
 }

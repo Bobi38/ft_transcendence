@@ -3,7 +3,9 @@ import { manager_room } from './ManagRoom.js';
 const cooldowns = new Map();
 
 export function playMorpion(message, socket){
-    const id = socket.userId
+    const id = socket.userId;
+    let game = manager_room.isInRoom(id);
+
     console.log(`ggggggggggg   playMorpion   ggggggggggggggg`,  id)
     if (cooldowns.has(id)) return;
 
@@ -18,13 +20,29 @@ export function playMorpion(message, socket){
 
     if (message === "je pars") {
         console.log("abondon de ", id);
-        manager_room.removePlayer(id);
+        if (game && game.getLock()){
+            if (id === game.getTurn())
+                game.switchTurn;
+            game.handleEndGame('abort', game.getTurn());
+            game.notifyTurn(
+                { message: "Abondon - tu as gagne", turn: false },
+                { message: "Abondon - tu as perdu", turn: false });
+            manager_room.removeRoom();
+            return;
+        }
+        manager_room.removePlayer(id, "bye bye");
         return;
     }
 
     if (message === "je veux jouer") {
         console.log("nouvelle demande");
-        const game = manager_room.findOnePlace(socket, "Morpion", id);
+        if (game){
+            console.log("a deja une partie");
+            socket.send(JSON.stringify({type: "game", message: `ca peut etre tres long :${game}}`}))
+            return ;
+        }
+
+        game = manager_room.findOnePlace(socket, "Morpion", id);
         socket.send(JSON.stringify({type: "game", message: game.getId()}))
         try{
             game.setLock(true);
@@ -42,48 +60,26 @@ export function playMorpion(message, socket){
     }
 
     if (message === "playfirst") {
-        console.log("j ai recu le message pour jouer le premier");
-        // a dev
-        socket.send(JSON.stringify({type: "game", message: "pas encore gerer"}))
+        console.log("message pour jouer en second");
+        if (game.setFirstPlayer())
+            socket.send(JSON.stringify({type: "game", message: `${game} : tu joues en second`}))
         return;
     }
 
-    let game = manager_room.isInRoom(id)
+    if (!game && game.isTurnPlayer(id)) return;
 
-    if (!game) return;
-
-    if (!game){
-        console.log("nouveau joeur prend une place");
-        game = manager_room.findOnePlace(socket, "Morpion", id);
-        console.log(`nouveau joueur dans ${game}`);
-
-        if (!game) {
-            console.log("Impossible de trouver ou créer une partie");   
-        }
-        return;
-    }
-
-    if(game.getLock()){
-        console.log("le jeu est lock - ca joue");
-        if (game.play(id, message)) {
-            if(game.checkVictory()){
-                console.log(`fin de la partie de ${game}`);
-                manager_room.removeRoom(game.getId());
-            }
+    console.log("le jeu est lock - ca joue");
+    if (game.play(id, message)) {
+        if(game.checkVictory()){
+            console.log(`fin de la partie de ${game}`);
+            manager_room.removeRoom(game.getId());
             return ;
         }
+        game.switchTurn();
+        game.notifyTurn(
+            { message: "À toi de jouer", turn: true },
+            { message: "Tour adverse", turn: false });
+        game.startTurnTimer();
     }
-
-    console.log("st ce que la partie estlock ? ");
-    if (game.getLock()){
-        console.log("non");
-        console.log(`debut de partie de ${game}`);
-        game.selectPlayer1(id);
-        game.player1.send("a toi de jouer");
-        game.player2.send("en attente joueur 1");
-        game.startTurnTimer(game.player1);
-        return ;
-    }
-    console.log("oui, on joue ????");
 
 }

@@ -24,7 +24,7 @@ import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 // ./src/page/all_game
 import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
-import Morpion          from    "FRONT/page/Game/Morpion/Morpion.jsx";
+import Morpion          from    "FRONT/page/all_game/Morpion/Morpion.jsx";
 
 
 
