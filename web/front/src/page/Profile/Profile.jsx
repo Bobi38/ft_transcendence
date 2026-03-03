@@ -49,7 +49,7 @@ export default function Profile() {
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
-            headers : {"Content-Type" : "application/json",},
+            headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({Pass: password})
         });
@@ -72,53 +72,35 @@ export default function Profile() {
             return;
         }
 
-        try{
-            const rep = await fetch("/api/profile/updateProfil", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(user)
-            });
-            const repjson = await rep.json();
-            if (repjson.success){
-                showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
-            }else{
-                console.error("handle_submit(4) Error updating profile:", repjson.message);
-            }
-        } catch (error) {
-            console.error("handle_submit(5) Error updating profile:", error);
-        }
+        const url = `/api/profile/updateProfil`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(user)
+        });
+        if (!repjson)
+            return;
+        showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
     };
 
-    const fetch_user_data = async () => {
-        
-        console.log("fetch_user_data(1) called");
-        try {
-            const rep = await fetch("/api/profile/profile" ,{
+    async function fetch_user_data(){
+        const url = `/api/profile/profile`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
-            const repjson = await rep.json();
-            if (repjson.success){
-                
-                console.log("fetch_user_data(2) User data fetched successfully:", repjson.message);
-                setUser(repjson.message);
-
-            }else{
-
-                console.error("fetch_user_data(3) Error:", repjson.message);
-            
-            }
-        } catch (error) {
-            console.error("fetch_user_data(4) Error", error);
-        }
-
-    };
+        if (!repjson)
+            return;
+        setUser(repjson.message)
+    }
 
     useEffect(() => {
         fetch_user_data();
