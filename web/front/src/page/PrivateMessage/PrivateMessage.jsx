@@ -46,16 +46,19 @@ export default function PrivateMessage() {
 
 
     async function fetch_private_message(goToConv){
+
         if (!goToConv)
             return;
 
-        console.log("/api/chatP/get_chat_private goToConv: ",goToConv)
+        const url = `/api/chatP/get_chat_private`;
 
-        const repjson = await useFetch('/api/chatP/get_chat_private', {
+        console.log(`${url} goToConv: `,goToConv)
+
+        const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-            body: JSON.stringify({goToConv}),
+            body: JSON.stringify({token: goToConv}),
         })
         if (!repjson)
             return;

@@ -93,10 +93,10 @@ export default function Profile() {
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-            });
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+        });
         if (!repjson)
             return;
         setUser(repjson.message)

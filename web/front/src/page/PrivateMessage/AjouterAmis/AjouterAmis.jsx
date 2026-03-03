@@ -10,27 +10,6 @@ import "./AjouterAmis.scss";
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";
 
-    // async function namefct(){
-    //     if (!goToConv)
-    //         return;
-
-        // const url = `/api/auth/login`;
-
-        // console.log(`${url}`)
-
-    //     const repjson = await useFetch(`${url}`, {
-    //         method: "POST",
-    //         headers: {'Content-Type': 'application/json'},
-    //         credentials: "include",
-    //     })
-    //     if (!repjson)
-    //         return;
-    
-    
-
-
-    // }
-
 export default function AjouterAmis() {
     const fetch_type = {
         method: "GET",
