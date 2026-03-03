@@ -30,6 +30,7 @@ function NouvellePartie(){
   );
 }
 
+
 function RebootTruc() {
   return (
     <button
