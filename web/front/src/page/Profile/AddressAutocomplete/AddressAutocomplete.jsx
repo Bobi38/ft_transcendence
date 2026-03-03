@@ -1,8 +1,14 @@
+/* extern */
+import { useState } from "react";
+
+/*back*/
+import { showAlert } from "BACK/fct1.js";
+
 /* Css */
 import "./AddressAutocomplete.scss";
 
 /* Components */
-import { useState } from "react";
+import useFetch from "HOOKS/useFetch.jsx";
 
     
 export default function AddressAutocomplete({user, setUser}) {
@@ -10,20 +16,27 @@ export default function AddressAutocomplete({user, setUser}) {
 
   const [results, setResults] = useState([]);
 
-  const handle_change = async (e) => {
 
-      setUser({ ...user, location: e.target.value }) 
-      const value = e.target.value;
+    const handle_change = async (e) => {
 
-      if (value.length > 3) {
-          const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`);
+        setUser({ ...user, location: e.target.value }) 
+        const value = e.target.value;
 
-          const data = await res.json();
-          setResults(data.features);
-      } else {
-          setResults([]);
-      }
-  };
+        if (value.length > 3) {
+
+            const url = `https://api-adresse.data.gouv.fr/search/?q=${value}`;
+    
+            console.log(`${url}`)
+    
+            const repjson = await useFetch(`${url}`)
+            if (!repjson)
+                return;
+            setResults(repjson.features);
+            
+        } else {
+            setResults([]);
+        }
+    };
 
   const handle_select = (address) => {
     setUser({...user, location: address})

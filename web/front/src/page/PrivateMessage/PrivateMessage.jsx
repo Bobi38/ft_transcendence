@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 
 /* back */
+// import { useSocket } from "../../../tool/SocketContext";
 import  SocketM  from "/app/front/tool/SocketManag.js";
 
 /* Css */
 import "./PrivateMessage.scss";
 
 /* Components */
+import useFetch from "HOOKS/useFetch";
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 import Amis from "./Amis/Amis.jsx"
@@ -25,83 +27,52 @@ export default function PrivateMessage() {
     const [input, setInput] = useState("");
     
 
-    
-    async function fetch_go_to_conv_private (){
-        console.log("fetch_go_to_conv_private(1) called");
-        try{
+    async function fetch_go_to_conv_private(){
 
-            const rep = await fetch('/api/chatP/fetch_conv', {
-                method: "GET",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            
-            // console.log("fetch_go_to_conv_private(2) after fetch");
-            const repjson = await rep.json();
-            if (repjson.success){
-                // console.log("fetch_go_to_conv_private(3) success");
+        const repjson = await useFetch('/api/chatP/fetch_conv', {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        });
 
-                const chats = repjson.message;
-                console.log("fetch_go_to_conv_private(info)", chats);
-                setDisplayedInfoConv(chats)
-                
-            }else {
-                console.log("fetch_go_to_conv_private(4) error back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_go_to_conv_private(5) error front ", err);
-        }
+        if (!repjson)
+            return;
+        setDisplayedInfoConv(repjson.message)
     }
-    
+
     useEffect(() => {
         fetch_go_to_conv_private()
     }, []);
 
 
+    async function fetch_private_message(goToConv){
 
+        if (!goToConv)
+            return;
 
+        const url = `/api/chatP/get_chat_private`;
 
+        console.log(`${url} goToConv: `,goToConv)
 
-
-
-
-    async function fetch_private_message(goToConv) {
-
-        // console.log("fetch_private_message(0.5) called: ", goToConv);
-
-        if (!goToConv) return;
-
-        console.log("fetch_private_message(1) called: ", goToConv);
-
-        const token = goToConv;
-        console.log("goToConv: ",goToConv)
-        try{
-            const reponse = await fetch('/api/chatP/get_chat_private', {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-                body: JSON.stringify({token}),
-            });
-            const repjson = await reponse.json();
-            if (repjson.success){
-                setDisplayedMessages(repjson.message);
-                console.log("fetch_private_message(2) success: " , repjson.message);
-            } else
-                console.error("fetch_private_message(3) Error back");
-        }catch(error){
-            console.error("fetch_private_message(4) Error front: ", err);
-        }
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+            body: JSON.stringify({token: goToConv}),
+        })
+        if (!repjson)
+            return;
+        setDisplayedMessages(repjson.message);
     }
 
 
     useEffect(() => {
 
-        console.log("useEffect on est la ", goToConv);
         fetch_private_message(goToConv);
 
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.login === goToConv)
+            if (data.login === goToConv || data.monMsg == true)
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();
         

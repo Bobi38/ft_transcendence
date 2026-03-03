@@ -54,26 +54,25 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
     console.log("Api /register called");
-  const { name, password, email } = req.body;
-  try {
-    const find = await User.findAll({ where: { mail: email } });
-    if (find.length != 0) {
-      if (find[0].OAuth == true)
-        return res.status(500).json({success: false, message: 'Email already used with OAuth, try to login with GitHub'});
-      else
-        return res.status(500).json({success: false, message: 'Email already used'});
-    }
-    console.log("Api /register av");
-    const CrypPass = await bcrypt.hash(password, 10);
+    const { name, password, email } = req.body;
+    try {
+        const find = await User.findAll({ where: { mail: email } });
+        if (find.length != 0) {
+          if (find[0].OAuth == true)
+            return res.status(500).json({success: false, message: 'Email already used with OAuth, try to login with GitHub'});
+          else
+            return res.status(500).json({success: false, message: 'Email already used'});
+        }
+        console.log("Api /register av");
+        const CrypPass = await bcrypt.hash(password, 10);
 
-    const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
-    console.log("Api /register ID", result.insertId);
-    res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
-    // majDb();
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({success: false, message: 'Erreur MySQL' });
-  }
+        const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
+        console.log("Api /register ID", result.insertId);
+        res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
+        // majDb();
+    } catch (err) {
+        res.status(500).json({success: false, message: 'Erreur MySQL' });
+    }
 });
 
 router.get('/logout', async (req, res) => {

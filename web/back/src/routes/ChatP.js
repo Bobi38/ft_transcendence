@@ -23,6 +23,8 @@ router.post('/add_message_private', async (req, res) => {
     const crypt = encrypt(data.message);
     console.log(crypt)
     await PrivMess.create({SenderId: id1.id, contenu: crypt, ChatId: findchat.id, time: data.time});
+    findchat.lastmess = new Date();
+    await findchat.save()
     console.log("GOOOOOD");
     res.status(201).json({success: true});
   }catch(err){
@@ -48,7 +50,7 @@ router.post('/get_chat_private', async (req, res) => {
             ret = maj_conv(id1.id, conv, name);
         res.status(201).json({success: true, message: ret});
     }catch(err){
-        res.status(500).json({success: false, message: err});
+        res.status(500).json({success: false, message: "caca"});
     }
 })
 
@@ -124,7 +126,7 @@ router.get('/fetch_conv', async (req, res) => {
             order: [['id', 'DESC']]
           }
         ],
-        order: [['id', 'DESC']]
+        order: [['lastmess', 'DESC']]
       });
 
         console.log("API fetch_conv test join(3)");

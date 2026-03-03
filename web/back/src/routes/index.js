@@ -86,10 +86,10 @@ export function maj_conv(id, conv, namelst){
 
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
-  console.log("Middleware auth for path:", req.method, req.originalUrl);
-  console.log("Middleware auth for path WHAT:", req.path);
-  console.log("Headers:", req.headers.origin);
-  console.log("tototo ", token);
+  // console.log("Middleware auth for path:", req.method, req.originalUrl);
+  // console.log("Middleware auth for path WHAT:", req.path);
+  // console.log("Headers:", req.headers.origin);
+  // console.log("tototo ", token);
   if (!token && req.path !== '/' && req.path !== '/api/auth/login' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' && req.path !== '/api/oauth2/github/callback') {
     return res.status(401).json({ success: false, redirect: true});
   }
@@ -104,7 +104,7 @@ export const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ success: false, redirect: true});
   }
 
-  console.log("token valid");
+  // console.log("token valid");
   next();
 }
 

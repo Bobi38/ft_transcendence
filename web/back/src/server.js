@@ -134,6 +134,8 @@ import chatProute from './routes/ChatP.js'
 import friendroute from './routes/Friends.js'
 import Profilroute from './routes/routeProfile.js'
 import GameServeroute from './routes/GameServer.js'
+import Profileroute from './routes/Profile.js'
+import Morpionroute from './routes/Morpion.js'
 
 dotenv.config();
 
@@ -162,6 +164,8 @@ app.use('/api/chatP', chatProute);
 app.use('/api/friend', friendroute);
 app.use('/api/profile', Profilroute);
 app.use('/api/game', GameServeroute);
+app.use('/api/profile', Profileroute);
+app.use('/api/morpion', Morpionroute);
 
 
 if (isDev) {

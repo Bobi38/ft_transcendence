@@ -25,6 +25,7 @@ class Chat {
     try {
         const user = await User.findByPk(userId);
       // const decoded = jwt.verify(token, secret);
+        console.log("name in ", user.name);
       this.sessions.set(socket.id, { socket, userId, username: user.name });
       // console.log("WS enregistré user", decoded.id);
       return token;
@@ -33,6 +34,25 @@ class Chat {
       return null;
     }
   }
+
+  finduserId(userId) {
+    for (const session of this.sessions.values()) {
+      if (session.userId === userId) {
+        return session;
+      }
+    }
+    return null;
+  }
+
+  findname(name){
+    for (const session of this.sessions.values()) {
+      if (session.username === name) {
+        return session;
+      }
+    }
+    return null;
+  }
+
   finduser(socketid) {
     return this.sessions.get(socketid) || null;
   }
@@ -78,6 +98,8 @@ async function fullmess(mess, Conv){
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id1, contenu: con, time: new Date()})
     else
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id2, contenu: con, time: new Date()})
+    Conv.lastmess = new Date();
+    await Conv.save();
   }
 }
 
