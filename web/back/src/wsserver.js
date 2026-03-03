@@ -73,7 +73,7 @@ export function initWebSocket(server) {
       try{
         const data = JSON.parse(message.toString());
         // console.log('=== MESSAGE REÇU ===');
-        console.log('Type:', data.type);
+        // console.log('Type:', data.type);
         // console.log('Contenu:', data.mess);
         // console.log('===================');
         // if (data.type === 'auth'){
