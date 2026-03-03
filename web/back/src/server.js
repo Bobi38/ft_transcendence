@@ -132,7 +132,6 @@ import securoute from './routes/secu.js'
 import chatGroute from './routes/ChatG.js'
 import chatProute from './routes/ChatP.js'
 import friendroute from './routes/Friends.js'
-import Profilroute from './routes/routeProfile.js'
 import GameServeroute from './routes/GameServer.js'
 import Profileroute from './routes/Profile.js'
 import Morpionroute from './routes/Morpion.js'
@@ -162,7 +161,7 @@ app.use('/api/secu', securoute);
 app.use('/api/chatG', chatGroute);
 app.use('/api/chatP', chatProute);
 app.use('/api/friend', friendroute);
-app.use('/api/profile', Profilroute);
+app.use('/api/profile', Profileroute);
 app.use('/api/game', GameServeroute);
 app.use('/api/profile', Profileroute);
 app.use('/api/morpion', Morpionroute);
