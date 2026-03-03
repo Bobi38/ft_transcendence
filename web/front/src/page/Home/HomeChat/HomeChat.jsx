@@ -38,7 +38,7 @@ export default function HomeChat() {
         console.log("/api/chatG/get_chat_global time:", time)
 
 
-        const repjson = await useFetch('/api/chatG/get_chat_global',{
+        const repjson = await useFetch('/api/chatG/add_message_global',{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include",
