@@ -124,7 +124,7 @@ async function CreatStat(){
                                 Id1:1, 
                                 OX1:0, 
                                 Id2:2, 
-                                OX1:1
+                                OX2:1
     });
 
     await StatMorp.create({ idUser:1,
