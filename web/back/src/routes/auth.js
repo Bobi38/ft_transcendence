@@ -3,7 +3,7 @@ import
 {
   User,
   Co,
-  // ChatG
+  // ChatG,
   // PrivMess,
   // PrivChat,
   // Friend,

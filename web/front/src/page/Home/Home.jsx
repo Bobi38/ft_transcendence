@@ -117,7 +117,6 @@ export default function Home() {
 
 	return (
 
-
 		<section id={`Home-root`}>
 			<div className="scanlines"></div>
             <div className={`${is_popup}`} >

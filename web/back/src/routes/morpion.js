@@ -1,6 +1,6 @@
 
 import 
-newrouter, 
+router, 
 {
   User,
   // Co,
@@ -16,7 +16,7 @@ newrouter,
 
 
 
-newrouter.get('/fetchStatMorp', async (req, res) => {
+router.get('/fetchStatMorp', async (req, res) => {
   try{
       const token = req.cookies.token;
       const decoded = jwt.verify(token, secret);
@@ -50,7 +50,7 @@ newrouter.get('/fetchStatMorp', async (req, res) => {
   }
 })
 
-newrouter.get('/get_morpion_stat', async (req, res) => {
+router.get('/get_morpion_stat', async (req, res) => {
     try{
         console.log("API get_morpion_stat(1) called");
         // const page1 = parseInt(req.params.page) || 1;
@@ -97,7 +97,7 @@ newrouter.get('/get_morpion_stat', async (req, res) => {
 })
 
 
-newrouter.post('/getGameMorp', async (req, res) => {
+router.post('/getGameMorp', async (req, res) => {
   try{
     const {pas} = req.body;
     const past = 5 * Number(pas);
