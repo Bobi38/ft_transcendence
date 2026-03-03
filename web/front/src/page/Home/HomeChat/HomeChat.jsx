@@ -46,26 +46,23 @@ export default function HomeChat() {
         });
         if (!repjson)
             return;
-
-        setDisplayedMessages(repjson.message);
     }
 
 
     useEffect(() => {
-        let handle_global_message;
-
+        fetch_global_message()
         const init = async () => {
             const repco = await checkCo();
             if (!repco) return;
 
 
-            await fetch_global_message();
+
 
             // if (SocketM.getState() && SocketM.getState() === "closed") {
             //     SocketM.connect();
             // }
 
-            handle_global_message = (data) => {
+            const handle_global_message = (data) => {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
                 setDisplayedMessages((prev) => [...prev, data]);
                 // setDisplayedMessages((prev) => {
@@ -81,9 +78,8 @@ export default function HomeChat() {
         init();
 
         return () => {
-            // if (handle_global_message) {
-            //     SocketM.offChat("ChatG");
-            // }
+            SocketM.offChat("ChatG");
+
         };
     }, []);
 
@@ -96,13 +92,8 @@ export default function HomeChat() {
         const data = {type: "mess", message: input, timer: time};
         
         console.log("handle_submit(2): " ,data);
-
-        const data2 = {...data, monMsg: false};
-
         add_message_global(time);
-        
-        console.log("handle_submit(3) send via WebSocket data2:", data2);
-        SocketM.sendd(data2);
+        SocketM.sendd(data);
         setInput("");
     };
 
@@ -126,7 +117,7 @@ export default function HomeChat() {
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
                         <div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
-
+                            {/* {() => {console.log("in html:", index)}} */}
                             {msg.monMsg ? (
                                 <div className={`message`}>
                                     <div>{msg.timer}</div>

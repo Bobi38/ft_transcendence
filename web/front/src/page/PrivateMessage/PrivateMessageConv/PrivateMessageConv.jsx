@@ -8,6 +8,7 @@ import  SocketM  from "/app/front/tool/SocketManag.js";
 import "./PrivateMessageConv.scss"; 
 
 /* Components */
+import useFetch from "HOOKS/useFetch.jsx";
 
 // login lui contient le login user
 export default function PrivateMessageConv({login, displayedMessages, setDisplayedMessages}) {    
