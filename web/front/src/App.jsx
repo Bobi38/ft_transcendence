@@ -1,5 +1,6 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 // import { SocketProvider } from "../tool/SocketContext"
 import { useEffect, useState } from "react";
 import checkCo from "BACK/fct1.js"
@@ -35,8 +36,9 @@ export default function App() {
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
-            if (!repco)
+            if (!repco){
                 return;
+            }
             if (!SocketM.getState() || SocketM.getState() === "closed")
                 SocketM.connect();
             console.log("App.jsx useEffect(1) SocketM.connect() called");
