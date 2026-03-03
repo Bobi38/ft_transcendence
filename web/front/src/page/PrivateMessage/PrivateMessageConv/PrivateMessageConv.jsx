@@ -14,87 +14,30 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 
     const [input, setInput] = useState("");
 
-    // async function fetch_private_message({login}) {
-    //     console.log("fetch_private_message(1) called: ", login);
-
-    //     const tok2 = login;
-
-    //     try{
-    //         const reponse = await fetch('/api/get_chat_private', {
-    //             method: "POST",
-    //             headers: {'Content-Type': 'application/json'},
-    //             credentials: "include",
-    //             body: JSON.stringify({tok2}),
-    //         });
-    //         const repjson = await reponse.json();
-    //         if (repjson.success){
-
-    //             setDisplayedMessages(message);
-                
-    //             console.log("fetch_private_message(2) success: " , repjson.message);
-    //         } else
-    //             console.error("fetch_private_message(3) Error back");
-    //     }catch(error){
-    //         console.error("fetch_private_message(4) Error front: ", err);
-    //     }
-    // }
-    
-
-
-
-
-    // useEffect(() => {
-
-    //     async () => { fetch_private_message({login}) }
-
-
-    //     if (SocketM.getState() === "closed") {
-    //         SocketM.connect();
-    //     }
-
-    //     const handle_private_message = (data) => {
-
-    //         console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-    //         if (data.login === login)
-    //             setDisplayedMessages(prevMessages => [...prevMessages, data]);
-    //     }
-    //     SocketM.onPriv(login, handle_private_message);
-
-    //     return () => {
-    //         SocketM.offPriv(handle_private_message);
-    //     };
-    // }, [login]);
-
-
-
-
     async function add_private_message(time, login){
-        console.log("add_private_message(1) called: ", input)
-        const data = {
-            message: input,
-            time: time,
-            id: login,
-        }
-
-        try{
-            const reponse = await fetch('/api/add_message_private',{
+        if (!time || !login)
+            return;
+        
+        const url = `/api/chatP/add_message_private`;
+        console.log(`${url}`)
+        const repjson = await useFetch(`${url}`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
-                body: JSON.stringify(data),
+                body: JSON.stringify({ message: input, time: time, id: login }),
+            }, null , function(repjson) {
+                if (repjson.message === "exist") {
+                    console.log("dlt_friend callbackfail(info) people not exist");
+                } else if (repjson.message === "relation") {
+                    console,log("dlt_friend callbackfail(info) people are not friend");
+                } else {
+                    console.log("dlt_friend callbackfail(info) error back ", repjson.message);
+                }
             });
-
-            const repjson = await reponse.json();
-            if(repjson.success){
-                console.log("add_private_message(2) success")
-            } else
-                console.error("add_private_message(3) Error back", repjson.message)
-        }catch(err){
-            console.error("add_private_message(4) Error front", err)
-        }
+        if (!repjson)
+            return;
+        console.log("good");
     }
-
-
     
     const handler_submit = (e) => {
         e.preventDefault();

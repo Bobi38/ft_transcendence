@@ -1,16 +1,24 @@
+/* extern */
+import { FaGithub } from "react-icons/fa";
+
+/* back */
+import { showAlert } from "BACK/fct1.js";
+
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
-import { showAlert } from "/app/back/src/fct1.js";
-import { AUTH } from "../../Home.jsx"
+
+/* Components */
+import { AUTH } from "FRONT/page/Home/Home.jsx"
+
+import useFetch from "HOOKS/useFetch.jsx";
+
 
 export default function Register({setShowLog}) {
 
+    async function register_submit(e){
 
-    const register_submit = async (event) => {
-
-        event.preventDefault();
-
-        const form = event.target;
+        e.preventDefault();
+        const form = e.target;
         const data = {
             name: form.name.value.trim(),
             email: form.email.value.trim(),
@@ -18,33 +26,25 @@ export default function Register({setShowLog}) {
         };
 
         if (!data.name || !data.email || !data.password) {
-            showAlert("register_submit(1) Missing value", 'danger');
+            showAlert("Missing value", 'danger');
             return;
         }
+        const url = `/api/auth/register`;
+        console.log(`${url}`)
         console.log(data.name + " " + data.email + " " + data.password);
-        try {
-            const reponse = await fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
 
-            const result = await reponse.json();
-
-            if (result.success) {
-                setShowLog(AUTH.LOGIN);
-            } else {
-                showAlert("register_submit(2)" + result.message, 'danger');
-            }
-        } catch (error) {
-            console.error("register_submit(3) Server error", error);
-        }
-    };
+        const repjson = await useFetch(`${url}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        if (!repjson)
+            return;
+        setShowLog(AUTH.LOGIN);
+    }
 
     function login_mode() {
-        console.log("login_mode(1) Passage en mode connection: ", AUTH.REGISTER);
+        // console.log("login_mode(1) Passage en mode connection: ", AUTH.REGISTER);
         setShowLog(AUTH.LOGIN)
     }
 

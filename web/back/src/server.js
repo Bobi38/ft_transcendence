@@ -107,9 +107,10 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import {Server as ColyServ} from "colyseus";
+// import {Server as ColyServ} from "colyseus";
 // import { GameRoom } from './colyseus/GameRoom.js';
-import router, { checktok } from './router.js';
+// import router from './routes/index.js';
+// import router from './router.js';
 import { majDb } from './fct.js';
 import { initWebSocket } from './wsserver.js';
 import {addDb} from './fct.js';
@@ -121,6 +122,18 @@ import './models/connect.js';
 import ChatG from './models/test.js';
 import './models/privchat.js';
 import './models/privmess.js';
+
+
+//router
+import { authMiddleware } from './routes/index.js';
+import authroute from './routes/auth.js'
+import oauth2route from './routes/Oauth2.js'
+import securoute from './routes/secu.js'
+import chatGroute from './routes/ChatG.js'
+import chatProute from './routes/ChatP.js'
+import friendroute from './routes/Friends.js'
+import Profileroute from './routes/Profile.js'
+import Morpionroute from './routes/Morpion.js'
 
 dotenv.config();
 
@@ -138,10 +151,18 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
-app.use('/api', router);
 
-// import newrouter from './routes/index.js';
-// app.use('/newapi', newrouter);
+app.use(authMiddleware);
+// app.use('/api', router);
+app.use('/api/auth', authroute);
+app.use('/api/oauth2', oauth2route);
+app.use('/api/secu', securoute);
+app.use('/api/chatG', chatGroute);
+app.use('/api/chatP', chatProute);
+app.use('/api/friend', friendroute);
+app.use('/api/profile', Profileroute);
+app.use('/api/morpion', Morpionroute);
+
 
 if (isDev) {
   console.log("JE SUIS DEV");

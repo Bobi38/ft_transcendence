@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import "./StatsMorpion.scss";
 
 /* Components */
-import Paging from "COMP/Paging/Paging.jsx";    
+import Paging from "COMP/Paging/Paging.jsx"; 
+import useFetch from "HOOKS/useFetch.jsx";   
 
 export default function StatsMorpion() {
 
@@ -93,31 +94,31 @@ export default function StatsMorpion() {
 
     const [currentPage, setCurrentPage] = useState("");
 
-
     async function fetch_stats(page_nb) {
+        if (page_nb < 0)
+            return;
 
-        console.log("fetch_stats(1) called");
+        const url = `/api/morpion/get_morpion_stat/${page_nb}`;         // const page = parseInt(req.params.page);
+        // const url = `/api/get_morpion_stat?page=${page_nb}`; // const page = parseInt(req.query.page);
 
-        try{
-            const reponse = await fetch(`/api/get_morpion_stat/${page_nb}`, {
-            // const reponse = await fetch(`/api/get_morpion_stat?page=${page_nb}`, {
-                method: "GET",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            console.log("fetch_stats(1.5) ", reponse);
-            const repjson = await reponse.json();
-            if (repjson.success){
-                console.log("fetch_stats(2) success stat_user: " , repjson.stat_user);
-                console.log("fetch_stats(3) success history: " , repjson.history);
-            } else
-                console.error("fetch_stats(4) Error back ", repjson.message);
-        }catch(error){
-            console.error("fetch_stats(5) Error front: ", error);
-        }
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`,  {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        }, function(repjson){
+            console.log("useFetch(info) success stat_user: " , repjson.stat_user);
+            console.log("useFetch(info) success history: " , repjson.history);
+        })
+        
+        if (!repjson)
+            return;
+        // setCurrentPage(...)
     }
 
-    fetch_stats(1);
+
+    fetch_stats(0);
 
     return (
         <div className={`StatsMorpion-root border-base`}>

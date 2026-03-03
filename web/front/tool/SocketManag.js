@@ -130,6 +130,7 @@ class SocketManag{
     }
     
     disco(){
+        this.sendd({type: "logout"})
         this.reco = false;
         this.id = null;
         if (this.socket.readyState == WebSocket.OPEN)

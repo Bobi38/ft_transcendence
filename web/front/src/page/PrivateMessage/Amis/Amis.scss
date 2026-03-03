@@ -16,6 +16,9 @@
         @include mix.fullw;
         text-align: center;
         padding: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         .div-btn{
             display: flex;
             flex-direction: row;

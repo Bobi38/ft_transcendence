@@ -10,6 +10,7 @@ import "./Profile.scss";
 
 /* Components */
 import AddressAutocomplete from "./AddressAutocomplete/AddressAutocomplete.jsx";
+import useFetch from "HOOKS/useFetch.jsx";
 
 
 export default function Profile() {
@@ -41,25 +42,21 @@ export default function Profile() {
             return;
         }
 
-        const data ={
-            Pass: password,
-        }
-        try{
-            const rep = await fetch("/api/majPass", {
-                method: "POST",
-                headers : {"Content-Type" : "application/json",},
-                credentials: "include",
-                body: JSON.stringify(data)
-            });
 
-            const repp = await rep.json();
-            if (repp.success)
-                showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
-            else
-                console.log ("handle_pass(4) err passmaj" , repp.message);
-        }catch(err){
-            console.log("handle_pass(5) ",err);
-        }
+        const url = `/api/profile/majPass`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers : { "Content-Type" : "application/json" },
+            credentials: "include",
+            body: JSON.stringify({Pass: password})
+        });
+        if (!repjson)
+            return;
+        showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
+        
     }
 
     const handle_submit = async (e) => {
@@ -75,53 +72,35 @@ export default function Profile() {
             return;
         }
 
-        try{
-            const rep = await fetch("/api/updateProfil", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(user)
-            });
-            const repjson = await rep.json();
-            if (repjson.success){
-                showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
-            }else{
-                console.error("handle_submit(4) Error updating profile:", repjson.message);
-            }
-        } catch (error) {
-            console.error("handle_submit(5) Error updating profile:", error);
-        }
+        const url = `/api/profile/updateProfil`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(user)
+        });
+        if (!repjson)
+            return;
+        showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
     };
 
-    const fetch_user_data = async () => {
-        
-        console.log("fetch_user_data(1) called");
-        try {
-            const rep = await fetch("/api/profile" ,{
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            const repjson = await rep.json();
-            if (repjson.success){
-                
-                console.log("fetch_user_data(2) User data fetched successfully:", repjson.message);
-                setUser(repjson.message);
+    async function fetch_user_data(){
+        const url = `/api/profile/profile`;
 
-            }else{
+        console.log(`${url}`)
 
-                console.error("fetch_user_data(3) Error:", repjson.message);
-            
-            }
-        } catch (error) {
-            console.error("fetch_user_data(4) Error", error);
-        }
-
-    };
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+        });
+        if (!repjson)
+            return;
+        setUser(repjson.message)
+    }
 
     useEffect(() => {
         fetch_user_data();

@@ -147,28 +147,3 @@ export default function Home() {
 	)
 }
 
-
-
-
-// const [user, setUser] = useState(null);
-// const fetchUserData = async () => {
-
-//     console.log("fetchUserData(1) called");
-//     try {
-//         const rep = await fetch("/api/user/profile");
-//         const repjson = await rep.json();
-//         if (repjson.success){
-
-//             console.log("fetchUserData(2) User data fetched successfully:", repjson.message);
-//             setUser(repjson.message);
-
-//         }else{
-
-//             console.error("fetchUserData(3) Error:", repjson.message);
-
-//         }
-//     } catch (error) {
-//         console.error("fetchUserData(4) Error", error);
-//     }
-
-// };

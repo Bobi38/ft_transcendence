@@ -8,108 +8,83 @@ import { useEffect, useState } from "react";
 import "./AjouterAmis.scss";
 
 /* Components */
-
-
+import useFetch from "HOOKS/useFetch.jsx";
 
 export default function AjouterAmis() {
+    const fetch_type = {
+        method: "GET",
+        headers: {'Content-Type': 'application/json'},
+        credentials: "include",
+    }
 
     async function add_friend(name){
-        console.log("add_friend(1) called: ", name);
-        try{
+        if (!goToConv)
+            return;
 
-            const rep = await fetch(`/api/add_friend?name=${name}`, {
-                method: "GET",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            
-            // console.log("add_friend(2) after fetch");
-            const repjson = await rep.json();
-            if (repjson.success) {
-                console.log("add_friend(info) good");
+        const url = `/api/friend/add_friend?name=${name}`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, fetch_type, null , function(repjson) {
+            if (repjson.message === undefined) {
+                console.log("add_friend callbackfail(info) people not exist");
+            } else if (repjson.message === name) {
+                console,log("add_friend callbackfail(info) people are already friend");
             } else {
-                if (repjson.message === undefined) {
-                    console.log("add_friend(info) people not exist");
-                } else if (repjson.message === name) {
-                    console,log("add_friend(info) people are already friend");
-                } else {
-                    console.log("add_friend(3) error back ", repjson.message);
-                }
+                console.log("add_friend callbackfail(info) error back ", repjson.message);
             }
-        } catch(err) {
-            console.log("add_friend(4) error front ", err);
-        }
+        })
+        if (!repjson)
+            return;
+        console.log("add_friend(info) good");
     }
 
 
+    async function fetch_all_request_friend(){
+        const url = `/api/friend/all_request_friend`;
 
-    async function fetch_all_request_friend(){ // with co or not
-        // console.log("fetch_all_request_friend(1) called");
-        try{
+        console.log(`${url}`)
 
-            const rep = await fetch('/api/all_request_friend', {
-                method: "GET",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            
-            // console.log("fetch_all_request_friend(2) after fetch");
-            const repjson = await rep.json();
-
-            if (repjson.success){
-                // setResponseFriendArray(repjson.message)
-                console.log("fetch_all_request_friend(info) success")
-
-            }else {
-                console.log("fetch_all_request_friend(3) error back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_all_request_friend(4) error front ", err);
-        }
+        const repjson = await useFetch(`${url}`, fetch_type)
+        if (!repjson)
+            return;
+        setResponseFriendArray(repjson.message)
     }
 
+    
+    async function fetch_response_friend_request(){
+        const url = `/api/friend/all_request_friend`;
 
-    async function fetch_response_friend_request(){ // with co or not
-        console.log("fetch_response_friend_request(1) called");
-        try{
+        console.log(`${url}`)
 
-            const rep = await fetch('/api/all_request_friend', {
-                method: "GET",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            
-            // console.log("fetch_response_friend_request(2) after fetch");
-            const repjson = await rep.json();
-
-            if (repjson.success){
-                // setResponseFriendArray(repjson.message)
-                console.log("success")
-
-            }else {
-                console.log("fetch_response_friend_request(3) error back ", repjson.message);
-            }
-        }catch(err){
-            console.log("fetch_response_friend_request(4) error front ", err);
-        }
+        const repjson = await useFetch(`${url}`, fetch_type)
+        if (!repjson)
+            return;
+        setResponseFriendArray(repjson.message)
     }
+    
 
 
-    const [responseFriend, setResponseFriend] = useState(null);
+    // useEffect(() => {fetch_all_request_friend()}, []);
+
+
     const [responseFriendArray, setResponseFriendArray] = useState([{ login: "titi" },{ login: "tata" }]);
 
     const handel_form = (e) =>{
         console.log("handel_form(1) called")
         const el_add_friend = document.getElementById("add-friend")
         console.log("handel_form(2) demande envoyer", el_add_friend.value)
-        // add_friend(el_add_friend.value)
-        
-        {
-            console.log("handel_form(info) clear input value")
-            el_add_friend.value = ""
-        }
+        add_friend(el_add_friend.value)
+        console.log("handel_form(info) clear input value")
+        el_add_friend.value = ""
     }
     
+    const handel_response = (arg) =>{
+        console.log("requestfriend finish", arg)
+        // send => responseFriend
+    }
+
+
     return (
 
         <div className={`AjouterAmis-root border-0`}>
@@ -123,18 +98,23 @@ export default function AjouterAmis() {
             <hr/>
 
             <div className={`response border-1`}>
+
                 {responseFriendArray && responseFriendArray.map((msg, index) => (
+
                     <div key={index}>
                         {index != 0 && <hr/>}
                         <div className={`one-response border-2`}>
-                            <h5>{msg.login ? msg.login : "titi"}</h5>
+
+                            <h5>{msg.login}</h5>
 
                             <div className={`div-btn border-3`}>
-                                <button onClick={() => {setResponseFriend({login: msg.login, response: true })}}>true</button>
-                                <button onClick={() => {setResponseFriend({login: msg.login, response: false })}}>false</button>
+                                <button onClick={() => {handel_response({login: msg.login, response: true })}}>true</button>
+                                <button onClick={() => {handel_response({login: msg.login, response: false })}}>false</button>
                             </div>
+
                         </div>
                     </div>
+
                 ))}
 
             </div>

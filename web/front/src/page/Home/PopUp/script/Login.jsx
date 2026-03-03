@@ -1,9 +1,16 @@
+/* extern */
+import { FaGithub } from "react-icons/fa";
+
+/* back */
+import { showAlert } from "BACK/fct1.js";
+
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
-import { showAlert } from "/app/back/src/fct1.js";
+/* Components */
 import { AUTH } from "FRONT/page/Home/Home.jsx"
-import { FaGithub } from "react-icons/fa";
+
+import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Login({setShowLog}) {
 
@@ -21,31 +28,25 @@ export default function Login({setShowLog}) {
             return;
         }
 
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+        const api_url = `/api/auth/login`;
 
-            const result = await response.json();
+        console.log(`${api_url}`)
 
-            if (result.success) {
-                sessionStorage.setItem('token', result.tooken);
-                sessionStorage.setItem('message', "Connexion réussie");
-                sessionStorage.setItem('type', "success");
+        const repjson = await useFetch(`${api_url}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
 
-
-                setShowLog(AUTH.MAILA2F); 
-                // setShowLog(AUTH.NONE); 
-
-            } else {
-                showAlert("login_submit(2) Erreur : " + result.message, "danger");
-            }
-        } catch (error) {
-            console.error("login_submit(3) Erreur serveur", error);
-            showAlert("login_submit(4) Impossible de se connecter pour le moment", "danger");
+        if (!repjson){
+            showAlert("Impossible de se connecter pour le moment", "danger");
+            return;
         }
+
+        sessionStorage.setItem('token', repjson.tooken);
+        sessionStorage.setItem('message', "Connexion réussie");
+        sessionStorage.setItem('type', "success");
+        setShowLog(AUTH.MAILA2F);
     };
 
 
@@ -57,13 +58,8 @@ export default function Login({setShowLog}) {
 
     
     const handle_git = () => {
-        window.location.href = "/api/github";
+        window.location.href = "/api/oauth2/github";
     };
-    
-    // const miss_pass_mode = () => {
-    //     console.log("Passage en mode inscription:", AUTH.REGISTER);
-    //     setShowLog(AUTH.REGISTER);
-    // }
 
     return (
         <>
@@ -79,7 +75,7 @@ export default function Login({setShowLog}) {
                             name={`email`}
                             placeholder={`you@exemple.com`}
                             required
-                            value={`toto@test.c`}
+                            // value={`toto@test.c`}//--
                             />
 
                     <label  htmlFor="password">Password</label>
@@ -88,7 +84,7 @@ export default function Login({setShowLog}) {
                             name={`password`}
                             placeholder={`1234btw`}
                             required
-                            value={`tt`}
+                            // value={`tt`}//--
                             />
 
                     <div className={`button-container`}>

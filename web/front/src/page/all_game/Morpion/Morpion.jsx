@@ -31,7 +31,7 @@ function RebootTruc() {
   );
 }
 
-function NewPartie(){
+function Newpartie(){
    return (
     <button
       onClick={() =>
@@ -118,7 +118,7 @@ export default function Truc() {
       <div className="status">{msg}</div>
       <div>< RebootTruc /></div>
       <div>< GoOUT /></div>
-      <div>< NewPartie /></div>
+      <div>< Newpartie /></div>
       <div className="game-board">
         <Board squares={board}/>
       </div>
