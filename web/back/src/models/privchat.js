@@ -16,6 +16,10 @@ const PrivChat = sequelize.define('PrivChat', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  lastmess:{
+    type: DataTypes.DATE,
+    allowNull: true,
+  }
 }, {
   tableName: 'PrivChat',
   timestamps: false, 

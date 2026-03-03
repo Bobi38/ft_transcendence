@@ -52,6 +52,13 @@ class SocketManag{
                 console.log("Message reçu de type priv_mess via WebSocket:", dataa.mess);
                 this.listeners.priv.forEach(cb => cb(dataa));
             }
+            if (dataa.type === 'ping'){
+                // alert("receive PING")
+                const data = {
+                    type: 'pong'
+                }
+                this.sendd(data)
+            }
         };
         this.socket.onerror = (error) => {
             console.log("errr socket" + error);

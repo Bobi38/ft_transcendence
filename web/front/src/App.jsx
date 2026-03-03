@@ -1,7 +1,7 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import { SocketProvider } from "../tool/SocketContext"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import checkCo from "BACK/fct1.js"
 
 /* back */

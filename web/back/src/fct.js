@@ -98,6 +98,8 @@ async function fullmess(mess, Conv){
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id1, contenu: con, time: new Date()})
     else
       await PrivMess.create({ChatId: Conv.id, SenderId: Conv.id2, contenu: con, time: new Date()})
+    Conv.lastmess = new Date();
+    await Conv.save();
   }
 }
 
