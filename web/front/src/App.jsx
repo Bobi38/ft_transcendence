@@ -64,11 +64,11 @@ export default function App() {
 
             {/* Navigation */}
             <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
-            <Route path={`/Morpion`}                element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
+            <Route path={`/MorpionTraining`}        element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/WaitRoom`}               element={<Navigation>   <Morpion/>           </Navigation>}/>
+            <Route path={`/Morpion`}                element={<Navigation>   <Morpion/>            </Navigation>}/>
 
 
             {/* bad path */}

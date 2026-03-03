@@ -101,7 +101,7 @@ export default function Home() {
 	const cards_content = [
 		{ text:"Weather", path: "/Weather" },
 		{ text:"Intra", path: "/https://profile.intra.42.fr" },
-		{ text:"WaitRoom", path: "/WaitRoom" },
+		{ text:"WaitRoom", path: "/Morpion" },
 		{ text:"Stats", path: "/Stats" },
 		{ text:"Game", path: "/Game" },
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
