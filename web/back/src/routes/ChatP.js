@@ -50,7 +50,7 @@ router.post('/get_chat_private', async (req, res) => {
             ret = maj_conv(id1.id, conv, name);
         res.status(201).json({success: true, message: ret});
     }catch(err){
-        res.status(500).json({success: false, message: err});
+        res.status(500).json({success: false, message: "caca"});
     }
 })
 

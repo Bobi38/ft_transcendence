@@ -1,12 +1,15 @@
+/* extern */
+import { useEffect, useState } from "react";
+
+/* back */
+import checkCo from "BACK/fct1.js";
+import  SocketM  from "/app/front/tool/SocketManag.js";
+
 /* Css */
 import "./HomeChat.scss";
 
 /* Components */
-import { useEffect, useState } from "react";
-
-// import { useSocket } from "../../../../tool/SocketContext";
-import  SocketM  from "/app/front/tool/SocketManag.js";
-import checkCo from "/app/back/src/fct1.js";
+import useFetch from "HOOKS/useFetch";
 
 export default function HomeChat() {
 
@@ -14,54 +17,39 @@ export default function HomeChat() {
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
+    async function fetch_global_message(){
 
-    async function  fetch_global_message(){
+        console.log("/api/chatG/get_chat_global",)
 
-        console.log("fetch_global_message(1) called");
-        try {
-            const reponse = await fetch('/api/chatG/get_chat_global', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: "include"
-            });
+        const repjson = await useFetch('/api/chatG/get_chat_global', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: "include"
+        });
+        if (!repjson)
+            return;
 
-            const repjson = await reponse.json();
-            if (repjson.success){
-                
-                setDisplayedMessages(repjson.message);
-                
-                console.log("fetch_global_message(2) success: " , repjson.message);
-            } else 
-                console.error("fetch_global_message(3) Error back");
-        } catch (error) {
-            console.error("fetch_global_message(4) Error front:", error);
-        }
+        setDisplayedMessages(repjson.message);
     }
 
     async function add_message_global(time){
-        console.log("add_message_global(1) called: ", input);
-        const data = {
-            message: input,
-            time: time 
-        }
+        if (!time) return
+        
+        console.log("/api/chatG/get_chat_global time:", time)
 
-        try{
-            const reponse = await fetch('/api/chatG/add_message_global', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: "include",
-                    body: JSON.stringify(data),
-                });
 
-            const repjson = await reponse.json();
-            if (repjson.success){
-                console.log("add_message_global(2) message added in db")
-            } else
-                console.error("add_message_global(3) Error back", repjson.message)
-        }catch(err){
-            console.error("add_message_global(4) Error front", err)
-        }
+        const repjson = await useFetch('/api/chatG/get_chat_global',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: "include",
+            body: JSON.stringify({ message: input, time: time }),
+        });
+        if (!repjson)
+            return;
+
+        setDisplayedMessages(repjson.message);
     }
+
 
     useEffect(() => {
         let handle_global_message;

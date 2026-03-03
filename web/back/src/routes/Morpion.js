@@ -1,6 +1,5 @@
 
 import 
-newrouter, 
 {
   User,
   // Co,
@@ -12,11 +11,16 @@ newrouter,
   StatMorp,
   GameMorp,
   HistoryMorp,
+  jwt,
+  secret,
+  express
 }from './index.js';
 
 
+const router = express.Router();
 
-newrouter.get('/fetchStatMorp', async (req, res) => {
+
+router.get('/fetchStatMorp', async (req, res) => {
   try{
       const token = req.cookies.token;
       const decoded = jwt.verify(token, secret);
@@ -50,20 +54,22 @@ newrouter.get('/fetchStatMorp', async (req, res) => {
   }
 })
 
-newrouter.get('/get_morpion_stat', async (req, res) => {
+router.get('/get_morpion_stat', async (req, res) => {
     try{
         console.log("API get_morpion_stat(1) called");
-        // const page1 = parseInt(req.params.page) || 1;
-        // console.log("API get_morpion_stat(1) params ", page1);
-        const page2 = parseInt(req.query.page) || 1;
-        console.log("API get_morpion_stat(1) query ", page2);
+        // const page = parseInt(req.params.page) || 1;
+        // console.log("API get_morpion_stat(1) params ", page);
+        let page = parseInt(req.query.page) 
+        if (page < 0)
+          return (res.status(404).json({success: false, message: `unknow page_nbr${page_nbr}`}))
+        console.log("API get_morpion_stat(1) query ", page);
 
         const token = req.cookies.token;
         const decoded = jwt.verify(token, secret);
         console.log("API get_morpion_stat(2)");
         const resultStats = await StatMorp.findOne({where: {idUser: decoded.id}});
         console.log("API get_morpion_stat(3)");
-        const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: 0, order:[['id', 'DESC']]})
+        const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: page2 - 1, order:[['id', 'DESC']]})
         console.log("API get_morpion_stat(4)");
         const stat = {
             AllGame: resultStats.nbGame,
@@ -92,12 +98,12 @@ newrouter.get('/get_morpion_stat', async (req, res) => {
         return res.status(201).json({success: true, stat_user: stat, history: resultHistory});
 
     }catch(err){
-        return res.status(500).json({success: false, message: err });
+        return res.status(500).json({success: false, message: err});
     }
 })
 
 
-newrouter.post('/getGameMorp', async (req, res) => {
+router.post('/getGameMorp', async (req, res) => {
   try{
     const {pas} = req.body;
     const past = 5 * Number(pas);
@@ -109,3 +115,5 @@ newrouter.post('/getGameMorp', async (req, res) => {
     return res.status(500).json({success:false, message: "err "})
   }
 })
+
+export default router;

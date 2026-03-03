@@ -1,76 +1,60 @@
+/* extern */
+import { FaGithub } from "react-icons/fa";
+import { useState } from "react";
+
+/* back */
+
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
-
 /* Components */
-import { useState } from "react";
-import { AUTH } from "../../Home.jsx"
+import { AUTH } from "FRONT/page/Home/Home.jsx"
+import useFetch from "HOOKS/useFetch.jsx";
 
 export default function MailA2F({setShowLog}) {
 
     const [showCodeInput, setShowCodeInput] = useState(false);
 
-    const maila2f_send_mail = async () => {
 
-        console.log("maila2f_send_mail(1) called");
-        try {
-          const rep = await fetch("/api/secu/send_mail", {
+    async function maila2f_send_mail() {
+        const url = `/api/secu/send_mail`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-          });
+        });
+        if (!repjson)
+            return;
 
-          console.log("maila2f_send_mail(2) Response received:", rep);
-
-          const repjson = await rep.json();
-          console.log("json parsed:", repjson);
-          if (repjson.success) {
-
-            console.log("maila2f_send_mail(3) Verification email sent successfully:", repjson.message);
-            setShowCodeInput(true);
-
-          } else {
-
-            console.log("maila2f_send_mail(4) Error sending verification email");
-
-          }
-        } catch (error) {
-          console.error("maila2f_send_mail(5) Error sending verification email:", error);
-        }
-    };
-
-  const maila2f_check_code = async (e) => {
-
-    console.log("maila2f_check_code(1) called");
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const code = formData.get("code");
-
-
-    try{
-      const rep = await fetch("/api/secu/maila2f_check_code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({code}),
-      })
-
-      console.log("maila2f_check_code(2) Response received:", rep);
-      const repjson = await rep.json();
-      if (repjson.success){
-
-        console.log("maila2f_check_code(3) 2FA successfully verified");
-        setShowLog(AUTH.NONE);
-
-      } else {
-
-        console.log("maila2f_check_code(4) 2FA failed:", repjson.message);
-
-      }
-    }catch(error){
-      console.log("maila2f_check_code(4) 2FA failed:", error);
+        setShowCodeInput(true);
     }
-  }
+
+
+
+    async function maila2f_send_mail(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const code = formData.get("code");
+
+        const url = `/api/secu/maila2f_check_code`;
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({code}),
+        })
+        if (!repjson)
+            return;
+
+        setShowLog(AUTH.NONE);
+    }
 
     return (
         <>
@@ -79,7 +63,7 @@ export default function MailA2F({setShowLog}) {
                 <h4>MailA2F</h4>
                 
                 {!showCodeInput && (
-                    <button type={`button`} id={`mailverif`} className={``} onClick={maila2f_send_mail}>
+                    <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_mail(e);}}>
                       Envoyer mail de verification
                     </button>
                 )}

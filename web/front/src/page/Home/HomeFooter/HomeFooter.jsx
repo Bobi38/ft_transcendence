@@ -16,11 +16,14 @@ import useClock from "FRONT/hooks/useClock.jsx";
 
 export default function HomeFooter({setShowLog}) {
 
+
+
+
     function logout() {
         console.log("logout(1) called")
-
+        
         fetch('/api/auth/logout', {
-            method: 'GET',//TODO TITOU post sans body?
+            method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
         })
