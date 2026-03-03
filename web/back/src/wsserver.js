@@ -2,6 +2,7 @@ import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from './fct.js';
 import {manager_room} from './morpion/ManagRoom.js';
+import { playMorpion as morpion } from './morpion/PlayMorpion.js';
 import cookie from 'cookie' ;
 
 
@@ -73,7 +74,7 @@ export function initWebSocket(server) {
       try{
         const data = JSON.parse(message.toString());
         // console.log('=== MESSAGE REÇU ===');
-        console.log('Type:', data.type);
+        // console.log('Type:', data.type);
         // console.log('Contenu:', data.mess);
         // console.log('===================');
         // if (data.type === 'auth'){
@@ -108,6 +109,7 @@ export function initWebSocket(server) {
             }
           }
         }
+
         if (data.type === 'priv_mess'){
           console.log("je suis dans un type priv_messsssssssss")
           const nono = socket.userId;
@@ -124,7 +126,14 @@ export function initWebSocket(server) {
         if (data.type === "logout")
           socket.GoLogout = true;
 
+        if (data.type === 'game') {
+          console.log(`game : recu ${data.message}`);
+          morpion(data.message, socket, socket.userId);
+          return ;
+        }
+
         if (data.type === 'morpion'){
+          console.log("probleme num1 si tu me vois, personne ne doit connaitre ce type");
           let message = "";
           console.log("je suis dans un type waitRoom");
           console.log("user id dans wait room " + socket.userId);
@@ -148,6 +157,7 @@ export function initWebSocket(server) {
           }
         }
         if (data.type === "in-game"){
+          console.log("probleme num2 si tu me vois, personne ne doit connaitre ce type");
           if (data.act === "role"){
             //objectif est de repartir les roles pour savoir qui commence et qui aura les O ou les X
             //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois

@@ -4,8 +4,11 @@ import GameMorp from "../models/GameMorp.js";
 class MorpionRoom extends Room {
     constructor (id) {
         super(id);
-        this._type = "Morpion"
+        this._type = "Morpion";
         this._max_players = 2;
+        this._min_players = 2;
+        this._first_player = false;
+        this._turn = null;
         this._how_win = null;
         this._ending = null;
         this._time = null;
@@ -25,34 +28,94 @@ class MorpionRoom extends Room {
         ];
         this.player1 = null;
         this.player2 = null;
+    }   
+
+    setFirstPlayer(){
+        if (this._locked) return false;
+
+        this._first_player = true;
+        return true;
     }
 
-    selectPlayer1(id) {
-        const players = [...this._players.keys()];
-        if (!players.includes(id)) {
-            throw new Error("Le joueur n'est pas dans la room");
+    isTurnPlayer(PlayerId){
+        return _turn === PlayerId;
+    }
+
+    switchTurn() {
+        const [p1, p2] = [...this._players.keys()];
+        this._turn = this._turn === p1 ? p2 : p1;
+    }
+
+    getTurn() {
+        return this._turn;
+    }
+
+    startGame(firstPlayerId) {
+        if (!this._players.has(firstPlayerId)) {
+            throw new Error("Invalid player");
         }
 
-        if (players.length !== this._max_players) {
-            throw new Error("Il faut exactement 2 joueurs pour sélectionner player1");
-        }
+        if (this._first_player)
+            this._turn = firstPlayerId;
 
-        this.setlock(true);
-        
-        this.player1 = this._players.get(id);
-        this.player2 = this._players.get(
-            [...this._players.keys()].find(p => p !== id));
         this._chrono = Date.now();
     }
+
+    notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
+        if (!this._turn) return;
+
+        for (const [id, player] of this._players.entries()) {
+            const basePayload = {
+                board: this._board
+            };
+
+            player.send(
+                id === this._turn
+                    ? { ...basePayload, ...payloadCurrent }
+                    : { ...basePayload, ...payloadOthers }
+            );
+        }
+    }
+// utilisation :
+// this.notifyTurn(
+//     { message: "À toi de jouer", turn: true },
+//     { message: "Tour adverse", turn: false }
+// );
+
+    // selectPlayer1(id) {
+    //     const players = [...this._players.keys()];
+    //     if (!players.includes(id)) {
+    //         throw new Error("Le joueur n'est pas dans la room");
+    //     }
+
+    //     if (players.length !== this._max_players) {
+    //         throw new Error("Il faut exactement 2 joueurs pour sélectionner player1");
+    //     }
+        
+    //     this.player1 = this._players.get(id);
+    //     this.player2 = this._players.get(
+    //         [...this._players.keys()].find(p => p !== id));
+
+    //     if (!this._first_player)
+    //         [this.player1, this.player2] = [this.player2, this.player1];
+
+    //     this._chrono = Date.now();
+    // }
 
     countMoves() {
         return this._board.reduce((c, v) => v !== " " ? c + 1 : c, 0);
     }
 
     getCurrentPlayer(current = true) {
-        const moves = this.countMoves();
-        const isStartTurn = (moves % 2 === 0) === current;
-        return isStartTurn ? this.player1 : this.player2;
+        if (current)
+            return this._players.get(this._turn);
+        
+        const otherId = [...this._players.keys()].find(id => id !== this._turn);
+        return this._players.get(otherId);
+    }
+
+    getOtheriD(currentId) {
+        return [...this._players.keys()].find(id => id !== currentId);
     }
 
     isValidPlay(index) {
@@ -63,26 +126,30 @@ class MorpionRoom extends Room {
     }
 
     play(currentPlayer, index) {
-        if (currentPlayer !== this.getCurrentPlayer()) {
-            currentPlayer.send("Ce n'est pas ton tour", this._board);
+        console.log(String(currentPlayer));
+        if (this._turn !== currentPlayer) {
+            this.getPlayer(currentPlayer).send("Ce n'est pas ton tour", this._board);
             return false;
         }
+
+        const player = this.getCurrentPlayer();
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send("Coup invalide", this._board);
+            player.send("Coup invalide", this._board);
             return false;
         }
 
-        currentPlayer.clearTurnTimer();
+        console.log("on arrive ici tout va bien")
+        player.clearTurnTimer();
 
-        const symbol = currentPlayer === this.player1 ? "X" : "O";
+        const symbol = (this.countMoves() % 2 === 0)? "X" : "O";
         this._board[index] = symbol;
 
         const now = Date.now();
 
         if (this._chrono !== null) {
             const timeTour = now - this._chrono;
-            currentPlayer.setPlayTime(timeTour);
+            player.setPlayTime(timeTour);
         }
 
         this._chrono = now;
@@ -90,12 +157,12 @@ class MorpionRoom extends Room {
         return true;
     }
 
-    handleEndGame(ending){
-        this.clearTimer();
+    handleEndGame(ending, winnerId = null){
+        this.clearOutTimer();
 
         this._ending = ending;
 
-        this.majdb().catch(err =>
+        this.majdb(winnerId).catch(err =>
             console.error("Erreur sauvegarde DB:", err)
         );
     }
@@ -109,12 +176,12 @@ class MorpionRoom extends Room {
                 char === this._board[b] &&
                 char === this._board[c]
             ) {
-                this._winner = char === "X" ? this.player1 : this.player2;
-                this._loser = char === "X" ? this.player2 : this.player1;
-                this._winner.send({message: "tu as gagne"}, this._board);
-                this._loser.send({message: "perdu"}, this._board);
+                this.notifyTurn(
+                    { message: "gagne", turn: false },
+                    { message: "perdu", turn: false });
+
                 this._how_win = "HVD"[Math.floor (i / 3)];
-                this.handleEndGame("W");
+                this.handleEndGame("win", this._turn);
                 return true;
             }
             i++
@@ -122,25 +189,23 @@ class MorpionRoom extends Room {
 
         if (!this._board.includes(" ")) {
             this.sendAll({message: "egalite"}, this._board);
-            this.handleEndGame("E");
+            this.handleEndGame("draw");
             return true;
         }
-
-        this.startTurnTimer(this.getCurrentPlayer());
 
         return false;
     }
 
-    // avertissement avant timeoout
-    startTurnTimer(player) {
+    startTurnTimer() {
+        const currentPlayer = this.getCurrentPlayer();
         const action = () => {
-            player.send({
+            currentPlayer.send({
             message: "⏰ Dépêche-toi de jouer !",
             board: this._board
             })
         };
 
-        player.startTurnTimer(action, 4000);
+        player.startTurnTimer(action, 8000);
     }
 
     serializeBoard() {
@@ -149,20 +214,45 @@ class MorpionRoom extends Room {
         .join("");
     }
 
-    async majdb () {
+    async majdb (winner = null) {
+
+        const isEven = this.countMoves() % 2 === 0;
+
+        const p1 = isEven
+            ? this.getCurrentPlayer()
+            : this.getCurrentPlayer(false);
+
+        const p2 = isEven
+            ? this.getCurrentPlayer(false)
+            : this.getCurrentPlayer();
+
+        const { id: player_1, time: time_player_1, nb_turn: nb_turn_player_1 } = p1.getData();
+        const { id: player_2, time: time_player_2, nb_turn: nb_turn_player_2 } = p2.getData();
+        
+        const loser = winner
+                ? (winner === player_1 ? player_2 : player_1)
+                : null;
+        
         await GameMorp.create({
-            howWin: this._how_win,
-            dateGame: this._dateGame,
-            Ending: this._ending,
-            player1: this.player1.getId(),
-            player2: this.player2.getId(),
-            time1: this.player1.getPlayTime(),
-            time2: this.player2.getPlayTime(),
+            how_win: this._how_win,
+            date_game: this._date_Game,
+            ending: this._ending,
+
+            player_1, 
+            player_2,
+
+            time_player_1,
+            time_player_2,
+
+            nb_turn_player_1,
+            nb_turn_player_2,
+
             map: this.serializeBoard(),
-            winner: this._winner,
-            loser: this._loser
+            winner,
+            loser
         });
     }
 }
+
 
 export default MorpionRoom;

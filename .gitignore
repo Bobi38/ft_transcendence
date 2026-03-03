@@ -4,4 +4,4 @@ conf/secrets/*
 *nico*
 .vite
 node_modules
-package-lock.json
+*package-lock.json

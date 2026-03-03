@@ -19,9 +19,11 @@ export default function HomeChat() {
 
     async function fetch_global_message(){
 
-        console.log("/api/chatG/get_chat_global",)
+        const url = `/api/chatG/get_chat_global`;
 
-        const repjson = await useFetch('/api/chatG/get_chat_global', {
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
@@ -35,10 +37,12 @@ export default function HomeChat() {
     async function add_message_global(time){
         if (!time) return
         
-        console.log("/api/chatG/add_message_global time:", time)
 
+        const url = `/api/chatG/add_message_global`;
 
-        const repjson = await useFetch('/api/chatG/add_message_global',{
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include",
@@ -52,8 +56,6 @@ export default function HomeChat() {
     useEffect(() => {
         fetch_global_message()
         const init = async () => {
-            const repco = await checkCo();
-            if (!repco) return;
 
 
 

@@ -63,23 +63,22 @@ async function checktok(tokenn) {
 export function maj_conv(id, conv, namelst){
   const  tableau = [];
 
-  for (let i = conv.length - 1; i >= 0; i--) {
-    let name;
-    let monMs;
-    if (conv[i].SenderId == id){
-      name = "me";
-      monMs = true;
+    for (let i = conv.length - 1; i >= 0; i--) {
+        let name;
+        let monMs;
+        if (conv[i].SenderId == id){
+            name = "me";
+            monMs = true;
+        } else {
+            console.log("namelst ", namelst.length);
+            const user = namelst.find(u => u.id === conv[i].SenderId);
+            name = user ? user.name : "unknown";
+            monMs = false;
+        }
+        const mess = decrypt(conv[i].contenu);
+        tableau.push({monMsg: monMs, message: mess, login: name, timer: conv[i].time})
     }
-    else{
-      console.log("namelst ", namelst.length);
-      const user = namelst.find(u => u.id === conv[i].SenderId);
-      name = user ? user.name : "unknown";
-      monMs = false;
-    }
-    const mess = decrypt(conv[i].contenu);
-    tableau.push({monMsg: monMs, message: mess, login: name, timer: conv[i].time})
-  }
-  return tableau;
+    return tableau;
 };
 
 

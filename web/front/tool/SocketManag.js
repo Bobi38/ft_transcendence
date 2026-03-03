@@ -63,11 +63,10 @@ class SocketManag{
         this.socket.onerror = (error) => {
             console.log("errr socket" + error);
         }
-        this.socket.onclose = () => {
-            console.log('on front deco');
+        this.socket.onclose = () => {          
             if (this.reco)
                 this.nbco++;
-                setTimeout(() => this.connect(), 50);
+                setTimeout(() => this.connect(), 300);
         }
         this.nbco++;
     }
@@ -124,14 +123,16 @@ class SocketManag{
     }
 
     sendd (data){
-        try{
-            console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
-            if (this.socket.readyState == WebSocket.OPEN){
-                console.log("envoi du message via WebSocket:", data);
-                this.socket.send(JSON.stringify(data));
-            }
-        }catch(err){
-            console.log("error dans send " + err);
+        console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
+
+        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+            console.log("proble de socket :envoie impossible");
+            return;
+        }
+        else
+        {
+            console.log("envoi du message via WebSocket:", data);
+            this.socket.send(JSON.stringify(data));
         }
     }
     
