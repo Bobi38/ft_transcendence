@@ -32,6 +32,7 @@ const result = await User.findAll({
 					},]});
     console.log("2 f");
     console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
+
     return res.status(201).json({success: true, message: result});
   }catch(err){
     return res.status(500).json({success: false, message: "err all_friend back ", err});

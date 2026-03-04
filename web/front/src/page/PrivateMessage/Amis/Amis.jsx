@@ -20,7 +20,7 @@ export default function Amis({setGoToAction, setGoToConv}) {
     const [responseFriendArray, setResponseFriendArray] = useState([]);
 
 
-    async function all_friend(){ // with co or not
+    async function all_friend(){
         const url = `/api/friend/all_friend`;
 
         console.log(`${url}`)
@@ -32,7 +32,7 @@ export default function Amis({setGoToAction, setGoToConv}) {
             })
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        console.log("all_friend");
+        console.log("all_friend", repjson.message);
         setResponseFriendArray(repjson.message)
     }
 
