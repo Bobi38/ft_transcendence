@@ -35,7 +35,7 @@ export default function PrivateMessage() {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         });
-        if (!repjson && !repjson.success)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
         setDisplayedInfoConv(repjson.message)
     }
@@ -60,7 +60,7 @@ export default function PrivateMessage() {
             credentials: "include",
             body: JSON.stringify({token: goToConv}),
         })
-        if (!repjson && !repjson.success)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
         setDisplayedMessages(repjson.message);
     }
