@@ -1,66 +1,3 @@
-.form-container1 {
-
-    .Profile-form-info {
-
-        .Profile-cant-change {
-            position: relative;
-            display: inline-block;
-
-            span {
-                position: absolute;
-                left: 60%;
-                background: black;
-                color: white;
-                font-size:0.8rem;
-                padding: 4px 8px;
-                border-radius: 4px;
-                white-space: nowrap;
-                
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                pointer-events: none;
-            }
-            &:hover span {
-                opacity: 1;
-            }
-        }
-        
-    }
-
-    .Profile-change-password {
-        height: fit-content;
-        gap: 1rem;
-        font-size: 1.5rem;
-    }
-
-    .Profile-form-password {
-        .Profile-password {
-            position: relative;
-            display: flex;
-            align-items: center;
-
-            input {
-                width: 100%;
-                padding-right: 40px;
-            }
-
-            .Profile-eye-icon {
-                position: absolute;
-                right: 10px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-            }
-        }
-    }
-}
-
-
-
-
-
-
-
 #Profile-root {
     // mixin
     border-radius: 0.5rem;
@@ -73,6 +10,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    overflow: hidden auto;
 
     .edit {
         background-color: rgba(0, 0, 0, 0.2);
