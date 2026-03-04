@@ -28,9 +28,8 @@ export default function HomeChat() {
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
-
         setDisplayedMessages(repjson.message);
     }
 
@@ -48,32 +47,19 @@ export default function HomeChat() {
             credentials: "include",
             body: JSON.stringify({ message: input, time: time }),
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
     }
 
 
     useEffect( () => {
         fetch_global_message()
+        
         const init = async () => {
-
-
-
-
-            // if (SocketM.getState() && SocketM.getState() === "closed") {
-            //     SocketM.connect();
-            // }
-
             const handle_global_message = (data) => {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
                 setDisplayedMessages((prev) => [...prev, data]);
-                // setDisplayedMessages((prev) => {
-                //     const updatedMessages = [...prev, {monMsg: data.monMsg, message: data.message, login: data.login, timer: data.timer}];
-                //     console.log("Updated messages:", updatedMessages);
-                //     return updatedMessages;
-                // });
             };
-
             SocketM.onChat(handle_global_message, "ChatG");
         };
 
