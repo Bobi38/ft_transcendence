@@ -3,6 +3,7 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion} from "@babylonjs/core";
+import { Client } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -48,6 +49,13 @@ export class App {
                     this._scene.debugLayer.show();
                 }
             }
+        });
+
+        let colyseusSDK = new Client("ws://localhost:2567");
+        colyseusSDK.joinOrCreate("my_room").then((room) => {
+            console.log("Connected to roomId: " + room.roomId);
+        }).catch((error) => {
+            console.log("Couldn't connect to room");
         });
 
         // run the main render loop

@@ -27,28 +27,26 @@ FROM node:24.13.0
 WORKDIR /app/back
 
 # Backend
+
 COPY ./back/package*.json ./
 RUN npm install
 # RUN npm install -g nodemon
 RUN npm install -g concurrently
 RUN npm install vite http-proxy-middleware
+COPY ./back .
 
-#launch colyseus game server
-#RUN FORCE_COLOR=0 yes 0 | npm init colyseus-app ./gameServer
-#RUN npm init colyseus-app ./gameServer
-#RUN cd ./gameServer && npm start &
+# Game Server
 
-RUN mkdir gameServer
-COPY ./back/gameServer/package*.json ./gameServer
-RUN cd gameServer && npm install
-
-
+WORKDIR /app/back/gameServer
+COPY ./back/gameServer/package*.json ./
+RUN npm install
 
 # Frontend
 
 WORKDIR /app/front
 COPY ./front/package*.json ./
 RUN npm install
+COPY ./front .
 
 
 WORKDIR /app
@@ -56,10 +54,7 @@ COPY ./media ./media
 
 WORKDIR /app/back
 # Copie tout
-COPY . .
+#COPY . .
 
 EXPOSE 9000 5173 2567
 CMD ["npm", "run", "dev"]
-
-
-
