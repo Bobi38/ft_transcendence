@@ -89,7 +89,19 @@ router.get('/all_request_friend', async (req,res) => {
 		const token = req.cookies.token;
     	const decoded = jwt.verify(token, secret);
 		const result = await User.findOne({ where: { id: decoded.id } });
-		const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, State: false}, {Friend2: result.id, State: false}]}})
+		const relation = await Friend.findAll({where:  {State: false,[Op.or]: [{Friend1: result.id}, {Friend2: result.id}]}, 
+												include:[
+													{
+														model: User,
+														as: 'User1',
+														attributes: ['id', 'name']
+													},
+													{
+														model: User,
+														as: 'User2',
+														attributes: ['id', 'name']														
+													}
+												]})
 		console.log("av")
 		console.log(relation)
 		// if (relation.length === 0){
