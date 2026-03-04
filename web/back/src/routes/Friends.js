@@ -84,6 +84,9 @@ router.get('/dlt_friend', async (req, res) => {
 	}
 })
 
+format_all_request_friend({}) {
+
+}
 router.get('/all_request_friend', async (req,res) => {
 	try{
 		const token = req.cookies.token;
@@ -109,6 +112,31 @@ router.get('/all_request_friend', async (req,res) => {
 		// 	return res.status(201).json({success: true, message: []})
 		// }
 		return res.status(201).json({success: true, message: relation})
+	}catch(err){
+		return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
+	}
+})
+
+
+router.post('/response_friend', async (req, res) => {
+	try {
+		console.log("i m in response friend")
+		const {login, response} = req.body
+		console.log("req.body", req.body)
+		console.log("response:",response)
+		console.log("login:",login)
+		const token = req.cookies.token;
+    	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+		const friend = await User.findOne({ where: { name: login } });
+		const relat = await Friend.findOne({where: { [Op.or]: [{Friend1: result.id, Friend2: friend.id}, {Friend1:friend.id , Friend2: result.id}]}})
+		if (relat.length === 0)
+			return res.status(409).json({success: false, message: "relation doesn't exist"})
+		if (response)
+			await relat.update({State: true})
+		else
+			await relat.destroy();
+		return res.status(201).json({success: true, message: "good"})
 	}catch(err){
 		return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
 	}
