@@ -17,8 +17,8 @@
         border: 2px solid black;
     }
     .info {
-	    @include mix.fullh;
-        width: 20%;
+	    @include mix.full;
+        // width: 20%;
         display: flex;
         flex-direction: column;
         overflow: hidden auto;
@@ -64,7 +64,6 @@
                         width: 70%;
                     }
                     span{
-                        width: 30%;
                         font-size: 0.5rem;
                     }
                 }

@@ -16,8 +16,6 @@ export default function Navigation({ children }) {
     const navigate = useNavigate();
 
     const connection_check = async () => {
-        if (screen == "ErrorRedir"){return}
-
         const res = await checkCo();
         if (!res){
             navigate('/');
@@ -28,24 +26,14 @@ export default function Navigation({ children }) {
     connection_check();
 
 
-
     return (
-
         <>
-            <section className={`Navigation-root`}> {/* 100vh */}
-
-
+            <section className={`Navigation-root`}>
                 <div className={`children-container`}>
-
                     {children}
-
                 </div>
-            
                 <NavBar/>
-
             </section>
         </>
-
     );
-
 }

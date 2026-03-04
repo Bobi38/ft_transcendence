@@ -13,6 +13,7 @@ import useFetch from "HOOKS/useFetch";
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
 import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
 import Amis from "./Amis/Amis.jsx"
+import Hr from    "FRONT/Component/Hr/Hr.jsx";
 
 
 export default function PrivateMessage() {
@@ -34,8 +35,7 @@ export default function PrivateMessage() {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         });
-
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
         setDisplayedInfoConv(repjson.message)
     }
@@ -60,7 +60,7 @@ export default function PrivateMessage() {
             credentials: "include",
             body: JSON.stringify({token: goToConv}),
         })
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
         setDisplayedMessages(repjson.message);
     }
@@ -75,7 +75,6 @@ export default function PrivateMessage() {
             if (data.login === goToConv || data.monMsg == true)
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();
-        
         }
         SocketM.onPriv(handle_private_message);
 
@@ -89,53 +88,45 @@ export default function PrivateMessage() {
     return (
         <>
             <div className={`PrivateMessage-root border-0`}>
+                <Hr thickness={`5px`}>
+                    <div className={`info border-1`}>
 
-{/* ------------------------------------------------------------------------------------------- */}
-                <div className={`info border-1`}>
-
-                    <div className={`bloc-friend-addfriend border-2`}>
-                        <div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
-                        <hr/>
-                        <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
-                    </div>
+                        <div className={`bloc-friend-addfriend border-2`}>
+                            <div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
+                            <hr/>
+                            <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
+                        </div>
 
     {/* ------------------------------------------------------------------------------ */}
-                    <hr className={`big`}/>
+                        <hr className={`big`}/>
     {/* ------------------------------------------------------------------------------ */}
 
-                    <div className={`bloc-last-conv-friend border-2`}>
-                        {displayedInfoConv && displayedInfoConv.map((msg,index) => (
-                            <div key={index}>
-                                {index != 0 && <hr/>}
-                                    
-                                <div className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
-                                    <div className={`header-last-conv border-4`}>
-                                        <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
+                        <div className={`bloc-last-conv-friend border-2`}>
+                            {displayedInfoConv && displayedInfoConv.map((msg,index) => (
+                                <div key={index}>
+                                    {index != 0 && <hr/>}
+                                        
+                                    <div className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
+                                        <div className={`header-last-conv border-4`}>
+                                            <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
+                                        </div>
+                                        <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
                                     </div>
-                                    <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
+
                                 </div>
-
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
-{/* ------------------------------------------------------------------------------------------- */}
+                    <div className={`display-screen border-2`}>
+                        <div className={`border-left`}></div>
 
-    {/* ------------------------------------------------------------------------------ */}
-                <hr className={`big`}/>
-    {/* ------------------------------------------------------------------------------ */}
+                        {goToAction === 1 && <AjouterAmis />}
+                        {goToAction === 2 && <Amis setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
+                        {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
+                    
+                    </div>
 
-{/* ------------------------------------------------------------------------------------------- */}
-                <div className={`display-screen border-2`}>
-                    <div className={`border-left`}></div>
-
-                    {goToAction === 1 && <AjouterAmis />}
-                    {goToAction === 2 && <Amis setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
-                    {goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
-                
-                </div>
-
-{/* ------------------------------------------------------------------------------------------- */}
+                </Hr>
             </div> {/* PrivateMessage-root */}
         </>
         

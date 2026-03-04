@@ -77,7 +77,7 @@ async function majDb(retry = 5) {
   while (retry > 0) {
     try {
       await sequelize.authenticate();
-      console.log('Connection good.');
+      // console.log('Connection good.');
       await sequelize.sync({ alter: true });
     // await sequelize.sync({ alert: true }); A REMETTRE POUR LA PROD
       console.log('la table a ete mise a jour avec succes.');
@@ -124,7 +124,7 @@ async function CreatStat(){
                                 Id1:1, 
                                 OX1:0, 
                                 Id2:2, 
-                                OX1:1
+                                OX2:1
     });
 
     await StatMorp.create({ idUser:1,
@@ -156,7 +156,7 @@ async function CreatFriend(){
 async function addDb(){
   const count = await User.count();
     if (count === 0){
-      majDb();
+      // majDb();
       const CrypPass = await bcrypt.hash('tt', 10);
       const CrypPassNi = await bcrypt.hash('12', 10);
       const toto = await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false, win: 0, total_part: 100});
@@ -164,11 +164,13 @@ async function addDb(){
       const tata = await User.create({name: 'tata', password: CrypPass, mail: 'tata@test.c', co: false, win: 0, total_part: 0});
       const tutu = await User.create({name: 'tutu', password: CrypPass, mail: 'tutu@test.c', co: false, win: 0, total_part: 0});
       const ni = await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
-      majDb();
+      const no = await User.create({name: 'nona', password: CrypPass, mail: 'nono@test.c', co: false, win: 50, total_part: 0});
+      const na = await User.create({name: 'nana', password: CrypPass, mail: 'nana@test.c', co: false, win: 50, total_part: 0});
+      // majDb();
       await CreatPrivMess();
-      majDb();
+      // majDb();
       await CreatStat();
-      majDb();
+      // majDb();
       await CreatFriend();
       majDb();
     }

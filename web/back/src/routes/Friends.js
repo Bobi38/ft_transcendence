@@ -84,4 +84,22 @@ router.get('/dlt_friend', async (req, res) => {
 	}
 })
 
+router.get('/all_request_friend', async (req,res) => {
+	try{
+		const token = req.cookies.token;
+    	const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+		const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, State: false}, {Friend2: result.id, State: false}]}})
+		console.log("av")
+		console.log(relation)
+		// if (relation.length === 0){
+		// 	console.log("in if")
+		// 	return res.status(201).json({success: true, message: []})
+		// }
+		return res.status(201).json({success: true, message: relation})
+	}catch(err){
+		return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
+	}
+})
+
 export default router;

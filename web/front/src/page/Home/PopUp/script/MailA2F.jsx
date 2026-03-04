@@ -26,7 +26,7 @@ export default function MailA2F({setShowLog}) {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         });
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
 
         setShowCodeInput(true);
@@ -50,7 +50,7 @@ export default function MailA2F({setShowLog}) {
             credentials: "include",
             body: JSON.stringify({code}),
         })
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
 
         setShowLog(AUTH.NONE);

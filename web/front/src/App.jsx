@@ -1,5 +1,6 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 // import { SocketProvider } from "../tool/SocketContext"
 import { useEffect, useState } from "react";
 import checkCo from "BACK/fct1.js"
@@ -12,6 +13,7 @@ import './style/index.scss'
 
 /* Components */
 import Navigation       from    "FRONT/Component/Navigation/Navigation.jsx";
+import Hr               from    "FRONT/Component/Hr/Hr.jsx";
   // ./src/page/
 import Home             from    "FRONT/page/Home/Home.jsx";
 import ContactUs        from    "FRONT/page/ContactUs/ContactUs.jsx";
@@ -24,6 +26,7 @@ import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 // ./src/page/all_game
 import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
+import Morpion          from    "FRONT/page/all_game/Morpion/Morpion.jsx";
 
 
 
@@ -34,15 +37,17 @@ export default function App() {
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
-            if (!repco)
+            if (!repco){
                 return;
+            }
             if (!SocketM.getState() || SocketM.getState() === "closed")
                 SocketM.connect();
             console.log("App.jsx useEffect(1) SocketM.connect() called");
         }
         init();
         return () => {
-          // SocketM.disco();
+          // if (SocketM.socket)
+          //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
         };
     }, []);
@@ -61,12 +66,12 @@ export default function App() {
 
             {/* Navigation */}
             <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
-            <Route path={`/Morpion`}                element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
+            <Route path={`/MorpionTraining`}        element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/WaitRoom`}               element={<Navigation>   <WaitRoom/>           </Navigation>}/>
-            <Route path={`/Test`}               element={<Pong3D/>}/>
+            <Route path={`/Morpion`}                element={<Navigation>   <Morpion/>            </Navigation>}/>
+            <Route path={`/hr`}                     element={<Navigation>   <Hr><div>oui</div><div>non</div></Hr>            </Navigation>}/>
 
 
             {/* bad path */}

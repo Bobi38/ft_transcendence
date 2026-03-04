@@ -19,70 +19,59 @@ export default function HomeChat() {
 
     async function fetch_global_message(){
 
-        console.log("/api/chatG/get_chat_global",)
+        const url = `/api/chatG/get_chat_global`;
 
-        const repjson = await useFetch('/api/chatG/get_chat_global', {
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
         });
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
-
         setDisplayedMessages(repjson.message);
     }
 
     async function add_message_global(time){
         if (!time) return
         
-        console.log("/api/chatG/get_chat_global time:", time)
 
+        const url = `/api/chatG/add_message_global`;
 
-        const repjson = await useFetch('/api/chatG/get_chat_global',{
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include",
             body: JSON.stringify({ message: input, time: time }),
         });
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
-
-        setDisplayedMessages(repjson.message);
     }
 
 
-    useEffect(() => {
-        let handle_global_message;
-
+    useEffect( () => {
+        fetch_global_message()
+        
         const init = async () => {
-            const repco = await checkCo();
-            if (!repco) return;
-
-
-            await fetch_global_message();
-
-            // if (SocketM.getState() && SocketM.getState() === "closed") {
-            //     SocketM.connect();
-            // }
-
-            handle_global_message = (data) => {
+            const handle_global_message = (data) => {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
                 setDisplayedMessages((prev) => [...prev, data]);
             };
-
             SocketM.onChat(handle_global_message, "ChatG");
         };
 
         init();
 
         return () => {
-            if (handle_global_message) {
-                SocketM.offChat("ChatG");
-            }
+            SocketM.offChat("ChatG");
+
         };
     }, []);
 
-    const handle_submit = (e) => {
+    const handle_submit = async (e) => {
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
@@ -91,13 +80,8 @@ export default function HomeChat() {
         const data = {type: "mess", message: input, timer: time};
         
         console.log("handle_submit(2): " ,data);
-
-        const data2 = {...data, monMsg: false};
-
-        add_message_global(time);
-        
-        console.log("handle_submit(3) send via WebSocket data2:", data2);
-        SocketM.sendd(data2);
+        await add_message_global(time);
+        SocketM.sendd(data);
         setInput("");
     };
 
@@ -121,7 +105,7 @@ export default function HomeChat() {
                     {displayedMessages && displayedMessages.map((msg, index) => (
 
                         <div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
-
+                            {/* {() => {console.log("in html:", index)}} */}
                             {msg.monMsg ? (
                                 <div className={`message`}>
                                     <div>{msg.timer}</div>

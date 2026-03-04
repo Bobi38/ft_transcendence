@@ -6,8 +6,8 @@ function GoOUT(){
   return (
   <button onClick={() =>
     SocketM.sendd({
-        type: "truc",
-        mess: "je pars"
+        type: "game",
+        message: "je pars"
       })
     }
   > 
@@ -16,13 +16,28 @@ function GoOUT(){
   );
 }
 
+function NouvellePartie(){
+  return (
+  <button onClick={() =>
+    SocketM.sendd({
+        type: "game",
+        message: "je veux jouer"
+      })
+    }
+  > 
+    Nouvelle Partie
+  </button>
+  );
+}
+
+
 function RebootTruc() {
   return (
     <button
       onClick={() =>
         SocketM.sendd({
-          type: "truc",
-          mess: "reboot"
+          type: "game",
+          message: "reboot"
         })
       }
     >
@@ -31,17 +46,17 @@ function RebootTruc() {
   );
 }
 
-function Newpartie(){
+function SelectFirst(){
    return (
     <button
       onClick={() =>
         SocketM.sendd({
-          type: "truc",
-          mess: "play"
+          type: "game",
+          message: "playfirst"
         })
       }
     >
-     je veux jouer
+     je veux jouer en second
     </button>
   ); 
 }
@@ -57,8 +72,8 @@ function Square({ value, onSquareClick }) {
 function Board( { squares }) {
     function handleClick(i) {
       SocketM.sendd({
-        type: "truc",
-        mess: i,
+        type: "game",
+        message: i,
       })
   }
  
@@ -83,7 +98,8 @@ function Board( { squares }) {
   );
 }
 
-export default function Truc() {
+export default function Morpion() {
+  console.log("ici cest front FunctionMorpion");
   const [msg, setMsg] = useState("En attente...");
   const [board, setBoard] = useState(Array(9).fill(" "));
 
@@ -93,22 +109,23 @@ export default function Truc() {
     }
 
     // SocketM.sendd({
-    //       type: "truc",
-    //       mess: "est-ce que tu me reçois ?"
+    //       type: "game",
+    //       message: "est-ce que tu me reçois ?"
     // });
     
-    // console.log("after co");
+    console.log("after co");
 
     const handleTest = (data) => {
-      setMsg(data.mess);
+      console.log(data)
+      setMsg(data.message);
       if (data.board)
         setBoard(data.board);
     };
 
-    SocketM.ontruc(handleTest);
+    SocketM.onGame(handleTest);
 
     return () => {
-      SocketM.offtruc(handleTest);
+      SocketM.offGame(handleTest);
     }
   }, []);
 
@@ -118,10 +135,11 @@ export default function Truc() {
       <div className="status">{msg}</div>
       <div>< RebootTruc /></div>
       <div>< GoOUT /></div>
-      <div>< Newpartie /></div>
+      <div>< SelectFirst /></div>
       <div className="game-board">
         <Board squares={board}/>
       </div>
+      <div>< NouvellePartie /></div>
     </>
   );
 }

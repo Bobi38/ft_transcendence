@@ -69,7 +69,7 @@ export default function Amis({setGoToAction, setGoToConv}) {
                     console.log("dlt_friend callbackfail(info) error back ", repjson.message);
                 }
             });
-        if (!repjson)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
         console.log("good");
     }

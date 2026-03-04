@@ -54,7 +54,7 @@ const HistoryMorp = sequelize.define('HistoryMorp', {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
-                OX1:{
+                OX2:{
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
