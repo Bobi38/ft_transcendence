@@ -60,12 +60,9 @@ export class App {
 
     private async _main(): Promise<void> {
         let colyseusSDK = new Client("ws://localhost:2567");
-        await colyseusSDK.joinOrCreate("my_room").then((room) => {
-            this._room = room;
-            console.log("Connected to roomId: " + room.roomId);
-        }).catch((error) => {
-            console.log("Couldn't connect to room");
-        });
+        const room = await colyseusSDK.joinOrCreate("my_room");
+        console.log("Joined room " + room.roomId);
+        this._room = room;
         await this._start();
 
         this._engine.runRenderLoop(() => {

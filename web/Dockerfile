@@ -62,7 +62,7 @@ FROM node:24.13.0
 
 COPY ./back/package*.json ./
 WORKDIR /app/back
-RUN npm ci
+RUN npm install
 RUN npm install -g concurrently
 RUN npm install vite http-proxy-middleware
 COPY ./back .
