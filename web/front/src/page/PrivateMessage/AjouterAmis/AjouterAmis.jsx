@@ -48,6 +48,7 @@ export default function AjouterAmis() {
         const repjson = await useFetch(`${url}`, fetch_type)
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        console.log("all_request_friend", repjson.message)
         setResponseFriendArray(repjson.message)
     }
 
