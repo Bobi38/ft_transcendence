@@ -127,7 +127,7 @@ export default function Profile() {
 
                 <div className={`form-container`}>
 
-                    {/* <form className={``} onSubmit={handle_submit}>
+                    <form className={``} onSubmit={handle_submit}>
 
                         <label htmlFor={`login`}>Login</label>
                         <input  type={`text`}
@@ -168,21 +168,21 @@ export default function Profile() {
                                 /> 
 
                         <label htmlFor={`location`}>Location</label>
-                        <AddressAutocomplete user={user} setUser={setUser}/>
+                        <AddressAutocomplete user={user} setUser={setUser} isReadOnly={isReadOnly}/>
 
                         <button type={`submit`}>Modifier mes informations</button>
                         
-                    </form> */}
+                    </form>
 
 
-                    <div className={`change-password`}
+                    {/* <div className={`change-password`}
                          onClick={() => setShowFormPassword(!showFormPassword)}>
                         Changer de mot de passe
 
 
                         <div className={showFormPassword ? "visible" : "hidden"}>
 
-                        {/* <form className={``} onSubmit={handle_pass}>
+                        <form className={``} onSubmit={handle_pass}>
 
                                 <label htmlFor={`password`}>Nouveau Mot de passe</label>
                                 <div className={``}>
@@ -219,9 +219,9 @@ export default function Profile() {
 
                                 
                                 <button type={`submit`}>Modifier mon mot de passe</button>
-                            </form> */}
+                            </form>
                         </div>
-                    </div>
+                    </div> */}
 
                 </div>{/* className={`form-container`} */}
 

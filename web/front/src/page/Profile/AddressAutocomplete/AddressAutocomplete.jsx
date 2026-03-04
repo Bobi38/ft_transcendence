@@ -11,62 +11,55 @@ import "./AddressAutocomplete.scss";
 import useFetch from "HOOKS/useFetch.jsx";
 
     
-export default function AddressAutocomplete({user, setUser}) {
+export default function AddressAutocomplete({user, setUser, isReadOnly}) {
 
 
-  const [results, setResults] = useState([]);
-
+    const [results, setResults] = useState([]);
 
     const handle_change = async (e) => {
 
-        setUser({ ...user, location: e.target.value }) 
         const value = e.target.value;
+        setUser({ ...user, location: value }) 
 
         if (value.length > 3) {
+            const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${value}`);
 
-            const url = `https://api-adresse.data.gouv.fr/search/?q=${value}`;
-    
-            console.log(`${url}`)
-    
-            const repjson = await useFetch(`${url}`)
-            if (!repjson)
-                return;
-            setResults(repjson.features);
-            
+            const data = await res.json();
+            setResults(data.features);
+            console.log("results: ",results);
+
         } else {
             setResults([]);
         }
     };
 
-  const handle_select = (address) => {
-    setUser({...user, location: address})
-    setResults([]);
-  };
+    const handle_select = (address) => {
+        setUser({...user, location: address})
+        setResults([]);
+    };
 
   return (
         <>
-            <div>
+            <div className={`AddressAutocomplete-root`}>
 
                 <input type={`text`} id={`location`} name={`location`}
-                       value={user.location} onChange={handle_change}
+                       value={user.location || ""} onChange={handle_change}
+                       readOnly={isReadOnly}
                        placeholder={`Entrez votre adresse`}/>
 
-                {!results && 
-
+                {results && 
                     <div className={`AddressAutocomplete-list-item`}>
+                        <ul>
 
-                      <ul>
-                          {results.map((item) => (
-                              <li key={item.properties.id}
-                                  onClick={() => handle_select(item.properties.label)}
-                                  style={{ cursor: "pointer" }}>
+                            {results.map((item) => (
+                                <li key={item.properties.id}
+                                    onClick={() => handle_select(item.properties.label)}
+                                    style={{ cursor: "pointer" }}>
+                                    {item.properties.label}
+                                </li>
+                            ))}
 
-                                  {item.properties.label}
-                                
-                              </li>
-                          ))}
-                      </ul>
-
+                        </ul>
                     </div>
                 }
 
