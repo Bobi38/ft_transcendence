@@ -53,7 +53,7 @@ export default function Profile() {
             credentials: "include",
             body: JSON.stringify({Pass: password})
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
         
@@ -82,7 +82,7 @@ export default function Profile() {
             credentials: "include",
             body: JSON.stringify(user)
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
     };
@@ -97,7 +97,7 @@ export default function Profile() {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         setUser(repjson.message)
     }

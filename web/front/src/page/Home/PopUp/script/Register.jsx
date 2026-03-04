@@ -38,7 +38,7 @@ export default function Register({setShowLog}) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         setShowLog(AUTH.LOGIN);
     }

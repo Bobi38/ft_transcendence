@@ -28,7 +28,7 @@ export default function HomeChat() {
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         setDisplayedMessages(repjson.message);
     }
@@ -47,7 +47,7 @@ export default function HomeChat() {
             credentials: "include",
             body: JSON.stringify({ message: input, time: time }),
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
     }
 

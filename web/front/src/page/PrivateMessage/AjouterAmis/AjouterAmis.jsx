@@ -34,7 +34,7 @@ export default function AjouterAmis() {
                 console.log("add_friend callbackfail(info) error back ", repjson.message);
             }
         })
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         console.log("add_friend(info) good");
     }
@@ -46,7 +46,7 @@ export default function AjouterAmis() {
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, fetch_type)
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         setResponseFriendArray(repjson.message)
     }

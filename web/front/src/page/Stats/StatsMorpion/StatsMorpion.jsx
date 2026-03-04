@@ -111,8 +111,7 @@ export default function StatsMorpion() {
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
             console.log("useFetch(info) success history: " , repjson.history);
         })
-        
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         // setCurrentPage(...)
     }
