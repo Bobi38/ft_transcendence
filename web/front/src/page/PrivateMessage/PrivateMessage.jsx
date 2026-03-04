@@ -62,6 +62,7 @@ export default function PrivateMessage() {
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        
         setDisplayedMessages(repjson.message);
     }
 

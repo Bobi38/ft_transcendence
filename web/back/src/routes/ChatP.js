@@ -46,7 +46,7 @@ router.post('/get_chat_private', async (req, res) => {
         const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
         const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id}});
         let ret = "";
-        if (conv.length - 1 != 0)
+        if (conv.length != 0)
             ret = maj_conv(id1.id, conv, name);
         res.status(201).json({success: true, message: ret});
     }catch(err){
