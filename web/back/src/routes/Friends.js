@@ -84,14 +84,25 @@ router.get('/dlt_friend', async (req, res) => {
 	}
 })
 
-format_all_request_friend({}) {
+function format_all_request_friend(name, relation) {
+	const  tableau = [];
+	
+	for(let i = relation;relation.length >= 0; i--){
+		const login = name === relation[i].User1.name ? relation[i].User2.name : relation[i].User1.name;
+		tableau.push({login: login});
+	}
+    
+	return tableau;
+};
 
-}
 router.get('/all_request_friend', async (req,res) => {
+	console.log("router.get('/all_request_friend")
 	try{
 		const token = req.cookies.token;
     	const decoded = jwt.verify(token, secret);
+	console.log("router.get('/all_request_friend")
 		const result = await User.findOne({ where: { id: decoded.id } });
+	console.log("router.get('/all_request_friend")
 		const relation = await Friend.findAll({where:  {State: false,[Op.or]: [{Friend1: result.id}, {Friend2: result.id}]}, 
 												include:[
 													{
@@ -105,8 +116,11 @@ router.get('/all_request_friend', async (req,res) => {
 														attributes: ['id', 'name']														
 													}
 												]})
-		console.log("av")
+
 		console.log(relation)
+		const formated_relation = format_all_request_friend(result.name, relation)
+
+		console.log(formated_relation)
 		// if (relation.length === 0){
 		// 	console.log("in if")
 		// 	return res.status(201).json({success: true, message: []})
