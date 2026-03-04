@@ -8,6 +8,7 @@ import "./Pong3D.scss";
 
 /* Components */
 import { App as GameApp } from "FRONT/game/app.ts";
+import useFetch from "HOOKS/useFetch.jsx";
 
 
     
@@ -27,24 +28,25 @@ export default function Pong3D() {
     }, []);
 
 
-    async function  test(){
+    async function namefct(){
 
-        console.log("fet tes game(1) called");
-        try {
-            const reponse = await fetch('/api/game/serv', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: "include"
-            });
+        const url = `/api/game/serv`;
 
-        } catch (error) {
-            console.error("fet tes game(4) Error front:", error);
-        }
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: "include"
+        });
+        if (!repjson)
+            return;
     }
-    
+
+    namefct();
+
     return (
         <div className={`Pong3D-root`}>
-            {test()}
             <canvas ref={canvasRef} />
         </div>
     )

@@ -33,6 +33,14 @@ RUN npm install
 RUN npm install -g concurrently
 RUN npm install vite http-proxy-middleware
 
+#launch colyseus game server
+#RUN FORCE_COLOR=0 yes 0 | npm init colyseus-app ./gameServer
+#RUN npm init colyseus-app ./gameServer
+#RUN cd ./gameServer && npm start &
+
+RUN mkdir gameServer
+COPY ./back/gameServer/package*.json ./gameServer
+RUN cd gameServer && npm install
 
 
 
@@ -50,7 +58,7 @@ WORKDIR /app/back
 # Copie tout
 COPY . .
 
-EXPOSE 9000 5173
+EXPOSE 9000 5173 2567
 CMD ["npm", "run", "dev"]
 
 

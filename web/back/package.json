@@ -4,11 +4,12 @@
   "type": "module",
   "main": "./src/server.js",
   "scripts": {
-    "dev": "concurrently -k \"nodemon --legacy-watch server.js\" \"cd /app/front && npm run dev\"",
+    "dev": "concurrently -k \"nodemon --legacy-watch server.js\" \"cd /app/front && npm run dev\" \"cd /app/back/gameServer && npm start\"",
     "start": "node server.js"
   },
   "dependencies": {
     "@colyseus/schema": "^4.0.4",
+    "@colyseus/sdk": "^0.17.34",
     "bcrypt": "^5.1.1",
     "colyseus": "^0.17.0",
     "cookie-parser": "^1.4.6",
@@ -24,7 +25,7 @@
     "qrcode": "1.5.4",
     "sequelize": "^6.37.1",
     "validator": "^13.15.26",
-    "ws": "^https://substack.com/home/post/p-1897099848.16.0",
+    "ws": "^8.16.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

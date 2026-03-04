@@ -18,7 +18,7 @@ export default function AjouterAmis() {
     }
 
     async function add_friend(name){
-        if (!goToConv)
+        if (!name)
             return;
 
         const url = `/api/friend/add_friend?name=${name}`;
