@@ -59,10 +59,13 @@ router.post('/register', async (req, res) => {
         const find = await User.findAll({ where: { mail: email } });
         if (find.length != 0) {
           if (find[0].OAuth == true)
-            return res.status(500).json({success: false, message: 'Email already used with OAuth, try to login with GitHub'});
+            return res.status(409).json({success: false, message: 'Email already used with OAuth, try to login with GitHub'});
           else
-            return res.status(500).json({success: false, message: 'Email already used'});
+            return res.status(409).json({success: false, message: 'Email already used'});
         }
+        const name = await User.findAll({where :{name: name}})
+        if (name.lenght != 0)
+            return res.status(409).json({success: false, message: 'Name already used'})
         console.log("Api /register av");
         const CrypPass = await bcrypt.hash(password, 10);
 
