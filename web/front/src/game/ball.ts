@@ -34,8 +34,16 @@ export class Ball {
         });
     }
 
+    public setVelocity(velocity : Vector3) {
+        this._aggregate.body.setAngularVelocity(velocity);
+    }
+
     public getMeshPosition() : Vector3 {
         return this._mesh.position.clone();
+    }
+
+    public getVelocity() : Vector3 {
+        return this._aggregate.body.getAngularVelocity();
     }
 
     public dispose() {

@@ -24,13 +24,7 @@ router.get('/all_friend', async (req, res) => {
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     console.log("1 f");
-//     const result = await User.findByPk(decoded.id, {
-//   include: [
-//     { model: User, as: 'Friends', through: { where: { State: true }, attributes: [] } },
-//     { model: User, as: 'FriendOf', through: { where: { State: true }, attributes: [] } }
-//   ]
-// });
-const result = await User.findAll({
+	const result = await User.findAll({
 					where: { id: decoded.id },
 					include: [{
 						model: User,
@@ -46,9 +40,8 @@ const result = await User.findAll({
 						through: { where: { State: true }, attributes: [] },
 						required: false
 					},]});
-    console.log("2 f");
-    // console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
 	const ret = format_all_friend(result[0]);
+    console.log("ret",ret);
     return res.status(201).json({success: true, message: ret});
   }catch(err){
     return res.status(500).json({success: false, message: "err all_friend back ", err});
@@ -121,7 +114,6 @@ function format_all_request_friend(name, relation) {
 };
 
 router.get('/all_request_friend', async (req,res) => {
-	console.log("router.get('/all_request_friend")
 	try{
 		const token = req.cookies.token;
     	const decoded = jwt.verify(token, secret);
@@ -140,14 +132,12 @@ router.get('/all_request_friend', async (req,res) => {
 													}
 												]})
 
-		console.log(relation[0].User1[0].name)
+		if (relation.length === 0){
+			return res.status(201).json({success: true, message: []})
+		}
+		console.log(relation[0].User1.name)
 		const formated_relation = format_all_request_friend(result.name, relation)
-
 		console.log(formated_relation)
-		// if (relation.length === 0){
-		// 	console.log("in if")
-		// 	return res.status(201).json({success: true, message: []})
-		// }
 		return res.status(201).json({success: true, message: formated_relation})
 	}catch(err){
 		return res.status(501).json({success: false, message: "error /all_request_friend back " + err})

@@ -3,7 +3,7 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion} from "@babylonjs/core";
-import { Client } from "@colyseus/sdk";
+import { Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -19,6 +19,7 @@ export class App {
     private _player: Player;
     private MAX_SPEED: number = 40;
     private _ball: Ball;
+    private _room : Room;
     public assets;
 
 
@@ -51,18 +52,17 @@ export class App {
             }
         });
 
-        let colyseusSDK = new Client("ws://localhost:2567");
-        colyseusSDK.joinOrCreate("my_room").then((room) => {
-            console.log("Connected to roomId: " + room.roomId);
-        }).catch((error) => {
-            console.log("Couldn't connect to room");
-        });
+        
 
         // run the main render loop
         this._main();
     }
 
     private async _main(): Promise<void> {
+        let colyseusSDK = new Client("ws://localhost:2567");
+        const room = await colyseusSDK.joinOrCreate("my_room");
+        console.log("Joined room " + room.roomId);
+        this._room = room;
         await this._start();
 
         this._engine.runRenderLoop(() => {
@@ -77,6 +77,11 @@ export class App {
         this._engine.displayLoadingUI();
         await this._setupGame();
         await this._scene.whenReadyAsync();
+        this._scene.onBeforeStepObservable.add(() => {
+            console.log(this._ball.getMeshPosition());
+            console.log(this._ball.getVelocity());
+        });
+        this._ball.setVelocity(new Vector3(0,0,1));
         this._engine.hideLoadingUI();
     }
 
@@ -92,6 +97,7 @@ export class App {
             locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
         });
         const havokPlugin = new HavokPlugin(true, havokInstance);
+        havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
         
         await this._environment.load();
@@ -113,11 +119,13 @@ export class App {
 
         this._player = new Player(this.assets, scene, shadow, this._input)
         
-        this._ball = new Ball(new Vector3(0, 3, 7), 1, this.MAX_SPEED, shadow, this._scene);
+        let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
+        this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
         this._scene.onBeforeRenderObservable.add(() => {
             if (this._ball.getMeshPosition()._z < -23) {
                 this._ball.dispose();
-                this._ball = new Ball(new Vector3(0,3,7), 1, this.MAX_SPEED, shadow, this._scene);
+                let ballPos = new Vector3(this._room.state.ball.x, this._room.state.ball.y, this._room.state.ball.z);
+                this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
             }
         });
     }
