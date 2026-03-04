@@ -53,6 +53,9 @@ services:
   # Backend
       - ./web/back:/app/back                  # monte tout le backend
       - /app/back/node_modules           # garde les modules de l'image
+  # GameServer
+      - ./web/back/gameServer:/app/back/gameServer
+      - /app/back/gameServer/node_modules
   # Frontend
       - ./web/front:/app/front  # monte le frontend pour HMR
       - /app/front/node_modules
@@ -62,6 +65,7 @@ services:
     ports:
       - "9000:9000"   # backend Node
       - "5173:5173"   # Vite frontend
+      - "2567:2567"   # Colyseus backend
     secrets:
     - cle_pswd
     - cle_chat

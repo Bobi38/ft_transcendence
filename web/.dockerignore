@@ -1,3 +1,5 @@
 front/node_modules
 back/node_modules
+back/gameServer/node_modules
+node_modules
 .git

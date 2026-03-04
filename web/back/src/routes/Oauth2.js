@@ -52,7 +52,7 @@ router.get('/github/callback', async (req, res) => {
   console.log("GitHub user email:", email);
   const result = await User.findAll({ where: { mail: email[0].email } });
   const name = await User.findAll({where :{name: user.login}})
-  if (name.lenght != 0){
+  if (name.length != 0){
     let prefix = genRanHex(6);
     user.login = user.login + prefix
   }

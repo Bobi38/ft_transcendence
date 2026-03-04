@@ -59,29 +59,34 @@ FROM node:24.13.0
 
 
 # Backend
+
 COPY ./back/package*.json ./
 WORKDIR /app/back
 RUN npm ci
 RUN npm install -g concurrently
 RUN npm install vite http-proxy-middleware
+COPY ./back .
 
+# Game Server
 
-
+WORKDIR /app/back/gameServer
+COPY ./back/gameServer/package*.json ./
+RUN npm install
 
 # Frontend
 
 WORKDIR /app/front
 COPY ./front/package*.json ./
-RUN npm ci
+RUN npm install
+COPY ./front .
+
 
 WORKDIR /app
+COPY ./media ./media
 
-COPY back ./back
-COPY front ./front
-COPY media ./media
+WORKDIR /app/back
+# Copie tout
+#COPY . .
 
-EXPOSE 9000 5173
+EXPOSE 9000 5173 2567
 CMD ["npm", "run", "dev"]
-
-
-

@@ -35,7 +35,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
                 console.log("dlt_friend callbackfail(info) error back ", repjson.message);
             }
         });
-        if (!repjson && !repjson.success)
+        if (!repjson || (repjson &&  !repjson.success))
             return;
         console.log("good");
     }
