@@ -62,6 +62,7 @@ services:
     ports:
       - "9000:9000"   # backend Node
       - "5173:5173"   # Vite frontend
+      - "2567:2567"   # Colyseus backend
     secrets:
     - cle_pswd
     - cle_chat
