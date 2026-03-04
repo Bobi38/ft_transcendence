@@ -52,16 +52,16 @@ export default function AjouterAmis() {
     }
 
     
-    async function fetch_response_friend_request(){
-        const url = `/api/friend/all_request_friend`;
+    // async function fetch_response_friend_request(){
+    //     const url = `/api/friend/all_request_friend`;//todo
 
-        console.log(`${url}`)
+    //     console.log(`${url}`)
 
-        const repjson = await useFetch(`${url}`, fetch_type)
-        if (!repjson)
-            return;
-        setResponseFriendArray(repjson.message)
-    }
+    //     const repjson = await useFetch(`${url}`, fetch_type)
+    //     if (!repjson)
+    //         return;
+    //     setResponseFriendArray(repjson.message)
+    // }
     
 
 
