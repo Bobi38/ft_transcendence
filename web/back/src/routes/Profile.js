@@ -1,4 +1,4 @@
-import {express, jwt, bcrypt, validator, isValidPhoneNumber} from './index.js';
+import {express, jwt, bcrypt, validator, isValidPhoneNumber, secret} from './index.js';
 import {User} from './index.js'
 
 const router = express.Router();
@@ -17,7 +17,7 @@ router.get('/profile', async(req, res) =>{
     }
     res.status(201).json({success: true, message: data});
   }catch(err){
-    res.status(501).json({success: false, message: 'Err mysql getname'});
+    res.status(501).json({success: false, message: 'Err mysql getname' , err});
   }
 });
 
@@ -25,6 +25,9 @@ router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
     console.log("API /updateProfil dans update profil", user);
+    const name = await User.findAll({where :{name: user.login}})
+    if (name.lenght != 0)
+      return res.status(409).json({success: false, message: 'Name already used'})
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });

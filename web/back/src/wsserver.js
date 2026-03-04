@@ -240,7 +240,7 @@ export function initWebSocket(server) {
         session.socket.send(JSON.stringify({ type: 'ping' }));
       }
     }
-  }, 15000);
+  }, 100000);
 }
 
 
