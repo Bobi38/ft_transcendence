@@ -80,9 +80,21 @@ export default function AjouterAmis() {
         el_add_friend.value = ""
     }
     
-    const handel_response = (arg) =>{
+    const handel_response = async (arg) => {
         console.log("requestfriend finish", arg)
-        // send => responseFriend
+
+        const url = `/api/friend/response_friend`;//todo
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        credentials: "include",
+        body: JSON.stringify(arg)
+    })
+        if (!repjson || (repjson &&  !repjson.success))
+            return;
     }
 
 

@@ -104,9 +104,9 @@ export default function Morpion() {
   const [board, setBoard] = useState(Array(9).fill(" "));
 
     useEffect(() => {
-    if(SocketM.nb() === 0){
-        SocketM.connect()
-    }
+    // if(SocketM.nb() === 0){
+    //     SocketM.connect()
+    // }
 
     // SocketM.sendd({
     //       type: "game",
