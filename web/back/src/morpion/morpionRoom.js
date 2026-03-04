@@ -61,6 +61,10 @@ class MorpionRoom extends Room {
         this._chrono = Date.now();
     }
 
+    getboard(){
+        return this._board;
+    }
+
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
 

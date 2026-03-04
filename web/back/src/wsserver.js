@@ -56,8 +56,10 @@ export function initWebSocket(server) {
       const room = manager_room.isInRoom(useid)
       if (room){
         const player = room.getPlayer(useid)
-        if (player)
+        if (player){
           player._socket = socket
+          player.send({message: "refresh" , board: room.getboard()});
+        }
       }
       if (exist){
         exist.socket = socket;
