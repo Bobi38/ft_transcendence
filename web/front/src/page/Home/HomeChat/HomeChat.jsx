@@ -28,7 +28,7 @@ export default function HomeChat() {
             headers: { 'Content-Type': 'application/json' },
             credentials: "include"
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
         setDisplayedMessages(repjson.message);
     }
@@ -47,12 +47,12 @@ export default function HomeChat() {
             credentials: "include",
             body: JSON.stringify({ message: input, time: time }),
         });
-        if (!repjson)
+        if (!repjson && !repjson.success)
             return;
     }
 
 
-    useEffect(() => {
+    useEffect( () => {
         fetch_global_message()
         
         const init = async () => {
@@ -71,7 +71,7 @@ export default function HomeChat() {
         };
     }, []);
 
-    const handle_submit = (e) => {
+    const handle_submit = async (e) => {
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
@@ -80,7 +80,7 @@ export default function HomeChat() {
         const data = {type: "mess", message: input, timer: time};
         
         console.log("handle_submit(2): " ,data);
-        add_message_global(time);
+        await add_message_global(time);
         SocketM.sendd(data);
         setInput("");
     };

@@ -17,6 +17,7 @@ $children_height: 100% - $navbar_height;
 
     .children-container {
         height: $children_height;
+        overflow: hidden auto;
     }
 }
 
