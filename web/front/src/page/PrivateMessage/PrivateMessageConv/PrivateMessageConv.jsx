@@ -22,25 +22,26 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         const url = `/api/chatP/add_message_private`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-                body: JSON.stringify({ message: input, time: time, id: login }),
-            }, null , function(repjson) {
-                if (repjson.message === "exist") {
-                    console.log("dlt_friend callbackfail(info) people not exist");
-                } else if (repjson.message === "relation") {
-                    console,log("dlt_friend callbackfail(info) people are not friend");
-                } else {
-                    console.log("dlt_friend callbackfail(info) error back ", repjson.message);
-                }
-            });
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+            body: JSON.stringify({ message: input, time: time, id: login }),
+        }, null , function(repjson) {
+            if (repjson.message === "exist") {
+                console.log("dlt_friend callbackfail(info) people not exist");
+            } else if (repjson.message === "relation") {
+                console,log("dlt_friend callbackfail(info) people are not friend");
+            } else {
+                console.log("dlt_friend callbackfail(info) error back ", repjson.message);
+            }
+        });
+        
         if (!repjson)
             return;
         console.log("good");
     }
     
-    const handler_submit = (e) => {
+    const handler_submit = async (e) => {
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
@@ -52,7 +53,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 
         const data2 = {...data, monMsg: false};
 
-        add_private_message(time, login);
+        await add_private_message(time, login);
 
         console.log("handle_submit(3) send via WebSocket data2:", data2);
         SocketM.sendd(data2);

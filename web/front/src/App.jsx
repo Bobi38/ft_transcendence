@@ -13,6 +13,7 @@ import './style/index.scss'
 
 /* Components */
 import Navigation       from    "FRONT/Component/Navigation/Navigation.jsx";
+import Hr               from    "FRONT/Component/Hr/Hr.jsx";
   // ./src/page/
 import Home             from    "FRONT/page/Home/Home.jsx";
 import ContactUs        from    "FRONT/page/ContactUs/ContactUs.jsx";
@@ -70,6 +71,7 @@ export default function App() {
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
             <Route path={`/Morpion`}                element={<Navigation>   <Morpion/>            </Navigation>}/>
+            <Route path={`/hr`}                     element={<Navigation>   <Hr><div>oui</div><div>non</div></Hr>            </Navigation>}/>
 
 
             {/* bad path */}
