@@ -18,7 +18,7 @@ export default function AjouterAmis() {
     }
 
     async function add_friend(name){
-        if (!goToConv)
+        if (!name)
             return;
 
         const url = `/api/friend/add_friend?name=${name}`;
@@ -65,10 +65,10 @@ export default function AjouterAmis() {
     
 
 
-    // useEffect(() => {fetch_all_request_friend()}, []);
+    useEffect(() => {fetch_all_request_friend()}, []);
 
 
-    const [responseFriendArray, setResponseFriendArray] = useState([{ login: "titi" },{ login: "tata" }]);
+    const [responseFriendArray, setResponseFriendArray] = useState([]);
 
     const handel_form = (e) =>{
         console.log("handel_form(1) called")
