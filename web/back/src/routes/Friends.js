@@ -3,6 +3,22 @@ import {User, Friend} from './index.js';
 
 const router = express.Router();
 
+function format_all_friend(relation) {
+	const  tableau = [];
+	
+	for(let i = 0; i < relation.FriendOf.length; i++){
+		const login = relation.FriendOf[i].name;
+		tableau.push({login: login});
+	}
+
+	for(let i = 0; i < relation.Friends.length; i++){
+		const login = relation.Friends[i].name;
+		tableau.push({login: login});
+	}
+
+	return tableau;
+};
+
 router.get('/all_friend', async (req, res) => {
   try{
     const token = req.cookies.token;
@@ -32,8 +48,8 @@ const result = await User.findAll({
 					},]});
     console.log("2 f");
     console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
-
-    return res.status(201).json({success: true, message: result});
+	const ret = format_all_friend(result[0]);
+    return res.status(201).json({success: true, message: ret});
   }catch(err){
     return res.status(500).json({success: false, message: "err all_friend back ", err});
   }
@@ -116,7 +132,7 @@ router.get('/all_request_friend', async (req,res) => {
 													}
 												]})
 
-		console.log(relation)
+		console.log(relation[0].User1[0].name)
 		const formated_relation = format_all_request_friend(result.name, relation)
 
 		console.log(formated_relation)
