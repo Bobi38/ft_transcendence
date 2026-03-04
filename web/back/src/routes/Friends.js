@@ -87,7 +87,7 @@ router.get('/dlt_friend', async (req, res) => {
 function format_all_request_friend(name, relation) {
 	const  tableau = [];
 	
-	for(let i = relation;relation.length >= 0; i--){
+	for(let i = relation.length - 1 ;i >= 0; i--){
 		const login = name === relation[i].User1.name ? relation[i].User2.name : relation[i].User1.name;
 		tableau.push({login: login});
 	}
@@ -100,9 +100,7 @@ router.get('/all_request_friend', async (req,res) => {
 	try{
 		const token = req.cookies.token;
     	const decoded = jwt.verify(token, secret);
-	console.log("router.get('/all_request_friend")
 		const result = await User.findOne({ where: { id: decoded.id } });
-	console.log("router.get('/all_request_friend")
 		const relation = await Friend.findAll({where:  {State: false,[Op.or]: [{Friend1: result.id}, {Friend2: result.id}]}, 
 												include:[
 													{
@@ -125,7 +123,7 @@ router.get('/all_request_friend', async (req,res) => {
 		// 	console.log("in if")
 		// 	return res.status(201).json({success: true, message: []})
 		// }
-		return res.status(201).json({success: true, message: relation})
+		return res.status(201).json({success: true, message: formated_relation})
 	}catch(err){
 		return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
 	}
