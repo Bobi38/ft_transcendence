@@ -67,7 +67,7 @@ export function initWebSocket(server) {
       }
       else if (id){
         id.socket = socket
-        console.log("user already exist id");
+        // console.log("user already exist id");
       }
       else{
         // console.log("new user, add to chat sessions");

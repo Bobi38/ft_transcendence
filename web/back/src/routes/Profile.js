@@ -75,6 +75,33 @@ router.post('/majPass', async(req,res) => {
   }catch(err){
     res.status(500).json({success: false, message: "error majpass ", err});
   }
-}) 
+})
+
+router.get('/Homeweather', async (req, res) => {
+  try{
+    console.log("API /Homeweather dans Homeweather");
+    const key = "b26266decd6341248ef151027261902";
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    let loc;
+    if (result && result.adress)
+      loc = result.adress
+    else
+      loc = "Charbonnieres-les-Bains"
+    console.log("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc)
+    const response = await fetch("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc, {
+      method: "GET",
+      headers: { "Accept": "application/json" }
+    });
+    const data = await response.json()
+    if (data)
+        return res.status(201).json({success: true, message: data})
+    else
+        return res.status(201).json({success: false})
+  }catch(err){
+    return res.status(501).json({success: false, message: "error back /Homeweather " + err})
+  }
+})
 
 export default router;

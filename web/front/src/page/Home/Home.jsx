@@ -94,6 +94,34 @@ export default function Home() {
 
     }, []);
 
+	// const [weather, setWeather] = useState(null);
+
+	// useEffect(() => {
+    // async function fetchWeather() {
+    //     try {
+	// 		console.log("fetchWeather(1) called");
+    //         const response = await fetch("/api/profile/Homeweather", {
+	// 			method: "GET",
+	// 			headers: {'Content-Type': 'application/json'},
+    //             credentials: "include",
+	// 		});
+    //         const data = await response.json();
+
+    //         // adapte selon ton backend
+    //         setWeather({
+    //             title: `${data.message.location.name}`,
+	// 			temp: `${data.message.current.temp_c}°C`,
+	// 			descript: `${data.message.current.condition.text}`,
+    //             icon: data.message.current.condition.icon // ex: "https://..."
+    //         });
+
+    //     } catch (err) {
+    //         console.log("weather error", err);
+    //     }
+    // }
+
+    // fetchWeather();
+	// }, []);
 
 
 
@@ -112,7 +140,21 @@ export default function Home() {
 
 	// cards.push( <HomeCardWeather key={index} path={"/Weather"}>{ "Weather"}</HomeCardWeather> )
 	cards_content.forEach((el, index) => {
-		cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
+		// if (weather && el.text === 'Weather'){
+		// 	cards.push(
+		// 		<HomeCard key={index} path={el.path}>
+		// 			<img src={weather.icon} />
+		// 			<br/>
+		// 			<span>{weather.descript}</span>
+		// 			<br/>
+		// 			<span>{weather.title}</span>
+		// 			<br/>
+		// 			<span>{weather.temp}</span>
+		// 		</HomeCard>
+		// 	)
+		// }
+		// else
+			cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
 	})
 
 

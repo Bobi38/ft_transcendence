@@ -17,6 +17,11 @@ export default function AjouterAmis() {
         credentials: "include",
     }
 
+    const [responseFriendArray, setResponseFriendArray] = useState({
+        Fme:[],
+        Fother:[]
+    });
+
     async function add_friend(name){
         if (!name)
             return;
@@ -69,8 +74,6 @@ export default function AjouterAmis() {
     useEffect(() => {fetch_all_request_friend()}, []);
 
 
-    const [responseFriendArray, setResponseFriendArray] = useState([]);
-
     const handel_form = (e) =>{
         console.log("handel_form(1) called")
         const el_add_friend = document.getElementById("add-friend")
@@ -95,6 +98,7 @@ export default function AjouterAmis() {
     })
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        await fetch_all_request_friend()
     }
 
 
@@ -112,7 +116,35 @@ export default function AjouterAmis() {
 
             <div className={`response border-1`}>
 
-                {responseFriendArray && responseFriendArray.map((msg, index) => (
+                <h4>Demades Recu</h4>
+                {responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
+                    <div key={`other-${index}`}>
+                        <div className={`one-response border-2`}>
+                        <h5>{msg.login}</h5>
+                            <div className={`div-btn border-3`}>
+                                <button onClick={() => {handel_response({login: msg.login, response: true })}}>true</button>
+                                <button onClick={() => {handel_response({login: msg.login, response: false })}}>false</button>
+                            </div>
+                            </div>
+                        </div>
+                ))}
+
+
+            
+
+                <h4>Demades Envoyer</h4>
+                {responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
+                    <div key={`me-${index}`}>
+                        <div className={`one-response border-2`}>
+                        <h5>{msg.login}</h5>
+                            <div className={`div-btn border-3`}>
+                                <button onClick={() => {handel_response({login: msg.login, response: false })}}>Suprimer</button>
+                            </div>
+                            </div>
+                        </div>
+                ))}
+
+                {/* {responseFriendArray && responseFriendArray.map((msg, index) => (
 
                     <div key={index}>
                         {index != 0 && <hr/>}
@@ -128,7 +160,7 @@ export default function AjouterAmis() {
                         </div>
                     </div>
 
-                ))}
+                ))} */}
 
             </div>
         </div>

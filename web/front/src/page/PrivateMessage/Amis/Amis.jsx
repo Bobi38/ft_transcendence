@@ -70,6 +70,10 @@ export default function Amis({setGoToAction, setGoToConv}) {
         all_friend();
     }, []);
 
+    const handleDelete = async (friend) => {
+        await dlt_friend(friend.login);
+        await all_friend();
+    }
 
 
     return (
@@ -80,7 +84,7 @@ export default function Amis({setGoToAction, setGoToConv}) {
 
                     <div className="div-btn">
                         <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>mp</button>
-                        <button onClick={() => {setResponseFriend({login: msg.login, response: "c'est pas encore fait bg" })}}>supprimer</button>
+                        <button onClick={() => {handleDelete({login: msg.login })}}>supprimer</button>
                     </div>
                 </div>
             ))}

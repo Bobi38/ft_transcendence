@@ -149,9 +149,9 @@ async function CreatStat(){
 
 async function CreatFriend(){
   await Friend.create({Friend1: 1, Friend2: 2, State: true, WhoAsk: 1});
-  await Friend.create({Friend1: 1, Friend2: 3, State: true, WhoAsk: 3});
+  await Friend.create({Friend1: 1, Friend2: 3, State: false, WhoAsk: 1});
   await Friend.create({Friend1: 4, Friend2: 1, State: false, WhoAsk: 4});
-  await Friend.create({Friend1: 5, Friend2: 1, State: true, WhoAsk: 1});
+  await Friend.create({Friend1: 5, Friend2: 1, State: true, WhoAsk: 5});
 }
 
 async function addDb(){
