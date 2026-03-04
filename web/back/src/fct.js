@@ -8,7 +8,7 @@ import sequelize from './models/index.js';
 import User from './models/user.js';
 import ChatG from './models/test.js';
 import PrivChat from './models/privchat.js';
-import GameMorp from './models/GameMorp.js';
+import { seedGameMorp } from './morpion/seedmorp.js';
 import PrivMess from './models/privmess.js';
 import StatMorp from './models/StatMorp.js';
 import HistoryMorp from './models/HistoryMorp.js';
@@ -173,6 +173,7 @@ async function addDb(){
       await CreatStat();
       // majDb();
       await CreatFriend();
+      await seedGameMorp();
       majDb();
     }
 }
