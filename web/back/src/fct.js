@@ -163,7 +163,7 @@ async function addDb(){
       const titi = await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
       const tata = await User.create({name: 'tata', password: CrypPass, mail: 'tata@test.c', co: false, win: 0, total_part: 0});
       const tutu = await User.create({name: 'tutu', password: CrypPass, mail: 'tutu@test.c', co: false, win: 0, total_part: 0});
-      const ni = await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
+      const ni = await User.create({name: '⏰ni⏰', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
       // majDb();
       await CreatPrivMess();
       // majDb();
