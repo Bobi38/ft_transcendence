@@ -103,7 +103,7 @@ export default function Home() {
 		{ text:"Intra", path: "/https://profile.intra.42.fr" },
 		{ text:"WaitRoom", path: "/Morpion" },
 		{ text:"Stats", path: "/Stats" },
-		{ text:"Game", path: "/Game" },
+		{ text:"Pong3D", path: "/Pong3D" },
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
 		{ text:"test GAME", path: "/Test" },
 		{ text:"Morpion", path: "/Morpion" },
