@@ -17,43 +17,34 @@ export default function Amis({setGoToAction, setGoToConv}) {
 
     console.log("Amis Components called")
 
-    const [responseFriendArray, setResponseFriendArray] = useState([{ login: "titi" },{ login: "tata" }]);
+    const [responseFriendArray, setResponseFriendArray] = useState([]);
 
 
-    // async function fetch_all_friend(){ // with co or not
-    //     console.log("fetch_all_friend(1) called");
-    //     try{
+    async function all_friend(){ // with co or not
+        const url = `/api/friend/all_friend`;
 
-            // const rep = await fetch('/api/friend/all_friend', {
-            //     method: "GET",
-            //     headers: {'Content-Type': 'application/json'},
-            //     credentials: "include",
-            // });
-            
-    //         // console.log("fetch_all_friend(2) after fetch");
-    //         const repjson = await rep.json();
-    //         console.log("fetch_all_friend(2.5) repjson: ",repjson.message);
+        console.log(`${url}`)
 
-    //         if (repjson.success){
-    //             // setResponseFriendArray(repjson.message)
-    //             console.log("success")
-    //             console.log(repjson.message[0].Friends[0].name);
-    //             console.log(repjson.message[0].Friends[1].name);
-    //             console.log(repjson.message[0].FriendOf[0].name);
-
-    //         }else {
-    //             console.log("fetch_all_friend(3) error back ", repjson.message);
-    //         }
-    //     }catch(err){
-    //         console.log("fetch_all_friend(4) error front ", err);
-    //     }
-    // }
+        const repjson = await useFetch(`${url}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            })
+        if (!repjson || (repjson &&  !repjson.success))
+            return;
+        console.log("all_friend");
+        setResponseFriendArray(repjson.message)
+    }
 
 
+
+    const [responseFriend, setResponseFriend] = useState();
 
     async function dlt_friend(name){
+
         if (!name)
             return;
+
         const url = `/api/friend/dlt_friend?name=${name}`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
@@ -76,11 +67,10 @@ export default function Amis({setGoToAction, setGoToConv}) {
 
 
     useEffect(() => {
-        // fetch_all_friend();
+        all_friend();
     }, []);
 
 
-    const [responseFriend, setResponseFriend] = useState();
 
     return (
         <div className={`Amis-root border-0`}>
