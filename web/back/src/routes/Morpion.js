@@ -68,7 +68,7 @@ router.get('/get_morpion_stat', async (req, res) => {
         console.log("API get_morpion_stat(2)");
         const resultStats = await StatMorp.findOne({where: {idUser: decoded.id}});
         console.log("API get_morpion_stat(3)");
-        const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: page2 - 1, order:[['id', 'DESC']]})
+        const resultHistory = await HistoryMorp.findAll({where: {[Op.or]: [{Id1: decoded.id}, {Id2: decoded.id}]}}, {limit: 5, offset: page - 1, order:[['id', 'DESC']]})
         console.log("API get_morpion_stat(4)");
         const stat = {
             AllGame: resultStats.nbGame,
@@ -108,8 +108,8 @@ router.post('/getGameMorp', async (req, res) => {
     const past = 5 * Number(pas);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
-    const result = await GameMorp.findAll({where: {[Op.or]: [{Player1: decoded.id}, {Player2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
-    return res.status(201).json({success: true, data: result});
+    const result = await GameMorp.findAll({where: {[Op.or]: [{player_1: decoded.id}, {player_2: decoded.id}]}}, {limit: 5, offset: past, order:[['id', 'DESC']]})
+    return res.status(201).json({success: true, message: result});
   }catch(err){
     return res.status(500).json({success:false, message: "err "})
   }

@@ -47,7 +47,7 @@ const result = await User.findAll({
 						required: false
 					},]});
     console.log("2 f");
-    console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
+    // console.log("here ", result[0].Friends[0].name, result[0].FriendOf[0].name, result[0].FriendOf[0].co);
 	const ret = format_all_friend(result[0]);
     return res.status(201).json({success: true, message: ret});
   }catch(err){
@@ -102,14 +102,22 @@ router.get('/dlt_friend', async (req, res) => {
 })
 
 function format_all_request_friend(name, relation) {
-	const  tableau = [];
+	const  Fother = [];
+	const Fme = []
 	
 	for(let i = relation.length - 1 ;i >= 0; i--){
 		const login = name === relation[i].User1.name ? relation[i].User2.name : relation[i].User1.name;
-		tableau.push({login: login});
+		if (relation[i].User1.name == name)
+			Fme.push({login: login});
+		else
+			Fother.push({login: login})
 	}
     
-	return tableau;
+	const data ={
+		Fme: Fme,
+		Fother: Fother
+	}
+	return data;
 };
 
 router.get('/all_request_friend', async (req,res) => {
