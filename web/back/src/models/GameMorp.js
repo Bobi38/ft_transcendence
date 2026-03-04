@@ -5,7 +5,7 @@ import User from './user.js';
 const GameMorp = sequelize.define('GameMorp', {
 
   how_win: {
-    type: DataTypes.ENUM('H', 'V', 'D'),
+    type: DataTypes.ENUM('H', 'V', 'D', '0'),
     allowNull: false
   },
 
@@ -92,13 +92,3 @@ export default GameMorp;
 //     { model: User, as: 'loserUser' }
 //   ]
 // });
-
-
-
-
-
-
-/*
-CREATION TABLE PAR JOUEURS
-
-*/

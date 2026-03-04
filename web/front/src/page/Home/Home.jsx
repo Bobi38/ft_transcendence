@@ -101,15 +101,16 @@ export default function Home() {
 	const cards_content = [
 		{ text:"Weather", path: "/Weather" },
 		{ text:"Intra", path: "/https://profile.intra.42.fr" },
+		{ text:"PrivateMessage", path: "/PrivateMessage" },
+		{ text:"Morpion", path: "/Morpion" },
+		{ text:"Pong3D", path: "/Pong3D" },
+		{ text:"Pond2D", path: "/Pond2D" },
 		{ text:"WaitRoom", path: "/Morpion" },
 		{ text:"Stats", path: "/Stats" },
-		{ text:"Pong3D", path: "/Pong3D" },
-		{ text:"PrivateMessage", path: "/PrivateMessage" },
-		{ text:"test GAME", path: "/Test" },
-		{ text:"Morpion", path: "/Morpion" },
 		{ text:"Nothing", path: "/Nothing" },
 	]
 
+	// cards.push( <HomeCardWeather key={index} path={"/Weather"}>{ "Weather"}</HomeCardWeather> )
 	cards_content.forEach((el, index) => {
 		cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
 	})
