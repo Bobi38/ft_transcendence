@@ -56,6 +56,7 @@ router.post('/register', async (req, res) => {
     console.log("Api /register called");
     const { name, password, email } = req.body;
     try {
+      console.log("1")
         const find = await User.findAll({ where: { mail: email } });
         if (find.length != 0) {
           if (find[0].OAuth == true)
@@ -63,18 +64,18 @@ router.post('/register', async (req, res) => {
           else
             return res.status(409).json({success: false, message: 'Email already used'});
         }
-        const name = await User.findAll({where :{name: name}})
-        if (name.lenght != 0)
+        const nam = await User.findAll({where :{name: name}})
+        if (nam.length != 0)
             return res.status(409).json({success: false, message: 'Name already used'})
         console.log("Api /register av");
         const CrypPass = await bcrypt.hash(password, 10);
-
+        console.log("3")
         const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
         console.log("Api /register ID", result.insertId);
         res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
         // majDb();
     } catch (err) {
-        res.status(500).json({success: false, message: 'Erreur MySQL' });
+        res.status(500).json({success: false, message: 'Erreur MySQL' + err });
     }
 });
 

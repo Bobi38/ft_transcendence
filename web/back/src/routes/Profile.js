@@ -26,7 +26,7 @@ router.post('/updateProfil', async(req, res) => {
     const user = req.body
     console.log("API /updateProfil dans update profil", user);
     const name = await User.findAll({where :{name: user.login}})
-    if (name.lenght != 0)
+    if (name.length != 0)
       return res.status(409).json({success: false, message: 'Name already used'})
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
