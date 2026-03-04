@@ -22,15 +22,47 @@
 # CMD ["npm", "start"]
 # DOCKER POUR LA PRODDDDDDDDDDDDD
 
+# FROM node:24.13.0
+
+# WORKDIR /app/back
+
+# # Backend
+# COPY ./back/package*.json ./
+# RUN npm install
+# # RUN npm install -g nodemon
+
+# inutlile deja dansjson devDependencies
+# RUN npm install -g concurrently
+# RUN npm install vite http-proxy-middleware
+
+
+
+
+# # Frontend
+
+# WORKDIR /app/front
+# COPY ./front/package*.json ./
+# RUN npm install
+
+
+# WORKDIR /app
+# COPY ./media ./media
+
+# WORKDIR /app/back
+# # Copie tout
+# COPY . .
+
+# EXPOSE 9000 5173
+# CMD ["npm", "run", "dev"]
+
 FROM node:24.13.0
 
-WORKDIR /app/back
 
 # Backend
 
 COPY ./back/package*.json ./
+WORKDIR /app/back
 RUN npm install
-# RUN npm install -g nodemon
 RUN npm install -g concurrently
 RUN npm install vite http-proxy-middleware
 COPY ./back .

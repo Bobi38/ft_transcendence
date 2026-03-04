@@ -8,6 +8,7 @@ import sequelize from './models/index.js';
 import User from './models/user.js';
 import ChatG from './models/test.js';
 import PrivChat from './models/privchat.js';
+import GameMorp from './models/GameMorp.js';
 import PrivMess from './models/privmess.js';
 import StatMorp from './models/StatMorp.js';
 import HistoryMorp from './models/HistoryMorp.js';
@@ -163,7 +164,7 @@ async function addDb(){
       const titi = await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false, win: 0, total_part: 0});
       const tata = await User.create({name: 'tata', password: CrypPass, mail: 'tata@test.c', co: false, win: 0, total_part: 0});
       const tutu = await User.create({name: 'tutu', password: CrypPass, mail: 'tutu@test.c', co: false, win: 0, total_part: 0});
-      const ni = await User.create({name: 'ni', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
+      const ni = await User.create({name: '⏰ni⏰', password: CrypPassNi, mail: 'ni@g.fr', co: false, win: 50, total_part: 0});
       const no = await User.create({name: 'nona', password: CrypPass, mail: 'nono@test.c', co: false, win: 50, total_part: 0});
       const na = await User.create({name: 'nana', password: CrypPass, mail: 'nana@test.c', co: false, win: 50, total_part: 0});
       // majDb();
