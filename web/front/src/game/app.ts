@@ -77,6 +77,11 @@ export class App {
         this._engine.displayLoadingUI();
         await this._setupGame();
         await this._scene.whenReadyAsync();
+        this._scene.onBeforeStepObservable.add(() => {
+            console.log(this._ball.getMeshPosition());
+            console.log(this._ball.getVelocity());
+        });
+        this._ball.setVelocity(new Vector3(0,0,1));
         this._engine.hideLoadingUI();
     }
 
@@ -92,6 +97,7 @@ export class App {
             locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
         });
         const havokPlugin = new HavokPlugin(true, havokInstance);
+        havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
         
         await this._environment.load();

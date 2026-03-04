@@ -1,8 +1,10 @@
 import { Room, Client, CloseCode } from "colyseus";
 import { MyRoomState } from "./schema/MyRoomState.js";
-import { Engine, HavokPlugin, MeshBuilder, PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
+import { HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
 import { Env } from "../../../../media/media.js"
+import fs from "fs";
+import path from "path";
 
 function ToVec3(input: any) : Vector3 {
     const ret = new Vector3(input.x, input.y, input.z);
@@ -16,7 +18,9 @@ function ToQuat(input: any) : Quaternion {
 
 export class MyRoom extends Room {
   private _scene : Scene;
-  private _engine: Engine;
+  private _engine: NullEngine;
+  private _ballNode : TransformNode;
+  private _bodies: PhysicsBody[] = [];
 
   maxClients = 4;
   state = new MyRoomState();
@@ -37,6 +41,8 @@ export class MyRoom extends Room {
     const ballShape = new PhysicsShapeSphere(Vector3.Zero(), 1, this._scene);
     const ball = new PhysicsBody(ballNode, PhysicsMotionType.DYNAMIC, false, this._scene);
     ball.shape = ballShape;
+    this._ballNode = ballNode;
+    this._bodies.push(ball);
     return ball;
   }
 
@@ -69,20 +75,40 @@ export class MyRoom extends Room {
     ground.shape = groundShape;
     ceiling.shape = ceilingShape;
     elevan.shape = elevanShape;
+    this._bodies.push(wallLeft);
+    this._bodies.push(wallRight);
+    this._bodies.push(ground);
+    this._bodies.push(ceiling);
+    this._bodies.push(elevan);
   }
 
   private async _startSimulation() {
-    const engine = new Engine(null, true);
+    const engine = new NullEngine();
     const scene = new Scene(engine);
-    const havokInstance = await HavokPhysics({
-            locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
-        });
-    const havokPlugin = new HavokPlugin(true, havokInstance);
+    const wasmPath = path.resolve("node_modules/@babylonjs/havok/lib/esm/HavokPhysics.wasm");
+    const wasmBuffer = fs.readFileSync(wasmPath);
+    const wasmBinary = wasmBuffer.buffer.slice(wasmBuffer.byteOffset,wasmBuffer.byteOffset + wasmBuffer.byteLength);
+    const havok = await HavokPhysics({wasmBinary});
+    // const havokInstance = await HavokPhysics({
+    //         locateFile: (file) => `file://gameServer/node_modules/@babylonjs/havok/lib/esm/${file}`
+    //     });
+    console.log("HavokPhysics loaded from file");
+    const havokPlugin = new HavokPlugin(true, havok);
+    const deltaTime = 1 / 60;
+    havokPlugin.setTimeStep(deltaTime);
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
     this._scene = scene;
     this._engine = engine;
     const ball : PhysicsBody = this._createBall();
     this._createWalls;
+    ball.setLinearVelocity(new Vector3(0,0,10))
+
+    //manually stepping
+    setInterval(() => {
+      console.log(this._ballNode.position);
+      console.log(ball.getLinearVelocity());
+      havokPlugin.executeStep(deltaTime, this._bodies);
+    }, deltaTime * 1000);
 }
 
   onCreate (options: any) {
