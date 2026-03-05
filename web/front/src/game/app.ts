@@ -77,12 +77,10 @@ export class App {
         this._engine.displayLoadingUI();
         await this._setupGame();
         await this._scene.whenReadyAsync();
-        console.log(this._scene.onBeforeStepObservable);
         this._scene.onBeforePhysicsObservable.add(() => {
-            console.log(this._ball.getMeshPosition());
-            console.log(this._ball.getVelocity());
+            console.log(this._ball.getMeshPosition()._z);
+            //console.log(this._ball.getVelocity());
         });
-        this._ball.setVelocity(new Vector3(0,0,1));
         this._engine.hideLoadingUI();
     }
 
@@ -111,14 +109,11 @@ export class App {
         let light = new PointLight('PointLight', new Vector3(0,5,0), scene);
         light.diffuse = new Color3(1,1,1);
         light.intensity = 1;
-        //light.radius = 0.1;
-        //light.radius = 0; 
-        //light.includedOnlyMeshes = [];
 
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
 
-        this._player = new Player(this.assets, scene, shadow, this._input)
+        this._player = new Player(this.assets, scene, shadow, this._input, this._room);
         
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);

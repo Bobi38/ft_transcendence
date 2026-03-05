@@ -1,10 +1,12 @@
 import { AbstractMesh, Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
+import { Room } from "@colyseus/sdk";
 
 export class Player extends TransformNode {
     PLAYER_SPEED: number;
     public camera;
     public scene: Scene;
+    public room: Room;
     private _input;
     private _moveDirection: Vector3;
 
@@ -18,9 +20,10 @@ export class Player extends TransformNode {
     public racketBody: PhysicsBody;
     public hand_node: TransformNode;
 
-    constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, input? : PlayerInput) {
+    constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, input : PlayerInput, room: Room) {
         super("player", scene);
         this.scene = scene;
+        this.room = room;
         this.mesh = assets.mesh;
         this.mesh.parent = this;
         this._setupPlayerCamera();
@@ -58,6 +61,10 @@ export class Player extends TransformNode {
             console.log(mouseAvgSpeed, power);
 
             ballBody.applyImpulse(hitDirection.scale(power), event.point);
+
+            const ballPos = ballBody.transformNode.position.clone();
+            const ballVel = ballBody.getLinearVelocity(); 
+            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: ballVel.asArray()});
         });
 
         // this.racketAggregate = new PhysicsAggregate(scene.getNodeByName("rocketRoot") as TransformNode,

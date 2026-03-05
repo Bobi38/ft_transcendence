@@ -19,7 +19,7 @@ function ToQuat(input: any) : Quaternion {
 export class MyRoom extends Room {
   private _scene : Scene;
   private _engine: NullEngine;
-  private _ballNode : TransformNode;
+  private _ball: PhysicsBody;
   private _bodies: PhysicsBody[] = [];
   private _shapes: PhysicsShape[] = [];
   private _nodes: TransformNode[] = [];
@@ -34,7 +34,100 @@ export class MyRoom extends Room {
        * Handle "yourMessageType" message.
        */
       console.log(client.sessionId, "sent a message:", message);
+    },
+    "racketImpact": (client: Client, data: any) => {
+      const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
+      const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
+      this._ball.setLinearVelocity(ballVel);
+      this._ball.transformNode.setAbsolutePosition(ballPos);
+      console.log(client.sessionId,  "hit the ball: ", data);
     }
+  }
+  
+
+  private async _startSimulation() {
+    const engine = new NullEngine();
+    const scene = new Scene(engine);
+    const camera = new ArcRotateCamera("Camera", 0, 0.8, 100, Vector3.Zero(), scene); //necessary for scene.render()
+    const wasmPath = path.resolve("node_modules/@babylonjs/havok/lib/esm/HavokPhysics.wasm");
+    const wasmBuffer = fs.readFileSync(wasmPath);
+    const wasmBinary = wasmBuffer.buffer.slice(wasmBuffer.byteOffset,wasmBuffer.byteOffset + wasmBuffer.byteLength);
+    const havok = await HavokPhysics({wasmBinary});
+    console.log("HavokPhysics loaded from file");
+    const havokPlugin = new HavokPlugin(true, havok);
+    this._havokPlugin = havokPlugin;
+    const deltaTime = 1 / 60;
+    havokPlugin.setTimeStep(deltaTime);
+    scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+    this._scene = scene;
+    this._engine = engine;
+    this._ball = this._createBall();
+    this._createWalls();
+
+    scene.onBeforePhysicsObservable.add(() => {
+      console.log(this._ball.transformNode.position._z);
+      //console.log(this._ball.getLinearVelocity());
+    });
+
+    engine.runRenderLoop(() => {
+      scene.render();
+    })
+}
+
+  onCreate (options: any) {
+    /**
+     * Called when a new room is created.
+     */
+    //START PHYSICS SIMULATION
+    console.log("room", this.roomId, "created and starting physics simulation");
+    this._startSimulation();
+  }
+
+  onJoin (client: Client, options: any) {
+    /**
+     * Called when a client joins the room.
+     */
+    console.log(client.sessionId, "joined room", this.roomId);
+  }
+
+  onLeave (client: Client, code: CloseCode) {
+    /**
+     * Called when a client leaves the room.//manually stepping
+    setInterval(() => {
+      console.log(this._ballNode.position);
+      console.log(ball.getLinearVelocity());
+      havokPlugin.executeStep(deltaTime, this._bodies);
+    }, deltaTime * 1000);
+     */
+    console.log(client.sessionId, "left room", this.roomId, "with code", code);
+  }
+
+  onDispose() {
+    /**
+     * Called when the room is disposed.
+     */
+    this._bodies.forEach(body => {
+        if (body.shape) {
+            body.shape.dispose();
+        }
+        body.dispose(); 
+    });
+    this._bodies = [];
+
+    this._nodes.forEach(node => node.dispose());
+    this._nodes = [];
+
+    this._scene.onBeforePhysicsObservable.clear();
+
+    if (this._havokPlugin) {
+        this._havokPlugin.dispose();
+        this._havokPlugin = null;
+    }
+    if (this._scene) {
+        this._scene.dispose();
+        this._scene = null;
+    }
+    console.log("room", this.roomId, "disposing and ending simulation");
   }
 
   private _createBall() : PhysicsBody {
@@ -44,7 +137,6 @@ export class MyRoom extends Room {
     const ballShape = new PhysicsShapeSphere(Vector3.Zero(), 0.5, this._scene);
     const ball = new PhysicsBody(ballNode, PhysicsMotionType.DYNAMIC, false, this._scene);
     ball.shape = ballShape;
-    this._ballNode = ballNode;
     const material = {friction: 0, restitution: 1};
     ballShape.material = material;
     ball.setMassProperties({mass: 1});
@@ -119,100 +211,6 @@ export class MyRoom extends Room {
     this._nodes.push(groundNode);
     this._nodes.push(ceilingNode);
     this._nodes.push(elevanNode);
-  }
-
-  private async _startSimulation() {
-    const engine = new NullEngine();
-    const scene = new Scene(engine);
-    const camera = new ArcRotateCamera("Camera", 0, 0.8, 100, Vector3.Zero(), scene); //necessary for scene.render()
-    const wasmPath = path.resolve("node_modules/@babylonjs/havok/lib/esm/HavokPhysics.wasm");
-    const wasmBuffer = fs.readFileSync(wasmPath);
-    const wasmBinary = wasmBuffer.buffer.slice(wasmBuffer.byteOffset,wasmBuffer.byteOffset + wasmBuffer.byteLength);
-    const havok = await HavokPhysics({wasmBinary});
-    // const havokInstance = await HavokPhysics({
-    //         locateFile: (file) => `file://gameServer/node_modules/@babylonjs/havok/lib/esm/${file}`
-    //     });
-    console.log("HavokPhysics loaded from file");
-    const havokPlugin = new HavokPlugin(true, havok);
-    this._havokPlugin = havokPlugin;
-    const deltaTime = 1 / 60;
-    havokPlugin.setTimeStep(deltaTime);
-    scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
-    this._scene = scene;
-    this._engine = engine;
-    const ball : PhysicsBody = this._createBall();
-    this._createWalls();
-    ball.setLinearVelocity(new Vector3(0,0,1))
-
-    //manually stepping
-    // setInterval(() => {
-    //   console.log(this._ballNode.position);
-    //   console.log(ball.getLinearVelocity());
-    //   havokPlugin.executeStep(deltaTime, this._bodies);
-    // }, deltaTime * 1000);
-
-    scene.onBeforePhysicsObservable.add(() => {
-      console.log(this._ballNode.position);
-      console.log(ball.getLinearVelocity());
-    });
-
-    engine.runRenderLoop(() => {
-      scene.render();
-    })
-}
-
-  onCreate (options: any) {
-    /**
-     * Called when a new room is created.
-     */
-    //START PHYSICS SIMULATION
-    this._startSimulation();
-  }
-
-  onJoin (client: Client, options: any) {
-    /**
-     * Called when a client joins the room.
-     */
-    console.log(client.sessionId, "joined!");
-  }
-
-  onLeave (client: Client, code: CloseCode) {
-    /**
-     * Called when a client leaves the room.//manually stepping
-    setInterval(() => {
-      console.log(this._ballNode.position);
-      console.log(ball.getLinearVelocity());
-      havokPlugin.executeStep(deltaTime, this._bodies);
-    }, deltaTime * 1000);
-     */
-    console.log(client.sessionId, "left!", code);
-  }
-
-  onDispose() {
-    /**
-     * Called when the room is disposed.
-     */
-    this._bodies.forEach(body => {
-        if (body.shape) {
-            body.shape.dispose();
-        }
-        body.dispose(); 
-    });
-    this._bodies = [];
-
-    this._nodes.forEach(node => node.dispose());
-    this._nodes = [];
-    //don't forget to remove Observables if any
-
-    if (this._havokPlugin) {
-        this._havokPlugin.dispose();
-        this._havokPlugin = null;
-    }
-    if (this._scene) {
-        this._scene.dispose();
-        this._scene = null;
-    }
-    console.log("room", this.roomId, "disposing and ending simulation");
   }
 
 }
