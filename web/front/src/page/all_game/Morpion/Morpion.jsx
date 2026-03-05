@@ -129,6 +129,15 @@ export default function Morpion() {
     }
   }, []);
 
+    // useEffect(() => {
+
+    //   return (() => {
+    //         SocketM.sendd({
+    //             type: "game",
+    //             message: "je pars"
+    //         })
+    //     });
+    // }, [])
 
     return (
     <>
