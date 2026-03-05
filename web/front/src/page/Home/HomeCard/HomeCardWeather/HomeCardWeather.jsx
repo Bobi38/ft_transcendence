@@ -76,16 +76,6 @@ export default function HomeCardWeather() {
 				</div>
 			)}
 		</div>
-	)   
-	return (
-		<div className={`HomeCardWeather-root card-effect`}>
-			{weather.icon && <img src={weather.icon} />}
-			<p>
-				<span>{weather.descript}</span><br/><br/>
-				<span>{weather.title}</span><br/>
-				<span>{weather.temp}</span>
-			</p>
-		</div>
 	)
 }
 
