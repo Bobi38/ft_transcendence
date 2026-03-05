@@ -192,7 +192,7 @@ class MorpionRoom extends Room {
         }
 
         if (!this._board.includes(" ")) {
-            this.sendAll({message: "egalite"}, this._board);
+            this.sendAll({message: "egalite", board: this._board, turn: false} );
             this.handleEndGame("draw");
             return true;
         }
@@ -209,7 +209,7 @@ class MorpionRoom extends Room {
             })
         };
 
-        player.startTurnTimer(action, 8000);
+        player.startTurnTimer(action, 4000);
     }
 
     serializeBoard() {

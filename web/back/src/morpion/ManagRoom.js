@@ -1,4 +1,5 @@
 import MorpionRoom from "./morpionRoom.js";
+import WaitRoom from "./waitRoom.js";
 import Room from "./Room.js";
 
 const roomTypes = {
@@ -9,6 +10,7 @@ const roomTypes = {
 class ManagerRoom {
     constructor(){
         this._roomId = (Date.now() % 50001) + 57;
+        this.lobby = new WaitRoom;
         this._rooms = new Map();
     }
 
@@ -53,6 +55,10 @@ class ManagerRoom {
             }
         }
         console.log("IsInRoom : joueur inconnu");
+
+        if (this.lobby.isInRoom(playerId))
+            return this.lobby;
+
         return null;
     }
 
@@ -89,6 +95,7 @@ class ManagerRoom {
     removeAll(mess = null) {
         this._rooms.forEach(r => {r.remove(mess);})
         this._rooms.clear();
+        this.lobby.sendAll(mess)
     }
 
     sendAll(mess) {
