@@ -1,4 +1,4 @@
-import { Color3, MeshBuilder, PhysicsAggregate, PhysicsMotionType, PhysicsShapeType, Quaternion, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import { Color3, MeshBuilder, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Quaternion, Scene, StandardMaterial, TransformNode, Vector3 } from "@babylonjs/core";
 import { Env } from "../../../media/media.js"
 
 
