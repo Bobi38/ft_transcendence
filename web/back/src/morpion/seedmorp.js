@@ -188,7 +188,7 @@ export async function seedGameMorp() {
         map: "--XOXOXXO"
       },
       {
-        how_win: "0",
+        how_win: "A",
         date_game: "2026-03-04 15:53:23",
         ending: "abort",
         player_1: 4,
@@ -216,7 +216,7 @@ export async function seedGameMorp() {
         map: "OOXXXOOXX"
       },
       {
-        how_win: "0",
+        how_win: "A",
         date_game: "2026-03-04 15:53:30",
         ending: "abort",
         player_1: 1,
@@ -230,7 +230,7 @@ export async function seedGameMorp() {
         map: "-OX-XXXOO"
       },
       {
-        how_win: "0",
+        how_win: "A",
         date_game: "2026-03-04 15:53:39",
         ending: "abort",
         player_1: 5,

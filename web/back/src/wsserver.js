@@ -53,14 +53,11 @@ export function initWebSocket(server) {
 
       const exist = chat.finduser(socket.id);
       const id = chat.finduserId(socket.userId);
-      const room = manager_room.isInRoom(useid)
-      if (room){
-        const player = room.getPlayer(useid)
-        if (player){
-          player._socket = socket
-          player.send({message: "refresh" , board: room.getboard()});
-        }
-      }
+
+      manager_room.isInRoom(useid)
+        ?.getPlayer(useid)
+        ?.refreshSocket(socket);
+
       if (exist){
         exist.socket = socket;
         console.log("user already exist exist");

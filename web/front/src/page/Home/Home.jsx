@@ -12,8 +12,8 @@ import "./Home.scss";
 import PopUp from "./PopUp/PopUp.jsx"
 import HomeChat from "./HomeChat/HomeChat.jsx";
 import HomeCard from "./HomeCard/HomeCard.jsx";
+import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 import HomeFooter from "./HomeFooter/HomeFooter.jsx";
-
 
 export const AUTH = {
     NONE: 0,
@@ -94,67 +94,24 @@ export default function Home() {
 
     }, []);
 
-	// const [weather, setWeather] = useState(null);
-
-	// useEffect(() => {
-    // async function fetchWeather() {
-    //     try {
-	// 		console.log("fetchWeather(1) called");
-    //         const response = await fetch("/api/profile/Homeweather", {
-	// 			method: "GET",
-	// 			headers: {'Content-Type': 'application/json'},
-    //             credentials: "include",
-	// 		});
-    //         const data = await response.json();
-
-    //         // adapte selon ton backend
-    //         setWeather({
-    //             title: `${data.message.location.name}`,
-	// 			temp: `${data.message.current.temp_c}°C`,
-	// 			descript: `${data.message.current.condition.text}`,
-    //             icon: data.message.current.condition.icon // ex: "https://..."
-    //         });
-
-    //     } catch (err) {
-    //         console.log("weather error", err);
-    //     }
-    // }
-
-    // fetchWeather();
-	// }, []);
-
 
 
 	const cards = [];
 	const cards_content = [
-		{ text:"Weather", path: "/Weather" },
-		{ text:"Intra", path: "/https://profile.intra.42.fr" },
+		// { text:"Weather", path: "/Weather" },
+		{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
 		{ text:"Morpion", path: "/Morpion" },
 		{ text:"Pong3D", path: "/Pong3D" },
 		{ text:"Pond2D", path: "/Pond2D" },
-		{ text:"WaitRoom", path: "/Morpion" },
+		{ text:"Nothing", path: "/Nothing" },
 		{ text:"Stats", path: "/Stats" },
 		{ text:"Nothing", path: "/Nothing" },
 	]
 
-	// cards.push( <HomeCardWeather key={index} path={"/Weather"}>{ "Weather"}</HomeCardWeather> )
+	cards.push( <HomeCardWeather key={0}/> )
 	cards_content.forEach((el, index) => {
-		// if (weather && el.text === 'Weather'){
-		// 	cards.push(
-		// 		<HomeCard key={index} path={el.path}>
-		// 			<img src={weather.icon} />
-		// 			<br/>
-		// 			<span>{weather.descript}</span>
-		// 			<br/>
-		// 			<span>{weather.title}</span>
-		// 			<br/>
-		// 			<span>{weather.temp}</span>
-		// 		</HomeCard>
-		// 	)
-		// }
-		// else
-			cards.push( <HomeCard key={index} path={el.path}>{el.text}</HomeCard> )
+			cards.push( <HomeCard key={index + 1} path={el.path}>{el.text}</HomeCard> )
 	})
 
 

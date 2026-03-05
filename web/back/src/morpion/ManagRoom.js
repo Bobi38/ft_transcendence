@@ -1,4 +1,5 @@
 import MorpionRoom from "./morpionRoom.js";
+import WaitRoom from "./waitRoom.js";
 import Room from "./Room.js";
 
 const roomTypes = {
@@ -9,19 +10,8 @@ const roomTypes = {
 class ManagerRoom {
     constructor(){
         this._roomId = (Date.now() % 50001) + 57;
+        this.lobby = new WaitRoom;
         this._rooms = new Map();
-    }
-
-    newRoomId(){
-        if (this._roomId > 2000000000)
-            this._roomId = (Date.now() % 50001) + 57;
-
-        let increment = this._roomId;
-        increment = ((increment % 31) + 1) * ((increment % 7) + 1);
-
-        this._roomId += increment;
-
-        return this._roomId.toString(36);
     }
 
     createRoom(type = "default") {
@@ -53,6 +43,10 @@ class ManagerRoom {
             }
         }
         console.log("IsInRoom : joueur inconnu");
+
+        if (this.lobby.isInRoom(playerId))
+            return this.lobby;
+
         return null;
     }
 
@@ -89,6 +83,7 @@ class ManagerRoom {
     removeAll(mess = null) {
         this._rooms.forEach(r => {r.remove(mess);})
         this._rooms.clear();
+        this.lobby.sendAll(mess)
     }
 
     sendAll(mess) {
@@ -102,6 +97,18 @@ class ManagerRoom {
         game.outTimer = setTimeout(() => {
             game.remove("* TIME OUT *");
         }, game.limit_time);
+    }
+
+    newRoomId(){
+        if (this._roomId > 2000000000)
+            this._roomId = (Date.now() % 50001) + 57;
+
+        let increment = this._roomId;
+        increment = ((increment % 31) + 1) * ((increment % 7) + 1);
+
+        this._roomId += increment;
+
+        return this._roomId.toString(36);
     }
 }
 

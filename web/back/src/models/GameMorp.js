@@ -5,7 +5,7 @@ import User from './user.js';
 const GameMorp = sequelize.define('GameMorp', {
 
   how_win: {
-    type: DataTypes.ENUM('H', 'V', 'D', '0'),
+    type: DataTypes.ENUM('H', 'V', 'D', 'A', '0'),
     allowNull: false
   },
 
@@ -91,4 +91,24 @@ export default GameMorp;
 //     { model: User, as: 'winnerUser' },
 //     { model: User, as: 'loserUser' }
 //   ]
+// });
+
+// const PlayerStats = sequelize.define('PlayerStats', {
+
+//   player_id: {
+//     type: DataTypes.INTEGER,
+//     primaryKey: true
+//   },
+
+//   games: {
+//     type: DataTypes.INTEGER,
+//     defaultValue: 0
+//   },
+
+//   wins: {
+//     type: DataTypes.INTEGER,
+//     defaultValue: 0
+//   },
+// await PlayerStats.increment('wins', {
+//   where: { player_id: id }
 // });

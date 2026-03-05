@@ -6,14 +6,27 @@ export class Player{
         this._play_time = 0;
         this._socket = socket;
         this._id = id;
+        this._prev_data = {};
     }
 
     isConnected() {
         return this._socket && this._socket.readyState === 1;
     }
 
-    send(data = {}) {
+    refreshSocket(socket){
+        this._socket = socket;
+        this.send();
+    }
+
+    send(data) {
         if (!this._socket || this._socket.readyState !== 1) return;
+
+        if (data === undefined) {
+            data = this._prev_data;
+            if (!data) return;
+        } else {
+            this._prev_data = structuredClone(data);
+        }
 
         try {
             const payload =
@@ -26,7 +39,7 @@ export class Player{
                 ...payload
             }));
         } catch (err) {
-            console.error("WebSocket send error:", err);
+            console.error("WebSocket player.send error:", err);
         }
     }
 

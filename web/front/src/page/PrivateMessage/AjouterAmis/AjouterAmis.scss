@@ -1,4 +1,4 @@
-// @use "STYLE/variable" as var;
+@use "STYLE/variable" as *;
 //    var.$border_value;
 
 @use "STYLE/_mixin" as mix;
@@ -14,24 +14,34 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 1rem;
-        // form{
-        //     display: flex;
-        //     input{
-        //         flex: 1
-        //     }
-        // }
+        padding: 0.5rem;
     }
     .response{
         @include mix.full;
         padding: 0.5rem;
+        .bloc1,.bloc2{
+            @include mix.full;
+            overflow :hidden auto; 
+        }
+        .bloc1{padding-bottom: 0.5rem;}
+        .bloc2{padding-top: 0.5rem;}
+
+        h4 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+        }
         .one-response{
-            padding: 1rem;
+            padding: 0.5rem;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-
+            
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.100);
+            }
             .div-btn{
                 display: flex;
                 flex-direction: row;
