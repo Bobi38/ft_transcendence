@@ -1,6 +1,6 @@
 @use "STYLE/_variable" as *;
 
-.HomeCardWearher-root {
+.HomeCardWeather-root {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +13,8 @@
 
 	border:4px solid $second;
 	border-radius:25px;
-
+	position: relative;
+ 	overflow: hidden;
 	&:hover, &:focus {
 		outline: none;
 		border-radius: 30px;
