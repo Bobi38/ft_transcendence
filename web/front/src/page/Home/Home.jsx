@@ -128,12 +128,12 @@ export default function Home() {
 	const cards = [];
 	const cards_content = [
 		{ text:"Weather", path: "/Weather" },
-		{ text:"Intra", path: "/https://profile.intra.42.fr" },
+		{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
 		{ text:"PrivateMessage", path: "/PrivateMessage" },
 		{ text:"Morpion", path: "/Morpion" },
 		{ text:"Pong3D", path: "/Pong3D" },
 		{ text:"Pond2D", path: "/Pond2D" },
-		{ text:"WaitRoom", path: "/Morpion" },
+		{ text:"Nothing", path: "/Nothing" },
 		{ text:"Stats", path: "/Stats" },
 		{ text:"Nothing", path: "/Nothing" },
 	]
