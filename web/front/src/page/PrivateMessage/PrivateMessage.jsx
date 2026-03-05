@@ -89,7 +89,9 @@ export default function PrivateMessage() {
     return (
         <>
             <div className={`PrivateMessage-root border-0`}>
-                <Hr thickness={`5px`}>
+
+                <Hr initial={160} min1={160} thickness={5}>
+
                     <div className={`info border-1`}>
 
                         <div className={`bloc-friend-addfriend border-2`}>
@@ -98,9 +100,7 @@ export default function PrivateMessage() {
                             <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
                         </div>
 
-    {/* ------------------------------------------------------------------------------ */}
                         <hr className={`big`}/>
-    {/* ------------------------------------------------------------------------------ */}
 
                         <div className={`bloc-last-conv-friend border-2`}>
                             {displayedInfoConv && displayedInfoConv.map((msg,index) => (
@@ -117,9 +117,10 @@ export default function PrivateMessage() {
                                 </div>
                             ))}
                         </div>
+
                     </div>
+
                     <div className={`display-screen border-2`}>
-                        <div className={`border-left`}></div>
 
                         {goToAction === 1 && <AjouterAmis />}
                         {goToAction === 2 && <Amis setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
@@ -128,6 +129,7 @@ export default function PrivateMessage() {
                     </div>
 
                 </Hr>
+
             </div> {/* PrivateMessage-root */}
         </>
         
