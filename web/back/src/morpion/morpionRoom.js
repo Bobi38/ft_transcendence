@@ -80,31 +80,6 @@ class MorpionRoom extends Room {
             );
         }
     }
-// utilisation :
-// this.notifyTurn(
-//     { message: "À toi de jouer", turn: true },
-//     { message: "Tour adverse", turn: false }
-// );
-
-    // selectPlayer1(id) {
-    //     const players = [...this._players.keys()];
-    //     if (!players.includes(id)) {
-    //         throw new Error("Le joueur n'est pas dans la room");
-    //     }
-
-    //     if (players.length !== this._max_players) {
-    //         throw new Error("Il faut exactement 2 joueurs pour sélectionner player1");
-    //     }
-        
-    //     this.player1 = this._players.get(id);
-    //     this.player2 = this._players.get(
-    //         [...this._players.keys()].find(p => p !== id));
-
-    //     if (!this._first_player)
-    //         [this.player1, this.player2] = [this.player2, this.player1];
-
-    //     this._chrono = Date.now();
-    // }
 
     countMoves() {
         return this._board.reduce((c, v) => v !== " " ? c + 1 : c, 0);
@@ -145,6 +120,7 @@ class MorpionRoom extends Room {
 
         console.log("on arrive ici tout va bien")
         player.clearTurnTimer();
+        console.log("tout va bien, c est sur ?")
 
         const symbol = (this.countMoves() % 2 === 0)? "X" : "O";
         this._board[index] = symbol;
@@ -165,6 +141,10 @@ class MorpionRoom extends Room {
         this.clearOutTimer();
 
         this._ending = ending;
+        if (ending === 'abort')
+            this._how_win = 'A';
+        else if (ending === 'draw')
+            this._how_win = '0';
 
         this.majdb(winnerId).catch(err =>
             console.error("Erreur sauvegarde DB:", err)
@@ -209,7 +189,7 @@ class MorpionRoom extends Room {
             })
         };
 
-        player.startTurnTimer(action, 4000);
+        player.startTurnTimer(action, 3000);
     }
 
     serializeBoard() {

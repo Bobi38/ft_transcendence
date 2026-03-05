@@ -14,18 +14,6 @@ class ManagerRoom {
         this._rooms = new Map();
     }
 
-    newRoomId(){
-        if (this._roomId > 2000000000)
-            this._roomId = (Date.now() % 50001) + 57;
-
-        let increment = this._roomId;
-        increment = ((increment % 31) + 1) * ((increment % 7) + 1);
-
-        this._roomId += increment;
-
-        return this._roomId.toString(36);
-    }
-
     createRoom(type = "default") {
         const RoomClass = roomTypes[type] || roomTypes.default;
         const new_room = new RoomClass(this.newRoomId());
@@ -109,6 +97,18 @@ class ManagerRoom {
         game.outTimer = setTimeout(() => {
             game.remove("* TIME OUT *");
         }, game.limit_time);
+    }
+
+    newRoomId(){
+        if (this._roomId > 2000000000)
+            this._roomId = (Date.now() % 50001) + 57;
+
+        let increment = this._roomId;
+        increment = ((increment % 31) + 1) * ((increment % 7) + 1);
+
+        this._roomId += increment;
+
+        return this._roomId.toString(36);
     }
 }
 

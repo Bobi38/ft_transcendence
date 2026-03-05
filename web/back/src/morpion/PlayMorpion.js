@@ -4,15 +4,20 @@ const cooldowns = new Map();
 
 export function playMorpion(message, socket){
     const id = socket.userId;
-    let game = manager_room.isInRoom(id);
 
-    console.log(`ggggggggggg   playMorpion   ggggggggggggggg`,  id)
     if (cooldowns.has(id)) return;
 
     cooldowns.set(id, true);
     setTimeout(() => cooldowns.delete(id), 200);
 
-    console.log("ca communique avec morpion", message)
+    console.log(`connecte dans play Morpion ${message} de ${id}`)
+
+    let game = manager_room.isInRoom(id);
+
+    if (!game){
+        manager_room.lobby.addPlayer(socket, id);
+    }
+
     if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
         return;
@@ -20,18 +25,22 @@ export function playMorpion(message, socket){
 
     if (message === "je pars") {
         console.log("abondon de ", id);
-        if (game && game.getLock()){
-            if (id === game.getTurn())
-                game.switchTurn;
-            game.handleEndGame('abort', game.getTurn());
-            game.notifyTurn(
-                { message: "Abondon - tu as gagne", turn: false },
-                { message: "Abondon - tu as perdu", turn: false });
-            manager_room.removeRoom();
+        if (!game){
+            manager_room.lobby.removePlayer(id);
             return;
         }
-        manager_room.removePlayer(id, "bye bye");
-        return;
+        if (!game.getLock()) {
+            manager_room.removePlayer(id, "bye bye");
+            return;
+        }
+
+        if (id === game.getTurn())
+            game.switchTurn;
+        game.handleEndGame('abort', game.getTurn());
+        game.notifyTurn(
+            { message: "Abondon - tu as gagne", turn: false },
+            { message: "Abondon - tu as perdu", turn: false });
+        manager_room.removeRoom();
     }
 
     if (message === "je veux jouer") {
@@ -43,6 +52,7 @@ export function playMorpion(message, socket){
         }
 
         game = manager_room.findOnePlace(socket, "Morpion", id);
+        manager_room.lobby.removePlayer(id);
         socket.send(JSON.stringify({type: "game", message: game.getId()}))
         try{
             game.setLock(true);
@@ -62,11 +72,12 @@ export function playMorpion(message, socket){
     if (message === "playfirst") {
         console.log("message pour jouer en second");
         if (game.setFirstPlayer())
-            socket.send(JSON.stringify({type: "game", message: `${game} : tu joues en second`}))
+            socket.send(JSON.stringify({ type: "game", message: `${game} : tu joues en second` }))
         return;
     }
 
-    if (!game && game.isTurnPlayer(id)) return;
+    if (!game) return;
+    if (game.isTurnPlayer(id)) return;
 
     console.log("le jeu est lock - ca joue");
     if (game.play(id, message)) {

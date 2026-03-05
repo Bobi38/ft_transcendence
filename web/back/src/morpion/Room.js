@@ -20,6 +20,7 @@ class Room {
     }
 
     addPlayer(socket, PlayerId) {
+        if (this.isInRoom(PlayerId)) return false;
         if (this._locked) return false;
         if (this.isFull()) return false;
 

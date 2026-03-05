@@ -12,10 +12,6 @@ class WaitRoom extends Room {
         this.out_timer = null;
         this.limit_time = 24 * 3600 * 1000;
     }
-
-    savePlayer(id){
-        const player = this.isInRoom()
-    }
 }
 
 export default WaitRoom;
