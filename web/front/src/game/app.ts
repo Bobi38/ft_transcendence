@@ -77,7 +77,8 @@ export class App {
         this._engine.displayLoadingUI();
         await this._setupGame();
         await this._scene.whenReadyAsync();
-        this._scene.onBeforeStepObservable.add(() => {
+        console.log(this._scene.onBeforeStepObservable);
+        this._scene.onBeforePhysicsObservable.add(() => {
             console.log(this._ball.getMeshPosition());
             console.log(this._ball.getVelocity());
         });

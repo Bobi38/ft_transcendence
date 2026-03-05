@@ -42,17 +42,20 @@ export class MyRoom extends Room {
     const ball = new PhysicsBody(ballNode, PhysicsMotionType.DYNAMIC, false, this._scene);
     ball.shape = ballShape;
     this._ballNode = ballNode;
+    const material = {friction: 0, restitution: 1};
+    ballShape.material = material;
+    ball.setMassProperties({mass: 1});
     this._bodies.push(ball);
     return ball;
   }
 
   private _createWalls() {
     const env = JSON.parse(Env);
-    let wallRightShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Zero(), ToVec3(env.wallDimensions), this._scene);
-    let wallLeftShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Zero(), ToVec3(env.wallDimensions), this._scene);
-    let groundShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Zero(), ToVec3(env.groundDimensions), this._scene);
-    let elevanShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Zero(), ToVec3(env.groundDimensions), this._scene);
-    let ceilingShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Zero(), ToVec3(env.groundDimensions), this._scene);
+    let wallRightShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
+    let wallLeftShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
+    let groundShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
+    let elevanShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
+    let ceilingShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
     let wallRightNode = new TransformNode("wallRightNode", this._scene);
     let wallLeftNode = new TransformNode("wallLeftNode", this._scene);
     let groundNode = new TransformNode("groundNode", this._scene);
@@ -100,8 +103,8 @@ export class MyRoom extends Room {
     this._scene = scene;
     this._engine = engine;
     const ball : PhysicsBody = this._createBall();
-    this._createWalls;
-    ball.setLinearVelocity(new Vector3(0,0,10))
+    this._createWalls();
+    ball.setLinearVelocity(new Vector3(0,0,1))
 
     //manually stepping
     setInterval(() => {

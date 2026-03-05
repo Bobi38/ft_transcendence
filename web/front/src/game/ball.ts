@@ -35,7 +35,7 @@ export class Ball {
     }
 
     public setVelocity(velocity : Vector3) {
-        this._aggregate.body.setAngularVelocity(velocity);
+        this._aggregate.body.setLinearVelocity(velocity);
     }
 
     public getMeshPosition() : Vector3 {
@@ -43,7 +43,7 @@ export class Ball {
     }
 
     public getVelocity() : Vector3 {
-        return this._aggregate.body.getAngularVelocity();
+        return this._aggregate.body.getLinearVelocity();
     }
 
     public dispose() {
