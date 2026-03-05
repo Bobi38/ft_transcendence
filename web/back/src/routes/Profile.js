@@ -24,13 +24,13 @@ router.get('/profile', async(req, res) =>{
 router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
-    console.log("API /updateProfil dans update profil", user);
-    const name = await User.findAll({where :{name: user.login}})
-    if (name.length != 0)
-      return res.status(409).json({success: false, message: 'Name already used'})
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
+    console.log("API /updateProfil dans update profil", user);
+    const name = await User.findAll({where :{name: user.login}})
+    if ((name.length != 0) && (name.id != result.id))
+      return res.status(409).json({success: false, message: 'Name already used'})
     console.log(user.email)
     if (validator.isEmail(user.email)){
       console.log("email valid");
