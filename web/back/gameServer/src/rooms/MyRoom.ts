@@ -25,7 +25,8 @@ export class MyRoom extends Room {
   private _nodes: TransformNode[] = [];
   private _havokPlugin: HavokPlugin;
 
-  maxClients = 4;
+  maxClients = 2;
+  patchRate = 50;
   state = new MyRoomState();
 
   messages = {
@@ -65,14 +66,28 @@ export class MyRoom extends Room {
     this._createWalls();
 
     scene.onBeforePhysicsObservable.add(() => {
-      console.log(this._ball.transformNode.position._z);
+      //console.log(this._ball.transformNode.position._z);
       //console.log(this._ball.getLinearVelocity());
     });
 
     engine.runRenderLoop(() => {
       scene.render();
-    })
-}
+    });
+  }
+
+  onBeforePatch(state: MyRoomState) {
+    const ballPos = this._ball.transformNode.position.clone();
+    const ballVel = this._ball.getLinearVelocity();
+    //console.log(ballPos);
+    //console.log(ballVel);
+    state.ball.position.x = ballPos.x;
+    state.ball.position.y = ballPos.y;
+    state.ball.position.z = ballPos.z;
+
+    state.ball.velocity.x = ballVel.x;
+    state.ball.velocity.y = ballVel.y;
+    state.ball.velocity.z = ballVel.z;
+  }
 
   onCreate (options: any) {
     /**
