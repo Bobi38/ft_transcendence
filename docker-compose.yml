@@ -72,9 +72,53 @@ services:
     secrets:
     - cle_pswd
     - cle_chat
+  
+  auth:
+    build: ./web/back/
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9100:9100"
+    volumes:
+      - ./web/back/auth:/app/back/auth
+      - /app/back/auth/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
 
-  chat_service:
-    build: ./web/back/chat
+  chatP_service:
+    build: ./web/back/chat/chatP
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9002:9002"
+    volumes:
+      - ./web/back/chat/chatP:/app/back/chat/chatP                 # monte tout le backend
+      - /app/back/chat/chatP/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+
+  chatG_service:
+    build: ./web/back/chat/chatG
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
@@ -88,10 +132,9 @@ services:
       - home
     ports:
       - "9001:9001"
-      - "9002:9002"
     volumes:
-      - ./web/back/chat:/app/back/chat                 # monte tout le backend
-      - /app/back/chat/node_modules
+      - ./web/back/chat/chatG:/app/back/chat/chatG                 # monte tout le backend
+      - /app/back/chat/chatG//node_modules
     secrets:
     - cle_pswd
     - cle_chat
@@ -112,7 +155,7 @@ services:
     ports:
       - "9003:9003"
     volumes:
-      - ./web/back/user:/app/back/user                 # monte tout le backend
+      - ./web/back/user:/app/back/user
       - /app/back/user/node_modules
     secrets:
     - cle_pswd

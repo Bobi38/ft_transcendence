@@ -8,20 +8,30 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:9000', // ton backend Node
+        target: 'http://localhost:9000', 
         changeOrigin: true,
         secure: false,
       },
-      '/ws': { // si tu utilises WebSocket
-        target: 'ws://localhost:9000',
-        ws: true,
-        changeOrigin: true,
-      },
-      '/game': {
-        target: 'ws://localhost:9000',
-        ws: true,
-        changeOrigin: true,
-      },
+    '/ws/chatG': {
+      target: 'ws://localhost:9001', 
+      ws: true,
+      changeOrigin: true,
+    },
+    '/ws/chatP': {
+      target: 'ws://localhost:9002', 
+      ws: true,
+      changeOrigin: true,
+    },
+    '/ws/morp': {
+      target: 'ws://localhost:9004', 
+      ws: true,
+      changeOrigin: true,
+    },
+    '/ws/goat': {
+      target: 'ws://localhost:2567',
+      ws: true,
+      changeOrigin: true,
+    },
     },
   },
   resolve: {
