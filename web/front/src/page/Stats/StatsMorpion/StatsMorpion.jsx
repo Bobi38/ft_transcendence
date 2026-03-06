@@ -13,10 +13,9 @@ import useFetch from "HOOKS/useFetch.jsx";
 
 export default function StatsMorpion() {
 
-
-
-    const [currentPage, setCurrentPage] = useState(null);
-    const [totalPage, setTotalPage] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalGame, setTotalGame] = useState(null);
+    const [statToDisplay, setStatToDisplay] = useState(null);
 
     async function fetch_history(login , page_nb) {
 
@@ -60,20 +59,69 @@ export default function StatsMorpion() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
 
-        // setCurrentPage(...)
-        // setTotalPage(...)
+        const data = repjson.stat_user;
+
+        setTotalGame(data.total_game);
+
+        const win_horizontal = data.type_X_horizontal_winner + data.type_O_horizontal_winner
+        const win_vertical = data.type_X_vertical_winner + data.type_O_vertical_winner
+        const win_diagonal = data.type_X_diagonal_winner + data.type_O_diagonal_winner
+
+
+        const lose_horizontal = data.type_X_horizontal_loser + data.type_O_horizontal_loser
+        const lose_vertical = data.type_X_vertical_loser + data.type_O_vertical_loser
+        const lose_diagonal = data.type_X_diagonal_loser + data.type_O_diagonal_loser
+
+
+        const type_X_win = data.type_X_horizontal_winner + data.type_X_vertical_winner + data.type_X_diagonal_winner
+        const type_X_lose = data.type_X_horizontal_loser + data.type_X_vertical_loser + data.type_X_diagonal_loser
+        
+        const type_O_win = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
+        const type_O_lose = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
+        
+        const win_abort = data.type_X_abort_winner + data.type_O_abort_winner
+        const draw = data.type_X_draw + data.type_O_draw
+        const lose_abort = data.type_X_abort_loser + data.type_O_abort_loser
+        
+        const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
+        const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
+
+        setStatToDisplay({
+            win_horizontal: win_horizontal,
+            win_vertical: win_vertical,
+            win_diagonal: win_diagonal,
+            lose_horizontal: lose_horizontal,
+            lose_vertical: lose_vertical,
+            lose_diagonal: lose_diagonal,
+            type_X_win: type_X_win,
+            type_X_lose: type_X_lose,
+            type_O_win: type_O_win,
+            type_O_lose: type_O_lose,
+            win_abort: win_abort,
+            draw: draw,
+            lose_abort: lose_abort,
+            all_win_without_abort: all_win_without_abort,
+            all_lose_without_abort: all_lose_without_abort
+        });
+
+        console.log("statToDisplay:",statToDisplay);
     }
 
 
     
     useEffect(() => {
+        fetch_stats("");
         // fetch_history("nana", 42);
         // fetch_history("nana", 0);
         // fetch_history(null, 0);
-        // fetch_stats("nana");
     }, [])
 
+    useEffect(() => {
+            // fetch_history("nana", currentPage);
+    }, [currentPage]);
+
     return (
+        
         <div className={`StatsMorpion-root border-base`}>
 
             <div className={`history-container border-1`}>
@@ -81,7 +129,7 @@ export default function StatsMorpion() {
                 <div className={`history-card-container`}>
 
                 </div>
-                <Paging  currentPage={currentPage} setNewPage={setCurrentPage}/>
+                <Paging totalGame={totalGame} currentPage={currentPage} setNewPage={setCurrentPage}/>
 
             </div>
 
@@ -91,22 +139,39 @@ export default function StatsMorpion() {
                     
                     <div className={`wl-graph border-2`}>
                         <p>Graph</p>
+                        <p>win:{statToDisplay&&statToDisplay.all_win_without_abort}</p>
+                        <p>lose:{statToDisplay&&statToDisplay.all_lose_without_abort}</p>
+                        <p>win:{statToDisplay&&statToDisplay.win_abort}</p>
+                        <p>lose:{statToDisplay&&statToDisplay.lose_abort}</p>
+
                     </div>
 
                     <div className={`wl-o-x border-2`}>
+
                         <p>ox-win-loss</p>
+                        <p>winO:{statToDisplay&&statToDisplay.type_O_win}</p>
+                        <p>loseO:{statToDisplay&&statToDisplay.type_O_lose}</p>
+                        <p>winX:{statToDisplay&&statToDisplay.type_X_win}</p>
+                        <p>loseX:{statToDisplay&&statToDisplay.type_X_lose}</p>
+
                     </div>
 
                     <div className={`wl-horizontal border-2`}>
-                        <p>h</p>
+                        <p>horizontal</p>
+                        <p>win:{statToDisplay&&statToDisplay.win_horizontal}</p>
+                        <p>lose:{statToDisplay&&statToDisplay.lose_horizontal}</p>
                     </div>
 
                     <div className={`wl-diagonal border-2`}>
-                        <p>d</p>
+                        <p>diagonal</p>
+                        <p>win:{statToDisplay&&statToDisplay.win_diagonal}</p>
+                        <p>lose:{statToDisplay&&statToDisplay.lose_diagonal}</p>
                     </div>
 
                     <div className={`wl-vertical border-2`}>
-                        <p>v</p>
+                        <p>vertical</p>
+                        <p>win:{statToDisplay&&statToDisplay.win_vertical}</p>
+                        <p>lose:{statToDisplay&&statToDisplay.lose_vertical}</p>
                     </div>
 
             </div>

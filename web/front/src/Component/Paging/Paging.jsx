@@ -37,7 +37,15 @@ export default function Paging({ totalPage, currentPage, setNewPage}) {
                             <span aria-hidden="true">&laquo;</span>
                         </button>
                     </li>)}
-
+<li>
+                        <button>
+                            <span aria-hidden="true">&laquo;</span>
+                        </button>
+                    </li><li>
+                        <button>
+                            <span aria-hidden="true">&raquo;</span>
+                        </button>
+                    </li>
                     { totalPage > 5 && (<li>
                         <button>
                             <span aria-hidden="true">&raquo;</span>
