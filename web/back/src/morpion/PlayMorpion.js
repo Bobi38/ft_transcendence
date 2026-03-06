@@ -14,9 +14,10 @@ export function playMorpion(message, socket){
 
     let game = manager_room.isInRoom(id);
 
-    if (!game){
-        manager_room.lobby.addPlayer(socket, id);
-    }
+    // if (!game){
+
+    //     manager_room.lobby.addPlayer(socket, id);
+    // }
 
     if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
@@ -25,10 +26,10 @@ export function playMorpion(message, socket){
 
     if (message === "je pars") {
         console.log("abondon de ", id);
-        if (!game){
-            manager_room.lobby.removePlayer(id);
-            return;
-        }
+        // if (!game){
+        //     manager_room.lobby.removePlayer(id);
+        //     return;
+        // }
         if (!game.getLock()) {
             manager_room.removePlayer(id, "bye bye");
             return;
@@ -52,7 +53,7 @@ export function playMorpion(message, socket){
         }
 
         game = manager_room.findOnePlace(socket, "Morpion", id);
-        manager_room.lobby.removePlayer(id);
+        // manager_room.lobby.removePlayer(id);
         socket.send(JSON.stringify({type: "game", message: game.getId()}))
         try{
             game.setLock(true);
@@ -63,7 +64,9 @@ export function playMorpion(message, socket){
                 { message: "Tour adverse", turn: false });
         }
         catch (err) {
+            console.log("erreur");
             game._turn = id;
+            console.log("bien ici");
             socket.send(JSON.stringify({type: "game", message: "en attente de joueur"}))
         }
         return;
@@ -77,7 +80,7 @@ export function playMorpion(message, socket){
     }
 
     if (!game) return;
-    if (!game.isTurnPlayer(id)) return;
+    // if (!game.isTurnPlayer(id)) return;
 
     console.log("le jeu est lock - ca joue");
     if (game.play(id, message)) {

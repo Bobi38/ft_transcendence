@@ -44,8 +44,8 @@ class ManagerRoom {
         }
         console.log("IsInRoom : joueur inconnu");
 
-        if (this.lobby.isInRoom(playerId))
-            return this.lobby;
+        // if (this.lobby.isInRoom(playerId))
+        //     return this.lobby;
 
         return null;
     }
