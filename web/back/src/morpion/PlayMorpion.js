@@ -64,9 +64,8 @@ export function playMorpion(message, socket){
                 { message: "Tour adverse", turn: false });
         }
         catch (err) {
-            console.log("erreur");
+            console.log("premier set _Turn");
             game._turn = id;
-            console.log("bien ici");
             socket.send(JSON.stringify({type: "game", message: "en attente de joueur"}))
         }
         return;
@@ -79,8 +78,9 @@ export function playMorpion(message, socket){
         return;
     }
 
-    if (!game) return;
-    // if (!game.isTurnPlayer(id)) return;
+    if (!game || !game.getLock()) return;
+    console.log("avant turn");
+    if (!game.isTurnPlayer(id)) return;
 
     console.log("le jeu est lock - ca joue");
     if (game.play(id, message)) {

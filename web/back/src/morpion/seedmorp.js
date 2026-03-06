@@ -6,7 +6,7 @@ export async function seedGameMorp() {
   if (count === 0) {
     await GameMorp.bulkCreate([
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 12:52:22",
         ending: "win",
         player_1: 5,
@@ -20,7 +20,7 @@ export async function seedGameMorp() {
         map: "-OX-XXXOO"
       },
       {
-        how_win: "V",
+        how_win: "vertical",
         date_game: "2026-03-04 12:52:39",
         ending: "win",
         player_1: 5,
@@ -34,7 +34,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 12:53:01",
         ending: "win",
         player_1: 1,
@@ -48,7 +48,7 @@ export async function seedGameMorp() {
         map: "--XOXOXXO"
       },
       {
-        how_win: "H",
+        how_win: "horizontal",
         date_game: "2026-03-04 12:53:23",
         ending: "win",
         player_1: 5,
@@ -62,7 +62,7 @@ export async function seedGameMorp() {
         map: "----OOXXX"
       },
       {
-        how_win: "0",
+        how_win: "draw",
         date_game: "2026-03-04 13:53:23",
         ending: "draw",
         player_1: 5,
@@ -76,7 +76,7 @@ export async function seedGameMorp() {
         map: "OOXXXOOXX"
       },
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 14:52:22",
         ending: "win",
         player_1: 5,
@@ -90,7 +90,7 @@ export async function seedGameMorp() {
         map: "-OX-XXXOO"
       },
       {
-        how_win: "V",
+        how_win: "vertical",
         date_game: "2026-03-04 14:52:39",
         ending: "win",
         player_1: 5,
@@ -104,7 +104,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 14:53:01",
         ending: "win",
         player_1: 2,
@@ -118,7 +118,7 @@ export async function seedGameMorp() {
         map: "--XOXOXXO"
       },
       {
-        how_win: "H",
+        how_win: "horizontal",
         date_game: "2026-03-04 14:53:23",
         ending: "win",
         player_1: 5,
@@ -132,7 +132,7 @@ export async function seedGameMorp() {
         map: "----OOXXX"
       },
       {
-        how_win: "0",
+        how_win: "draw",
         date_game: "2026-03-04 14:53:28",
         ending: "draw",
         player_1: 5,
@@ -146,7 +146,7 @@ export async function seedGameMorp() {
         map: "OOXXXOOXX"
       },
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 14:55:22",
         ending: "win",
         player_1: 5,
@@ -160,7 +160,7 @@ export async function seedGameMorp() {
         map: "-OX-XXXOO"
       },
       {
-        how_win: "V",
+        how_win: "vertical",
         date_game: "2026-03-04 14:56:39",
         ending: "win",
         player_1: 5,
@@ -174,7 +174,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 14:57:01",
         ending: "win",
         player_1: 1,
@@ -188,7 +188,7 @@ export async function seedGameMorp() {
         map: "--XOXOXXO"
       },
       {
-        how_win: "A",
+        how_win: "abort",
         date_game: "2026-03-04 15:53:23",
         ending: "abort",
         player_1: 4,
@@ -202,7 +202,7 @@ export async function seedGameMorp() {
         map: "----OOXXX"
       },
       {
-        how_win: "0",
+        how_win: "draw",
         date_game: "2026-03-04 15:53:24",
         ending: "draw",
         player_1: 5,
@@ -216,7 +216,7 @@ export async function seedGameMorp() {
         map: "OOXXXOOXX"
       },
       {
-        how_win: "A",
+        how_win: "abort",
         date_game: "2026-03-04 15:53:30",
         ending: "abort",
         player_1: 1,
@@ -230,7 +230,7 @@ export async function seedGameMorp() {
         map: "-OX-XXXOO"
       },
       {
-        how_win: "A",
+        how_win: "abort",
         date_game: "2026-03-04 15:53:39",
         ending: "abort",
         player_1: 5,
@@ -244,7 +244,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "D",
+        how_win: "diagonal",
         date_game: "2026-03-04 15:54:01",
         ending: "win",
         player_1: 1,
@@ -258,7 +258,7 @@ export async function seedGameMorp() {
         map: "--XOXOXXO"
       },
       {
-        how_win: "H",
+        how_win: "horizontal",
         date_game: "2026-03-04 15:55:23",
         ending: "win",
         player_1: 5,
@@ -272,7 +272,7 @@ export async function seedGameMorp() {
         map: "----OOXXX"
       },
       {
-        how_win: "0",
+        how_win: "draw",
         date_game: "2026-03-04 15:56:23",
         ending: "draw",
         player_1: 5,
