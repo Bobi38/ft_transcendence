@@ -119,46 +119,25 @@ async function CreatPrivMess(){
 }
 
 async function CreatStat() {
-  
-    // const un = await StatMorp.create({
-    //     idUser: 1,
-    //     total_game: 18,
-    //     time_played: 90000,
-    //     nb_turn_played: 90,
-    //     type_X_horizontal_winner: 1 ,
-    //     type_X_horizontal_loser: 1 ,
-    //     type_X_vertical_winner: 1 ,
-    //     type_X_vertical_loser: 1 ,
-    //     type_X_diagonal_winner: 1 ,
-    //     type_X_diagonal_loser: 1 ,
-    //     type_X_abort_winner: 1 ,
-    //     type_X_abort_loser: 1 ,
-    //     type_X_draw: 1 ,
-    //     type_O_horizontal_winner: 1 ,
-    //     type_O_horizontal_loser: 1 ,
-    //     type_O_vertical_winner: 1 ,
-    //     type_O_vertical_loser: 1 ,
-    //     type_O_diagonal_winner: 1 ,
-    //     type_O_diagonal_loser: 1 ,
-    //     type_O_abort_winner: 1 ,
-    //     type_O_abort_loser: 1 ,
-    //     type_O_draw: 1 ,
-    // });
-    
-    // const data = {total_game: 1, time_played: 5000, nb_turn_played: 5};
-    // const how_win = "abort";
-    // const type_player = "X";
-    // const type_winner = "loser";
 
-    // if (how_win === 'draw'){
-    //     data[`type_${type_player}_draw`]  = 1;
-    // } else {
-    //     data[`type_${type_player}_${how_win}_${type_winner}`] = 1;
-    // }
-    // await un.increment(data);
+    const user1stat = await StatMorp.findOne({where: {idUser: 1}});
+    
+    const data = {total_game: 1, time_played: 5000, nb_turn_played: 5};
+
+    const how_win = "abort";
+    const type_player = "X";
+    const type_winner = "loser";
+
+    if (how_win === 'draw'){
+        data[`type_${type_player}_draw`]  = 1;
+    } else {
+        data[`type_${type_player}_${how_win}_${type_winner}`] = 1;
+    }
+
+    await user1stat.increment(data);
+
     // const deux = await StatMorp.findOne({where: {idUser: 1}});
-    // console.log(deux);
-    // console.log(un);
+
 }
 
 async function CreatFriend(){
