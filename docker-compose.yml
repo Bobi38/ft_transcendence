@@ -37,38 +37,109 @@ services:
       - home
     restart: always
 
-  web:
-    build: ./web/
-    container_name: web
+  front:
+    build: ./web/front/
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web/front:/app/front  # monte le frontend pour HMR
+      - /app/front/node_modules
+
+
+  gateway:
+    build: ./web/back/
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
       DB_NAME: "TRANS"
       DB_HOST: "mysql"
       DB_PORT:  3306
-    volumes:
-  # Backend
-      - ./web/back:/app/back                  # monte tout le backend
-      - /app/back/node_modules           # garde les modules de l'image
-  # GameServer
-      - ./web/back/gameServer:/app/back/gameServer
-      - /app/back/gameServer/node_modules
-  # Frontend
-      - ./web/front:/app/front  # monte le frontend pour HMR
-      - /app/front/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - home
-    restart: always
     ports:
-      - "9000:9000"   # backend Node
-      - "5173:5173"   # Vite frontend
-      - "2567:2567"   # Colyseus backend
+      - "9000:9000"
+    volumes:
+      - ./web/back/:/app/back/
+      - /app/back/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+
+  chat_service:
+    build: ./web/back/chat
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9001:9001"
+      - "9002:9002"
+    volumes:
+      - ./web/back/chat:/app/back/chat                 # monte tout le backend
+      - /app/back/chat/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+
+  user_service:
+    build: ./web/back/user
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9003:9003"
+    volumes:
+      - ./web/back/user:/app/back/user                 # monte tout le backend
+      - /app/back/user/node_modules
+    secrets:
+    - cle_pswd
+
+  game:
+    build: ./web/back/game
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9004:9004"
+      - "2567:2567"
+    secrets:
+      - cle_pswd
+    volumes:
+      - ./web/back/gameServer:/app/back/gameServer
+      - /app/back/gameServer/node_modules
+      - ./web/back/morp:/app/back/morp
+      - /app/back/morp/node_modules
 
 secrets:
   data_pswd:
