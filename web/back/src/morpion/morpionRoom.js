@@ -38,7 +38,7 @@ class MorpionRoom extends Room {
     }
 
     isTurnPlayer(PlayerId){
-        return _turn === PlayerId;
+        return this._turn === PlayerId;
     }
 
     switchTurn() {
@@ -55,8 +55,10 @@ class MorpionRoom extends Room {
             throw new Error("Invalid player");
         }
 
-        if (this._first_player)
+        if (this._first_player){
+            console.log("je set turn")
             this._turn = firstPlayerId;
+        }
 
         this._chrono = Date.now();
     }
