@@ -13,93 +13,34 @@ import useFetch from "HOOKS/useFetch.jsx";
 
 export default function StatsMorpion() {
 
-    // const data = {
-    //     my_id: 1,
-    //     history: [
-    //         {
-    //             gameid: 1,
-    //             game_stats:{
-                    
-    //                 map: "OX--XO-XO",
-    //                 //has_result: {same winner_id = green / not same winner_is = red}, "draw,abort" = blue
-    //                 game_result: "has_result,draw,abort",
-    //                 id_user: {
-    //                     //null !has_result
-    //                     winner_id: 1,//if is not my id i have lost
-    //                     player:  [
-    //                         {id:1, ox: 'X'},
-    //                         {id:2, ox: 'O'}
-    //                     ]
-    //                 },
-    //             }
-    //         },
-    //         {
-    //             gameid: 2,
-    //             game_stats:{
-                    
-    //                 map: "OX--XO-XO",
-    //                 //has_result: {same winner_id = green / not same winner_is = red}, "draw,abort" = blue
-    //                 game_result: "has_result,draw,abort",
-    //                 id_user: {
-    //                     //null !has_result
-    //                     winner_id: 2,//if is not my id i have lost
-    //                     player: [
-    //                         {id:1, ox: 'X'},
-    //                         {id:2, ox: 'O'}
-    //                     ]
-    //                 },
-    //             }
-    //         }
-    //     ],
-    //     stat_user:{
-    //         total_game:20,
-    //         win:{
-    //             O_side:5,
-    //             X_side:5,
-    //             type: {
-    //                 horizontal:1,
-    //                 vertical:1,
-    //                 diagonal:1,
-    //             }
-    //         },
-    //         lost:{
-    //             O_side:5,
-    //             X_side:5,
-    //             type: {
-    //                 horizontal:1,
-    //                 vertical:1,
-    //                 diagonal:1,
-    //             }
-    //         },
-    //         draw: {
-    //             O_side:5,
-    //             X_side:5,
-    //             type: {
-    //                 horizontal:1,
-    //                 vertical:1,
-    //                 diagonal:1,
-    //             }
-    //         },
-    //         abort:{
-    //             O_side:5,
-    //             X_side:5,
-    //             type: {
-    //                 horizontal:1,
-    //                 vertical:1,
-    //                 diagonal:1,
-    //             }
-    //         },
-    //     }
-    // }
 
-    const [currentPage, setCurrentPage] = useState("");
 
-    async function fetch_stats(page_nb) {
+    const [currentPage, setCurrentPage] = useState(null);
+    const [totalPage, setTotalPage] = useState(null);
+
+    async function fetch_nb_of_game(page_nb) {
         if (page_nb < 0)
             return;
+        const url = `/api/morpion/get_morpion_stat/`;
+        // const url = `/api/morpion/get_morpion_stat/${page_nb}`;          // const page = parseInt(req.params.page);
+        // const url = `/api/get_morpion_stat?page=${page_nb}`;             // const page = parseInt(req.query.page);
 
-        const url = `/api/morpion/get_morpion_stat/${page_nb}`;         // const page = parseInt(req.params.page);
-        // const url = `/api/get_morpion_stat?page=${page_nb}`; // const page = parseInt(req.query.page);
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`,  {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        }, function(repjson){
+            console.log("useFetch(info) success history: " , repjson.history);
+        })
+        if (!repjson || (repjson &&  !repjson.success))
+            return;
+    }
+
+    async function fetch_stats(login) {
+
+        const url = `/api/morpion/get_morpion_stat/${login}`;
 
         console.log(`${url}`)
 
@@ -109,54 +50,58 @@ export default function StatsMorpion() {
             credentials: "include",
         }, function(repjson){
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
-            console.log("useFetch(info) success history: " , repjson.history);
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
         // setCurrentPage(...)
+        // setTotalPage(...)
     }
 
 
     fetch_stats(0);
 
+    useEffect(() => {
+
+    }, [])
+
     return (
         <div className={`StatsMorpion-root border-base`}>
 
-                <div className={`history-container border-1`}>
+            <div className={`history-container border-1`}>
 
-                    <div className={`history-card-container`}>
-
-                    </div>
-                    <Paging currentPage={currentPage} setNewPage={setCurrentPage}/>
+                <div className={`history-card-container`}>
 
                 </div>
+                <Paging currentPage={currentPage} setNewPage={setCurrentPage}/>
+
+            </div>
 
 {/* ------------------------------------------------------------------------ */}
 
-            <div className={`game-winrate border-4`}>
+            <div className={`game-winrate border-1`}>
                     
-                    <div className={`border wl-graph`}>
+                    <div className={`wl-graph border-2`}>
                         <p>Graph</p>
                     </div>
 
-                    <div className={`border wl-o-x`}>
+                    <div className={`wl-o-x border-2`}>
                         <p>ox-win-loss</p>
                     </div>
 
-                    <div className={`border wl-horizontal`}>
+                    <div className={`wl-horizontal border-2`}>
                         <p>h</p>
                     </div>
 
-                    <div className={`border wl-diagonal`}>
+                    <div className={`wl-diagonal border-2`}>
                         <p>d</p>
                     </div>
 
-                    <div className={`border wl-vertical`}>
+                    <div className={`wl-vertical border-2`}>
                         <p>v</p>
                     </div>
 
-            </div>{/* game-winrate */}
-{/* StatsMorpion-root */}
+            </div>
         </div>
     )
 }
+

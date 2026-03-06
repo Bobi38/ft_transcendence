@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
+import StatMorp from './StatMorp.js';
 
 const User = sequelize.define('User', {
   id: {
@@ -61,6 +62,33 @@ const User = sequelize.define('User', {
   timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas
 });
 
+User.hasMany(StatMorp, { as: 'statMorp', foreignKey: 'idUser' });
 
+User.afterCreate(async (user, options) => {
+    await StatMorp.create({
+        idUser: user.id,
+        total_game: 0,
+        time_played: 0,
+        nb_turn_played: 0,
+        type_X_horizontal_winner: 0,
+        type_X_horizontal_loser: 0,
+        type_X_vertical_winner: 0,
+        type_X_vertical_loser: 0,
+        type_X_diagonal_winner: 0,
+        type_X_diagonal_loser: 0,
+        type_X_abort_winner: 0,
+        type_X_abort_loser: 0,
+        type_X_draw: 0,
+        type_O_horizontal_winner: 0,
+        type_O_horizontal_loser: 0,
+        type_O_vertical_winner: 0,
+        type_O_vertical_loser: 0,
+        type_O_diagonal_winner: 0,
+        type_O_diagonal_loser: 0,
+        type_O_abort_winner: 0,
+        type_O_abort_loser: 0,
+        type_O_draw: 0,
+    });
+});
 
 export default User;

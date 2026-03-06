@@ -11,7 +11,7 @@ import "./Paging.scss";
 
 
     
-export default function Paging({currentPage , setNewPage}) {
+export default function Paging({ totalPage, currentPage, setNewPage}) {
 
     const change_page = (arg) => {
         
@@ -19,39 +19,31 @@ export default function Paging({currentPage , setNewPage}) {
         setNewPage(arg)
     }
 
+                    // <li>
+                    //     <button onClick={(e) => {change_page(1)}}>1</button>
+                    // </li>
+                    // <li>
+                    //     <button aria-current="page" onClick={(e) => {change_page(2)}}>2</button>
+                    // </li>
     return (
         <div className={`Paging-root`}>
 
             <nav aria-label="pagination">
 
                 <ul className="pagination">
-                    <li>
+
+                    { totalPage > 5 && (<li>
                         <button>
                             <span aria-hidden="true">&laquo;</span>
                         </button>
-                    </li>
+                    </li>)}
 
-                    <li>
-                        <button onClick={(e) => {change_page(1)}}>1</button>
-                    </li>
-
-                    <li>
-                        <button aria-current="page" onClick={(e) => {change_page(2)}}>2</button>
-                    </li>
-
-                    <li>
-                        <button onClick={(e) => {e.preventDefault();change_page(3)}}>3</button>
-                    </li>
-
-                    <li>
-                        <button onClick={(e) => {change_page(4)}}>4</button>
-                    </li>
-
-                    <li>
+                    { totalPage > 5 && (<li>
                         <button>
                             <span aria-hidden="true">&raquo;</span>
                         </button>
-                    </li>
+                    </li>)}
+
                 </ul>
 
             </nav>

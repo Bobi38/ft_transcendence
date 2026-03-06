@@ -118,33 +118,47 @@ async function CreatPrivMess(){
   await fullmess("El ultimo numero ", Conv3);
 }
 
-async function CreatStat(){
-    await HistoryMorp.create({  Map:"OX--XO-XO", 
-                                Result:"has_result", 
-                                WinnerId:1, 
-                                Id1:1, 
-                                OX1:0, 
-                                Id2:2, 
-                                OX2:1
-    });
+async function CreatStat() {
+  
+    // const un = await StatMorp.create({
+    //     idUser: 1,
+    //     total_game: 18,
+    //     time_played: 90000,
+    //     nb_turn_played: 90,
+    //     type_X_horizontal_winner: 1 ,
+    //     type_X_horizontal_loser: 1 ,
+    //     type_X_vertical_winner: 1 ,
+    //     type_X_vertical_loser: 1 ,
+    //     type_X_diagonal_winner: 1 ,
+    //     type_X_diagonal_loser: 1 ,
+    //     type_X_abort_winner: 1 ,
+    //     type_X_abort_loser: 1 ,
+    //     type_X_draw: 1 ,
+    //     type_O_horizontal_winner: 1 ,
+    //     type_O_horizontal_loser: 1 ,
+    //     type_O_vertical_winner: 1 ,
+    //     type_O_vertical_loser: 1 ,
+    //     type_O_diagonal_winner: 1 ,
+    //     type_O_diagonal_loser: 1 ,
+    //     type_O_abort_winner: 1 ,
+    //     type_O_abort_loser: 1 ,
+    //     type_O_draw: 1 ,
+    // });
+    
+    // const data = {total_game: 1, time_played: 5000, nb_turn_played: 5};
+    // const how_win = "abort";
+    // const type_player = "X";
+    // const type_winner = "loser";
 
-    await StatMorp.create({ idUser:1,
-                            nbGame:1,
-                            Win:5,
-                            Lost:5,
-                            Draw:0,
-                            Abort:0,
-                            WinDiag:2,
-                            WinHoriz:2,
-                            WinVert:6,
-                            LoseDiag:0,
-                            LoseHoriz:0,
-                            LoseVert:0,
-                            WinCercle:5,
-                            WinCroix:5,
-                            LostCercle:0,
-                            LostCroix:0,
-    });
+    // if (how_win === 'draw'){
+    //     data[`type_${type_player}_draw`]  = 1;
+    // } else {
+    //     data[`type_${type_player}_${how_win}_${type_winner}`] = 1;
+    // }
+    // await un.increment(data);
+    // const deux = await StatMorp.findOne({where: {idUser: 1}});
+    // console.log(deux);
+    // console.log(un);
 }
 
 async function CreatFriend(){
@@ -173,7 +187,7 @@ async function addDb(){
       await CreatStat();
       // majDb();
       await CreatFriend();
-      await seedGameMorp();
+      // await seedGameMorp();
       majDb();
     }
 }

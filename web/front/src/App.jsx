@@ -29,6 +29,11 @@ import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import Morpion          from    "FRONT/page/all_game/Morpion/Morpion.jsx";
 
 
+//     const data = {}
+      // data = [...type_O_horizontal_l]
+//     un.increment(data);
+//     console.log(un);
+// }
 
 
 

@@ -1,75 +1,93 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
-import User from './user.js';
+
 
 const StatMorp = sequelize.define('StatMorp', {
-    id:{
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-
-    },    
     idUser:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    nbGame:{
+    total_game:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    Win:{
+    time_played:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    Lost:{
+    nb_turn_played:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    Draw:{
+    type_X_horizontal_winner:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    Abort:{
-         type: DataTypes.INTEGER,
-         allowNull: false,
-    },
-    WinDiag:{
+    type_X_horizontal_loser:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    WinHoriz:{
+    type_X_vertical_winner:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    WinVert:{
+    type_X_vertical_loser:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    LoseDiag:{
+    type_X_diagonal_winner:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    LoseHoriz:{
+    type_X_diagonal_loser:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    LoseVert:{
+    type_X_abort_winner:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    WinCercle:{
+    type_X_abort_loser:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    WinCroix:{
+    type_X_draw:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    LostCercle:{
+    type_O_horizontal_winner:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    LostCroix:{
+    type_O_horizontal_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_vertical_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_vertical_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_diagonal_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_diagonal_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_abort_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_abort_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_draw:{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -78,6 +96,43 @@ const StatMorp = sequelize.define('StatMorp', {
   timestamps: false,
 });
 
-User.hasMany(StatMorp, {as: 'statMorp', foreignKey: 'idUser' });
+
+//     my_id: 1,
+//     history: [
+//         {
+//             gameid: 1,
+//             game_stats:{
+                
+//                 map: "OX--XO-XO",
+//                 //has_result: {same winner_id = green / not same winner_is = red}, "draw,abort" = blue
+//                 game_result: "has_result,draw,abort",
+//                 id_user: {
+//                     //null !has_result
+//                     winner_id: 1,//if is not my id i have lost
+//                     player:  [
+//                         {id:1, ox: 'X'},
+//                         {id:2, ox: 'O'}
+//                     ]
+//                 },
+//             }
+//         },
+//         {
+//             gameid: 2,
+//             game_stats:{
+                
+//                 map: "OX--XO-XO",
+//                 //has_result: {same winner_id = green / not same winner_is = red}, "draw,abort" = blue
+//                 game_result: "has_result,draw,abort",
+//                 id_user: {
+//                     //null !has_result
+//                     winner_id: 2,//if is not my id i have lost
+//                     player: [
+//                         {id:1, ox: 'X'},
+//                         {id:2, ox: 'O'}
+//                     ]
+//                 },
+//             }
+//         }
+//     ],
 
 export default StatMorp;

@@ -77,7 +77,7 @@ export function playMorpion(message, socket){
     }
 
     if (!game) return;
-    if (game.isTurnPlayer(id)) return;
+    if (!game.isTurnPlayer(id)) return;
 
     console.log("le jeu est lock - ca joue");
     if (game.play(id, message)) {

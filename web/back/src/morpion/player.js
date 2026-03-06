@@ -1,4 +1,9 @@
-export class Player{
+import StatMorp from "../models/StatMorp.js";
+
+
+
+
+export class Player {
     constructor(socket, id) {
         this._nick_name = null;
         this._turn_timer = null;
@@ -88,4 +93,53 @@ export class Player{
             nb_turn: this._nb_turn
          });
     }
+
+
+async majdb(how_win, type_player , type_winner = null) {
+    
+    const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal"];
+    const type_player_check = ["X", "O"];
+
+    if (!how_win_check.includes(how_win) || !type_player_check.includes(type_player)) {
+        throw new Error("Invalid params");
+    }
+
+    const data = {total_game: 1, time_played: this._play_time, nb_turn_played: this._nb_turn};
+
+    if (how_win === 'draw'){
+        data[`type_${type_player}_draw`] = 1;
+    } else {
+        data[`type_${type_player}_${how_win}_${type_winner}`] = 1;
+    }
+
+    await un.increment(data);
+
+    // const deux = await StatMorp.findOne({where: {idUser: 1}});
+    // console.log(deux);
+
+
+    // const data = {
+    //     total_game: 1,
+    //     time_played: 5000,
+    //     nb_turn_played: 5,
+    //     type_X_horizontal_w: 1 ,
+    //     type_X_horizontal_l: 0 ,
+    //     type_X_vertical_w: 0 ,
+    //     type_X_vertical_l: 0 ,
+    //     type_X_diagonal_w: 0 ,
+    //     type_X_diagonal_l: 0 ,
+    //     type_X_abort_w: 0 ,
+    //     type_X_abort_l: 0 ,
+    //     type_X_draw: 0 ,
+    //     type_O_horizontal_w: 0 ,
+    //     type_O_horizontal_l: 0 ,
+    //     type_O_vertical_w: 0 ,
+    //     type_O_vertical_l: 0 ,
+    //     type_O_diagonal_w: 0 ,
+    //     type_O_diagonal_l: 0 ,
+    //     type_O_abort_w: 0 ,
+    //     type_O_abort_l: 0 ,
+    //     type_O_draw: 0 ,
+    // }
+}
 }
