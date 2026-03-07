@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import "./StatsMorpion.scss";
 
 /* Components */
-import Paging from "COMP/Paging/Paging.jsx"; 
 import useFetch from "HOOKS/useFetch.jsx";   
+import Paging from "COMP/Paging/Paging.jsx"; 
+import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 
 export default function StatsMorpion() {
 
@@ -127,7 +128,14 @@ export default function StatsMorpion() {
             <div className={`history-container border-1`}>
 
                 <div className={`history-card-container border-2`}>
-                    
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard/>
                 </div>
                 <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
 

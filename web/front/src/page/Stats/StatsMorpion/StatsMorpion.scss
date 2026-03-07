@@ -20,13 +20,13 @@ $width_game_winrate: 100% - $width_history;
         width: $width_history;
         padding-right: 0;
 
-        overflow-y: auto;
         scrollbar-width: thin;
         display: flex;
         flex-direction: column;
         
         .history-card-container{
             flex: 1;
+            overflow-y: auto;
         }
 
     }

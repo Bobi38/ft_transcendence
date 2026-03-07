@@ -118,7 +118,7 @@ async function CreatPrivMess(){
   await fullmess("El ultimo numero ", Conv3);
 }
 
-async function CreatStat() {
+async function CreatHistory() {
 
     const user1stat = await StatMorp.findOne({where: {idUser: 1}});
     
@@ -135,6 +135,25 @@ async function CreatStat() {
     }
 
     await user1stat.increment(data);
+ 
+    await GameMorp.create({
+        how_win: "horizontal",
+        date_game: this._date_Game,
+        ending: this._ending,
+
+        player_1, 
+        player_2,
+
+        time_player_1,
+        time_player_2,
+
+        nb_turn_player_1,
+        nb_turn_player_2,
+
+        map: this.serializeBoard(),
+        winner,  // winner /  winner abort
+        loser
+    });
 
     // const deux = await StatMorp.findOne({where: {idUser: 1}});
 
@@ -163,7 +182,7 @@ async function addDb(){
       // majDb();
       await CreatPrivMess();
       // majDb();
-      await CreatStat();
+      await CreatHistory();
       // majDb();
       await CreatFriend();
       // await seedGameMorp();
