@@ -7,6 +7,7 @@ export class Ball {
     private _scene: Scene;
     private _shadow: ShadowGenerator;
     private _physicsObserver;
+    public positionError: Vector3;
 
     constructor(position: Vector3, diameter: number, maxSpeed: number, shadow: ShadowGenerator, scene: Scene) {
         this._scene = scene;

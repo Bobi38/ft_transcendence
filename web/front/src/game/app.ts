@@ -127,10 +127,12 @@ export class App {
                 this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
             }
         });
+        
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
             console.log(this._ball.getMeshPosition());
-            this._ball.setMeshPosition(newPos);
+            //this._ball.setMeshPosition(newPos);
+            this._ball.positionError = newPos.subtract(this._ball.getMeshPosition());
             console.log(newPos);
             console.log("something happened");
         });
@@ -138,11 +140,15 @@ export class App {
             const newVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
             this._ball.setVelocity(newVel);
         });
-        // this._callback.listen("ball", (currentVal, newVal) => {
-        //     console.log("hey listen");
-        //     console.log(currentVal);
-        //     console.log(newVal);
-        // });
+        this._scene.onBeforeRenderObservable.add(() => {
+            if (!this._ball.positionError)
+                return ;
+            const k = 60; //assumed framerate
+            const dt = this._engine.getDeltaTime() / 1000; // time in seconds
+            const correctionFactor = 1 - Math.exp(-k * dt);
+            const ballPos = this._ball.getMeshPosition();
+            this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scaleInPlace(correctionFactor)));
+        });
     }
 
     private async _loadCharacterAssets(scene: Scene) {
