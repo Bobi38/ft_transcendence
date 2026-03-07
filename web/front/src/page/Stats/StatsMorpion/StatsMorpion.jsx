@@ -13,8 +13,8 @@ import useFetch from "HOOKS/useFetch.jsx";
 
 export default function StatsMorpion() {
 
-    const [currentPage, setCurrentPage] = useState(0);
-    const [totalGame, setTotalGame] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalGames, setTotalGame] = useState(null);
     const [statToDisplay, setStatToDisplay] = useState(null);
 
     async function fetch_history(login , page_nb) {
@@ -129,7 +129,7 @@ export default function StatsMorpion() {
                 <div className={`history-card-container`}>
 
                 </div>
-                <Paging totalGame={totalGame} currentPage={currentPage} setNewPage={setCurrentPage}/>
+                <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
 
             </div>
 
