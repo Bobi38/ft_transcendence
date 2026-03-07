@@ -1,15 +1,63 @@
-.square {
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  cursor: pointer;
-}
 
-.board-row {
-  display: flex;
-}
+.Morpion-root{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    .info{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+        flex-direction: column;
+        gap: 5px;
+        .status {
+          margin-bottom: 10px;
+          font-weight: bold;
+        }
+    }
 
-.status {
-  margin-bottom: 10px;
-  font-weight: bold;
+    // .Board-root{
+        
+    //     .Board-row {
+    //         display: flex;            
+    //         .square {
+    //             width: 60px;
+    //             height: 60px;
+    //             font-size: 24px;
+    //             cursor: pointer;
+    //         }
+    //     }
+    // }
+    
+    // .Board-root{
+    //     height: 60%;
+    //     width: 60%;
+
+    //     .Board-row {
+    //         display: flex;
+    //         height: 33%;
+    //         .square {
+    //             width: 33%;
+    //             font-size: 24px;
+    //             cursor: pointer;
+    //         }
+    //     }
+    // }
+
+    .Board-root{
+        height: 60%;
+        width: 60%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        
+        .square {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+    }
 }
