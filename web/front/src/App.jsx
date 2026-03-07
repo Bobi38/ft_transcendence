@@ -21,10 +21,10 @@ import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
 import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
-import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
+// import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 
 // ./src/page/all_game
-import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
+// import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import Morpion          from    "FRONT/page/all_game/Morpion/Morpion.jsx";
 
@@ -71,7 +71,6 @@ export default function App() {
 
             {/* Navigation */}
             <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
-            <Route path={`/MorpionTraining`}        element={<Navigation>   <MorpionTraining/>    </Navigation>}/>
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
