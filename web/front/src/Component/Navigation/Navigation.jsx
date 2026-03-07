@@ -29,10 +29,13 @@ export default function Navigation({ children }) {
     return (
         <>
             <section className={`Navigation-root`}>
+
                 <div className={`children-container`}>
                     {children}
                 </div>
+                
                 <NavBar/>
+
             </section>
         </>
     );
