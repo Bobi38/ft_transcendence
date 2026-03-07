@@ -1,5 +1,6 @@
 @use "STYLE/_variable" as *;
 
+@use "STYLE/_mixin" as mix;
 .Morpion-root{
     height: 100%;
     width: 100%;
@@ -9,25 +10,8 @@
     align-content: center;
     flex-direction: column;
     button{
-        transition: all 0.2s;
-        padding: 0.6rem;
-
-        background: radial-gradient(#ffffff 40%, $main);
-        box-shadow: 0px 0px 7px 5px $main-dark;
-
-        border:4px solid $second;
-        border-radius:25px;
-        cursor: pointer;
-        &:hover {
-            outline: none;
-            border-radius: 30px;
-            border-color: $active;
-            box-shadow: 0px 0px 7px 5px $active-light;
-            scale: 1.05;
-        }
-        &:active{
-            scale: 1.10;
-        }
+        @include mix.icone;
+        box-shadow: 0px 0px 7px 5px #8da8c6;
     }
     .info{
         display: flex;

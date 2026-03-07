@@ -123,10 +123,10 @@ class SocketManag{
     }
 
     sendd (data){
-        console.log("coucou je suis dans sendd" + " " + this.socket.readyState);
+        console.log("In SocketManag.sendd " + this.socket.readyState);
 
         if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-            console.log("proble de socket :envoie impossible");
+            console.log("SocketManag.sendd: envoie impossible");
             return;
         }
         else

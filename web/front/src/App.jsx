@@ -74,9 +74,9 @@ export default function App() {
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>            </Navigation>}/>
+            <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>     </Navigation>}/>
             <Route path={`/Pong3D`}                 element={<Pong3D/>}/>
-            <Route path={`/hr`}                     element={<Navigation>   <Hr><div>oui</div><div>non</div></Hr>            </Navigation>}/>
+            {/* <Route path={`/hr`}                     element={<Navigation>   <Hr><div>oui</div><div>non</div></Hr>            </Navigation>}/> */}
 
 
             {/* bad path */}
