@@ -126,8 +126,8 @@ export default function StatsMorpion() {
 
             <div className={`history-container border-1`}>
 
-                <div className={`history-card-container`}>
-
+                <div className={`history-card-container border-2`}>
+                    
                 </div>
                 <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
 
