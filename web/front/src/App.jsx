@@ -26,7 +26,7 @@ import Stats            from    "FRONT/page/Stats/Stats.jsx";
 // ./src/page/all_game
 // import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
-import Morpion          from    "FRONT/page/all_game/Morpion/Morpion.jsx";
+import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
 
 
 //     const data = {}
@@ -74,7 +74,7 @@ export default function App() {
             <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
             <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/Morpion`}                element={<Navigation>   <Morpion/>            </Navigation>}/>
+            <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>            </Navigation>}/>
             <Route path={`/Pong3D`}                 element={<Pong3D/>}/>
             <Route path={`/hr`}                     element={<Navigation>   <Hr><div>oui</div><div>non</div></Hr>            </Navigation>}/>
 

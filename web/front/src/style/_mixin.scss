@@ -1,10 +1,18 @@
-@mixin full {
-    height: 100%;
-    width: 100%;
-}
-@mixin fullw { width: 100%; }
-@mixin fullh { height: 100%; }
 
+@use "STYLE/_variable" as *;
+
+@mixin full {
+    height: $root_height;
+    width: $root_width;
+}
+@mixin fullh { height: $root_height; }
+@mixin fullw { width: $root_width; }
+
+@mixin page {
+    @include full;
+    background-color: blueviolet;
+    border-radius: 0.5rem;
+}
 
 // @use "STYLE/_mixin" as mix;
 // 	@include mix.full;

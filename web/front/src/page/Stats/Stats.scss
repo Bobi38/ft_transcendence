@@ -1,15 +1,13 @@
 @use "STYLE/variable" as *;
+@use "STYLE/_mixin" as mix;
 
 $header_height: 10%;
 $container_height: $root_height - $header_height;
 
 .Stats-root{
-    /*bg*/
-    border-radius: 0.5rem;
-    background-color: blueviolet;
-    height: $root_height;
 
-    width: 100%;
+	@include mix.page;
+    
     padding: 1rem;
 
 
