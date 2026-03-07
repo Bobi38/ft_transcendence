@@ -25,15 +25,15 @@
             background: none;
             border: none;
         }
+        .onhover:hover, .active {
+            background-color: $active;
+        }
         li {
             list-style-type: none; // disabled le dot
             background-color: white;
             border-radius: 25px;
             padding: 0.4rem;
 
-            &:hover {
-                background-color: $active;
-            }
         }
 
 

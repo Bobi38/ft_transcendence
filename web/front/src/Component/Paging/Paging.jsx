@@ -72,9 +72,9 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
 
             <ul> 
 
-                <li>
+                <li className={`onhover`}>
                     <button onClick={(e) => {change_page(currentPage - 1)}}>
-                        <span>&lt;</span> prev {/* "<"prev */}
+                        &lt;prev {/* "<"prev */}
                     </button>
                 </li>
 
@@ -85,14 +85,20 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                     if (page === "...") {
                         return (
                             <li key={index} >
-                                <span>...</span>
+                                ...
                             </li>
                         );
                     }
-
+                    if (page === currentPage){
+                        return(
+                            <li key={index} onClick={() => setNewPage(page)} className={`active`}>
+                                {page}
+                            </li>
+                        )
+                    }
                     return (
-                        <li key={index} onClick={() => setNewPage(page)} >
-                            <span>{page}</span>
+                        <li key={index} onClick={() => setNewPage(page)} className={`onhover`}>
+                            {page}
                         </li>
                     );
                 })}
@@ -153,9 +159,9 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                         <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages}`}</button></li> 
                     */}
 
-                <li>
+                <li className={`onhover`}>
                     <button onClick={(e) => {change_page(currentPage + 1)}}>
-                        next <span>&gt;</span>  {/* next">" */}
+                        next &gt;  {/* next">" */}
                     </button>
                 </li>
 
