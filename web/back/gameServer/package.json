@@ -13,7 +13,8 @@
     "loadtest": "tsx loadtest/example.ts --room my_room --numClients 2",
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "clean": "rimraf build",
-    "test": "mocha -r tsx test/**.test.ts --exit --timeout 15000"
+    "test": "mocha -r tsx test/**.test.ts --exit --timeout 15000",
+    "schema-codegen": "npx schema-codegen src/rooms/schema/* --ts --output ../../front/src/game/schema"
   },
   "author": "",
   "license": "UNLICENSED",
