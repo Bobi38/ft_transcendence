@@ -143,11 +143,13 @@ export class App {
         this._scene.onBeforeRenderObservable.add(() => {
             if (!this._ball.positionError)
                 return ;
-            const k = 60; //assumed framerate
-            const dt = this._engine.getDeltaTime() / 1000; // time in seconds
-            const correctionFactor = 1 - Math.exp(-k * dt);
+            const patchRate = 0.05; //in seconds
+            const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
+            const fractionElapsed = patchRate / dt;
+            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed);
             const ballPos = this._ball.getMeshPosition();
-            this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scaleInPlace(correctionFactor)));
+            this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
+            this._ball.positionError.scaleInPlace(1 - correctionFactor);
         });
     }
 
