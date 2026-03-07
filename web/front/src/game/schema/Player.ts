@@ -6,10 +6,8 @@
 // 
 
 import { Schema, type, ArraySchema, MapSchema, SetSchema, DataChange } from '@colyseus/schema';
-import { Ball } from './Ball'
-import { Player } from './Player'
+import { Vector3 } from './Vector3'
 
-export class MyRoomState extends Schema {
-    @type(Ball) public ball: Ball = new Ball();
-    @type({ map: Player }) public players: MapSchema<Player> = new MapSchema<Player>();
+export class Player extends Schema {
+    @type(Vector3) public position: Vector3 = new Vector3();
 }

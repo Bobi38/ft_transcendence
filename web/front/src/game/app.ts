@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion} from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, Epsilon, UniversalCamera} from "@babylonjs/core";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
@@ -17,8 +17,9 @@ export class App {
     private _engine: Engine;
     private _scene: Scene;
     private _environment: Environment;
-    private _input: PlayerInput;
+    //private _input: PlayerInput;
     private _player: Player;
+    private _camera: UniversalCamera;
     private MAX_SPEED: number = 40;
     private _ball: Ball;
     private _room : Room<MyRoomState>;
@@ -87,6 +88,12 @@ export class App {
         this._engine.hideLoadingUI();
     }
 
+    private _setupPlayerCamera() {
+        this._camera = new UniversalCamera("cam", new Vector3(0,3,-23), this._scene);
+        this._camera.fov = 0.47;
+        this._scene.activeCamera = this._camera;
+    }
+
     private async _setupGame() {
         let scene = new Scene(this._engine);
         scene.clearColor = new Color4(0.015, 0.015, 0.2);
@@ -103,9 +110,17 @@ export class App {
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
         
         await this._environment.load();
-        await this._loadCharacterAssets(scene);
-        this._input = new PlayerInput(scene);
+        this.assets = await this._loadCharacterAssets();
+        this._setupPlayerCamera();
+        
         await this._initializeGameAsync(scene);
+        
+    }
+
+    private _updateCamera() {
+        let cameraOffset = new Vector3(0,3,-23);
+        let newPos = this._player.getPlayerPosition().add(cameraOffset);
+        this._camera.position = Vector3.Lerp(this._camera.position, newPos, 0.4);
     }
 
     private async _initializeGameAsync(scene: Scene): Promise<void> {
@@ -116,7 +131,14 @@ export class App {
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
 
-        this._player = new Player(this.assets, scene, shadow, this._input, this._room);
+        this._player = new Player(this.assets, scene, shadow, this._room);
+        this._player.setPlayerInput(
+            new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
+        this._scene.registerBeforeRender(() => {
+            this._player.updateBody();
+            this._player.updateRacket();
+            this._updateCamera();
+        });
         
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
@@ -130,17 +152,18 @@ export class App {
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            console.log(this._ball.getMeshPosition());
+            //console.log(this._ball.getMeshPosition());
             //this._ball.setMeshPosition(newPos);
             this._ball.positionError = newPos.subtract(this._ball.getMeshPosition());
-            console.log(newPos);
-            console.log("something happened");
+            //console.log(newPos);
+            //console.log("something happened");
         });
         this._callback.onChange(this._room.state.ball.velocity, () => {
             const newVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
             this._ball.setVelocity(newVel);
         });
         this._scene.onBeforeRenderObservable.add(() => {
+            console.log(this._ball.positionError);
             if (!this._ball.positionError)
                 return ;
             const patchRate = 0.05; //in seconds
@@ -150,26 +173,27 @@ export class App {
             const ballPos = this._ball.getMeshPosition();
             this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
             this._ball.positionError.scaleInPlace(1 - correctionFactor);
+            if (this._ball.positionError.lengthSquared() < Epsilon)
+                this._ball.positionError = null;
         });
     }
 
-    private async _loadCharacterAssets(scene: Scene) {
-        async function loadCharacter(): Promise<{mesh: Mesh}> {
-            let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, scene);
+        private async _loadCharacterAssets(): Promise<{mesh: Mesh}> {
+            let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
 
             body.isVisible = false;
 
             body.position = new Vector3(0,1.5,0);
-            let bodymtl = new StandardMaterial("red", scene);
+            let bodymtl = new StandardMaterial("red", this._scene);
             bodymtl.diffuseColor = Color3.Red();
             body.material = bodymtl;
             body.isPickable = false;
-            const hand_node = new TransformNode("hand_node", scene)
+            const hand_node = new TransformNode("hand_node", this._scene)
             hand_node.position = new Vector3(0.4, 2, 1);
             const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.5});
             hand.material = bodymtl;
 
-            let racketmtl = new StandardMaterial("white", scene);
+            let racketmtl = new StandardMaterial("white", this._scene);
             racketmtl.diffuseColor = new Color3(0.4,0.2,0);
             let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.2, height: 0.8});
             stick.position._y = 0.4;
@@ -180,19 +204,13 @@ export class App {
             //racket.rotation = new Vector3(Math.PI / 2, 0, 0);
             racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
             
-            let racketRoot = new TransformNode("racketRoot", scene);
+            let racketRoot = new TransformNode("racketRoot", this._scene);
     
             racket.parent = stick;
             stick.parent = hand;
             hand.parent = racketRoot;
             racketRoot.parent = hand_node;
             hand_node.parent = body;
-
-            
             return { mesh: body};
         }
-        return loadCharacter().then((assets) => {
-            this.assets = assets;
-        })
-    }
 }

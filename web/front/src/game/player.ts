@@ -7,26 +7,26 @@ export class Player extends TransformNode {
     public camera;
     public scene: Scene;
     public room: Room;
-    private _input;
+    private _input : PlayerInput;
     private _moveDirection: Vector3;
 
-    public mouseSpeedBuffer = [];
+    public mouseSpeedBuffer : number[] = [];
     public mouseBufferSize: number = 5;
     public prevMousePos = Vector2.Zero();
-    public mouseDirBuffer = [];
+    public mouseDirBuffer : Vector2[] = [];
 
     public mesh: Mesh;
     public racket: TransformNode;
     public racketBody: PhysicsBody;
     public hand_node: TransformNode;
 
-    constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, input : PlayerInput, room: Room) {
+    constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
         super("player", scene);
         this.scene = scene;
         this.room = room;
         this.mesh = assets.mesh;
         this.mesh.parent = this;
-        this._setupPlayerCamera();
+        //this._setupPlayerCamera();
 
         this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
         this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
@@ -35,7 +35,7 @@ export class Player extends TransformNode {
         shadowGenerator.addShadowCaster(scene.getMeshByName("hand"), false);
         shadowGenerator.addShadowCaster(scene.getMeshByName("stick"), false);
     
-        this._input = input;
+        //this._input = input;
 
         const colRacketShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(),
             new Vector3(1.5, 2.5, 0.5), scene);
@@ -78,11 +78,12 @@ export class Player extends TransformNode {
         physicsViewer.showBody(colRacketBody);
     }
 
-    private _updateFromControls() {
-        this._moveDirection = new Vector3(this._input.horizontal, 0, this._input.vertical).normalize();
+    public updateBody() {
+        //this._moveDirection = new Vector3(this._input.horizontal, 0, this._input.vertical).normalize();
+        this.mesh.moveWithCollisions(this._input.getMoveDirection());
     }
 
-    private _updateFromMouse() {
+    public updateRacket() {
         const mousePos = new Vector2(this.scene.pointerX, this.scene.pointerY);
         const mouseSpeed = Vector2.Distance(mousePos, this.prevMousePos);
         const mouseDir = mousePos.subtract(this.prevMousePos);
@@ -140,25 +141,40 @@ export class Player extends TransformNode {
         }
     }
 
-    private _setupPlayerCamera() {
-        this.camera = new UniversalCamera("cam", new Vector3(0,3,-23), this.scene);
-        this.camera.fov = 0.47;
-        this.scene.activeCamera = this.camera;
-        this.activatePlayerCamera();
+    // private _setupPlayerCamera() {
+    //     this.camera = new UniversalCamera("cam", new Vector3(0,3,-23), this.scene);
+    //     this.camera.fov = 0.47;
+    //     this.scene.activeCamera = this.camera;
+    //     this.activatePlayerCamera();
+    // }
+
+    // public activatePlayerCamera() {
+    //     this.scene.registerBeforeRender(() => {
+    //         this._updateBody();
+    //         this._updateRacket();
+    //         this._updateCamera();
+    //     })
+    // }
+
+    // private _updateCamera() {
+    //     let cameraOffset = new Vector3(0,3,-23);
+    //     let newPos = this.mesh.position.add(cameraOffset);
+    //     this.camera.position = Vector3.Lerp(this.camera.position, newPos, 0.4);
+    // }
+
+    public getPlayerPosition() : Vector3 {
+        return this.mesh.position.clone();
     }
 
-    public activatePlayerCamera() {
-        this.scene.registerBeforeRender(() => {
-            this._updateFromControls();
-            this._updateFromMouse();
-            this.mesh.moveWithCollisions(this._moveDirection);
-            this._updateCamera();
-        })
+    public setPlayerInput(input: PlayerInput) {
+        this._input = input;
     }
 
-    private _updateCamera() {
-        let cameraOffset = new Vector3(0,3,-23);
-        let newPos = this.mesh.position.add(cameraOffset);
-        this.camera.position = Vector3.Lerp(this.camera.position, newPos, 0.4);
+    public getHandNode() : TransformNode {
+        return this.hand_node;
+    }
+
+    public getRacketNode() : TransformNode {
+        return this.racket;
     }
 }
