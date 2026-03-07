@@ -1,4 +1,9 @@
-export class Player{
+import StatMorp from "../models/StatMorp.js";
+
+
+
+
+export class Player {
     constructor(socket, id) {
         this._nick_name = null;
         this._turn_timer = null;
@@ -87,5 +92,29 @@ export class Player{
             time: this._play_time,
             nb_turn: this._nb_turn
          });
+    }
+
+
+    async majdb(how_win, type_player , type_winner = null) {
+        
+        const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal"];
+        const type_player_check = ["X", "O"];
+
+        if (!how_win_check.includes(how_win) || !type_player_check.includes(type_player)) {
+            throw new Error("Invalid params");
+        }
+
+        const data = {total_game: 1, time_played: this._play_time, nb_turn_played: this._nb_turn};
+
+        if (how_win === 'draw'){
+            data[`type_${type_player}_draw`] = 1;
+        } else {
+            data[`type_${type_player}_${how_win}_${type_winner}`] = 1;
+        }
+
+        
+        const userstat = await StatMorp.findOne({where: {idUser: 1}});
+        await userstat.increment(data);
+
     }
 }

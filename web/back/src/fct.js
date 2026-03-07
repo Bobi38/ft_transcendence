@@ -118,33 +118,26 @@ async function CreatPrivMess(){
   await fullmess("El ultimo numero ", Conv3);
 }
 
-async function CreatStat(){
-    await HistoryMorp.create({  Map:"OX--XO-XO", 
-                                Result:"has_result", 
-                                WinnerId:1, 
-                                Id1:1, 
-                                OX1:0, 
-                                Id2:2, 
-                                OX2:1
-    });
+async function CreatStat() {
 
-    await StatMorp.create({ idUser:1,
-                            nbGame:1,
-                            Win:5,
-                            Lost:5,
-                            Draw:0,
-                            Abort:0,
-                            WinDiag:2,
-                            WinHoriz:2,
-                            WinVert:6,
-                            LoseDiag:0,
-                            LoseHoriz:0,
-                            LoseVert:0,
-                            WinCercle:5,
-                            WinCroix:5,
-                            LostCercle:0,
-                            LostCroix:0,
-    });
+    const user1stat = await StatMorp.findOne({where: {idUser: 1}});
+    
+    const data = {total_game: 1, time_played: 5000, nb_turn_played: 5};
+
+    const how_win = "abort";
+    const type_player = "X";
+    const type_winner = "loser";
+
+    if (how_win === 'draw'){
+        data[`type_${type_player}_draw`]  = 1;
+    } else {
+        data[`type_${type_player}_${how_win}_${type_winner}`] = 1;
+    }
+
+    await user1stat.increment(data);
+
+    // const deux = await StatMorp.findOne({where: {idUser: 1}});
+
 }
 
 async function CreatFriend(){
@@ -173,7 +166,7 @@ async function addDb(){
       await CreatStat();
       // majDb();
       await CreatFriend();
-      await seedGameMorp();
+      // await seedGameMorp();
       majDb();
     }
 }

@@ -38,7 +38,7 @@ class MorpionRoom extends Room {
     }
 
     isTurnPlayer(PlayerId){
-        return _turn === PlayerId;
+        return this._turn === PlayerId;
     }
 
     switchTurn() {
@@ -55,8 +55,10 @@ class MorpionRoom extends Room {
             throw new Error("Invalid player");
         }
 
-        if (this._first_player)
+        if (this._first_player){
+            console.log("je set turn")
             this._turn = firstPlayerId;
+        }
 
         this._chrono = Date.now();
     }
@@ -142,9 +144,9 @@ class MorpionRoom extends Room {
 
         this._ending = ending;
         if (ending === 'abort')
-            this._how_win = 'A';
+            this._how_win = 'abort';
         else if (ending === 'draw')
-            this._how_win = '0';
+            this._how_win = 'draw';
 
         this.majdb(winnerId).catch(err =>
             console.error("Erreur sauvegarde DB:", err)
@@ -164,7 +166,7 @@ class MorpionRoom extends Room {
                     { message: "gagne", turn: false },
                     { message: "perdu", turn: false });
 
-                this._how_win = "HVD"[Math.floor (i / 3)];
+                this._how_win = ["horizontal","diagonal","vertical"][Math.floor (i / 3)];
                 this.handleEndGame("win", this._turn);
                 return true;
             }
@@ -232,9 +234,20 @@ class MorpionRoom extends Room {
             nb_turn_player_2,
 
             map: this.serializeBoard(),
-            winner,
+            winner,  // winner /  winner abort
             loser
         });
+
+        if (!winner) {                  // draw
+            p1.majdb(this._how_win, 'X');
+            p2.majdb(this._how_win, 'O');
+        } else if (winner === p1) {     // player1 winner /  winner abort
+            p1.majdb(this._how_win, 'X', 'winner');
+            p2.majdb(this._how_win, 'O', 'loser');
+        } else {                        // player2 winner /  winner abort
+            p1.majdb(this._how_win, 'X', 'loser');
+            p2.majdb(this._how_win, 'O', 'winner');
+        }
     }
 }
 

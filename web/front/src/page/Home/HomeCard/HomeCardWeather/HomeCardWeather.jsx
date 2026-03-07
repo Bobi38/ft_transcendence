@@ -18,7 +18,6 @@ export default function HomeCardWeather() {
 		title: null, 
 		temp: null,
 	});
-
 	useEffect(() => {
 		
 		async function fetchWeather() {
@@ -46,18 +45,28 @@ export default function HomeCardWeather() {
 
 		fetchWeather();
 	}, []);
+	
+	const [activeWeather, setActiveWeather] = useState({"": ""})
+	
+	useEffect(() => {
 
-
+		setActiveWeather({
+			backgroundImage: `url(${weather.icon})`,
+			backgroundSize: 'cover',
+			// width: '100%',
+			// height: '100%',
+			// opacity: '100%',
+			// display: "flex",
+			// justifyContent: "center",
+			// alignItems: "center",
+		})
+	}, [weather]);
+	
     return (
-		<div className={`HomeCardWeather-root card-effect`}>
-			{!weather.icon && (
-				<p>
-					<span>{weather.descript}</span><br/><br/>
-					<span>{weather.title}</span><br/>
-					<span>{weather.temp}</span>
-				</p>
-			)}
-			{weather.icon && (
+		<div className={`HomeCardWeather-root card-effect`}
+			style={activeWeather}>
+
+			{/* {weather.icon && (
 				<div style={{
 					backgroundImage: `url(${weather.icon})`,
 					backgroundSize: 'cover',
@@ -67,14 +76,14 @@ export default function HomeCardWeather() {
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
-				}}>
+				}}> */}
 				<p>
 					<span>{weather.descript}</span><br/><br/>
 					<span>{weather.title}</span><br/>
 					<span>{weather.temp}</span>
 				</p>
-				</div>
-			)}
+				{/* </div> */}
+			{/* )} */}
 		</div>
 	)
 }

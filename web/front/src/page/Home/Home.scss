@@ -48,8 +48,8 @@ $padding: 1.7rem;
 			//padding-right: $padding * 2;
 			display: grid;
   			grid-template-columns: repeat(3, 1fr);
-			grid-column-gap: $padding * 1.5;
-			grid-row-gap: $padding * 1.5;
+			grid-gap: $padding * 1.5;
+			grid-auto-rows: 1fr;
 		}
 	}
 }

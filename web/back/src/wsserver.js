@@ -133,7 +133,7 @@ export function initWebSocket(server) {
 
         if (data.type === 'game') {
           console.log(`game : recu ${data.message}`);
-          morpion(data.message, socket, socket.userId);
+          morpion(data.message, socket);
           return ;
         }
 
