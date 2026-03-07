@@ -34,7 +34,7 @@ export class PlayerInput {
         }));
         scene.onBeforeRenderObservable.add(() => {
             this._inputBody();
-            // this._inputRacket();
+            this._inputRacket();
         })
     }
 
@@ -107,18 +107,23 @@ export class PlayerInput {
             const localAxisZ = Vector3.Cross(localAxisX, localAxisY).normalize();
             const targetRotation = Quaternion.RotationQuaternionFromAxis(localAxisX, localAxisY, localAxisZ);
 
-            // let lerpedRotation : Quaternion;
-            // if (!this._racket.rotationQuaternion) {
-            //     lerpedRotation = targetRotation;
-            // } else {
-            //     Quaternion.SlerpToRef(this.racket.rotationQuaternion, targetRotation, 0.3, this.racket.rotationQuaternion);
-            //     //lerpedRotation = Quaternion.Slerp(this.racket.rotationQuaternion, targetRotation, 0.3);
-            // }
-            // //this.racketBody.setTargetTransform(relativePos, lerpedRotation);
+            if (!this._racket.rotationQuaternion) {
+                this._newRacketRot = targetRotation;
+            } else {
+                this._newRacketRot = Quaternion.Slerp(this._racket.rotationQuaternion, targetRotation, 0.3);
+            }
         }
     }
 
     public getMoveDirection() : Vector3 {
         return this._moveDirection.clone();
     }
+
+    public getNewRacketPos() : Vector3 {
+        return this._newRacketPos.clone();
+    }
+
+    public getNewRacketRot() : Quaternion {
+        return this._newRacketRot.clone();
+    } 
 }
