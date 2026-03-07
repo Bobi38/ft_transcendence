@@ -1,24 +1,14 @@
 @use "STYLE/variable" as *;
 
-.NavBar-container {
+.NavBar-root {
     display: flex;
+    flex-direction: row;
     justify-content: space-evenly;
-    background: rgb(174, 36, 36);
-    border-radius: $border_radius_value;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 100%;
+    
+	background: rgb(122, 162, 190);
+    border-top: rgb(56, 118, 163) solid 3px;
 
-
-    .Link {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        border-radius: $border_radius_value;
-        text-decoration: none;
-        color: white;
-        background-color: #667eea;
-        transition: all 0.3s ease;
-    }
+    align-items: center;
+    text-align: center;
+	flex: 1;
 }
-

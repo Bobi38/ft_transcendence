@@ -221,7 +221,7 @@ class MorpionRoom extends Room {
         
         await GameMorp.create({
             how_win: this._how_win,
-            date_game: this._date_Game,
+            // date_game: this._date_Game, ?? undefine
             ending: this._ending,
 
             player_1, 

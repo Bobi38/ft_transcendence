@@ -8,8 +8,11 @@
 	color: white;
 	transition: all 0.2s;
 
-	&:hover, &:focus {
-		scale: 1.08;
+	&:hover{
+		scale: 1.05;
 		border-color: $active-light;
+	}
+	&:active{
+		scale: 1.15;
 	}
 }

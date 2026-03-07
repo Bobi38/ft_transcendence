@@ -5,42 +5,48 @@
 //    @include mix.full;
 
 .Paging-root{
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: $root_width;
-    height: 28px;
-
-    nav {
-        font: 1rem sans-serif;
+    height: 58px;
+    padding: 0.5rem;
+    gap: 30px;
+    ul {
         
         display: flex;
+        align-items: center;
         justify-content: center;
-        
-        .pagination {
-
-            list-style: none;
-            margin: 0;
-            padding: 0;
-
-            display: flex;
-            gap: 1px;
-
-            button {
-
-                display: block;
-                padding: 0.25rem 0.5rem;
-                border: 1px solid #999999;
-                border-radius: 0.2rem;
-                text-decoration: none;
-
-            }
-
-            button[aria-current="page"] {
-
-                background-color: #333333;
-                color: white;
-                
-            }
+        background-color: $accent;
+        gap: 5px;
+        padding: 0.3rem;
+        border-radius: 25px;
+        button {
+            background: none;
+            border: none;
         }
+        .onhover:hover, .active {
+            background-color: $active;
+        }
+        li {
+            list-style-type: none; // disabled le dot
+            background-color: white;
+            border-radius: 25px;
+            padding: 0.4rem;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 

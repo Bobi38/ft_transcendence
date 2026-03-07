@@ -1,5 +1,8 @@
+
+@use "STYLE/_mixin" as mix;
+
 .ContactUs-root{
-    width: 100%;
+    @include mix.page;
     
     display: flex;
     flex-direction: column;
