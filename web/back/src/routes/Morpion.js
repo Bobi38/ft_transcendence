@@ -96,7 +96,12 @@ router.get('/get_morpion_history/:page', async (req, res) => {
         
         console.log("API get_morpion_history(3)");
 
-        const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: 5, offset: 0, order: [['id', 'DESC']] });
+        const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: 5, offset: 0, order: [['id', 'DESC']], include: [
+    { model: User, as: 'player1', attributes: ['name'] },
+    { model: User, as: 'player2', attributes: ['name'] },
+    { model: User, as: 'winnerUser', attributes: ['name'] },
+    { model: User, as: 'loserUser', attributes: ['name'] }// Optionnel : pour afficher le gagnant
+  ]});
 // GameMorp.findAll({where: {[Op.or]: [{player_1: to_search.id}, {player_2: to_search.id}]}}, {limit: 5, offset: 0 , order:[['id', 'DESC']]})
 
         
