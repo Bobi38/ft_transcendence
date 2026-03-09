@@ -38,12 +38,12 @@ function GoOut(){
     );
 }
 
-function SelectFirst(){
+function SelectSecondPlayer(){
     return (
         <button onClick={() => {
             SocketM.sendd({
                 type: "game",
-                message: "playfirst"
+                message: "playSecond"
             })
         }}>
             je veux jouer en second
@@ -115,7 +115,7 @@ export default function Morpion() {
 
                 <GoOut/>
 
-                <SelectFirst/>
+                <SelectSecondPlayer/>
 
                 <div className="status">
                     {msg === "recherche"

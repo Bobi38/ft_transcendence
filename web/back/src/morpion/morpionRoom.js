@@ -120,9 +120,7 @@ class MorpionRoom extends Room {
             return false;
         }
 
-        console.log("on arrive ici tout va bien")
         player.clearTurnTimer();
-        console.log("tout va bien, c est sur ?")
 
         const symbol = (this.countMoves() % 2 === 0)? "X" : "O";
         this._board[index] = symbol;
@@ -166,7 +164,8 @@ class MorpionRoom extends Room {
                     { message: "gagne", turn: false },
                     { message: "perdu", turn: false });
 
-                this._how_win = ["horizontal","diagonal","vertical"][Math.floor (i / 3)];
+                console.log(`victoire avec ligne ${i}`);
+                this._how_win = ["horizontal","vertical","diagonal"][Math.floor (i / 3)];
                 this.handleEndGame("win", this._turn);
                 return true;
             }

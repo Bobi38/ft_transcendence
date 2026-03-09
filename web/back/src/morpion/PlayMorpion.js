@@ -26,10 +26,7 @@ export function playMorpion(message, socket){
 
     if (message === "je pars") {
         console.log("abondon de ", id);
-        // if (!game){
-        //     manager_room.lobby.removePlayer(id);
-        //     return;
-        // }
+
         if (!game.getLock()) {
             manager_room.removePlayer(id, "bye bye");
             return;
@@ -41,7 +38,8 @@ export function playMorpion(message, socket){
         game.notifyTurn(
             { message: "Abondon - tu as gagne", turn: false },
             { message: "Abondon - tu as perdu", turn: false });
-        manager_room.removeRoom();
+        manager_room.removeRoom(game.getId());
+        return ;
     }
 
     if (message === "je veux jouer") {
@@ -71,7 +69,7 @@ export function playMorpion(message, socket){
         return;
     }
 
-    if (message === "playfirst") {
+    if (message === "playSecond") {
         console.log("message pour jouer en second");
         if (game.setFirstPlayer())
             socket.send(JSON.stringify({ type: "game", message: `${game} : tu joues en second` }))
