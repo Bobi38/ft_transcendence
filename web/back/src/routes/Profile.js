@@ -82,6 +82,8 @@ const cache = new Map();
 function cacheWeather(duration = 3600000) {
   return async function (req, res, next) {
     try {
+
+    console.log("API /cacheWeather depuis Homeweather");
       const token = req.cookies.token;
       const decoded = jwt.verify(token, secret);
       const result = await User.findOne({ where: { id: decoded.id } });
@@ -90,14 +92,18 @@ function cacheWeather(duration = 3600000) {
 
       req.loc = loc;
 
+      console.log("API /cacheWeather cache", cache);
       const cached = cache.get(loc);
 
+    console.log("API /cacheWeather cached:", cached);
       if (cached && (Date.now() - cached.timestamp) < duration) {
+
         console.log(`pas d appel a l'API Weather : ${loc} deja connu`);
         return res.status(200).json({ success: true, message: cached.data });
       }
-
+      
       req.cacheKey = loc;
+      console.log("API /cacheWeather next()", req.cacheKey);
       next();
 
     } catch (err) {

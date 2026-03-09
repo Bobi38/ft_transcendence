@@ -36,7 +36,7 @@ export default function StatsMorpion() {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         }, function(repjson){
-            console.log("useFetch(info) success history: " , repjson.history);
+            console.log("useFetch(info) success history_user: " , repjson.history_user);
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
@@ -112,7 +112,7 @@ export default function StatsMorpion() {
     
     useEffect(() => {
         fetch_stats("");
-        // fetch_history("nana", 42);
+        fetch_history("", 0);
         // fetch_history("nana", 0);
         // fetch_history(null, 0);
     }, [])
@@ -167,9 +167,11 @@ export default function StatsMorpion() {
                     </div>
 
                     <div className={`wl-horizontal border-2`}>
+
                         <p>horizontal</p>
                         <p>win: { statToDisplay && statToDisplay.win_horizontal } </p>
                         <p>lose: { statToDisplay && statToDisplay.lose_horizontal } </p>
+
                     </div>
 
                     <div className={`wl-diagonal border-2`}>
