@@ -13,7 +13,7 @@ function getCookie(name, cookieHeader) {
 }
 
 export function initWebSChat(server) {
-  const wss = new WebSocketServer({ server, path: '/ws' });
+  const wss = new WebSocketServer({ server, path: '/ws/chatP' });
 
   let idd = 0;
   console.log('WebSocket server initialized on path /ws');
@@ -49,19 +49,19 @@ export function initWebSChat(server) {
 
       const exist = chat.finduser(socket.id);
       const id = chat.finduserId(socket.userId);
-      if (exist){
-        exist.socket = socket;
-        console.log("user already exist exist");
-      }
-      else if (id){
-        id.socket = socket
-        // console.log("user already exist id");
-      }
-      else{
+      // if (exist){
+      //   exist.socket = socket;
+      //   console.log("user already exist exist");
+      // }
+      // else if (id){
+      //   id.socket = socket
+      //   // console.log("user already exist id");
+      // }
+      // else{
         // console.log("new user, add to chat sessions");
         await chat.addtok(useid, socket, useid);
         // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
-      }
+      // }
     }catch(err){
       console.log("err debut wsss ", err);
     }
@@ -72,26 +72,6 @@ export function initWebSChat(server) {
         console.log('=== MESSAGE REÇU IN WSCHAT ===');
         console.log('Type:', data.type);
         console.log('===================');
-        if (data.type === 'mess'){
-          console.log("je suis dans un type messsssssssss " , socket.id)
-          const nono = socket.userId;
-          const na = chat.finduserId(socket.userId)
-          const ni = na.username;
-          console.log ("----" , nono , "----", ni);
-          console.log("taille === ", chat.countUser());
-          for (const session of chat.sessions.values()){
-            console.log("session ", session.userId);
-            console.log("idddd " + session.userId + "   "  +  nono + "-----");
-            if (session.socket.readyState === ws.OPEN && session.userId != nono){
-                console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
-                session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: data.timer}));
-            }
-            if (session.socket.readyState === ws.OPEN && session.userId === nono){
-              console.log("MYSEFLF");
-              session.socket.send(JSON.stringify({type: 'message',monMsg: true, message: data.message, login: ni, timer: data.timer}));
-            }
-          }
-        }
         if (data.type === 'priv_mess'){
           console.log("je suis dans un type priv_messsssssssss")
           const nono = socket.userId;
@@ -99,11 +79,16 @@ export function initWebSChat(server) {
           const ni = na.username;
           const send = chat.findname(data.to);
           console.log("name" , ni, " ", data.to)
-          if (send && send.socket.readyState === ws.OPEN){
-            console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
-            send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+          for (const session of chat.sessions.values()){
+
+            if (send && session.socket.readyState === ws.OPEN && session.userId === send.userId){
+              console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
+              send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+            }
+            if (send && session.socket.readyState === ws.OPEN && session.userId === nono){
+              socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
+            }
           }
-          socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
         }
         if (data.type === "logout")
           socket.GoLogout = true;

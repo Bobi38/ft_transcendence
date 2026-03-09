@@ -5,14 +5,13 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { initWebSChat } from './WsSChat.js';
+import { initWebSChat } from './WsSChatP.js';
 
 
 
 
 //router
-import chatGroute from '../src/routes/ChatG.js'
-import chatProute from '../src/routes/ChatP.js'
+import chatProute from './src/routes/ChatP.js'
 
 
 dotenv.config();
@@ -32,8 +31,11 @@ app.use(session({
   saveUninitialized: true
 }))
 
-
-app.use('/api/chatP', chatProute);
+app.use((req, res, next) => {
+  console.log(`[CHATP SERVICE] ${req.method} ${req.path}`);
+  next();
+});
+app.use('/', chatProute);
 
 
 (async () => {

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 /* back */
 // import { useSocket } from "../../../tool/SocketContext";
-import  SocketM  from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/tool/SocketManag.js";
 
 /* Css */
 import "./PrivateMessage.scss";
@@ -77,10 +77,10 @@ export default function PrivateMessage() {
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();
         }
-        SocketM.onPriv(handle_private_message);
+        SocketM.on("priv", handle_private_message, "un");
 
         return () => {
-            SocketM.offPriv(handle_private_message);
+            SocketM.off("priv", "un");
         };
 
     }, [goToConv]);

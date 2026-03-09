@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import { SocketProvider } from "../tool/SocketContext"
 import { useEffect, useState } from "react";
-import checkCo from "../../back/src/fct1.js"
+import checkCo from "../tool/fct1.js"
 
 /* back */
 import SocketM from "../tool/SocketManag";
@@ -40,8 +40,12 @@ export default function App() {
             if (!repco){
                 return;
             }
-            if (!SocketM.getState() || SocketM.getState() === "closed")
-                SocketM.connect();
+            if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")
+                SocketM.connectsocket("chat");
+            if (!SocketM.getState("priv") || SocketM.getState("priv") === "closed")
+                SocketM.connectsocket("priv");
+            if (!SocketM.getState("morp") || SocketM.getState("morp") === "closed")
+                SocketM.connectsocket("morp");
             console.log("App.jsx useEffect(1) SocketM.connect() called");
         }
         init();

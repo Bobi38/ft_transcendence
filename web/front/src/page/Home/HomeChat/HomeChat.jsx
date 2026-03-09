@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import checkCo from "BACK/fct1.js";
-import  SocketM  from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/tool/SocketManag.js";
 
 /* Css */
 import "./HomeChat.scss";
@@ -60,13 +59,13 @@ export default function HomeChat() {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
                 setDisplayedMessages((prev) => [...prev, data]);
             };
-            SocketM.onChat(handle_global_message, "ChatG");
+            SocketM.on("chat", handle_global_message, "ChatG");
         };
 
         init();
 
         return () => {
-            SocketM.offChat("ChatG");
+            SocketM.off("chat", "ChatG");
 
         };
     }, []);
@@ -81,7 +80,7 @@ export default function HomeChat() {
         
         console.log("handle_submit(2): " ,data);
         await add_message_global(time);
-        SocketM.sendd(data);
+        SocketM.sendd(SocketM.socket.chat, data);
         setInput("");
     };
 

@@ -5,13 +5,13 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { initWebSChat } from './WsSChat.js';
+import { initWebSMopr } from './WsSMopr.js';
 
 
 
 
 //router
-import Morpionroute from './routes/Morpion.js'
+import Morpionroute from './src/routes/Morpion.js'
 
 
 dotenv.config();
@@ -31,13 +31,17 @@ app.use(session({
   saveUninitialized: true
 }))
 
+app.use((req, res, next) => {
+  console.log(`[MORP SERVICE] ${req.method} ${req.path}`);
+  next();
+});
 
-app.use('/api/morp', Morpionroute);
+app.use('/', Morpionroute);
 
 (async () => {
   try {
     const server = http.createServer(app);
-    initWebSChat(server);
+    initWebSMopr(server);
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);

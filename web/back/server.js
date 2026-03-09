@@ -12,21 +12,13 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 // import { GameRoom } from './colyseus/GameRoom.js';
 // import router from './routes/index.js';
 // import router from './router.js';
-import { majDb } from './fct.js';
-import { initWebSocket } from './wsserver.js';
-import {addDb} from './fct.js';
-
-// Models
-import './models/index.js';
-import User from './models/user.js';
-import './models/connect.js';
-import ChatG from './models/test.js';
-import './models/privchat.js';
-import './models/privmess.js';
+import { majDb } from './src/fct.js';
+import {addDb} from './src/fct.js';
+import bodyParser from 'body-parser';
 
 
 //router
-import { authMiddleware } from './routes/index.js';
+import { authMiddleware } from './src/routes/index.js';
 
 dotenv.config();
 
@@ -37,7 +29,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
 
-app.use(express.json());
+// app.use(express.json());
 app.use(cookieParser());
 app.use(session({
   secret:'coucou',
@@ -47,39 +39,39 @@ app.use(session({
 
 app.use(authMiddleware);
 
-
 app.use('/api/auth', createProxyMiddleware({
-  target: 'http://localhost:9100',
-  changeOrigin: true
-}))
+  target: 'http://auth:9005',
+  changeOrigin: true,
+  selfHandleResponse: false,
+}));
 
 app.use('/api/oauth2', createProxyMiddleware({
-  target: 'http://localhost:9100',
+  target: 'http://auth:9005',
   changeOrigin: true
 }))
 
 app.use('/api/secu', createProxyMiddleware({
-  target: 'http://localhost:9100',
+  target: 'http://auth:9005',
   changeOrigin: true
 }))
 
 app.use('/api/profile', createProxyMiddleware({
-  target: 'http://localhost:9003',
+  target: 'http://user_service:9003',
   changeOrigin: true
 }))
 
 app.use('/api/friend', createProxyMiddleware({
-  target: 'http://localhost:9003',
+  target: 'http://user_service:9003',
   changeOrigin: true
 }))
 
 app.use('/api/chatG', createProxyMiddleware({
-  target: 'http://localhost:9001',
+  target: 'http://chatg_service:9001',
   changeOrigin: true
 }))
 
 app.use('/api/chatP', createProxyMiddleware({
-  target: 'http://localhost:9002',
+  target: 'http://chatp_service:9002',
   changeOrigin: true
 }))
 
@@ -89,7 +81,7 @@ app.use('/api/chatP', createProxyMiddleware({
 // }))
 
 app.use('/api/morpion', createProxyMiddleware({
-  target: 'http://localhost:9004',
+  target: 'http://morp:9004',
   changeOrigin: true
 }))
 

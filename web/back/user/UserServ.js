@@ -5,14 +5,14 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { initWebSChat } from './WsSChat.js';
 
 
 
 
-import authroute from '../src/routes/auth.js'
-import oauth2route from '../src/routes/Oauth2.js'
-import securoute from '../src/routes/secu.js'
+
+import authroute from './src/routes/auth.js'
+import oauth2route from './src/routes/Oauth2.js'
+import securoute from './src/routes/secu.js'
 
 
 dotenv.config();
@@ -32,16 +32,19 @@ app.use(session({
   saveUninitialized: true
 }))
 
+app.use((req, res, next) => {
+  console.log(`[USER_S SERVICE] ${req.method} ${req.path}`);
+  next();
+});
 
-app.use('/api/auth', authroute);
-app.use('/api/oauth2', oauth2route);
-app.use('/api/secu', securoute);
+app.use('/', authroute);
+app.use('/', oauth2route);
+app.use('/', securoute);
 
 
 (async () => {
   try {
     const server = http.createServer(app);
-    initWebSChat(server);
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);

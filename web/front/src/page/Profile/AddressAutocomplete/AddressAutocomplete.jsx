@@ -1,8 +1,8 @@
 /* extern */
 import { useState } from "react";
 
-/*back*/
-import { showAlert } from "BACK/fct1.js";
+// /*back*/
+// import { showAlert } from "BACK/fct1.js";
 
 /* Css */
 import "./AddressAutocomplete.scss";

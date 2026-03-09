@@ -16,7 +16,7 @@ export { default as session } from 'express-session';
 export { default as QRCode } from 'qrcode';
 export { authenticator } from 'otplib';
 export { error, time } from 'console';
-export { majDb } from '../fct.js'
+// export { majDb } from '../fct.js'
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -32,7 +32,7 @@ import PswEmail from '../models/PssWrdEmail.js';
 import StatMorp from '../models/StatMorp.js';
 import GameMorp from '../models/GameMorp.js';
 import HistoryMorp from '../models/HistoryMorp.js';
-import {decrypt} from '../crypt.js'
+import {decrypt} from './crypt.js'
 
 const router = express.Router();
 export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -86,16 +86,18 @@ export function maj_conv(id, conv, namelst){
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   // console.log("Middleware auth for path:", req.method, req.originalUrl);
-  // console.log("Middleware auth for path WHAT:", req.path);
+  console.log("Middleware auth for path WHAT:", req.path);
   // console.log("Headers:", req.headers.origin);
   // console.log("tototo ", token);
-  if (!token && req.path !== '/' && req.path !== '/api/auth/login' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' && req.path !== '/api/oauth2/github/callback') {
-    return res.status(401).json({ success: false, redirect: true});
-  }
+   console.log('🌐 Middlewareavec body:', req.body);  
   if (req.path === '/' || req.path === '/api/auth/login' || req.path === '/api/auth/register' || req.path === '/api/oauth2/github' || req.path === '/api/oauth2/github/callback') {
     console.log("Public route, no auth required");
     return next() ;
   }
+  if (!token && req.path !== '/' && req.path !== '/api/auth/login' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' && req.path !== '/api/oauth2/github/callback') {
+    return res.status(401).json({ success: false, redirect: true});
+  }
+
   const valid = await checktok(token);
   if (valid === 1) {
     console.log("token not valid");

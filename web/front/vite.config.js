@@ -13,18 +13,22 @@ export default defineConfig({
   },
   '/ws/chatG': {
     target: 'ws://chatg_service:9001',
+    changeOrigin: true,
     ws: true,
   },
   '/ws/chatP': {
     target: 'ws://chatp_service:9002',
+    changeOrigin: true,
     ws: true,
   },
   '/ws/morp': {
-    target: 'ws://game:9004',
+    target: 'ws://morp:9004',
+    changeOrigin: true,
     ws: true,
   },
   '/ws/goat': {
     target: 'ws://game:2567',
+    changeOrigin: true,
     ws: true,
   },
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SocketM from "/app/front/tool/SocketManag.js";
+import SocketM from "/app/tool/SocketManag.js";
 import './Morpion.scss';
 
 function GoOUT(){
@@ -122,10 +122,10 @@ export default function Morpion() {
         setBoard(data.board);
     };
 
-    SocketM.onGame(handleTest);
+    SocketM.on("morp", handleTest, "un");
 
     return () => {
-      SocketM.offGame(handleTest);
+      SocketM.offGame("morp", "un");
     }
   }, []);
 

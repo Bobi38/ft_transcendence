@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 
 /* back */
-import checkCo from "BACK/fct1.js"
+import checkCo from "../../../tool/fct1.js"
 
 /* Css */
 import "./Navigation.scss";

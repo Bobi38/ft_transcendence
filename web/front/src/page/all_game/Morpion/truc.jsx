@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SocketM from "/app/front/tool/SocketManag.js";
+import SocketM from "/app/tool/SocketManag.js";
 import './Morpion.scss';
 
 function GoOUT(){

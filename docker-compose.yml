@@ -48,8 +48,7 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./web:/app
-      - ./web/back/src/fct1.js:/app/tool/fct1.js
+      - ./web/front/:/app
       - /app/node_modules
 
 
@@ -91,7 +90,7 @@ services:
     networks:
       - home
     ports:
-      - "9100:9100"
+      - "9005:9005"
     volumes:
       - ./web/back/auth:/app
       - ./web/back/src/models:/app/src/models
@@ -174,6 +173,7 @@ services:
       - /app/node_modules
     secrets:
     - cle_pswd
+    - cle_chat
 
   # ping:
   #   build: ./web/back/game
@@ -216,12 +216,13 @@ services:
       - "9004:9004"
     secrets:
       - cle_pswd
+      - cle_chat
     volumes:
-      - ./web/back/morp:/app/back/morp
+      - ./web/back/game/morp:/app
       - ./web/back/src/routes:/app/src/routes
       - ./web/back/src/models:/app/src/models
       - ./web/back/src/morpion:/app/src/morpion
-      - /app/back/morp/node_modules
+      - /app//node_modules
 
 secrets:
   data_pswd:
