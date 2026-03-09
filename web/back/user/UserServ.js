@@ -10,10 +10,9 @@ import { fileURLToPath } from 'url';
 
 
 
-import authroute from './src/routes/auth.js'
-import oauth2route from './src/routes/Oauth2.js'
-import securoute from './src/routes/secu.js'
 
+import friendroute from './src/routes/Friends.js'
+import Profileroute from './src/routes/Profile.js'
 
 dotenv.config();
 
@@ -37,9 +36,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', authroute);
-app.use('/', oauth2route);
-app.use('/', securoute);
+app.use('/', friendroute);
+app.use('/', Profileroute);
+
 
 
 (async () => {

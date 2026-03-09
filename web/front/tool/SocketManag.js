@@ -2,6 +2,7 @@ const paths = {
     chat: "/ws/chatG",
     priv: "/ws/chatP",
     morp: "/ws/morp",
+    morp: "/ws/friend",
     pong: "/ws/goat"
 };
 
@@ -27,6 +28,7 @@ class SocketManag{
             chat: new Map(),
             game: new Map(),
             room: new Map(),
+            friend: new Map(),
             priv: new Map(),
             friend: new Map()
         };

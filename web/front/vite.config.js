@@ -21,6 +21,11 @@ export default defineConfig({
     changeOrigin: true,
     ws: true,
   },
+  '/ws/friend': {
+    target: 'ws://user_service:9003',
+    changeOrigin: true,
+    ws: true,
+  },
   '/ws/morp': {
     target: 'ws://morp:9004',
     changeOrigin: true,
