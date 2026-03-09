@@ -66,7 +66,7 @@ export function playMorpion(message, socket){
         catch (err) {
             console.log("premier set _Turn");
             game._turn = id;
-            socket.send(JSON.stringify({type: "game", message: "en attente de joueur"}))
+            socket.send(JSON.stringify({type: "game", message: "recherche"}))
         }
         return;
     }

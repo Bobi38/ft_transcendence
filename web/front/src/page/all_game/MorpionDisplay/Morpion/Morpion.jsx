@@ -69,8 +69,9 @@ function NouvellePartie({ setBoard }){
 export default function Morpion() {
 
 
-    const [msg, setMsg] = useState("En attente...");
+    const [msg, setMsg] = useState("Royal Morpion(the ultim morpion)");
     const [board, setBoard] = useState(null);
+    const [wait, setWait] = useState(0);
 
       useEffect(() => {
 
@@ -95,19 +96,35 @@ export default function Morpion() {
 
     }, []);
 
+    useEffect(() => {
+        if (msg !== "recherche") return;
+
+        const interval = setInterval(() => {
+            setWait((prev) => (prev + 1) % 5);
+        }, 900);
+
+        return () => clearInterval(interval);
+    }, [msg]);
 
     return (
         <div className={`Morpion-root`}>
 
             <div className={`info`}>
 
-                {/* <RebootTruc/> */}
+                <RebootTruc/>
 
                 <GoOut/>
 
                 <SelectFirst/>
 
-                <div className="status">{msg}</div>
+                <div className="status">
+                    {msg === "recherche"
+                        ? <>
+                            recherche en cours<span className="wait">{".".repeat(wait)}</span>
+                        </>
+                        : msg
+                    }
+                </div>
 
             </div>
 

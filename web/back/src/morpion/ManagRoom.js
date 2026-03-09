@@ -70,8 +70,9 @@ class ManagerRoom {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
                 room.removePlayer(playerId, message);
-
+                console.log(`tu vois 0 ? lenght = ${room.length()}`);
                 if (room.length() === 0) {
+                    console.log("oui j ai vu 0");
                     this.removeRoom(room.getId());
                 }
 
