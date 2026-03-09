@@ -1,4 +1,5 @@
 import { ActionManager, Axis, ExecuteCodeAction, Plane, Quaternion, Scalar, Scene, TransformNode, UniversalCamera, Vector2, Vector3} from "@babylonjs/core";
+import { PlayerCamera } from "./PlayerCamera";
 
 export class PlayerInput {
     private _moveDirection : Vector3;
@@ -7,7 +8,7 @@ export class PlayerInput {
 
     private _inputMap;
     private _scene: Scene;
-    private _camera: UniversalCamera;
+    private _camera: PlayerCamera;
     private _handNode: TransformNode;
     private _racket: TransformNode;
 
@@ -16,7 +17,7 @@ export class PlayerInput {
     public prevMousePos = Vector2.Zero();
     public mouseDirBuffer : Vector2[] = [];
 
-    constructor(scene: Scene, camera: UniversalCamera, handNode: TransformNode, racket: TransformNode) {
+    constructor(scene: Scene, camera: PlayerCamera, handNode: TransformNode, racket: TransformNode) {
         this._scene = scene;
         this._camera = camera;
         this._handNode = handNode;
@@ -76,7 +77,7 @@ export class PlayerInput {
 
         const plane = Plane.FromPositionAndNormal(new Vector3(0,0,3), new Vector3(0,0,1));
         const ray = this._scene.createPickingRay(this._scene.pointerX, this._scene.pointerY,
-            null, this._camera);
+            null, this._camera.getUniversalCamera());
         const distance = ray.intersectsPlane(plane);
         if (distance) {
             const worldPointerPos : Vector3 = ray.origin.add(ray.direction.scale(distance));

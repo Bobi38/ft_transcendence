@@ -12,6 +12,8 @@ import { AdvancedDynamicTexture, Control, Rectangle, StackPanel, TextBlock } fro
 import { Ball } from "./ball";
 import { MyRoomState } from "./schema/MyRoomState";
 import { StateCallbackStrategy } from "@colyseus/schema";
+import { GUI } from "./GUI";
+import { PlayerCamera } from "./PlayerCamera";
 
 export class App {
     private _canvas: HTMLCanvasElement;
@@ -19,29 +21,20 @@ export class App {
     private _scene: Scene;
     private _environment: Environment;
     private _player: Player;
-    private _camera: UniversalCamera;
+    private _camera: PlayerCamera;
     private MAX_SPEED: number = 40;
     private _ball: Ball;
     private _room : Room<MyRoomState>;
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadow : ShadowGenerator;
-    private _ui : AdvancedDynamicTexture;
+    private _ui : GUI;
     public playerAssets;
     public enemyAssets;
 
-    // private _createCanvas() {
-    //     var canvas = document.getElementById("wingame");
-    //     canvas.style.width = "100%";
-    //     canvas.style.height = "100%";
-    //     return canvas;
-    // }
-
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is undefined");
-        // create the canvas html element and attach it to the webpage
         this._canvas = canvas;
 
-        // initialize babylon scene and engine
         this._engine = new Engine(this._canvas, true, {adaptToDeviceRatio: true});
         this._scene = new Scene(this._engine);
 
@@ -57,44 +50,7 @@ export class App {
             }
         });
 
-        // run the main render loop
         this._main();
-    }
-
-    private _addWaitingGUI() {
-        const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        this._ui = ui;
-
-        const banner = new Rectangle();
-        banner.width = "500px";
-        banner.height = "100px";
-        banner.cornerRadius = 25;
-        banner.thickness = 2;
-        banner.color = "white";
-        banner.background = "rgba(0,0,0,0.45)";
-        banner.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        banner.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-
-        ui.addControl(banner);
-
-        const panel = new StackPanel();
-        banner.addControl(panel);
-
-        const waitingText = new TextBlock();
-        waitingText.text = "Waiting for a second player";
-        waitingText.color = "white";
-        waitingText.fontSize = 36;
-        waitingText.fontFamily = "Inter";
-        waitingText.height = "50px";
-        waitingText.fontWeight = "bold";
-
-        panel.addControl(waitingText);
-
-        let dots = 0;
-        setInterval(() => {
-            dots = (dots + 1) % 4;
-            waitingText.text = "Waiting for a second player" + ".".repeat(dots);
-        }, 500);
     }
 
     private async _main(): Promise<void> {
@@ -104,16 +60,22 @@ export class App {
         this._room = room;
         const callback = Callbacks.get(room);
         this._callback = callback;
-        await this._start();
 
-        this._addWaitingGUI();
+        this._engine.displayLoadingUI();
+        await this._setupHavok();
+        await this._setupGameAssets();
+        await this._scene.whenReadyAsync();
+        this._engine.hideLoadingUI();
+
+        this._ui = new GUI();
+        this._ui.addWaitingUI();
 
         callback.listen("started", () => {
             if (!this._room.state.started)
                 return ;
             console.log("Game has started");
             this._player.unlockControls();
-            this._ui.dispose();
+            this._ui.disposeWaitingUI();
         });
 
         this._engine.runRenderLoop(() => {
@@ -124,35 +86,20 @@ export class App {
         });
     }
 
-    private async _start() : Promise<void> {
-        this._engine.displayLoadingUI();
-        await this._setupGame();
-        await this._scene.whenReadyAsync();
-        // this._scene.onBeforePhysicsObservable.add(() => {
-        //     console.log(this._ball.getMeshPosition());
-        //     console.log(this._ball.getVelocity());
-        // });
-        this._engine.hideLoadingUI();
-    }
-
-
-    private async _setupGame() {
-        let scene = new Scene(this._engine);
-        scene.clearColor = new Color4(0.015, 0.015, 0.2);
-        this._scene = scene;
-
-        const environment = new Environment(scene);
-        this._environment = environment;
-
+    private async _setupHavok() {
         const havokInstance = await HavokPhysics({
             locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
         });
         const havokPlugin = new HavokPlugin(true, havokInstance);
         havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+    }
 
+    private async _setupGameAssets() {
+        this._scene.clearColor = new Color4(0.015, 0.015, 0.2);
+        this._environment = new Environment(this._scene);
         await this._environment.load();
-        this._shadow = await this._initializeGameAsync(scene);
+        this._shadow = this._initLightAndBall(this._scene);
 
         this._callback.onAdd("players", (player, sessionId) => {
             console.log("player added:", sessionId);
@@ -169,7 +116,7 @@ export class App {
         });
     }
 
-    private async _initializeGameAsync(scene: Scene): Promise<ShadowGenerator> {
+    private _initLightAndBall(scene: Scene): ShadowGenerator {
         let light = new PointLight('PointLight', new Vector3(0,5,0), scene);
         light.diffuse = new Color3(1,1,1);
         light.intensity = 1;
@@ -189,24 +136,19 @@ export class App {
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            //console.log(this._ball.getMeshPosition());
-            //this._ball.setMeshPosition(newPos);
             this._ball.positionError = newPos.subtract(this._ball.getMeshPosition());
-            //console.log(newPos);
-            //console.log("something happened");
         });
         this._callback.onChange(this._room.state.ball.velocity, () => {
             const newVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
             this._ball.setVelocity(newVel);
         });
         this._scene.onBeforeRenderObservable.add(() => {
-            console.log(this._ball.positionError);
             if (!this._ball.positionError)
                 return ;
             const patchRate = 0.05; //in seconds
             const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
             const fractionElapsed = patchRate / dt;
-            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed);
+            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
             const ballPos = this._ball.getMeshPosition();
             this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
             this._ball.positionError.scaleInPlace(1 - correctionFactor);
@@ -216,37 +158,16 @@ export class App {
         return shadow;
     }
 
-    private _updateCamera(isNearSide: boolean) {
-        let cameraOffset;
-        if (isNearSide)
-            cameraOffset = new Vector3(0,3,-23);
-        else
-            cameraOffset = new Vector3(0,3,33);
-        let newPos = this._player.getPlayerPosition().add(cameraOffset);
-        this._camera.position = Vector3.Lerp(this._camera.position, newPos, 0.4);
-    }
-
-    private _setupPlayerCamera(isNearSide: boolean) {
-        if (isNearSide)
-            this._camera = new UniversalCamera("cam", new Vector3(0,3,-23), this._scene);
-        else {
-            this._camera = new UniversalCamera("cam", new Vector3(0,3, 33), this._scene);
-            this._camera.rotation = new Vector3(0, Math.PI, 0);
-        }
-        this._camera.fov = 0.47;
-        this._scene.activeCamera = this._camera;
-    }
-
     private async _setupPlayer(position: Vector3, isNearSide: boolean) {
         this.playerAssets = await this._loadCharacterAssets(position);
-        this._setupPlayerCamera(isNearSide);
+        this._camera = new PlayerCamera(isNearSide, this._scene);
         this._player = new Player(this.playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
         this._scene.registerBeforeRender(() => {
             this._player.updateBody();
             this._player.updateRacket();
-            this._updateCamera(isNearSide);
+            this._camera.updateCamera(isNearSide, this._player.getPlayerPosition());
         });
     }
 
@@ -254,39 +175,38 @@ export class App {
         this.enemyAssets = await this._loadCharacterAssets(position);
     }
 
-        private async _loadCharacterAssets(position: Vector3): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
-            let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
+    private async _loadCharacterAssets(position: Vector3): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
+        let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
 
-            body.isVisible = false;
+        body.isVisible = false;
 
-            body.position = position;
-            let bodymtl = new StandardMaterial("red", this._scene);
-            bodymtl.diffuseColor = Color3.Red();
-            body.material = bodymtl;
-            body.isPickable = false;
-            const hand_node = new TransformNode("hand_node", this._scene)
-            hand_node.position = new Vector3(0.4, 2, 1);
-            const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.5});
-            hand.material = bodymtl;
+        body.position = position;
+        let bodymtl = new StandardMaterial("red", this._scene);
+        bodymtl.diffuseColor = Color3.Red();
+        body.material = bodymtl;
+        body.isPickable = false;
+        const hand_node = new TransformNode("hand_node", this._scene)
+        hand_node.position = new Vector3(0.4, 2, 1);
+        const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.5});
+        hand.material = bodymtl;
 
-            let racketmtl = new StandardMaterial("white", this._scene);
-            racketmtl.diffuseColor = new Color3(0.4,0.2,0);
-            let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.2, height: 0.8});
-            stick.position._y = 0.4;
-            stick.material = racketmtl;
-            const racket = MeshBuilder.CreateCylinder("racket", {diameter: 1, height: 0.2});
-            racket.material = racketmtl;
-            racket.position._y = 0.7;
-            //racket.rotation = new Vector3(Math.PI / 2, 0, 0);
-            racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
-            
-            let racketRoot = new TransformNode("racketRoot", this._scene);
-    
-            racket.parent = stick;
-            stick.parent = hand;
-            hand.parent = racketRoot;
-            racketRoot.parent = hand_node;
-            hand_node.parent = body;
-            return { mesh: body, handNode: hand_node, racketNode: racketRoot};
-        }
+        let racketmtl = new StandardMaterial("white", this._scene);
+        racketmtl.diffuseColor = new Color3(0.4,0.2,0);
+        let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.2, height: 0.8});
+        stick.position._y = 0.4;
+        stick.material = racketmtl;
+        const racket = MeshBuilder.CreateCylinder("racket", {diameter: 1, height: 0.2});
+        racket.material = racketmtl;
+        racket.position._y = 0.7;
+        racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
+        
+        let racketRoot = new TransformNode("racketRoot", this._scene);
+
+        racket.parent = stick;
+        stick.parent = hand;
+        hand.parent = racketRoot;
+        racketRoot.parent = hand_node;
+        hand_node.parent = body;
+        return { mesh: body, handNode: hand_node, racketNode: racketRoot};
+    }
 }
