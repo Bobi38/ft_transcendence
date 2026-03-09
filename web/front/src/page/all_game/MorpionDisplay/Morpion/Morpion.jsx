@@ -1,6 +1,14 @@
+/* extern */
 import { useState, useEffect } from "react";
-import SocketM from "/app/front/tool/SocketManag.js";
+
+/* back */
+import  SocketM  from "/app/front/tool/SocketManag.js";
+
+/* Css */
 import './Morpion.scss';
+
+/* Components */
+import Board from "./Board/Board.jsx";
 
 function RebootTruc() {
 
@@ -58,32 +66,6 @@ function NouvellePartie({ setBoard }){
     );
 }
 
-function Board({ board }) {
-
-    function handleClick(i) {
-        SocketM.sendd({
-            type: "game",
-            message: i,
-        })
-    }
-
-    return (
-        <div className={`Board-root`}>
-
-            {board?.map((element, index) => (
-
-                <button key={index} className={`square`} 
-                        onClick={() => handleClick(index)}>
-
-                    {element}
-                </button>
-
-            ))}
-
-        </div>
-    );
-}
-
 export default function Morpion() {
 
 
@@ -93,13 +75,6 @@ export default function Morpion() {
       useEffect(() => {
 
         console.log("Morpion component called");
-
-        // SocketM.sendd({
-        //       type: "game",
-        //       message: "est-ce que tu me reçois ?"
-        // });
-        
-        console.log("Morpion component after connection");
 
         const handleTest = (data) => {
          
@@ -120,33 +95,23 @@ export default function Morpion() {
 
     }, []);
 
-    // useEffect(() => {
-
-    //   return (() => {
-    //         SocketM.sendd({
-    //             type: "game",
-    //             message: "je pars"
-    //         })
-    //     });
-    // }, [])
 
     return (
         <div className={`Morpion-root`}>
+
             <div className={`info`}>
 
-                <div className="status">{msg}</div>
-                
-                <RebootTruc/>
-            
+                {/* <RebootTruc/> */}
+
                 <GoOut/>
-            
+
                 <SelectFirst/>
 
-            </div>
-  
+                <div className="status">{msg}</div>
 
-            <Board board={board}/>
-  
+            </div>
+
+            <Board board={board} isGame={true}/>
 
             <NouvellePartie setBoard={setBoard}/>
 

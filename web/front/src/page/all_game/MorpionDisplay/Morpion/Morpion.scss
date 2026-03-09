@@ -19,52 +19,13 @@
         align-items: center;
         align-content: center;
         flex-direction: column;
-        gap: 5px;
+        gap: 10px;
         .status {
           margin-bottom: 10px;
           font-weight: bold;
         }
     }
 
-    // .Board-root{
-        
-    //     .Board-row {
-    //         display: flex;            
-    //         .square {
-    //             width: 60px;
-    //             height: 60px;
-    //             font-size: 24px;
-    //             cursor: pointer;
-    //         }
-    //     }
-    // }
-    
-    // .Board-root{
-    //     height: 60%;
-    //     width: 60%;
 
-    //     .Board-row {
-    //         display: flex;
-    //         height: 33%;
-    //         .square {
-    //             width: 33%;
-    //             font-size: 24px;
-    //             cursor: pointer;
-    //         }
-    //     }
-    // }
-
-    .Board-root{
-        height: 60%;
-        width: 60%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        gap: 5px;
-
-        .square {
-            font-size: 24px;
-        }
-    }
         
 }

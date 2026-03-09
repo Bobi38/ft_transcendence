@@ -11,6 +11,7 @@ import PrivChat from './models/privchat.js';
 import { seedGameMorp } from './morpion/seedmorp.js';
 import PrivMess from './models/privmess.js';
 import StatMorp from './models/StatMorp.js';
+import GameMorp from './models/GameMorp.js';
 import HistoryMorp from './models/HistoryMorp.js';
 import Friend from './models/friend.js';
 
@@ -136,24 +137,24 @@ async function CreatHistory() {
 
     await user1stat.increment(data);
  
-    await GameMorp.create({
-        how_win: "horizontal",
-        date_game: this._date_Game,
-        ending: this._ending,
+    // await GameMorp.create({
+    //     how_win: "horizontal",
+    //     date_game: this._date_Game,
+    //     ending: this._ending,
 
-        player_1, 
-        player_2,
+    //     player_1, 
+    //     player_2,
 
-        time_player_1,
-        time_player_2,
+    //     time_player_1,
+    //     time_player_2,
 
-        nb_turn_player_1,
-        nb_turn_player_2,
+    //     nb_turn_player_1,
+    //     nb_turn_player_2,
 
-        map: this.serializeBoard(),
-        winner,  // winner /  winner abort
-        loser
-    });
+    //     map: this.serializeBoard(),
+    //     winner,  // winner /  winner abort
+    //     loser
+    // });
 
     // const deux = await StatMorp.findOne({where: {idUser: 1}});
 

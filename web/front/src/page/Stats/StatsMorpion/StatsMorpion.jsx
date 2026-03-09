@@ -121,6 +121,7 @@ export default function StatsMorpion() {
             // fetch_history("nana", currentPage);
     }, [currentPage]);
 
+    const [stats, setStats] = useState("OXOXXXOXO")
     return (
         
         <div className={`StatsMorpion-root border-base`}>
@@ -128,14 +129,14 @@ export default function StatsMorpion() {
             <div className={`history-container border-1`}>
 
                 <div className={`history-card-container border-2`}>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
-                    <StatsMorpionHistoryCard/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <StatsMorpionHistoryCard stats={stats.split('')}/>
                 </div>
                 <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
 

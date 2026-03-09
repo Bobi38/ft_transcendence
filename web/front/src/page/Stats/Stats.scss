@@ -5,7 +5,7 @@ $header_height: 10%;
 $container_height: $root_height - $header_height;
 
 .Stats-root{
-
+    
 	@include mix.page;
     
     padding: 1rem;
@@ -40,6 +40,9 @@ $container_height: $root_height - $header_height;
         height: $container_height;
         width: 100%;
         flex: 1;
+         li , li button {
+            color: rgb(2, 119, 143);
+        }
     }
 
 }

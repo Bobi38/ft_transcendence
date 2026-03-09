@@ -95,9 +95,9 @@ export default function PrivateMessage() {
                     <div className={`info border-1`}>
 
                         <div className={`bloc-friend-addfriend border-2`}>
-                            <div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }>Ajouter / Accepter<br/>Amis</div>
+                            <div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }><p>Ajouter / Accepter</p><p>Amis</p></div>
                             <hr/>
-                            <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }>Amis</div>
+                            <div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }><p>Amis</p></div>
                         </div>
 
                         <hr className={`big`}/>

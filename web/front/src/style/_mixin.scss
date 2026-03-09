@@ -12,10 +12,14 @@
     @include full;
     background-color: blueviolet;
     border-radius: 0.5rem;
+    p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
+        color: rgb(10, 201, 240);
+    }
 }
 
 
 @mixin icone{
+    
     transition: all 0.2s;
     padding: 0.6rem;
 
