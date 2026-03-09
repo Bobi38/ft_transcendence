@@ -53,12 +53,12 @@ export class Environment {
         ground.material = wall_mat;
         ceiling.material = wall_mat;
 
-        let elevanWall = MeshBuilder.CreateBox("wall_elevan", {size: 1}, this._scene);
-        elevanWall.scaling = ToVec3(env.groundDimensions);
-        elevanWall.receiveShadows = true;
-        elevanWall.material = wall_mat;
-        elevanWall.position = ToVec3(env.elevanPos);
-        elevanWall.rotationQuaternion = ToQuat(env.elevanQuaternion);
+        // let elevanWall = MeshBuilder.CreateBox("wall_elevan", {size: 1}, this._scene);
+        // elevanWall.scaling = ToVec3(env.groundDimensions);
+        // elevanWall.receiveShadows = true;
+        // elevanWall.material = wall_mat;
+        // elevanWall.position = ToVec3(env.elevanPos);
+        // elevanWall.rotationQuaternion = ToQuat(env.elevanQuaternion);
 
         const wall_leftAggregate = new PhysicsAggregate(wall_left, PhysicsShapeType.BOX, {mass:0, restitution:1, friction: 0}, this._scene);
         const wall_rightAggregate = new PhysicsAggregate(wall_right, PhysicsShapeType.BOX, {mass:0, restitution:1, friction: 0}, this._scene);
@@ -69,8 +69,8 @@ export class Environment {
         groundAggregate.body.setMotionType(PhysicsMotionType.STATIC);
         ceilingAggregate.body.setMotionType(PhysicsMotionType.STATIC);
 
-        const elevanWallAggregate = new PhysicsAggregate(elevanWall, PhysicsShapeType.BOX, {mass:0, restitution:1, friction:0}, this._scene);
-        elevanWallAggregate.body.setMotionType(PhysicsMotionType.STATIC);
+        // const elevanWallAggregate = new PhysicsAggregate(elevanWall, PhysicsShapeType.BOX, {mass:0, restitution:1, friction:0}, this._scene);
+        // elevanWallAggregate.body.setMotionType(PhysicsMotionType.STATIC);
         
     }
 }

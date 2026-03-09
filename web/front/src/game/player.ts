@@ -1,4 +1,4 @@
-import { AbstractMesh, Axis, Mesh, PhysicsAggregate, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 import { Room } from "@colyseus/sdk";
 
@@ -12,6 +12,8 @@ export class Player extends TransformNode {
     public racket: TransformNode;
     public racketBody: PhysicsBody;
     public hand_node: TransformNode;
+    public sessionId: string;
+    private _controlsEnabled : boolean = false;
 
     constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
         super("player", scene);
@@ -20,12 +22,14 @@ export class Player extends TransformNode {
         this.mesh = assets.mesh;
         this.mesh.parent = this;
 
-        this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
-        this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
-        shadowGenerator.addShadowCaster(this.mesh, false);
-        shadowGenerator.addShadowCaster(scene.getMeshByName("racket"), false);
-        shadowGenerator.addShadowCaster(scene.getMeshByName("hand"), false);
-        shadowGenerator.addShadowCaster(scene.getMeshByName("stick"), false);
+        this.hand_node = assets.handNode;
+        this.racket = assets.racketNode;
+        // this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
+        // this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
+        shadowGenerator.addShadowCaster(this.mesh, true);
+        // shadowGenerator.addShadowCaster(scene.getMeshByName("racket"), false);
+        // shadowGenerator.addShadowCaster(scene.getMeshByName("hand"), false);
+        // shadowGenerator.addShadowCaster(scene.getMeshByName("stick"), false);
     
         const colRacketShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(),
             new Vector3(1.5, 2.5, 0.5), scene);
@@ -56,24 +60,20 @@ export class Player extends TransformNode {
             const ballVel = ballBody.getLinearVelocity(); 
             this.room.send("racketImpact", {position: ballPos.asArray(), velocity: ballVel.asArray()});
         });
-
-        // this.racketAggregate = new PhysicsAggregate(scene.getNodeByName("rocketRoot") as TransformNode,
-        //     PhysicsShapeType.BOX,
-        //     {extents: new Vector3(1.5, 2.5, 1), 
-        //     mass: 0, restitution: 1.2, friction: 0.5}, this.scene);
-        // this.racketAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
-        // this.racketAggregate.body.disablePreStep = false;
-
         const physicsViewer = new PhysicsViewer(this.scene);
         physicsViewer.showBody(colRacketBody);
     }
 
     public updateBody() {
         //this._moveDirection = new Vector3(this._input.horizontal, 0, this._input.vertical).normalize();
+        if (!this._controlsEnabled)
+            return ;
         this.mesh.moveWithCollisions(this._input.getMoveDirection());
     }
 
     public updateRacket() {
+        if (!this._controlsEnabled)
+            return ;
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
     }
@@ -92,5 +92,9 @@ export class Player extends TransformNode {
 
     public getRacketNode() : TransformNode {
         return this.racket;
+    }
+
+    public unlockControls() {
+        this._controlsEnabled = true;
     }
 }

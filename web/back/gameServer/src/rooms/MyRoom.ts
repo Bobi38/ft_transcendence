@@ -96,15 +96,21 @@ export class MyRoom extends Room {
      * Called when a client joins the room.
      */
     console.log(client.sessionId, "joined room", this.roomId);
-    this._nextPlayerIndex++;
     const player = new Player();
     player.position.x = 0;
     player.position.y = 1.5;
     if (this._nextPlayerIndex % 2 == 0)
       player.position.z = 0;
-    else
+    else {
       player.position.z = 20;
+      player.sideNear = false;
+    }
     this.state.players.set(client.sessionId, player);
+    this._nextPlayerIndex++;
+    if (this.state.players.size == 2) {
+      console.log("Game starting");
+      this.state.started = true;
+    }
   }
 
   onLeave (client: Client, code: CloseCode) {

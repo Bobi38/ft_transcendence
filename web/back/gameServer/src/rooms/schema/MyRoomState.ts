@@ -20,9 +20,11 @@ export class Ball extends Schema {
 
 export class Player extends Schema {
   @type(Vector3) position = new Vector3();
+  @type("boolean") sideNear = true;
 }
 
 export class MyRoomState extends Schema {
   @type(Ball) ball = new Ball();
+  @type("boolean") started = false;
   @type({ map: Player }) players = new MapSchema<Player>();
 }

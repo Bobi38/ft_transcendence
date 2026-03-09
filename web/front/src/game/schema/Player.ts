@@ -10,4 +10,5 @@ import { Vector3 } from './Vector3'
 
 export class Player extends Schema {
     @type(Vector3) public position: Vector3 = new Vector3();
+    @type("boolean") public sideNear!: boolean;
 }

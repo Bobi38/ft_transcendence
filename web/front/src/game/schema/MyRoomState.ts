@@ -11,5 +11,6 @@ import { Player } from './Player'
 
 export class MyRoomState extends Schema {
     @type(Ball) public ball: Ball = new Ball();
+    @type("boolean") public started!: boolean;
     @type({ map: Player }) public players: MapSchema<Player> = new MapSchema<Player>();
 }
