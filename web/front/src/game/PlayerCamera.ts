@@ -1,5 +1,4 @@
 import { Scene, UniversalCamera, Vector3 } from "@babylonjs/core";
-import { Player } from "./player";
 
 export class PlayerCamera {
     private _camera : UniversalCamera;

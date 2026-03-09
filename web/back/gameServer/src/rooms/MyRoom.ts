@@ -34,9 +34,20 @@ export class MyRoom extends Room {
       this._ball.setLinearVelocity(ballVel);
       this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
+    },
+    "bodyMoved": (client: Client, data: any) => {
+      //console.log(this.state.players.get(client.sessionId).position.z);
+      const playerPos = this.state.players.get(client.sessionId).position;
+      playerPos.x = data.position[0];
+      playerPos.y = data.position[1];
+      playerPos.z = data.position[2];
+      // this.state.players.get(client.sessionId).position.x = data.position[0];
+      // this.state.players.get(client.sessionId).position.y = data.position[1];
+      // this.state.players.get(client.sessionId).position.z = data.position[2];
+      //console.log(data.position);
+      //console.log(playerPos.x, playerPos.y, playerPos.z);
     }
   }
-  
 
   private async _startSimulation() {
     const engine = new NullEngine();

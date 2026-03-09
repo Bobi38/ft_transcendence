@@ -15,8 +15,9 @@ export class Player extends TransformNode {
     public sessionId: string;
     private _controlsEnabled : boolean = false;
 
-    constructor(assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
+    constructor(sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
         super("player", scene);
+        this.sessionId = sessionId;
         this.scene = scene;
         this.room = room;
         this.mesh = assets.mesh;
@@ -69,6 +70,10 @@ export class Player extends TransformNode {
         if (!this._controlsEnabled)
             return ;
         this.mesh.moveWithCollisions(this._input.getMoveDirection());
+
+        const playerPos = this.getPlayerPosition();
+        //console.log(playerPos);
+        this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
     public updateRacket() {

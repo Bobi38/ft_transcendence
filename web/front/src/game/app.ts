@@ -8,12 +8,12 @@ import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
 import HavokPhysics from "@babylonjs/havok";
-import { AdvancedDynamicTexture, Control, Rectangle, StackPanel, TextBlock } from "@babylonjs/gui";
 import { Ball } from "./ball";
 import { MyRoomState } from "./schema/MyRoomState";
 import { StateCallbackStrategy } from "@colyseus/schema";
 import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
+import { Enemy } from "./enemy";
 
 export class App {
     private _canvas: HTMLCanvasElement;
@@ -21,6 +21,7 @@ export class App {
     private _scene: Scene;
     private _environment: Environment;
     private _player: Player;
+    private _enemy: Enemy;
     private _camera: PlayerCamera;
     private MAX_SPEED: number = 40;
     private _ball: Ball;
@@ -28,8 +29,7 @@ export class App {
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadow : ShadowGenerator;
     private _ui : GUI;
-    public playerAssets;
-    public enemyAssets;
+    //public playerAssets;
 
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is undefined");
@@ -106,12 +106,12 @@ export class App {
             if (sessionId === this._room.sessionId) {
                 const playerPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 console.log(playerPos);
-                this._setupPlayer(playerPos, player.sideNear);
+                this._setupPlayer(sessionId, playerPos, player.sideNear);
             }
             else {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 console.log(enemyPos);
-                this._setupEnemy(enemyPos, player.sideNear);
+                this._setupEnemy(sessionId, enemyPos, player.sideNear);
             }
         });
     }
@@ -158,10 +158,10 @@ export class App {
         return shadow;
     }
 
-    private async _setupPlayer(position: Vector3, isNearSide: boolean) {
-        this.playerAssets = await this._loadCharacterAssets(position);
+    private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
+        const playerAssets = await this._loadCharacterAssets(position, true);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(this.playerAssets, this._scene, this._shadow, this._room);
+        this._player = new Player(sessionId, playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
         this._scene.registerBeforeRender(() => {
@@ -171,14 +171,25 @@ export class App {
         });
     }
 
-    private async _setupEnemy(position: Vector3, isNearSide: boolean) {
-        this.enemyAssets = await this._loadCharacterAssets(position);
+    private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
+        const enemyAssets = await this._loadCharacterAssets(position, false);
+        this._enemy = new Enemy(this._scene, enemyAssets, this._shadow, this._room);
+        console.log(this._room.state.players);
+        this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
+            console.log("updating enemy pos");
+            const newPos = this._room.state.players.get(sessionId).position;
+            this._enemy.updatePosition(new Vector3(newPos.x, newPos.y, newPos.z));
+        });
+        this._scene.registerBeforeRender( () => {
+            this._enemy.updateBody();
+        });
     }
 
-    private async _loadCharacterAssets(position: Vector3): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
+    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
         let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
 
-        body.isVisible = false;
+        if (isPlayer)
+            body.isVisible = false;
 
         body.position = position;
         let bodymtl = new StandardMaterial("red", this._scene);
