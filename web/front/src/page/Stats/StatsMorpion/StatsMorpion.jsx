@@ -147,40 +147,41 @@ export default function StatsMorpion() {
             <div className={`game-winrate border-1`}>
                     
                     <div className={`wl-graph border-2`}>
+
                         <p>Graph</p>
-                        <p>win:{statToDisplay&&statToDisplay.all_win_without_abort}</p>
-                        <p>lose:{statToDisplay&&statToDisplay.all_lose_without_abort}</p>
-                        <p>win:{statToDisplay&&statToDisplay.win_abort}</p>
-                        <p>lose:{statToDisplay&&statToDisplay.lose_abort}</p>
+                        <p>win: { statToDisplay && statToDisplay.all_win_without_abort } </p>
+                        <p>lose: { statToDisplay && statToDisplay.all_lose_without_abort } </p>
+                        <p>win: { statToDisplay && statToDisplay.win_abort } </p>
+                        <p>lose: { statToDisplay && statToDisplay.lose_abort } </p>
 
                     </div>
 
                     <div className={`wl-o-x border-2`}>
 
                         <p>ox-win-loss</p>
-                        <p>winO:{statToDisplay&&statToDisplay.type_O_win}</p>
-                        <p>loseO:{statToDisplay&&statToDisplay.type_O_lose}</p>
-                        <p>winX:{statToDisplay&&statToDisplay.type_X_win}</p>
-                        <p>loseX:{statToDisplay&&statToDisplay.type_X_lose}</p>
+                        <p>winO: { statToDisplay && statToDisplay.type_O_win } </p>
+                        <p>loseO: { statToDisplay && statToDisplay.type_O_lose } </p>
+                        <p>winX: { statToDisplay && statToDisplay.type_X_win } </p>
+                        <p>loseX: { statToDisplay && statToDisplay.type_X_lose } </p>
 
                     </div>
 
                     <div className={`wl-horizontal border-2`}>
                         <p>horizontal</p>
-                        <p>win:{statToDisplay&&statToDisplay.win_horizontal}</p>
-                        <p>lose:{statToDisplay&&statToDisplay.lose_horizontal}</p>
+                        <p>win: { statToDisplay && statToDisplay.win_horizontal } </p>
+                        <p>lose: { statToDisplay && statToDisplay.lose_horizontal } </p>
                     </div>
 
                     <div className={`wl-diagonal border-2`}>
                         <p>diagonal</p>
-                        <p>win:{statToDisplay&&statToDisplay.win_diagonal}</p>
-                        <p>lose:{statToDisplay&&statToDisplay.lose_diagonal}</p>
+                        <p>win: { statToDisplay && statToDisplay.win_diagonal } </p>
+                        <p>lose: { statToDisplay && statToDisplay.lose_diagonal } </p>
                     </div>
 
                     <div className={`wl-vertical border-2`}>
                         <p>vertical</p>
-                        <p>win:{statToDisplay&&statToDisplay.win_vertical}</p>
-                        <p>lose:{statToDisplay&&statToDisplay.lose_vertical}</p>
+                        <p>win: { statToDisplay && statToDisplay.win_vertical } </p>
+                        <p>lose: { statToDisplay && statToDisplay.lose_vertical } </p>
                     </div>
 
             </div>
