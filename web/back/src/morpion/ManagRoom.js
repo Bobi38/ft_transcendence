@@ -38,14 +38,11 @@ class ManagerRoom {
     isInRoom(playerId) {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
-                console.log("IsInRoom : deja present");
+                // console.log("IsInRoom : deja present");
                 return room;
             }
         }
-        console.log("IsInRoom : joueur inconnu");
-
-        // if (this.lobby.isInRoom(playerId))
-        //     return this.lobby;
+        // console.log("IsInRoom : joueur inconnu");
 
         return null;
     }

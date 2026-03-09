@@ -185,12 +185,12 @@ class MorpionRoom extends Room {
         const currentPlayer = this.getCurrentPlayer();
         const action = () => {
             currentPlayer.send({
-            message: "⏰ Dépêche-toi de jouer !",
+            message: "Dépêche-toi de jouer !",
             board: this._board
             })
         };
 
-        player.startTurnTimer(action, 3000);
+        currentPlayer.startTurnTimer(action, 3000);
     }
 
     serializeBoard() {

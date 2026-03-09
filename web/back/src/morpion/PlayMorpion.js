@@ -10,7 +10,7 @@ export function playMorpion(message, socket){
     cooldowns.set(id, true);
     setTimeout(() => cooldowns.delete(id), 200);
 
-    console.log(`connecte dans play Morpion ${message} de ${id}`)
+    // console.log(`connecte dans play Morpion ${message} de ${id}`)
 
     let game = manager_room.isInRoom(id);
 
@@ -22,24 +22,6 @@ export function playMorpion(message, socket){
     if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
         return;
-    }
-
-    if (message === "je pars") {
-        console.log("abondon de ", id);
-
-        if (!game.getLock()) {
-            manager_room.removePlayer(id, "bye bye");
-            return;
-        }
-
-        if (id === game.getTurn())
-            game.switchTurn;
-        game.handleEndGame('abort', game.getTurn());
-        game.notifyTurn(
-            { message: "Abondon - tu as gagne", turn: false },
-            { message: "Abondon - tu as perdu", turn: false });
-        manager_room.removeRoom(game.getId());
-        return ;
     }
 
     if (message === "je veux jouer") {
@@ -69,18 +51,37 @@ export function playMorpion(message, socket){
         return;
     }
 
+    if (!game) return ;
+
+    if (message === "je pars") {
+
+        if (!game.getLock()) {
+            manager_room.removePlayer(id, "bye bye");
+            return;
+        }
+
+        if (id === game.getTurn())
+            game.switchTurn;
+        game.handleEndGame('abort', game.getTurn());
+        game.notifyTurn(
+            { message: "Abondon - tu as gagne", turn: false },
+            { message: "Abondon - tu as perdu", turn: false });
+        manager_room.removeRoom(game.getId());
+        return ;
+    }
+
     if (message === "playSecond") {
-        console.log("message pour jouer en second");
+
         if (game.setFirstPlayer())
             socket.send(JSON.stringify({ type: "game", message: `${game} : tu joues en second` }))
         return;
     }
 
-    if (!game || !game.getLock()) return;
-    console.log("avant turn");
+    if (!game.getLock()) return;
+
     if (!game.isTurnPlayer(id)) return;
 
-    console.log("le jeu est lock - ca joue");
+    console.log(`je suis dans ${game}`);
     if (game.play(id, message)) {
         if(game.checkVictory()){
             console.log(`fin de la partie de ${game}`);
@@ -88,10 +89,12 @@ export function playMorpion(message, socket){
             return ;
         }
         game.switchTurn();
+        console.log(` joueur ${id} a jouer sur la case ${message}`)
         game.notifyTurn(
             { message: "À toi de jouer", turn: true },
             { message: "Tour adverse", turn: false });
         game.startTurnTimer();
+        console.log(`le changement`);
     }
 
 }
