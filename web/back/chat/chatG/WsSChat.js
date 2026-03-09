@@ -1,6 +1,6 @@
 import ws from 'ws';
 import { WebSocketServer } from 'ws';
-import {chat} from '../../src/fct.js';
+import {chat} from './ClassChat.js';
 
 
 function getCookie(name, cookieHeader) {

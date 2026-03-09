@@ -172,7 +172,7 @@ app.use('/api/auth', createProxyMiddleware({
 }))
 
 app.use('/api/profile', createProxyMiddleware({
-  target: 'http://localhost:9',
+  target: 'http://localhost:9100',
   changeOrigin: true
 }))
 

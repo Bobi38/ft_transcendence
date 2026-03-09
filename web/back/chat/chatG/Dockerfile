@@ -2,10 +2,10 @@ FROM node:24.13.0
 
 
 WORKDIR /app
-COPY package*.json ./\
+COPY package*.json ./
 RUN npm install
 
 COPY . .
 
-EXPOSE 9001 9002
+EXPOSE 9001
 CMD ["npm", "run", "dev"]

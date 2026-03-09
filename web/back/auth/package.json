@@ -2,7 +2,7 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./src/server.js",
+  "main": "./AuthServ.js",
 "scripts": {
   "dev": "nodemon AuthServ.js",
   "start": "node AuthServ.js"

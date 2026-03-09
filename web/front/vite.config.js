@@ -7,32 +7,27 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': {
-        target: 'http://localhost:9000', 
-        changeOrigin: true,
-        secure: false,
-      },
-    '/ws/chatG': {
-      target: 'ws://localhost:9001', 
-      ws: true,
-      changeOrigin: true,
-    },
-    '/ws/chatP': {
-      target: 'ws://localhost:9002', 
-      ws: true,
-      changeOrigin: true,
-    },
-    '/ws/morp': {
-      target: 'ws://localhost:9004', 
-      ws: true,
-      changeOrigin: true,
-    },
-    '/ws/goat': {
-      target: 'ws://localhost:2567',
-      ws: true,
-      changeOrigin: true,
-    },
-    },
+  '/api': {
+    target: 'http://gateway:9000',
+    changeOrigin: true,
+  },
+  '/ws/chatG': {
+    target: 'ws://chatg_service:9001',
+    ws: true,
+  },
+  '/ws/chatP': {
+    target: 'ws://chatp_service:9002',
+    ws: true,
+  },
+  '/ws/morp': {
+    target: 'ws://game:9004',
+    ws: true,
+  },
+  '/ws/goat': {
+    target: 'ws://game:2567',
+    ws: true,
+  },
+}
   },
   resolve: {
     alias: {

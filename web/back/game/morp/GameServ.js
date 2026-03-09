@@ -11,14 +11,14 @@ import { initWebSChat } from './WsSChat.js';
 
 
 //router
-import chatGroute from '../src/routes/ChatG.js'
+import Morpionroute from './routes/Morpion.js'
 
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PORT = process.env.PORT || 9001;
+const PORT = process.env.PORT || 9004;
 const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
@@ -32,9 +32,7 @@ app.use(session({
 }))
 
 
-app.use('/api/chatG', chatGroute);
-
-
+app.use('/api/morp', Morpionroute);
 
 (async () => {
   try {

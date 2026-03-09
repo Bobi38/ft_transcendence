@@ -2,7 +2,7 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./src/server.js",
+  "main": "./ChatServ.js",
 "scripts": {
   "dev": "nodemon ChatServ.js",
   "start": "node ChatServ.js"

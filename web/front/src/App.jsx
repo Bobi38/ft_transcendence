@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import { SocketProvider } from "../tool/SocketContext"
 import { useEffect, useState } from "react";
-import checkCo from "BACK/fct1.js"
+import checkCo from "../../back/src/fct1.js"
 
 /* back */
 import SocketM from "../tool/SocketManag";

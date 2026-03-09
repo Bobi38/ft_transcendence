@@ -83,10 +83,10 @@ app.use('/api/chatP', createProxyMiddleware({
   changeOrigin: true
 }))
 
-app.use('/api/game', createProxyMiddleware({
-  target: 'http://localhost:2567',
-  changeOrigin: true
-}))
+// app.use('/api/game', createProxyMiddleware({
+//   target: 'http://localhost:2567',
+//   changeOrigin: true
+// }))
 
 app.use('/api/morpion', createProxyMiddleware({
   target: 'http://localhost:9004',

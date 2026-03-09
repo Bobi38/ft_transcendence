@@ -10,15 +10,16 @@ import { initWebSChat } from './WsSChat.js';
 
 
 
-//router
-import chatGroute from '../src/routes/ChatG.js'
+import authroute from '../src/routes/auth.js'
+import oauth2route from '../src/routes/Oauth2.js'
+import securoute from '../src/routes/secu.js'
 
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PORT = process.env.PORT || 9001;
+const PORT = process.env.PORT || 9002;
 const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
@@ -32,8 +33,9 @@ app.use(session({
 }))
 
 
-app.use('/api/chatG', chatGroute);
-
+app.use('/api/auth', authroute);
+app.use('/api/oauth2', oauth2route);
+app.use('/api/secu', securoute);
 
 
 (async () => {

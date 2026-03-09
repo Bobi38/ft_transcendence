@@ -1,4 +1,4 @@
-import {decrypt, encrypt} from '../crypt.js';
+import {decrypt, encrypt} from './crypt.js';
 import {express, maj_conv, jwt, Op, secret} from './index.js';
 import {User, PrivChat, PrivMess} from './index.js';
 
