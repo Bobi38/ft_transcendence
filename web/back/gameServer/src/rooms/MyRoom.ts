@@ -36,16 +36,21 @@ export class MyRoom extends Room {
       console.log(client.sessionId,  "hit the ball: ", data);
     },
     "bodyMoved": (client: Client, data: any) => {
-      //console.log(this.state.players.get(client.sessionId).position.z);
       const playerPos = this.state.players.get(client.sessionId).position;
       playerPos.x = data.position[0];
       playerPos.y = data.position[1];
       playerPos.z = data.position[2];
-      // this.state.players.get(client.sessionId).position.x = data.position[0];
-      // this.state.players.get(client.sessionId).position.y = data.position[1];
-      // this.state.players.get(client.sessionId).position.z = data.position[2];
-      //console.log(data.position);
-      //console.log(playerPos.x, playerPos.y, playerPos.z);
+    },
+    "racketMoved": (client: Client, data: any) => {
+      const racketPos = this.state.players.get(client.sessionId).rackPos;
+      racketPos.x = data.position[0];
+      racketPos.y = data.position[1];
+      racketPos.z = data.position[2];
+      const racketRot = this.state.players.get(client.sessionId).rackRot;
+      racketRot.x = data.rotation[0];
+      racketRot.y = data.rotation[1];
+      racketRot.z = data.rotation[2];
+      racketRot.w = data.rotation[3];
     }
   }
 

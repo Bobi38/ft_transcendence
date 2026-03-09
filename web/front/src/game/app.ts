@@ -173,15 +173,21 @@ export class App {
 
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
         const enemyAssets = await this._loadCharacterAssets(position, false);
-        this._enemy = new Enemy(this._scene, enemyAssets, this._shadow, this._room);
+        this._enemy = new Enemy(this._scene, enemyAssets, this._shadow);
         console.log(this._room.state.players);
         this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
-            console.log("updating enemy pos");
             const newPos = this._room.state.players.get(sessionId).position;
-            this._enemy.updatePosition(new Vector3(newPos.x, newPos.y, newPos.z));
+            this._enemy.registerBody(new Vector3(newPos.x, newPos.y, newPos.z));
+        });
+        this._callback.onChange(this._room.state.players.get(sessionId).rackPos, () => {
+            const newPos = this._room.state.players.get(sessionId).rackPos;
+            const newRot = this._room.state.players.get(sessionId).rackRot;
+            this._enemy.registerRacket(new Vector3(newPos.x, newPos.y, newPos.z),
+                new Quaternion(newRot.x, newRot.y, newRot.z, newRot.w));
         });
         this._scene.registerBeforeRender( () => {
             this._enemy.updateBody();
+            this._enemy.updateRacket();
         });
     }
 

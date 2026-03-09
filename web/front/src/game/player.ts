@@ -81,6 +81,8 @@ export class Player extends TransformNode {
             return ;
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
+        this.room.send("racketMoved", {position: this.racket.position.asArray(),
+            rotation: this.racket.rotationQuaternion.asArray()});
     }
 
     public getPlayerPosition() : Vector3 {

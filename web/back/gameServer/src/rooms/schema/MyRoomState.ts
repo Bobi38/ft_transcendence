@@ -20,6 +20,8 @@ export class Ball extends Schema {
 
 export class Player extends Schema {
   @type(Vector3) position = new Vector3();
+  @type(Vector3) rackPos = new Vector3();
+  @type(Quaternion) rackRot = new Quaternion();
   @type("boolean") sideNear = true;
 }
 
