@@ -59,7 +59,7 @@ services:
     restart: always
 
   web:
-    build: ./web/
+    build: ./nweb/
     container_name: web
     depends_on:
       mysql:
@@ -71,7 +71,7 @@ services:
       DB_HOST: "mysql"
       DB_PORT:  3306
     volumes:
-      - ./web:/app:cached
+      - ./nweb:/app:cached
       - /app/node_modules
     networks:
       - home

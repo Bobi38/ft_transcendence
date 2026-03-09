@@ -39,7 +39,7 @@ services:
 
   front:
     container_name: front
-    build: ./web/front/
+    build: ./nweb/front/
     depends_on:
       mysql:
         condition: service_healthy
@@ -48,12 +48,12 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./web/front/:/app
+      - ./nweb/front/:/app
       - /app/node_modules
 
 
   gateway:
-    build: ./web/back/
+    build: ./nweb/back/
     container_name: gateway
     environment:
       DB_USER: "bobi"
@@ -69,14 +69,14 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./web/back/:/app
+      - ./nweb/back/:/app
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
   
   auth:
-    build: ./web/back/auth
+    build: ./nweb/back/auth
     container_name: auth
     environment:
       DB_USER: "bobi"
@@ -92,16 +92,16 @@ services:
     ports:
       - "9005:9005"
     volumes:
-      - ./web/back/auth:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./nweb/back/auth:/app
+      - ./nweb/back/src/models:/app/src/models
+      - ./nweb/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   chatp_service:
-    build: ./web/back/chat/chatP
+    build: ./nweb/back/chat/chatP
     container_name: chatp_service
     environment:
       DB_USER: "bobi"
@@ -117,16 +117,16 @@ services:
     ports:
       - "9002:9002"
     volumes:
-      - ./web/back/chat/chatP:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./nweb/back/chat/chatP:/app
+      - ./nweb/back/src/models:/app/src/models
+      - ./nweb/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   chatg_service:
-    build: ./web/back/chat/chatG
+    build: ./nweb/back/chat/chatG
     container_name: chatg_service
     environment:
       DB_USER: "bobi"
@@ -142,16 +142,16 @@ services:
     ports:
       - "9001:9001"
     volumes:
-      - ./web/back/chat/chatG:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./nweb/back/chat/chatG:/app
+      - ./nweb/back/src/models:/app/src/models
+      - ./nweb/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   user_service:
-    build: ./web/back/user
+    build: ./nweb/back/user
     container_name: user_service
     environment:
       DB_USER: "bobi"
@@ -167,16 +167,16 @@ services:
     ports:
       - "9003:9003"
     volumes:
-      - ./web/back/user:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./nweb/back/user:/app
+      - ./nweb/back/src/models:/app/src/models
+      - ./nweb/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   # ping:
-  #   build: ./web/back/game
+  #   build: ./nweb/back/game
   #   container_name: ping
   #   environment:
   #     DB_USER: "bobi"
@@ -194,12 +194,12 @@ services:
   #   secrets:
   #     - cle_pswd
   #   volumes:
-  #     - ./web/back/gameServer:/app/back/gameServer
+  #     - ./nweb/back/gameServer:/app/back/gameServer
   #     - /app/back/gameServer/node_modules
-  #     - ./web/back/src/routes:/app/src/routes
+  #     - ./nweb/back/src/routes:/app/src/routes
 
   morp:
-    build: ./web/back/game/morp
+    build: ./nweb/back/game/morp
     container_name: morp
     environment:
       DB_USER: "bobi"
@@ -218,10 +218,10 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/game/morp:/app
-      - ./web/back/src/routes:/app/src/routes
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/morpion:/app/src/morpion
+      - ./nweb/back/game/morp:/app
+      - ./nweb/back/src/routes:/app/src/routes
+      - ./nweb/back/src/models:/app/src/models
+      - ./nweb/back/src/morpion:/app/src/morpion
       - /app//node_modules
 
 secrets:

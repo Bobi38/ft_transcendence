@@ -5,6 +5,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { initWebSFriend } from './WsFriend.js';
 
 
 
@@ -18,7 +19,7 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PORT = process.env.PORT || 9002;
+const PORT = process.env.PORT || 9003;
 const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
@@ -44,6 +45,7 @@ app.use('/', Profileroute);
 (async () => {
   try {
     const server = http.createServer(app);
+    initWebSFriend(server);
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);

@@ -2,7 +2,7 @@ const paths = {
     chat: "/ws/chatG",
     priv: "/ws/chatP",
     morp: "/ws/morp",
-    morp: "/ws/friend",
+    friend: "/ws/friend",
     pong: "/ws/goat"
 };
 

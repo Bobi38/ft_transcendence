@@ -13,7 +13,7 @@ function getCookie(name, cookieHeader) {
 }
 
 export function initWebSChat(server) {
-  const wss = new WebSocketServer({ server, path: '/ws/chatG' });
+  const wss = new WebSocketServer({ server, path: '/ws/chatP' });
 
   let idd = 0;
   console.log('WebSocket server initialized on path /ws');
@@ -21,13 +21,12 @@ export function initWebSChat(server) {
     try{
       const iid = idd++;
       socket.id = iid;
-      console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-      console.log('URL:', req.url);
-      console.log('Headers upgrade:', req.headers.upgrade);
-      console.log('Headers socket:', socket.id);
-      console.log(req.headers.cookie)
+      // console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
+      // console.log('URL:', req.url);
+      // console.log('Headers upgrade:', req.headers.upgrade);
+      // console.log('Headers socket:', socket.id);
+      // console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
-
       if (!token) {
       // socket.close();
         return;
@@ -52,39 +51,43 @@ export function initWebSChat(server) {
       // const id = chat.finduserId(socket.userId);
       // if (exist){
       //   exist.socket = socket;
+      //   console.log("user already exist exist");
       // }
       // else if (id){
       //   id.socket = socket
+      //   // console.log("user already exist id");
       // }
       // else{
+        // console.log("new user, add to chat sessions");
         await chat.addtok(useid, socket, useid);
+        // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
       // }
     }catch(err){
       console.log("err debut wsss ", err);
     }
+    // console.log("taille =" , chat.countUser());
     socket.on('message', (message) => {
       try{
         const data = JSON.parse(message.toString());
         console.log('=== MESSAGE REÇU IN WSCHAT ===');
         console.log('Type:', data.type);
         console.log('===================');
-        if (data.type === 'mess'){
-          console.log("je suis dans un type messsssssssss " , socket.id)
+        if (data.type === 'priv_mess'){
+          console.log("je suis dans un type priv_messsssssssss")
           const nono = socket.userId;
-          const na = chat.finduserId(socket.userId)
+          const na = chat.finduserId(nono);
           const ni = na.username;
-          console.log ("----" , nono , "----", ni);
-          console.log("taille === ", chat.countUser());
+          const send = chat.findname(data.to);
+          console.log("name" , ni, " ", data.to)
           for (const session of chat.sessions.values()){
-            console.log("session ", session.userId);
-            console.log("idddd " + session.userId + "   "  +  nono + "-----");
-            if (session.socket.readyState === ws.OPEN && session.userId != nono){
-              console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
-              session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+            console.log(session.username, " " , session.userId, " ", session.socket.id);
+            if (send && session.socket.readyState === ws.OPEN && session.userId === send.userId){
+              console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
+              send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
             }
             if (session.socket.readyState === ws.OPEN && session.userId === nono){
-              console.log("MYSEFLF");
-              session.socket.send(JSON.stringify({type: 'message',monMsg: true, message: data.message, login: ni, timer: data.timer}));
+              console.log("innnnnnn" , session.username, " " , session.userId, " ", session.socket.id);
+              session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
             }
           }
         }
@@ -104,7 +107,7 @@ export function initWebSChat(server) {
     });
     socket.on('close', () => {
       try{
-        if (socket.cleanedUp) return;
+        if (socket.cleanedUp) return; // déjà traité
         socket.cleanedUp = true;
 
         const id = socket.userId;
@@ -133,7 +136,7 @@ export function initWebSChat(server) {
     for (const session of chat.sessions.values()){
       const so = session.socket;
       console.log(session.socket.id);
-      if (!so || !so.isAlive || so.readyState != ws.OPEN) {
+      if (!so.isAlive) {
         console.log('Socket morte', so.id);
         chat.removetokBySocketId(so.id);
         // so.terminate();

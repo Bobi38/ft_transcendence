@@ -46,6 +46,8 @@ export default function App() {
                 SocketM.connectsocket("priv");
             if (!SocketM.getState("morp") || SocketM.getState("morp") === "closed")
                 SocketM.connectsocket("morp");
+            if (!SocketM.getState("friend") || SocketM.getState("friend") === "closed")
+                SocketM.connectsocket("friend");
             console.log("App.jsx useEffect(1) SocketM.connect() called");
         }
         init();
