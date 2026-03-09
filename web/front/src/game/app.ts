@@ -8,6 +8,7 @@ import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
 import HavokPhysics from "@babylonjs/havok";
+import { AdvancedDynamicTexture, Control, Rectangle, StackPanel, TextBlock } from "@babylonjs/gui";
 import { Ball } from "./ball";
 import { MyRoomState } from "./schema/MyRoomState";
 import { StateCallbackStrategy } from "@colyseus/schema";
@@ -24,6 +25,7 @@ export class App {
     private _room : Room<MyRoomState>;
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadow : ShadowGenerator;
+    private _ui : AdvancedDynamicTexture;
     public playerAssets;
     public enemyAssets;
 
@@ -59,6 +61,42 @@ export class App {
         this._main();
     }
 
+    private _addWaitingGUI() {
+        const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        this._ui = ui;
+
+        const banner = new Rectangle();
+        banner.width = "500px";
+        banner.height = "100px";
+        banner.cornerRadius = 25;
+        banner.thickness = 2;
+        banner.color = "white";
+        banner.background = "rgba(0,0,0,0.45)";
+        banner.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        banner.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+
+        ui.addControl(banner);
+
+        const panel = new StackPanel();
+        banner.addControl(panel);
+
+        const waitingText = new TextBlock();
+        waitingText.text = "Waiting for a second player";
+        waitingText.color = "white";
+        waitingText.fontSize = 36;
+        waitingText.fontFamily = "Inter";
+        waitingText.height = "50px";
+        waitingText.fontWeight = "bold";
+
+        panel.addControl(waitingText);
+
+        let dots = 0;
+        setInterval(() => {
+            dots = (dots + 1) % 4;
+            waitingText.text = "Waiting for a second player" + ".".repeat(dots);
+        }, 500);
+    }
+
     private async _main(): Promise<void> {
         let colyseusSDK = new Client("ws://localhost:2567");
         const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
@@ -68,11 +106,14 @@ export class App {
         this._callback = callback;
         await this._start();
 
+        this._addWaitingGUI();
+
         callback.listen("started", () => {
             if (!this._room.state.started)
                 return ;
             console.log("Game has started");
             this._player.unlockControls();
+            this._ui.dispose();
         });
 
         this._engine.runRenderLoop(() => {
