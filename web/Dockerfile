@@ -58,7 +58,7 @@
 FROM node:24.13.0
 
 
-# Backend
+# Backendmekere
 
 COPY ./back/package*.json ./
 WORKDIR /app/back

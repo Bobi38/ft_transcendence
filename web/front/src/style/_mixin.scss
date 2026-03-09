@@ -10,7 +10,7 @@
 
 @mixin page {
     @include full;
-    background-color: blueviolet;
+    background-color: rgb(13, 138, 187);
     border-radius: 0.5rem;
     p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
         color: rgb(10, 201, 240);
@@ -42,7 +42,3 @@
         scale: 1.10;
     }
 }
-
-
-// @use "STYLE/_mixin" as mix;
-// 	@include mix.full;

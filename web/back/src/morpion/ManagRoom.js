@@ -28,7 +28,7 @@ class ManagerRoom {
 
     removeRoom(id, mess = null) {
         const room = this._rooms.get(id);
-
+        console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return;
 
         room.remove(mess);
@@ -38,14 +38,11 @@ class ManagerRoom {
     isInRoom(playerId) {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
-                console.log("IsInRoom : deja present");
+                // console.log("IsInRoom : deja present");
                 return room;
             }
         }
-        console.log("IsInRoom : joueur inconnu");
-
-        // if (this.lobby.isInRoom(playerId))
-        //     return this.lobby;
+        // console.log("IsInRoom : joueur inconnu");
 
         return null;
     }
@@ -70,8 +67,9 @@ class ManagerRoom {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
                 room.removePlayer(playerId, message);
-
+                console.log(`tu vois 0 ? lenght = ${room.length()}`);
                 if (room.length() === 0) {
+                    console.log("oui j ai vu 0");
                     this.removeRoom(room.getId());
                 }
 

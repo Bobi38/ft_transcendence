@@ -113,7 +113,7 @@ export class Player {
         }
 
         
-        const userstat = await StatMorp.findOne({where: {idUser: 1}});
+        const userstat = await StatMorp.findOne({where: {idUser: this._id}});
         await userstat.increment(data);
 
     }

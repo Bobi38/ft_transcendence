@@ -186,7 +186,7 @@ async function addDb(){
       await CreatHistory();
       // majDb();
       await CreatFriend();
-      // await seedGameMorp();
+      await seedGameMorp();
       majDb();
     }
 }
