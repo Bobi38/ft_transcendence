@@ -20,7 +20,6 @@ export class Environment {
     }
 
     public async load() {
-        console.log(Env);
         const env = JSON.parse(Env);
         let ground = MeshBuilder.CreateBox("ground", {size: 1}, this._scene);
         let ceiling = MeshBuilder.CreateBox("ceiling", {size: 1}, this._scene);

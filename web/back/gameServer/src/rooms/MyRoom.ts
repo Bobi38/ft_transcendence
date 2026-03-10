@@ -74,9 +74,12 @@ export class MyRoom extends Room {
       this._scene, this._bodies, this._shapes, this._nodes);
     createWalls(this._scene, this._bodies, this._shapes, this._nodes);
 
-    scene.onBeforePhysicsObservable.add(() => {
-      //console.log(this._ball.transformNode.position._z);
-      //console.log(this._ball.getLinearVelocity());
+    this._scene.onBeforeRenderObservable.add(() => {
+      let ballPos = this._ball.transformNode.position;
+      if (ballPos._z < -23 || ballPos._z > 40) {
+        ballPos = new Vector3(0,3,7);
+        this._ball.setLinearVelocity(Vector3.Zero());
+      }
     });
 
     engine.runRenderLoop(() => {

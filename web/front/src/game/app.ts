@@ -102,22 +102,20 @@ export class App {
         this._shadow = this._initLightAndBall(this._scene);
 
         this._callback.onAdd("players", (player, sessionId) => {
-            console.log("player added:", sessionId);
+            console.log("Player joined:", sessionId);
             if (sessionId === this._room.sessionId) {
                 const playerPos = new Vector3(player.position.x, player.position.y, player.position.z);
-                console.log(playerPos);
                 this._setupPlayer(sessionId, playerPos, player.sideNear);
             }
             else {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
-                console.log(enemyPos);
                 this._setupEnemy(sessionId, enemyPos, player.sideNear);
             }
         });
     }
 
     private _initLightAndBall(scene: Scene): ShadowGenerator {
-        let light = new PointLight('PointLight', new Vector3(0,5,0), scene);
+        let light = new PointLight('PointLight', new Vector3(0,5,10), scene);
         light.diffuse = new Color3(1,1,1);
         light.intensity = 1;
 
@@ -126,13 +124,13 @@ export class App {
         
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
-        this._scene.onBeforeRenderObservable.add(() => {
-            if (this._ball.getMeshPosition()._z < -23) {
-                this._ball.dispose();
-                let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-                this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
-            }
-        });
+        // this._scene.onBeforeRenderObservable.add(() => {
+        //     if (this._ball.getMeshPosition()._z < -23) {
+        //         this._ball.dispose();
+        //         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
+        //         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
+        //     }
+        // });
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
@@ -174,7 +172,6 @@ export class App {
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
         const enemyAssets = await this._loadCharacterAssets(position, false);
         this._enemy = new Enemy(this._scene, enemyAssets, this._shadow);
-        console.log(this._room.state.players);
         this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
             const newPos = this._room.state.players.get(sessionId).position;
             this._enemy.registerBody(new Vector3(newPos.x, newPos.y, newPos.z));
