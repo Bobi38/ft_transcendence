@@ -45,4 +45,8 @@ export class GUI {
     public disposeWaitingUI() {
         this._waiting4Player.dispose();
     }
+
+    public showScoreUI(scoreNear: number, scoreFar: number) {
+
+    }
 }

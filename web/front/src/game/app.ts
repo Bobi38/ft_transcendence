@@ -77,6 +77,9 @@ export class App {
             this._player.unlockControls();
             this._ui.disposeWaitingUI();
         });
+        callback.onChange(room.state.score, () => {
+            this._ui.showScoreUI(room.state.score.teamFar, room.state.score.teamNear);
+        });
 
         this._engine.runRenderLoop(() => {
             this._scene.render();
@@ -195,7 +198,7 @@ export class App {
             body.isVisible = false;
         }
         if (!isPlayer && !isNearSide) {
-            body.rotation = new Vector3(0,Math.PI,0);
+            body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
         }
 
         body.position = position;

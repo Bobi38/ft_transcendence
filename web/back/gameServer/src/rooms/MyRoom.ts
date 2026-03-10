@@ -1,6 +1,6 @@
 import { Room, Client, CloseCode } from "colyseus";
 import { MyRoomState, Player } from "./schema/MyRoomState.js";
-import { ArcRotateCamera, HavokPlugin, NullEngine, PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
+import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
 import fs from "fs";
 import path from "path";
@@ -76,8 +76,20 @@ export class MyRoom extends Room {
 
     this._scene.onBeforeRenderObservable.add(() => {
       let ballPos = this._ball.transformNode.position;
-      if (ballPos._z < -23 || ballPos._z > 40) {
-        ballPos = new Vector3(0,3,7);
+      if (ballPos.z < -23) {
+        console.log("Team Far won a point");
+        this.state.score.teamFar++;
+        if (this.state.score.teamFar > 3)
+          this.state.won = true;
+      }
+      else if (ballPos.z > 40) {
+        console.log("Team Near won a point");
+        this.state.score.teamNear++;
+        if (this.state.score.teamNear > 3)
+          this.state.won = true;
+      }
+      if (ballPos.z < -23 || ballPos.z > 40) {
+        this._ball.transformNode.position = new Vector3(0,3,7);
         this._ball.setLinearVelocity(Vector3.Zero());
       }
     });
