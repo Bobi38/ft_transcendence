@@ -1,0 +1,34 @@
+.ContactCardDisplay-root{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3,350px);
+    gap: 1.5rem;
+
+    .ContactCardDisplay-div1 { grid-area: 1 / 1 / 2 / 3; }
+    .ContactCardDisplay-div2 { grid-area: 1 / 3 / 2 / 5; }
+    .ContactCardDisplay-div3 { grid-area: 2 / 2 / 3 / 4; }
+    .ContactCardDisplay-div4 { grid-area: 3 / 1 / 4 / 3; }
+    .ContactCardDisplay-div5 { grid-area: 3 / 3 / 4 / 5; }
+}
+
+
+
+@media (max-width:1500px) { 
+
+    .ContactCardDisplay-root{
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, 350px);
+        grid-column-gap: 0px;
+        grid-row-gap:1rem;
+        
+        .ContactCardDisplay-div1 { grid-area: 1 / 1 / 2 / 2;}
+        .ContactCardDisplay-div2 { grid-area: 2 / 1 / 3 / 2;}
+        .ContactCardDisplay-div3 { grid-area: 3 / 1 / 4 / 2;}
+        .ContactCardDisplay-div4 { grid-area: 4 / 1 / 5 / 2;}
+        .ContactCardDisplay-div5 { grid-area: 5 / 1 / 6 / 2;}
+    }
+
+}

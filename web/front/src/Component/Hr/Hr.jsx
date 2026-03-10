@@ -1,8 +1,6 @@
 /* extern */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
-/* back */
-import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./Hr.scss";

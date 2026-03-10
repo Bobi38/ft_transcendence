@@ -1,5 +1,4 @@
 /* back */
-import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./HomeCard.scss";

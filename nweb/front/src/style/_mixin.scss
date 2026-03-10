@@ -1,0 +1,10 @@
+@mixin full {
+    height: 100%;
+    width: 100%;
+}
+@mixin fullw { width: 100%; }
+@mixin fullh { height: 100%; }
+
+
+// @use "STYLE/_mixin" as mix;
+// 	@include mix.full;
