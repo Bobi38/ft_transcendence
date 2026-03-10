@@ -78,14 +78,12 @@ export class MyRoom extends Room {
       let ballPos = this._ball.transformNode.position;
       if (this._ball.transformNode.position.z < -23) {
         console.log("Team Far won a point");
-        console.log(this._ball.transformNode.position);
         this.state.score.teamFar++;
         if (this.state.score.teamFar >= 3)
           this.state.won = true;
       }
       else if (this._ball.transformNode.position.z > 40) {
         console.log("Team Near won a point");
-        console.log(this._ball.transformNode.position);
         this.state.score.teamNear++;
         if (this.state.score.teamNear >= 3)
           this.state.won = true;
@@ -148,6 +146,28 @@ export class MyRoom extends Room {
       console.log("Game starting");
       this.state.started = true;
     }
+  }
+
+  onDrop(client: Client, code: number) {
+    // Allow the client to reconnect within 30 seconds
+    console.log(`Client ${client.sessionId} dropped (code: ${code})`);
+    this.allowReconnection(client, 5);
+ 
+    // Optionally mark the player as disconnected in your state
+    // const player = this.state.players.get(client.sessionId);
+    // if (player) {
+    //   player.connected = false;
+    // }
+  }
+
+  onReconnect(client: Client) {
+    console.log(`Client ${client.sessionId} reconnected!`);
+ 
+    // // Restore player connection status
+    // const player = this.state.players.get(client.sessionId);
+    // if (player) {
+    //   player.connected = true;
+    // }
   }
 
   onLeave (client: Client, code: CloseCode) {

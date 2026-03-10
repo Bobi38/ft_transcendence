@@ -3,7 +3,7 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, Epsilon, UniversalCamera} from "@babylonjs/core";
-import { Callbacks, Client, Room } from "@colyseus/sdk";
+import { Callbacks, Client, CloseCode, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -55,7 +55,25 @@ export class App {
 
     private async _main(): Promise<void> {
         let colyseusSDK = new Client("ws://localhost:2567");
-        const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
+        const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
+
+        let room: Room<MyRoomState>;
+
+        try {
+            if (reconnectionGameToken) {
+                console.log("Trying to reconnect...");
+                // Reconnect to the existing room
+                room = await colyseusSDK.reconnect<MyRoomState>(reconnectionGameToken);
+            } else {
+                throw new Error("No room/session stored, joining new room");
+            }
+        } catch (e) {
+            console.log("Reconnect failed or no previous session, joining new room:", e);
+            room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
+        }
+        localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
+
+        // const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
         console.log("Joined room " + room.roomId);
         this._room = room;
         const callback = Callbacks.get(room);
@@ -88,6 +106,28 @@ export class App {
             this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
         });
 
+        // room.onDrop((code, reason) => {
+        //     console.log(`Disconnected: ${code} - ${reason}`);
+        //     localStorage.setItem("test", "test1");
+        //     //showReconnectingUI();
+        // });
+        // room.onReconnect(() => {
+        //     console.log("Reconnected!");
+        //     //hideReconnectingUI();
+        // });
+        // room.onLeave((code, reason) => {
+        //     console.log(`Left room: ${code}`);
+ 
+        //     // if (code === CloseCode.FAILED_TO_RECONNECT) {
+        //     //     showError("Failed to reconnect. Please try again.");
+        //     // }
+ 
+        //     // // Clean up and return to menu
+        //     // cleanupGame();
+        // });
+        // room.onError((code, message) => {
+        //     console.error(`Room error: ${code} - ${message}`);
+        // });
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
