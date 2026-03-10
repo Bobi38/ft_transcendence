@@ -77,7 +77,7 @@ export class PlayerInput {
 
         const normal = this._handNode.forward;
         const position = this._handNode.getAbsolutePosition().add(normal.scale(3));
-        console.log(this._handNode.getAbsolutePosition(), position, normal);
+        //console.log(this._handNode.getAbsolutePosition(), position, normal);
         const plane = Plane.FromPositionAndNormal(position, normal);
         const ray = this._scene.createPickingRay(this._scene.pointerX, this._scene.pointerY,
             null, this._camera.getUniversalCamera());

@@ -157,7 +157,7 @@ export class App {
     }
 
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
-        const playerAssets = await this._loadCharacterAssets(position, true);
+        const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
         this._player = new Player(sessionId, playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
@@ -170,7 +170,7 @@ export class App {
     }
 
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
-        const enemyAssets = await this._loadCharacterAssets(position, false);
+        const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
         this._enemy = new Enemy(this._scene, enemyAssets, this._shadow);
         this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
             const newPos = this._room.state.players.get(sessionId).position;
@@ -188,11 +188,15 @@ export class App {
         });
     }
 
-    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
+    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
         let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
 
-        if (isPlayer)
+        if (isPlayer) {
             body.isVisible = false;
+        }
+        if (!isPlayer && !isNearSide) {
+            body.rotation = new Vector3(0,Math.PI,0);
+        }
 
         body.position = position;
         let bodymtl = new StandardMaterial("red", this._scene);
