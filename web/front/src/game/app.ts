@@ -76,9 +76,16 @@ export class App {
             console.log("Game has started");
             this._player.unlockControls();
             this._ui.disposeWaitingUI();
+            this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear);
         });
         callback.onChange(room.state.score, () => {
-            this._ui.showScoreUI(room.state.score.teamFar, room.state.score.teamNear);
+            this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
+        });
+        callback.listen("won", () => {
+            if (!this._room.state.won)
+                return ;
+            this._player.lockControls();
+            this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
         });
 
         this._engine.runRenderLoop(() => {

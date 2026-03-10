@@ -32,7 +32,7 @@ export class MyRoom extends Room {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
-      this._ball.transformNode.setAbsolutePosition(ballPos);
+      //this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
     },
     "bodyMoved": (client: Client, data: any) => {
@@ -74,23 +74,29 @@ export class MyRoom extends Room {
       this._scene, this._bodies, this._shapes, this._nodes);
     createWalls(this._scene, this._bodies, this._shapes, this._nodes);
 
-    this._scene.onBeforeRenderObservable.add(() => {
+    this._scene.onAfterPhysicsObservable.add(() => {
       let ballPos = this._ball.transformNode.position;
-      if (ballPos.z < -23) {
+      if (this._ball.transformNode.position.z < -23) {
         console.log("Team Far won a point");
+        console.log(this._ball.transformNode.position);
         this.state.score.teamFar++;
-        if (this.state.score.teamFar > 3)
+        if (this.state.score.teamFar >= 3)
           this.state.won = true;
       }
-      else if (ballPos.z > 40) {
+      else if (this._ball.transformNode.position.z > 40) {
         console.log("Team Near won a point");
+        console.log(this._ball.transformNode.position);
         this.state.score.teamNear++;
-        if (this.state.score.teamNear > 3)
+        if (this.state.score.teamNear >= 3)
           this.state.won = true;
       }
-      if (ballPos.z < -23 || ballPos.z > 40) {
-        this._ball.transformNode.position = new Vector3(0,3,7);
+      if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
+                        console.log(this._ball.transformNode.position);
         this._ball.setLinearVelocity(Vector3.Zero());
+        this._ball.setAngularVelocity(Vector3.Zero());
+        this._ball.transformNode.position.set(0,3,7);
+        //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
+         //       console.log(this._ball.transformNode.position);
       }
     });
 
