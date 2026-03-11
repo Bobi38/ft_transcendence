@@ -44,6 +44,7 @@ router.post('/updateProfil', async(req, res) => {
     if (user.login && user.login.length < 128){
       console.log("login good");
       await result.update({name: user.login})
+
     }
     if (user.login42 && user.login42.length < 128){
       console.log("login42 valid");
@@ -53,7 +54,7 @@ router.post('/updateProfil', async(req, res) => {
       console.log("adress good");
       await result.update({adress: user.location});
     }
-    res.status(201).json({success: true, message: "good"})
+    res.status(201).json({success: true, message: "data in username", username: user.login})
   }catch(err){
     res.status(500).json({success: false, message: "error updateProfil " , err});
   }

@@ -32,7 +32,7 @@ export default defineConfig({
     ws: true,
   },
   '/ws/goat': {
-    target: 'http://ping:2567',
+    target: 'http://pong3d:2567',
     changeOrigin: true,
     ws: true,
     rewrite: (path) => path.replace(/^\/ws\/goat/, ''),

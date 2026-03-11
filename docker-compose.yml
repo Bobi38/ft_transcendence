@@ -177,7 +177,7 @@ services:
 
   pong3d:
     build: ./web/back/pong3D
-    container_name: pong3D
+    container_name: pong3d
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
@@ -198,8 +198,8 @@ services:
       - ./web/back/pong3D:/app
       - ./web/front/media:/app/src/media
       - ./web/back/src/models:/app/src/models
-      - /app/node_modules
       - ./web/back/src/routes:/app/src/routes
+      - /app/node_modules
 
   morpion:
     build: ./web/back/morpion

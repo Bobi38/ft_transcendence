@@ -30,7 +30,7 @@ function GoOut(){
         <button onClick={() =>{
             SocketM.sendd(SocketM.socket.morp,{
                 type: "game",
-                message: "je pars"
+                message: "leave"
             })
         }}>
             je veux partir

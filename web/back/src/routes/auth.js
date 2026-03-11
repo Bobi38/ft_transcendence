@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-    res.status(201).json({  success : true , message: 'Utilisateur connecte'/*, user_id: result[0].id*/, token: token, username: result[0].name });
+    res.status(201).json({  success : true , message: 'Utilisateur connecte', token: token, username: result[0].name });
     // majDb();
   } catch (err) {
     console.error(err);

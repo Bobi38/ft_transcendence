@@ -17,7 +17,7 @@ import useClock from "FRONT/hooks/useClock.jsx";
 export default function HomeFooter({setShowLog}) {
 
 
-
+    const username = sessionStorage.getItem('username');
 
     function logout() {
         console.log("logout(1) called")
@@ -59,7 +59,9 @@ export default function HomeFooter({setShowLog}) {
                     <div>
                         {time}
                     </div>
-
+                    <div>
+                        {username}
+                    </div>
                     <button onClick={(logout)}>
                         logout quand pas log on enleve
                     </button>

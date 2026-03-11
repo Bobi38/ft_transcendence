@@ -100,7 +100,7 @@ export default function Home() {
 	const cards_content = [
 		// { text:"Weather", path: "/Weather" },
 		{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
-		{ text:"PrivateMessage", path: "/PrivateMessage" },
+		{ text:"Private Message", path: "/PrivateMessage" },
 		{ text:"Morpion", path: "/Morpion" },
 		{ text:"Pong3D", path: "/Pong3D" },
 		{ text:"Pond2D", path: "/Pond2D" },
