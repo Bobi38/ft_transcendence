@@ -2,10 +2,10 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./server.js",
+  "main": "./GameServ.js",
 "scripts": {
-  "dev": "nodemon server.js",
-  "start": "node server.js"
+  "dev": "nodemon GameServ.js",
+  "start": "node GameServ.js"
 },
   "dependencies": {
     "bcrypt": "^5.1.1",

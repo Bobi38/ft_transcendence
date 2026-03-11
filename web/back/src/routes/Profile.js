@@ -24,13 +24,13 @@ router.get('/profile', async(req, res) =>{
 router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
-    console.log("API /updateProfil dans update profil", user);
-    const name = await User.findAll({where :{name: user.login}})
-    if (name.length != 0)
-      return res.status(409).json({success: false, message: 'Name already used'})
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
+    console.log("API /updateProfil dans update profil", user);
+    const name = await User.findAll({where :{name: user.login}})
+    if ((name.length != 0) && (name.id != result.id))
+      return res.status(409).json({success: false, message: 'Name already used'})
     console.log(user.email)
     if (validator.isEmail(user.email)){
       console.log("email valid");
@@ -77,31 +77,93 @@ router.post('/majPass', async(req,res) => {
   }
 })
 
-router.get('/Homeweather', async (req, res) => {
-  try{
+const cache = new Map();
+
+function cacheWeather(duration = 3600000) {
+  return async function (req, res, next) {
+    try {
+      const token = req.cookies.token;
+      const decoded = jwt.verify(token, secret);
+      const result = await User.findOne({ where: { id: decoded.id } });
+
+      let loc = (result && result.adress) ? result.adress : "Charbonnieres-les-Bains";
+
+      req.loc = loc;
+
+      const cached = cache.get(loc);
+
+      if (cached && (Date.now() - cached.timestamp) < duration) {
+        console.log(`pas d appel a l'API Weather : ${loc} deja connu`);
+        return res.status(200).json({ success: true, message: cached.data });
+      }
+
+      req.cacheKey = loc;
+      next();
+
+    } catch (err) {
+      return res.status(500).json({ success:false, message: err.toString() });
+    }
+  };
+}
+
+router.get('/Homeweather', cacheWeather(), async (req, res) => {
+  try {
     console.log("API /Homeweather dans Homeweather");
     const key = "b26266decd6341248ef151027261902";
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await User.findOne({ where: { id: decoded.id } });
-    let loc;
-    if (result && result.adress)
-      loc = result.adress
-    else
-      loc = "Charbonnieres-les-Bains"
-    console.log("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc)
-    const response = await fetch("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc, {
-      method: "GET",
-      headers: { "Accept": "application/json" }
+    const loc = req.loc;
+
+    const response = await fetch(
+      `http://api.weatherapi.com/v1/current.json?key=${key}&q=${loc}`
+    );
+
+    const data = await response.json();
+
+    if (data) {
+
+      cache.set(req.cacheKey, {
+        data: data,
+        timestamp: Date.now()
+      });
+
+      return res.status(201).json({ success: true, message: data });
+    }
+
+    return res.status(201).json({ success: false });
+
+  } catch (err) {
+    return res.status(501).json({
+      success: false,
+      message: "error back /Homeweather " + err
     });
-    const data = await response.json()
-    if (data)
-        return res.status(201).json({success: true, message: data})
-    else
-        return res.status(201).json({success: false})
-  }catch(err){
-    return res.status(501).json({success: false, message: "error back /Homeweather " + err})
   }
-})
+});
+
+
+// router.get('/Homeweather', async (req, res) => {
+//   try{
+//     console.log("API /Homeweather dans Homeweather");
+//     const key = "b26266decd6341248ef151027261902";
+//     const token = req.cookies.token;
+//     const decoded = jwt.verify(token, secret);
+//     const result = await User.findOne({ where: { id: decoded.id } });
+//     let loc;
+//     if (result && result.adress)
+//       loc = result.adress
+//     else
+//       loc = "Charbonnieres-les-Bains"
+//     console.log("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc)
+//     const response = await fetch("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc, {
+//       method: "GET",
+//       headers: { "Accept": "application/json" }
+//     });
+//     const data = await response.json()
+//     if (data)
+//         return res.status(201).json({success: true, message: data})
+//     else
+//         return res.status(201).json({success: false})
+//   }catch(err){
+//     return res.status(501).json({success: false, message: "error back /Homeweather " + err})
+//   }
+// })
 
 export default router;

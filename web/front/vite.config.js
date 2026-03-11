@@ -32,7 +32,7 @@ export default defineConfig({
     ws: true,
   },
   '/ws/goat': {
-    target: 'ws://game:2567',
+    target: 'http://game:2567',
     changeOrigin: true,
     ws: true,
   },

@@ -164,7 +164,40 @@ app.use('/api/friend', friendroute);
 app.use('/api/profile', Profileroute);
 app.use('/api/game', GameServeroute);
 app.use('/api/profile', Profileroute);
-app.use('/api/morpion', Morpionroute);
+
+
+app.use('/api/auth', createProxyMiddleware({
+  target: 'http://localhost:9100',
+  changeOrigin: true
+}))
+
+app.use('/api/profile', createProxyMiddleware({
+  target: 'http://localhost:9',
+  changeOrigin: true
+}))
+
+app.use('/api/chatG', createProxyMiddleware({
+  target: 'http://localhost:9001',
+  changeOrigin: true
+}))
+
+app.use('/api/chatP', createProxyMiddleware({
+  target: 'http://localhost:9002',
+  changeOrigin: true
+}))
+
+app.use('/api/game', createProxyMiddleware({
+  target: 'http://localhost:2567',
+  changeOrigin: true
+}))
+
+app.use('/api/morpion', createProxyMiddleware({
+  target: 'http://localhost:9004',
+  changeOrigin: true
+}))
+
+
+
 
 
 if (isDev) {

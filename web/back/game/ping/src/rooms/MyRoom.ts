@@ -2,7 +2,7 @@ import { Room, Client, CloseCode } from "colyseus";
 import { MyRoomState } from "./schema/MyRoomState.js";
 import { HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
-import { Env } from "../../../../media/media.js"
+import { Env } from "../../media.js"
 import fs from "fs";
 import path from "path";
 

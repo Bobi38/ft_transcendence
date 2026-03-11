@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
-import { encrypt } from './crypt.js';
+import { encrypt } from './routes/crypt.js';
 
 //model
 import sequelize from './models/index.js';
