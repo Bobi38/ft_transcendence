@@ -46,7 +46,7 @@ export class Player extends TransformNode {
                 return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
-            const hitForward = 0.5;
+            const hitForward = 0.9;
             const mouseDirAvg = (this._input.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
             mouseDirAvg.scaleInPlace(1/this._input.mouseBufferSize).normalize();
             const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, hitForward).normalize();
@@ -103,5 +103,9 @@ export class Player extends TransformNode {
 
     public unlockControls() {
         this._controlsEnabled = true;
+    }
+
+    public lockControls() {
+        this._controlsEnabled = false;
     }
 }

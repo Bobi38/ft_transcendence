@@ -1,7 +1,11 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 
 export class GUI {
-    private _waiting4Player;
+    private _waiting4Player : AdvancedDynamicTexture;
+    private _score : AdvancedDynamicTexture;
+    private _scoreText : TextBlock;
+    private _isPlayerNear : boolean;
+    private _end : AdvancedDynamicTexture;
 
     constructor () {
     }
@@ -44,5 +48,88 @@ export class GUI {
 
     public disposeWaitingUI() {
         this._waiting4Player.dispose();
+    }
+
+    public addScoreUI(isNear: boolean) {
+        this._isPlayerNear = isNear;
+        this._score = AdvancedDynamicTexture.CreateFullscreenUI("ui");
+
+        const scorePanel = new Rectangle();
+        scorePanel.width = "160px";
+        scorePanel.height = "50px";
+        scorePanel.cornerRadius = 12;
+        scorePanel.color = "#ffffff";
+        scorePanel.thickness = 1;
+        scorePanel.background = "#1e1e1ecc";
+        scorePanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        scorePanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        scorePanel.top = "20px";
+        scorePanel.left = "-20px";
+        this._score.addControl(scorePanel);
+
+        const stack = new StackPanel();
+        stack.isVertical = false;
+        stack.paddingLeft = "12px";
+        stack.paddingRight = "12px";
+        scorePanel.addControl(stack);
+
+        const scoreLabel = new TextBlock();
+        scoreLabel.text = "SCORE";
+        scoreLabel.color = "#bbbbbb";
+        scoreLabel.fontSize = 14;
+        scoreLabel.width = "70px";
+        scoreLabel.fontFamily = "Inter";
+        scoreLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        stack.addControl(scoreLabel);
+
+        this._scoreText = new TextBlock();
+        this._scoreText.text = "0 : 0";
+        this._scoreText.color = "white";
+        this._scoreText.fontSize = 14;
+        this._scoreText.fontWeight = "bold";
+        this._scoreText.width = "70px";
+        this._scoreText.fontFamily = "Inter";
+        this._scoreText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        stack.addControl(this._scoreText);
+    }
+
+    public updateScoreUI(scoreNear: number, scoreFar: number) {
+        if (this._isPlayerNear)
+            this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
+        else
+            this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
+    }
+
+    public addEndUI(scoreNear: number, scoreFar: number) {
+        const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            this._end = ui;
+    
+            const banner = new Rectangle();
+            banner.width = "500px";
+            banner.height = "100px";
+            banner.cornerRadius = 25;
+            banner.thickness = 2;
+            banner.color = "white";
+            banner.background = "rgba(0,0,0,0.45)";
+            banner.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+            banner.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    
+            ui.addControl(banner);
+    
+            const panel = new StackPanel();
+            banner.addControl(panel);
+    
+            const endText = new TextBlock();
+            if (this._isPlayerNear && scoreNear >= 3 || !this._isPlayerNear && scoreFar >= 3)
+                endText.text = "Congratulations! You win";
+            else
+                endText.text = "Loser lol";
+            endText.color = "white";
+            endText.fontSize = 36;
+            endText.fontFamily = "Inter";
+            endText.height = "50px";
+            endText.fontWeight = "bold";
+    
+            panel.addControl(endText);
     }
 }
