@@ -86,7 +86,9 @@ export default function StatsMorpion({ username, setUsername }) {
             all_win_without_abort: all_win_without_abort,
             all_lose_without_abort: all_lose_without_abort
         };
-        if (statToDisplay !== data2){
+        if (JSON.stringify(statToDisplay) !== JSON.stringify(data2)){
+            console.log("statToDisplay:",statToDisplay);
+            console.log("data2:",data2);
             setStatToDisplay(data2);
             setNewPage(1)
         }
@@ -118,8 +120,8 @@ export default function StatsMorpion({ username, setUsername }) {
         if (historyUser !== repjson.history_user){
 
             console.log("historyUser: " ,historyUser);
-            console.log("repjson.history_user: " , repjson.history_user);
             setHistoryUser(repjson.history_user);
+            console.log("repjson.history_user: " , repjson.history_user);
         }
 
         // setNewPage(1);
