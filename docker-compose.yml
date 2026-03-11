@@ -175,7 +175,7 @@ services:
     - cle_pswd
     - cle_chat
 
-  pong3D:
+  pong3d:
     build: ./web/back/pong3D
     container_name: pong3D
     environment:
