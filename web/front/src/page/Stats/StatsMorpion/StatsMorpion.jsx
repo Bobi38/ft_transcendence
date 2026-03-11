@@ -44,8 +44,6 @@ export default function StatsMorpion({ username, setUsername }) {
 
         const data = repjson.stat_user;
 
-        setTotalGame(data.total_game);
-
         const win_horizontal = data.type_X_horizontal_winner + data.type_O_horizontal_winner
         const win_vertical = data.type_X_vertical_winner + data.type_O_vertical_winner
         const win_diagonal = data.type_X_diagonal_winner + data.type_O_diagonal_winner
@@ -86,13 +84,12 @@ export default function StatsMorpion({ username, setUsername }) {
             all_win_without_abort: all_win_without_abort,
             all_lose_without_abort: all_lose_without_abort
         };
-        if (JSON.stringify(statToDisplay) !== JSON.stringify(data2)){
-            console.log("statToDisplay:",statToDisplay);
-            console.log("data2:",data2);
-            setStatToDisplay(data2);
+        setStatToDisplay(data2);
+        if (totalGames < data.total_game){
+            setTotalGame(data.total_game);
             setNewPage(1)
         }
-        console.log("statToDisplay:",statToDisplay);
+        // console.log("statToDisplay:",statToDisplay);
     }
 
 
@@ -116,20 +113,12 @@ export default function StatsMorpion({ username, setUsername }) {
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
-
-        if (historyUser !== repjson.history_user){
-
-            console.log("historyUser: " ,historyUser);
-            setHistoryUser(repjson.history_user);
-            console.log("repjson.history_user: " , repjson.history_user);
-        }
-
-        // setNewPage(1);
+        setHistoryUser(repjson.history_user);
     }
 
 
     useEffect(() => {
-        console.log("username1: ",username," currentPage: ",currentPage)
+        // console.log("username1: ",username," currentPage: ",currentPage)
         fetch_stats();
         fetch_history(currentPage - 1);
     }, [username, currentPage]);
