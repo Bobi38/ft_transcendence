@@ -9,7 +9,7 @@ const GameMorp = sequelize.define('GameMorp', {
         autoIncrement: true,
     },
     how_win: {
-      type: DataTypes.ENUM("horizontal","diagonal","vertical", "abort", "draw"),
+      type: DataTypes.ENUM("horizontal", "diagonal_lr", "diagonal_rl", "vertical", "abort", "draw"),
       allowNull: false
     },
 
