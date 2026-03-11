@@ -27,6 +27,9 @@ $width_game_winrate: 100% - $width_history;
         .history-card-container{
             flex: 1;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
     }

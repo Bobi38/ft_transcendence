@@ -14,33 +14,9 @@ import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHisto
 
 export default function StatsMorpion() {
 
-    const [currentPage, setCurrentPage] = useState(1);
     const [totalGames, setTotalGame] = useState(null);
     const [statToDisplay, setStatToDisplay] = useState(null);
 
-    async function fetch_history(login , page_nb) {
-
-        // if (page_nb < 0)
-        //     return;
-
-        const url = login 
-            ? `/api/morpion/get_morpion_history/${page_nb}?name=${login}`
-            : `/api/morpion/get_morpion_history/${page_nb}`;
-
-
-
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`,  {
-            method: "GET",
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-        }, function(repjson){
-            console.log("useFetch(info) success history_user: " , repjson.history_user);
-        })
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-    }
 
     async function fetch_stats(login) {
 
@@ -109,7 +85,38 @@ export default function StatsMorpion() {
     }
 
 
-    
+
+    const [historyUser, setHistoryUser] = useState([]);
+
+    async function fetch_history(login , page_nb) {
+
+        // if (page_nb < 0)
+        //     return;
+
+        const url = login 
+            ? `/api/morpion/get_morpion_history/${page_nb}?name=${login}`
+            : `/api/morpion/get_morpion_history/${page_nb}`;
+
+
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`,  {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        }, function(repjson){
+            console.log("useFetch(info) success history_user: " , repjson.history_user);
+        })
+        if (!repjson || (repjson &&  !repjson.success))
+            return;
+        setHistoryUser(repjson.history_user);
+    }
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+
     useEffect(() => {
         fetch_stats("");
         fetch_history("", 0);
@@ -118,10 +125,11 @@ export default function StatsMorpion() {
     }, [])
 
     useEffect(() => {
-            // fetch_history("nana", currentPage);
+        fetch_history("", currentPage);
     }, [currentPage]);
 
     const [stats, setStats] = useState("OXOXXXOXO")
+    
     return (
         
         <div className={`StatsMorpion-root border-base`}>
@@ -129,14 +137,11 @@ export default function StatsMorpion() {
             <div className={`history-container border-1`}>
 
                 <div className={`history-card-container border-2`}>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+
+                    {historyUser?.map((element, index) => {
+                        return (<StatsMorpionHistoryCard key={index} stats={element}/>)
+                    })}
+
                 </div>
                 <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
 
