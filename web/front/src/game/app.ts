@@ -15,6 +15,13 @@ import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
 
+export enum RoomStatus {
+  WAITING = 0,
+  STARTED = 1,
+  WON = 2,
+  PLAYER_DISCONNECTED = 3
+}
+
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
@@ -62,7 +69,6 @@ export class App {
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
         let room: Room<MyRoomState>;
-
         try {
             if (reconnectionGameToken) {
                 console.log("Trying to reconnect...");
@@ -89,32 +95,43 @@ export class App {
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
-        this._ui = new GUI();
+        this._ui = new GUI(room);
         this._ui.addWaitingUI();
 
-        callback.listen("started", () => {
-            if (!this._room.state.started)
-                return ;
-            console.log("Game has started");
-            this._player.unlockControls();
-            this._ui.disposeWaitingUI();
-            this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear);
+        callback.listen("roomStatus", () => {
+            const status = this._room.state.roomStatus;
+            switch (status) {
+                case RoomStatus.STARTED:
+                    console.log("Game has started");
+                    this._player.unlockControls();
+                    this._ui.disposeWaitingUI();
+                    this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear);
+                    break;
+                case RoomStatus.WON:
+                    this._player.lockControls();
+                    this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
+                    break;
+                case RoomStatus.PLAYER_DISCONNECTED:
+                    this._player.lockControls();
+                    this._ui.addOtherPlayerDisconnectUI();
+                    break;
+            }
         });
         callback.onChange(room.state.score, () => {
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
-        callback.listen("won", () => {
-            if (!this._room.state.won)
-                return ;
-            this._player.lockControls();
-            this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
-        });
-        callback.listen("endedDisconnect", () => {
-            if (!this._room.state.endedDisconnect)
-                return ;
-            this._player.lockControls();
-            this._ui.addOtherPlayerDisconnectUI();
-        });
+        // callback.listen("won", () => {
+        //     if (!this._room.state.won)
+        //         return ;
+        //     this._player.lockControls();
+        //     this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
+        // });
+        // callback.listen("endedDisconnect", () => {
+        //     if (!this._room.state.endedDisconnect)
+        //         return ;
+        //     this._player.lockControls();
+        //     this._ui.addOtherPlayerDisconnectUI();
+        // });
 
         // room.onDrop((code, reason) => {
         //     console.log(`Disconnected: ${code} - ${reason}`);

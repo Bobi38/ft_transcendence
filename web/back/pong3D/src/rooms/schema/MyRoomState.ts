@@ -1,5 +1,12 @@
 import { MapSchema, Schema, type } from "@colyseus/schema";
 
+export enum RoomStatus {
+  WAITING = 0,
+  STARTED = 1,
+  WON = 2,
+  PLAYER_DISCONNECTED = 3
+}
+
 export class Vector3 extends Schema {
   @type("number") x: number = 0;
   @type("number") y: number = 3;
@@ -33,9 +40,10 @@ export class Score extends Schema {
 
 export class MyRoomState extends Schema {
   @type(Ball) ball = new Ball();
-  @type("boolean") started = false;
-  @type("boolean") won = false;
-  @type("boolean") endedDisconnect = false;
+  // @type("boolean") started = false;
+  // @type("boolean") won = false;
+  // @type("boolean") endedDisconnect = false;
+  @type("number") roomStatus = RoomStatus.WAITING;
   @type(Score) score = new Score();
   @type({ map: Player }) players = new MapSchema<Player>();
 }

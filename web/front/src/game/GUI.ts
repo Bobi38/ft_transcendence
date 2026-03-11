@@ -1,6 +1,8 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
+import { Room } from "@colyseus/sdk";
 
 export class GUI {
+    private _room : Room;
     private _waiting4Player : AdvancedDynamicTexture;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
@@ -8,7 +10,8 @@ export class GUI {
     private _end : AdvancedDynamicTexture;
     private _playerDisconnected : AdvancedDynamicTexture = null;
 
-    constructor () {
+    constructor (room: Room) {
+        this._room = room;
     }
 
     private _gameOverUI(text: string) {
@@ -47,6 +50,9 @@ export class GUI {
         newGameBtn.background = "#4CAF50";
 
         newGameBtn.onPointerClickObservable.add(() => {
+            this._room.leave(true);
+            localStorage.removeItem("reconnectionGameToken");
+            window.location.reload();
             console.log("New Game clicked");
         });
 
@@ -60,6 +66,7 @@ export class GUI {
         menuBtn.background = "#f44336";
 
         menuBtn.onPointerClickObservable.add(() => {
+            window.location.href = "/";
             console.log("Return to menu clicked");
 });
 

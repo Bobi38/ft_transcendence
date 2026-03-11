@@ -1,5 +1,5 @@
 import { Room, Client, CloseCode } from "colyseus";
-import { MyRoomState, Player } from "./schema/MyRoomState.js";
+import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
 import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
 import fs from "fs";
@@ -80,13 +80,13 @@ export class MyRoom extends Room {
         console.log("Team Far won a point");
         this.state.score.teamFar++;
         if (this.state.score.teamFar >= 3)
-          this.state.won = true;
+          this.state.roomStatus = RoomStatus.WON;
       }
       else if (this._ball.transformNode.position.z > 40) {
         console.log("Team Near won a point");
         this.state.score.teamNear++;
         if (this.state.score.teamNear >= 3)
-          this.state.won = true;
+          this.state.roomStatus = RoomStatus.WON;
       }
       if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
                         console.log(this._ball.transformNode.position);
@@ -144,19 +144,20 @@ export class MyRoom extends Room {
     this._nextPlayerIndex++;
     if (this.state.players.size == 2) {
       console.log("Game starting");
-      this.state.started = true;
+      this.state.roomStatus = RoomStatus.STARTED;
     }
   }
 
   onDrop(client: Client, code: number) {
     // Allow the client to reconnect within 30 seconds
     console.log(`Client ${client.sessionId} dropped (code: ${code})`);
-    this.allowReconnection(client, 5);
- 
     const player = this.state.players.get(client.sessionId);
     if (player) {
       player.connected = false;
     }
+    this.allowReconnection(client, 5).then(() => {
+      this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+    });
   }
 
   onReconnect(client: Client) {
@@ -172,12 +173,13 @@ export class MyRoom extends Room {
     /**
      * Called when a client leaves the room.
      */
-    if (code == CloseCode.FAILED_TO_RECONNECT)
-      console.log(client.sessionId, "failled to reconnect to room", this.roomId);
+    if (code == CloseCode.FAILED_TO_RECONNECT) {
+      console.log(client.sessionId, "failed to reconnect to room", this.roomId);
+    }
     else
       console.log(client.sessionId, "left room", this.roomId, "with code", code);
+    this.lock();
     this.state.players.delete(client.sessionId);
-    this.state.endedDisconnect = true;
   }
 
   onDispose() {
