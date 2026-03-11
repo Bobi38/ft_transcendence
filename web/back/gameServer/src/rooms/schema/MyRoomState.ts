@@ -20,9 +20,20 @@ export class Ball extends Schema {
 
 export class Player extends Schema {
   @type(Vector3) position = new Vector3();
+  @type(Vector3) rackPos = new Vector3();
+  @type(Quaternion) rackRot = new Quaternion();
+  @type("boolean") sideNear = true;
+}
+
+export class Score extends Schema {
+  @type("number") teamNear = 0;
+  @type("number") teamFar = 0;
 }
 
 export class MyRoomState extends Schema {
   @type(Ball) ball = new Ball();
+  @type("boolean") started = false;
+  @type("boolean") won = false;
+  @type(Score) score = new Score();
   @type({ map: Player }) players = new MapSchema<Player>();
 }

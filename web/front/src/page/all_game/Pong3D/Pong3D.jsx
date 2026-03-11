@@ -28,22 +28,22 @@ export default function Pong3D() {
     }, []);
 
 
-    async function namefct(){
+    // async function namefct(){
 
-        const url = `/api/game/serv`;
+    //     const url = `/api/game/serv`;
 
-        console.log(`${url}`)
+    //     console.log(`${url}`)
 
-        const repjson = await useFetch(`${url}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: "include"
-        });
-        if (!repjson)
-            return;
-    }
+    //     const repjson = await useFetch(`${url}`, {
+    //             method: 'GET',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             credentials: "include"
+    //     });
+    //     if (!repjson)
+    //         return;
+    // }
 
-    namefct();
+    // namefct();
 
     return (
         <div className={`Pong3D-root`}>

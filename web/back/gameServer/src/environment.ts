@@ -23,6 +23,7 @@ function ToQuat(input: any) : Quaternion {
     ball.setMassProperties({mass: 1});
     ball.setLinearDamping(0);
     ball.setAngularDamping(0);
+    ball.disablePreStep = false;
     nodes.push(ballNode);
     shapes.push(ballShape);
     bodies.push(ball);

@@ -1,9 +1,6 @@
 @use "STYLE/variable" as *;
 @use "STYLE/_mixin" as mix;
 
-$header_height: 10%;
-$container_height: $root_height - $header_height;
-
 .Stats-root{
     
 	@include mix.page;
@@ -18,8 +15,6 @@ $container_height: $root_height - $header_height;
     gap: 0.5rem;
 
     .Stats-selection{
-
-        height: $header_height;
 
         .Stats-btn{
             background-color: rgba(0, 0, 0, 0.150);
@@ -37,7 +32,7 @@ $container_height: $root_height - $header_height;
     }
         
     .Stats-container{
-        height: $container_height;
+        height: 0;
         width: 100%;
         flex: 1;
          li , li button {

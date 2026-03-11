@@ -11,13 +11,7 @@ $padding: 1.7rem;
 	background: white;
 
 	.scanlines {
-		position: fixed;
-		top: 0; left: 0; width: 100%; height: 100%;
-		background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(43, 0, 255, 0.015) 50%);
-		background-size: 100% 4px;
-		pointer-events: none;
-		opacity: 0.5;
-		z-index: 3;
+		@include mix.scanlines();
 	}
 
 	.Home-PopUp {

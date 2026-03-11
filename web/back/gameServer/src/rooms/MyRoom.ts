@@ -1,6 +1,6 @@
 import { Room, Client, CloseCode } from "colyseus";
 import { MyRoomState, Player } from "./schema/MyRoomState.js";
-import { ArcRotateCamera, HavokPlugin, NullEngine, PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
+import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
 import fs from "fs";
 import path from "path";
@@ -32,11 +32,27 @@ export class MyRoom extends Room {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
-      this._ball.transformNode.setAbsolutePosition(ballPos);
+      //this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
+    },
+    "bodyMoved": (client: Client, data: any) => {
+      const playerPos = this.state.players.get(client.sessionId).position;
+      playerPos.x = data.position[0];
+      playerPos.y = data.position[1];
+      playerPos.z = data.position[2];
+    },
+    "racketMoved": (client: Client, data: any) => {
+      const racketPos = this.state.players.get(client.sessionId).rackPos;
+      racketPos.x = data.position[0];
+      racketPos.y = data.position[1];
+      racketPos.z = data.position[2];
+      const racketRot = this.state.players.get(client.sessionId).rackRot;
+      racketRot.x = data.rotation[0];
+      racketRot.y = data.rotation[1];
+      racketRot.z = data.rotation[2];
+      racketRot.w = data.rotation[3];
     }
   }
-  
 
   private async _startSimulation() {
     const engine = new NullEngine();
@@ -58,9 +74,28 @@ export class MyRoom extends Room {
       this._scene, this._bodies, this._shapes, this._nodes);
     createWalls(this._scene, this._bodies, this._shapes, this._nodes);
 
-    scene.onBeforePhysicsObservable.add(() => {
-      //console.log(this._ball.transformNode.position._z);
-      //console.log(this._ball.getLinearVelocity());
+    this._scene.onAfterPhysicsObservable.add(() => {
+      let ballPos = this._ball.transformNode.position;
+      if (this._ball.transformNode.position.z < -23) {
+        console.log("Team Far won a point");
+        this.state.score.teamFar++;
+        if (this.state.score.teamFar >= 3)
+          this.state.won = true;
+      }
+      else if (this._ball.transformNode.position.z > 40) {
+        console.log("Team Near won a point");
+        this.state.score.teamNear++;
+        if (this.state.score.teamNear >= 3)
+          this.state.won = true;
+      }
+      if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
+                        console.log(this._ball.transformNode.position);
+        this._ball.setLinearVelocity(Vector3.Zero());
+        this._ball.setAngularVelocity(Vector3.Zero());
+        this._ball.transformNode.position.set(0,3,7);
+        //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
+         //       console.log(this._ball.transformNode.position);
+      }
     });
 
     engine.runRenderLoop(() => {
@@ -96,15 +131,43 @@ export class MyRoom extends Room {
      * Called when a client joins the room.
      */
     console.log(client.sessionId, "joined room", this.roomId);
-    this._nextPlayerIndex++;
     const player = new Player();
     player.position.x = 0;
     player.position.y = 1.5;
     if (this._nextPlayerIndex % 2 == 0)
       player.position.z = 0;
-    else
+    else {
       player.position.z = 20;
+      player.sideNear = false;
+    }
     this.state.players.set(client.sessionId, player);
+    this._nextPlayerIndex++;
+    if (this.state.players.size == 2) {
+      console.log("Game starting");
+      this.state.started = true;
+    }
+  }
+
+  onDrop(client: Client, code: number) {
+    // Allow the client to reconnect within 30 seconds
+    console.log(`Client ${client.sessionId} dropped (code: ${code})`);
+    this.allowReconnection(client, 5);
+ 
+    // Optionally mark the player as disconnected in your state
+    // const player = this.state.players.get(client.sessionId);
+    // if (player) {
+    //   player.connected = false;
+    // }
+  }
+
+  onReconnect(client: Client) {
+    console.log(`Client ${client.sessionId} reconnected!`);
+ 
+    // // Restore player connection status
+    // const player = this.state.players.get(client.sessionId);
+    // if (player) {
+    //   player.connected = true;
+    // }
   }
 
   onLeave (client: Client, code: CloseCode) {
