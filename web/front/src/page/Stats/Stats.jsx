@@ -27,7 +27,7 @@ export default function Stats() {
     return (
         <>
             <div className={`Stats-root`}>
-                
+
                 <div className={`Stats-selection`}>
 
                     {!selected && <h3>Stats</h3>}
