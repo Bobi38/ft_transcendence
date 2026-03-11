@@ -53,7 +53,7 @@ export function playMorpion(message, socket){
 
     if (!game) return ;
 
-    if (message === "je pars") {
+    if (message === "leave") {
 
         if (!game.getLock()) {
             manager_room.removePlayer(id, "bye bye");
