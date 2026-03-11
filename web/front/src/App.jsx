@@ -38,7 +38,7 @@ import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/Morpi
 
 
 export default function App() {
-
+  const [notif, setNotif] = useState(null);
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
@@ -54,9 +54,23 @@ export default function App() {
             if (!SocketM.getState("friend") || SocketM.getState("friend") === "closed")
                 SocketM.connectsocket("friend");
             console.log("App.jsx useEffect(1) SocketM.connect() called");
+
+            const handle_friend_co = (data) => {
+              console.log("friend connected:", data.login);
+              if (data.type == 'co')
+                setNotif(`${data.login} vient de se connecter`);
+              if (data.type == 'deco')
+                setNotif(`${data.login} vient de se DEconnecter`);
+
+              setTimeout(() => {
+              setNotif(null);
+              }, 3000); // disparaît après 3s
+            }
+            SocketM.on("friend", handle_friend_co, "un");
         }
         init();
         return () => {
+          SocketM.off("friend", "un");
           // if (SocketM.socket)
           //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
@@ -66,6 +80,11 @@ export default function App() {
 
   return (
     <>
+      {notif && (
+      <div className="global-notif">
+        {notif}
+      </div>
+      )}
       {/* <SocketProvider> */}
         <BrowserRouter>
           <Routes>

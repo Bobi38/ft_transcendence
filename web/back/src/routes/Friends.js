@@ -48,6 +48,10 @@ router.get('/all_friend', async (req, res) => {
   }
 })
 
+export const getAllFriends = async (req, res) => {
+    const friends = await FriendModel.findAll();
+    res.json(friends);
+};
 
 router.get('/add_friend', async (req, res) => {
 	try{

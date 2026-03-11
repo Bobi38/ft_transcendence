@@ -1,6 +1,7 @@
 /* extern */
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
+import SocketM from "../../../../../tool/SocketManag";
 
 /* back */
 
@@ -28,7 +29,7 @@ export default function MailA2F({setShowLog}) {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-
+        SocketM.sendd(SocketM.socket.friend, {type: 'co'});
         setShowCodeInput(true);
     }
 

@@ -3,6 +3,7 @@ import { FaGithub } from "react-icons/fa";
 
 /* back */
 import { showAlert } from "../../../../../tool/fct1.js";
+import SocketM from "../../../../../tool/SocketManag.js";
 
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
@@ -49,6 +50,7 @@ export default function Login({setShowLog}) {
         sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('type', "success");
         setShowLog(AUTH.MAILA2F);
+        SocketM.sendd(SocketM.socket.friend, {type: 'co'});
     };
 
 
