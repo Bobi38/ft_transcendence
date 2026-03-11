@@ -76,12 +76,12 @@ app.use('/api/chatP', createProxyMiddleware({
 }))
 
 app.use('/api/pong3D', createProxyMiddleware({
-  target: 'http://pong3D:2567',
+  target: 'http://pong3d:2567',
   changeOrigin: true
 }))
 
 app.use('/api/morpion', createProxyMiddleware({
-  target: 'http://morp:9004',
+  target: 'http://morpion:9004',
   changeOrigin: true
 }))
 

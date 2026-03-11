@@ -27,7 +27,7 @@ export default defineConfig({
     ws: true,
   },
   '/ws/morp': {
-    target: 'ws://morp:9004',
+    target: 'ws://morpion:9004',
     changeOrigin: true,
     ws: true,
   },
