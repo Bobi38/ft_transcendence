@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./StatsMorpionHistoryCard.scss";
@@ -10,7 +9,7 @@ import "./StatsMorpionHistoryCard.scss";
 /* Components */
 import Board from "FRONT/page/all_game/MorpionDisplay/Morpion/Board/Board.jsx";
 
-    
+
 export default function StatsMorpionHistoryCard({ stats }) {
 
     function format_stats( stats ) {

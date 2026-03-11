@@ -24,13 +24,20 @@ class SocketManag{
             friend : true,
             pong : true
         };
+        this.attempt = {
+            chat : 0,
+            priv : 0,
+            morp : 0,
+            friend : 0,
+            pong : 0
+        };
         this.listeners = {
             chat: new Map(),
             game: new Map(),
             room: new Map(),
             friend: new Map(),
+            morp: new Map(),
             priv: new Map(),
-            friend: new Map()
         };
     }
 
@@ -59,13 +66,22 @@ class SocketManag{
                 }
                 this.sendd(this.socket[name], data)
             }
+            if (dataa.type === 'auth_good')
+                this.attempt[name] = 0;
         }
         this.socket[name].onerror = (error) => {
             console.log("errr socket" + error);
         }
-        this.socket[name].onclose = () => {          
+        this.socket[name].onclose = (event) => {    
+            if (event.code == 1008){
+                document.cookie = "token=; Max-Age=0; path=/;";
+                return ;
+            }
+            this.attempt[name]++;
+            if (this.attempt[name] > 10)
+                return ;
             if (this.reco[name])
-                setTimeout(() => this.connectsocket(name), 300);
+                setTimeout(() => this.connectsocket(name), 1000);
         }
     }
 

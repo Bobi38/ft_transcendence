@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import  SocketM  from "/app/tool/SocketManag.js";
+import SocketM  from "/app/tool/SocketManag.js";
 
 /* Css */
 import "./HomeChat.scss";

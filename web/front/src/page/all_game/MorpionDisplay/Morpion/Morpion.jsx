@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 /* back */
-import  SocketM  from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/tool/SocketManag.js";
 
 /* Css */
 import './Morpion.scss';
@@ -14,7 +14,7 @@ function RebootTruc() {
 
     return (
         <button onClick={() => {
-            SocketM.sendd({
+            SocketM.sendd(SocketM.socket.morp,{
                 type: "game",
                 message: "reboot"
             })
@@ -28,7 +28,7 @@ function GoOut(){
 
     return (
         <button onClick={() =>{
-            SocketM.sendd({
+            SocketM.sendd(SocketM.socket.morp,{
                 type: "game",
                 message: "je pars"
             })
@@ -41,7 +41,7 @@ function GoOut(){
 function SelectSecondPlayer(){
     return (
         <button onClick={() => {
-            SocketM.sendd({
+            SocketM.sendd(SocketM.socket.morp,{
                 type: "game",
                 message: "playSecond"
             })
@@ -56,7 +56,7 @@ function NouvellePartie({ setBoard }){
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));
-            SocketM.sendd({
+            SocketM.sendd(SocketM.socket.morp,{
                 type: "game",
                 message: "je veux jouer"
             })
@@ -88,10 +88,10 @@ export default function Morpion() {
             }
         };
 
-        SocketM.onGame(handleTest);
+        SocketM.on("morp",handleTest, "un");
 
         return () => {
-            SocketM.offGame(handleTest);
+            SocketM.off("morp", "un");
         }
 
     }, []);

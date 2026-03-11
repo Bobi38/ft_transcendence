@@ -1,7 +1,7 @@
 /* extern */
 
 /* back */
-import  SocketM  from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/tool/SocketManag.js";
 
 /* Css */
 import "./Board.scss";

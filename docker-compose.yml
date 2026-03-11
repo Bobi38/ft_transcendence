@@ -193,10 +193,11 @@ services:
       - "2567:2567"
     secrets:
       - cle_pswd
+      - cle_chat
     volumes:
-      - ./web/back/gameServer:/app
+      - ./web/back/game/ping:/app
       - ./web/back/src/models:/app/src/models
-      - /app/back/gameServer/node_modules
+      - /app/node_modules
       - ./web/back/src/routes:/app/src/routes
 
   morp:

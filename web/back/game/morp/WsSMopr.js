@@ -39,7 +39,7 @@ export function initWebSMopr(server) {
 
       let user = jwt.verify(token, secret);
 
-      if (!user) {socket.close(); return; }
+      if (!user) {socket.close(1008, 'Unauthorized'); return; }
       // // console.log("uuu-------", user);
       const useid = user.id;
       socket.userId = useid;
@@ -67,6 +67,7 @@ export function initWebSMopr(server) {
       //   await chat.addtok(useid, socket, useid);
       //   // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
       // }
+      socket.send(JSON.stringify({type: "auth_good"}));
     }catch(err){
       console.log("err debut wsss ", err);
     }

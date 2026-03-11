@@ -76,7 +76,7 @@ app.use('/api/chatP', createProxyMiddleware({
 }))
 
 app.use('/api/game', createProxyMiddleware({
-  target: 'http://localhost:2567',
+  target: 'http://ping:2567',
   changeOrigin: true
 }))
 

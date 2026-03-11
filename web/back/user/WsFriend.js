@@ -90,6 +90,8 @@ export function initWebSFriend(server) {
         }
         if (data.type === "logout")
           socket.GoLogout = true;
+        if (data.type === "pong")
+          socket.isAlive = true;
       }catch (err){
         console.log("err serv ws= " + err);
       }

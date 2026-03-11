@@ -1,16 +1,13 @@
 /* extern */
 import { useEffect, useState } from "react";
 
-/* back */
-import checkCo from "BACK/fct1.js"
-
 /* Css */
 import "./MorpionDisplay.scss";
 
 /* Components */
 import Morpion from "./Morpion/Morpion";
 
-    
+
 export default function MorpionDisplay() {
 
     return (

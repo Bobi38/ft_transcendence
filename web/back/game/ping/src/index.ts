@@ -8,13 +8,13 @@
  * See: https://docs.colyseus.io/server
  */
 import { listen } from "@colyseus/tools";
-import servRoute from "./routes/Ping.js";
+
 
 
 
 // Import Colyseus config
-import app from "./app.config.js";
-app.use("/", servRoute);
+import app from "./app.config.ts";
+
 
 // Create and listen on 2567 (or PORT environment variable.)
 listen(app);
