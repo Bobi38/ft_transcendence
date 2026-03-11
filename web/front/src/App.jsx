@@ -71,6 +71,7 @@ export default function App() {
         init();
         return () => {
           SocketM.off("friend", "un");
+          SocketM.disconnect("friend");
           // if (SocketM.socket)
           //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
@@ -101,7 +102,6 @@ export default function App() {
             <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
             <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>     </Navigation>}/>
             <Route path={`/Pong3D`}                 element={<Pong3D/>}/>
-            {/* <Route path={`/hr`}                     element={<Navigation>   <Hr><div>oui</div><div>non</div></Hr>            </Navigation>}/> */}
 
 
             {/* bad path */}

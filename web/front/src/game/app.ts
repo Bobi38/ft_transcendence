@@ -15,6 +15,13 @@ import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
 
+export enum RoomStatus {
+  WAITING = 0,
+  STARTED = 1,
+  WON = 2,
+  PLAYER_DISCONNECTED = 3
+}
+
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
@@ -54,15 +61,15 @@ export class App {
     }
 
     private async _main(): Promise<void> {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host;
-        console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
-        let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
-        // let colyseusSDK = new Client("ws://pong3d:2567");
+        // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        // const host = window.location.host;
+        // console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
+        // let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
+        let colyseusSDK = new Client("ws://localhost:2567");
+        const token = sessionStorage.getItem("token");
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
         let room: Room<MyRoomState>;
-
         try {
             if (reconnectionGameToken) {
                 console.log("Trying to reconnect...");
@@ -72,8 +79,9 @@ export class App {
                 throw new Error("No room/session stored, joining new room");
             }
         } catch (e) {
+            //const token = sessionStorage.getItem("token");
             console.log("Reconnect failed or no previous session, joining new room:", e);
-            room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
+            room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
 
@@ -89,32 +97,49 @@ export class App {
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
-        this._ui = new GUI();
+        this._ui = new GUI(room);
         this._ui.addWaitingUI();
 
-        callback.listen("started", () => {
-            if (!this._room.state.started)
-                return ;
-            console.log("Game has started");
-            this._player.unlockControls();
-            this._ui.disposeWaitingUI();
-            this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear);
+        callback.listen("roomStatus", () => {
+            const status = this._room.state.roomStatus;
+            switch (status) {
+                case RoomStatus.STARTED:
+                    console.log("Game has started");
+                    this._player.unlockControls();
+                    this._ui.disposeWaitingUI();
+                    this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear);
+                    break;
+                case RoomStatus.WON:
+                    this._player.lockControls();
+                    this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
+                    break;
+                case RoomStatus.PLAYER_DISCONNECTED:
+                    this._player.lockControls();
+                    this._ui.addOtherPlayerDisconnectUI();
+                    break;
+            }
         });
         callback.onChange(room.state.score, () => {
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
-        callback.listen("won", () => {
-            if (!this._room.state.won)
-                return ;
-            this._player.lockControls();
-            this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
-        });
+        // callback.listen("won", () => {
+        //     if (!this._room.state.won)
+        //         return ;
+        //     this._player.lockControls();
+        //     this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
+        // });
+        // callback.listen("endedDisconnect", () => {
+        //     if (!this._room.state.endedDisconnect)
+        //         return ;
+        //     this._player.lockControls();
+        //     this._ui.addOtherPlayerDisconnectUI();
+        // });
 
         // room.onDrop((code, reason) => {
         //     console.log(`Disconnected: ${code} - ${reason}`);
         //     localStorage.setItem("test", "test1");
         //     //showReconnectingUI();
-        // });
+        // });esult
         // room.onReconnect(() => {
         //     console.log("Reconnected!");
         //     //hideReconnectingUI();
@@ -165,6 +190,14 @@ export class App {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 this._setupEnemy(sessionId, enemyPos, player.sideNear);
             }
+            this._callback.onChange(player, () => {
+                if (player.connected = false) {
+                    this._ui.addPlayerDisconnectedUI();
+                }
+                if (player.connected = true && this._ui.getIsPlayerDisconnectedUIShown()) {
+                    this._ui.disposePlayerDisconnectedUI();
+                }
+            });
         });
     }
 

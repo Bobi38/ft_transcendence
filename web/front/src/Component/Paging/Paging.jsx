@@ -55,12 +55,12 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
     useEffect(()=> {
         const tab = default_tab();
         setTabWithDot(add_dot(tab));
-
     },[currentPage])
 
 
-    const change_page = (arg) => {setNewPage(arg)
+    const change_page = (arg) => {
         console.log("newCurrentPage: ", arg)
+        setNewPage(arg)
     }
 
     useEffect(() => {
@@ -73,14 +73,12 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
             <ul> 
 
                 <li className={`onhover`}>
-                    <button onClick={(e) => {change_page(currentPage - 1)}}>
+                    <button onClick={(e) => {(currentPage == 1) ? null : change_page(currentPage - 1)}}>
                         &lt;prev {/* "<"prev */}
                     </button>
                 </li>
 
-
-
-                {tabWithDot && tabWithDot.map((page, index) => {
+                {tabWithDot?.map((page, index) => {
 
                     if (page === "...") {
                         return (
@@ -102,66 +100,10 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                         </li>
                     );
                 })}
-                {/*
-                        if (totalPages < 7)
-                            display all
-                        
-
-
-                        if (currentPage <= 4)
-                            display '1' +0 / +1 / +2 / +3 / +4
-                            single dot before high
-                            display highest totalPages
-
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>1</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>2</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>3</button></li>
-                                <li><button onClick={(e) => {change_page(currentPage - 1)}}>4</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>5</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>…</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages}`}</button></li> 
-
-
-
-                        if (currentPage > 5 && currentPage < totalPages - 4)
-                            display lower(everytime 1)
-                            dot
-                            current -1
-                            current
-                            current +1
-                            dot
-                            display highest totalPages
-
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>1</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>…</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>4</button></li>
-                                <li><button onClick={(e) => {change_page(currentPage - 1)}}>5</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>6</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>…</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages}`}</button></li> 
-                        
-
-
-                        
-                        if (currentPage >= totalPages - 3)
-                            display lower(everytime 1)
-                            single dot after low
-                            display 'totalPages' -4 / -3 / -2 / -1 / -0
-
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>1</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>…</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages - 4}`}</button></li>
-
-                                <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages - 3}`}</button></li>
-                        
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages - 2}`}</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages - 1}`}</button></li>
-                        <li><button onClick={(e) => {change_page(currentPage - 1)}}>{`${totalPages}`}</button></li> 
-                    */}
 
                 <li className={`onhover`}>
-                    <button onClick={(e) => {change_page(currentPage + 1)}}>
-                        next &gt;  {/* next">" */}
+                    <button onClick={(e) => {(currentPage == totalPages) ? null : change_page(currentPage + 1)}}>
+                        next&gt;  {/* next">" */}
                     </button>
                 </li>
 

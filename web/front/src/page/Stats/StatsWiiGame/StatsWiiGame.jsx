@@ -3,7 +3,7 @@ import "./StatsWiiGame.scss";
 
 /* Components */
     
-export default function StatsWiiGame() {
+export default function StatsWiiGame({ username, setUsername }) {
     return (
         <>
             <div>
