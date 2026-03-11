@@ -5,7 +5,7 @@ import User from './user.js';
 const GameMorp = sequelize.define('GameMorp', {
 
   how_win: {
-    type: DataTypes.ENUM("horizontal","diagonal","vertical", "abort", "draw"),
+    type: DataTypes.ENUM("horizontal", "diagonal_lr", "diagonal_rl", "vertical", "abort", "draw"),
     allowNull: false
   },
 
