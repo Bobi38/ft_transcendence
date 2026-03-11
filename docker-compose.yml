@@ -175,9 +175,9 @@ services:
     - cle_pswd
     - cle_chat
 
-  ping:
-    build: ./web/back/game/ping
-    container_name: ping
+  pong3D:
+    build: ./web/back/pong3D
+    container_name: pong3D
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
@@ -195,14 +195,14 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/game/ping:/app
+      - ./web/back/pong3D:/app
       - ./web/back/src/models:/app/src/models
       - /app/node_modules
       - ./web/back/src/routes:/app/src/routes
 
-  morp:
-    build: ./web/back/game/morp
-    container_name: morp
+  morpion:
+    build: ./web/back/morpion
+    container_name: morpion
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
@@ -220,7 +220,7 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/game/morp:/app
+      - ./web/back/morpion:/app
       - ./web/back/src/routes:/app/src/routes
       - ./web/back/src/models:/app/src/models
       - ./web/back/src/morpion:/app/src/morpion

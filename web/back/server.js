@@ -75,8 +75,8 @@ app.use('/api/chatP', createProxyMiddleware({
   changeOrigin: true
 }))
 
-app.use('/api/game', createProxyMiddleware({
-  target: 'http://ping:2567',
+app.use('/api/pong3D', createProxyMiddleware({
+  target: 'http://pong3D:2567',
   changeOrigin: true
 }))
 
