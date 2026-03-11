@@ -66,6 +66,7 @@ export class App {
         // console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
         // let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
         let colyseusSDK = new Client("ws://localhost:2567");
+        const token = sessionStorage.getItem("token");
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
         let room: Room<MyRoomState>;
@@ -78,8 +79,9 @@ export class App {
                 throw new Error("No room/session stored, joining new room");
             }
         } catch (e) {
+            //const token = sessionStorage.getItem("token");
             console.log("Reconnect failed or no previous session, joining new room:", e);
-            room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
+            room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
 
@@ -137,7 +139,7 @@ export class App {
         //     console.log(`Disconnected: ${code} - ${reason}`);
         //     localStorage.setItem("test", "test1");
         //     //showReconnectingUI();
-        // });
+        // });esult
         // room.onReconnect(() => {
         //     console.log("Reconnected!");
         //     //hideReconnectingUI();

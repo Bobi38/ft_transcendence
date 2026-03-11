@@ -1,11 +1,15 @@
-import { Room, Client, CloseCode } from "colyseus";
+import { Room, Client, CloseCode, AuthContext } from "colyseus";
 import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
 import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
 import fs from "fs";
 import path from "path";
 import { createBall, createWalls } from "../environment.js";
+import User from "../models/user.js";
+import PongStat from "../models/PongStat.js"
+import jwt from "jsonwebtoken"
 
+const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
 export class MyRoom extends Room {
   private _scene : Scene;
@@ -16,6 +20,9 @@ export class MyRoom extends Room {
   private _nodes: TransformNode[] = [];
   private _havokPlugin: HavokPlugin;
   private _nextPlayerIndex: number = 0;
+  private _tokens : Map<string, {auth: string, score: number, hasWon: boolean}> = new Map<string, {auth: string, score: number, hasWon: boolean}>();
+  private _near : string;
+  private _far: string;
 
   maxClients = 2;
   patchRate = 50;
@@ -79,14 +86,20 @@ export class MyRoom extends Room {
       if (this._ball.transformNode.position.z < -23) {
         console.log("Team Far won a point");
         this.state.score.teamFar++;
-        if (this.state.score.teamFar >= 3)
+        this._tokens.get(this._far).score++;
+        if (this.state.score.teamFar >= 3) {
           this.state.roomStatus = RoomStatus.WON;
+          this._tokens.get(this._far).hasWon = true;
+        }
       }
       else if (this._ball.transformNode.position.z > 40) {
         console.log("Team Near won a point");
         this.state.score.teamNear++;
-        if (this.state.score.teamNear >= 3)
+        this._tokens.get(this._near).score++;
+        if (this.state.score.teamNear >= 3) {
           this.state.roomStatus = RoomStatus.WON;
+          this._tokens.get(this._near).hasWon = true;
+        }
       }
       if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
                         console.log(this._ball.transformNode.position);
@@ -126,19 +139,52 @@ export class MyRoom extends Room {
     this._startSimulation();
   }
 
-  onJoin (client: Client, options: any) {
+  static async onAuth (token: string, options: any, context: AuthContext) {
+      /**
+       * This is a good place to validate the client's auth token.
+       */
+      const ourToken : string = options.token;
+      if (!ourToken) {
+        console.log("Failed to send authorization token");
+        return false;
+      }
+      let decoded;
+      try {
+        decoded = jwt.verify(ourToken, secret);
+      } catch (e) {
+        console.log("Verification failed:", e);
+      }
+      let result;
+      try {
+        result = await User.findOne({ where: { id: decoded.id } });
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
+      if (result == 0) {
+        console.log("Failed to find token in database");
+        return false;
+      }
+      return result;
+  }
+
+  onJoin (client: Client, options: any, auth: any) {
     /**
      * Called when a client joins the room.
      */
     console.log(client.sessionId, "joined room", this.roomId);
+    this._tokens.set(client.sessionId, {auth: auth, score: 0, hasWon: false});
     const player = new Player();
     player.position.x = 0;
     player.position.y = 1.5;
-    if (this._nextPlayerIndex % 2 == 0)
+    if (this._nextPlayerIndex % 2 == 0) {
       player.position.z = 0;
+      this._near = client.sessionId;
+    }
     else {
       player.position.z = 20;
       player.sideNear = false;
+      this._far = client.sessionId;
     }
     this.state.players.set(client.sessionId, player);
     this._nextPlayerIndex++;
@@ -155,7 +201,7 @@ export class MyRoom extends Room {
     if (player) {
       player.connected = false;
     }
-    this.allowReconnection(client, 5).then(() => {
+    this.allowReconnection(client, 5).catch(() => {
       this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
     });
   }
@@ -182,10 +228,32 @@ export class MyRoom extends Room {
     this.state.players.delete(client.sessionId);
   }
 
+  async _sendGameDataToDatabase() {
+    const iterator = this._tokens.entries();
+      const firstPlayer = iterator.next().value;
+      const secondPlayer = iterator.next().value;
+      const player1id = firstPlayer[1].auth;
+      const player2id = secondPlayer[1].auth;
+      const score1 = firstPlayer[1].score;
+      const score2 = secondPlayer[1].score;
+      let whowin, wholose;
+      if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
+      try {
+      await PongStat.create({Player1id: player1id, Player2id: player2id, whowin: whowin, wholose: wholose, score1: score1, score2: score2});
+      } catch (e) {
+        console.log("Failed to store results in database", e);
+      }
+  }
+
   onDispose() {
     /**
      * Called when the room is disposed.
      */
+    if (this.state.roomStatus != RoomStatus.WAITING)
+      this._sendGameDataToDatabase();
+
+    this._tokens = null;
+
     this._bodies.forEach(body => {
         if (body.shape) {
             body.shape.dispose();

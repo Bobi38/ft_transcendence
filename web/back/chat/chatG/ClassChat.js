@@ -53,6 +53,7 @@ class Chat {
   }
   decoded(token){
     try{
+      console.log("dans le decoded ", token , " " , secret);
       const decodeded = jwt.verify(token, secret);
       return decodeded;
     }catch(err){
