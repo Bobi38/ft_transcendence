@@ -14,4 +14,5 @@ export class Player extends Schema {
     @type(Vector3) public rackPos: Vector3 = new Vector3();
     @type(Quaternion) public rackRot: Quaternion = new Quaternion();
     @type("boolean") public sideNear!: boolean;
+    @type("boolean") public connected!: boolean;
 }

@@ -105,6 +105,12 @@ export class App {
             this._player.lockControls();
             this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
         });
+        callback.listen("endedDisconnect", () => {
+            if (!this._room.state.endedDisconnect)
+                return ;
+            this._player.lockControls();
+            this._ui.addOtherPlayerDisconnectUI();
+        });
 
         // room.onDrop((code, reason) => {
         //     console.log(`Disconnected: ${code} - ${reason}`);
@@ -161,6 +167,14 @@ export class App {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 this._setupEnemy(sessionId, enemyPos, player.sideNear);
             }
+            this._callback.onChange(player, () => {
+                if (player.connected = false) {
+                    this._ui.addPlayerDisconnectedUI();
+                }
+                if (player.connected = true && this._ui.getIsPlayerDisconnectedUIShown()) {
+                    this._ui.disposePlayerDisconnectedUI();
+                }
+            });
         });
     }
 

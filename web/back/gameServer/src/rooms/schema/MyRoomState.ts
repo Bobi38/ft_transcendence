@@ -23,6 +23,7 @@ export class Player extends Schema {
   @type(Vector3) rackPos = new Vector3();
   @type(Quaternion) rackRot = new Quaternion();
   @type("boolean") sideNear = true;
+  @type("boolean") connected = true;
 }
 
 export class Score extends Schema {
@@ -34,6 +35,7 @@ export class MyRoomState extends Schema {
   @type(Ball) ball = new Ball();
   @type("boolean") started = false;
   @type("boolean") won = false;
+  @type("boolean") endedDisconnect = false;
   @type(Score) score = new Score();
   @type({ map: Player }) players = new MapSchema<Player>();
 }

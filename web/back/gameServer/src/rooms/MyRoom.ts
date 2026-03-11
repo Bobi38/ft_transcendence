@@ -153,29 +153,31 @@ export class MyRoom extends Room {
     console.log(`Client ${client.sessionId} dropped (code: ${code})`);
     this.allowReconnection(client, 5);
  
-    // Optionally mark the player as disconnected in your state
-    // const player = this.state.players.get(client.sessionId);
-    // if (player) {
-    //   player.connected = false;
-    // }
+    const player = this.state.players.get(client.sessionId);
+    if (player) {
+      player.connected = false;
+    }
   }
 
   onReconnect(client: Client) {
     console.log(`Client ${client.sessionId} reconnected!`);
  
-    // // Restore player connection status
-    // const player = this.state.players.get(client.sessionId);
-    // if (player) {
-    //   player.connected = true;
-    // }
+    const player = this.state.players.get(client.sessionId);
+    if (player) {
+      player.connected = true;
+    }
   }
 
   onLeave (client: Client, code: CloseCode) {
     /**
      * Called when a client leaves the room.
      */
-    console.log(client.sessionId, "left room", this.roomId, "with code", code);
+    if (code == CloseCode.FAILED_TO_RECONNECT)
+      console.log(client.sessionId, "failled to reconnect to room", this.roomId);
+    else
+      console.log(client.sessionId, "left room", this.roomId, "with code", code);
     this.state.players.delete(client.sessionId);
+    this.state.endedDisconnect = true;
   }
 
   onDispose() {

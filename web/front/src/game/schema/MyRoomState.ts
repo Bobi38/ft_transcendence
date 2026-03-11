@@ -14,6 +14,7 @@ export class MyRoomState extends Schema {
     @type(Ball) public ball: Ball = new Ball();
     @type("boolean") public started!: boolean;
     @type("boolean") public won!: boolean;
+    @type("boolean") public endedDisconnect!: boolean;
     @type(Score) public score: Score = new Score();
     @type({ map: Player }) public players: MapSchema<Player> = new MapSchema<Player>();
 }
