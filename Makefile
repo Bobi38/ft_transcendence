@@ -29,13 +29,13 @@ creat:
 	chmod +x ./conf/db/conf.sh
 
 logs:
-	docker logs web -f
+	docker compose logs -f
 	
 logst:
-	docker logs web -f -t
+	docker compose logs -f -t
 	
 logs_alert_flo:
-	docker logs web -f -t --tail 0
+	docker compose logs -f -t --tail 0
 
 secrets:
 	@mkdir -p ./conf/secrets
