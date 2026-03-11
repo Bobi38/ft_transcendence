@@ -54,11 +54,11 @@ export class App {
     }
 
     private async _main(): Promise<void> {
-        // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        // const host = window.location.host;
-        // console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
-        // let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
-        let colyseusSDK = new Client("ws://localhost:2567");
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.host;
+        console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
+        let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
+        // let colyseusSDK = new Client("ws://pong3d:2567");
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
         let room: Room<MyRoomState>;

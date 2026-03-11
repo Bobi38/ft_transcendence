@@ -177,7 +177,7 @@ services:
 
   pong3d:
     build: ./web/back/pong3D
-    container_name: pong3D
+    container_name: pong3d
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
