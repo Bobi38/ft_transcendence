@@ -34,16 +34,16 @@ router.post('/login', async (req, res) => {
     //     return res.status(500).json({success:false, message: 'User already log'});
       console.log("Api /login " + result[0].id," avant token");
     const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
-    console.log("Api /login " + "apres token");
+    console.log("Api /login apres token");
     if (iid.length === 0)
       await Co.create({token: token, userId: result[0].id});
-    console.log("Api /login " + "TAILLE= " , Co.length);
+    console.log("Api /login TAILLE= " , Co.length);
     await result[0].update({co: true});
-    console.log("Api /login " + "ID", result[0].id);
+    console.log("Api /login ID", result[0].id);
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-    res.status(201).json({  success : true , message: 'Utilisateur connecte', user_id: result[0].id, tooken: token});
+    res.status(201).json({  success : true , message: 'Utilisateur connecte'/*, user_id: result[0].id*/, token: token, username: result[0].name });
     // majDb();
   } catch (err) {
     console.error(err);

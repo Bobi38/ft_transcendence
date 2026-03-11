@@ -33,7 +33,7 @@ export default function StatsMorpion() {
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success))
-            return;
+            return -1;
 
         const data = repjson.stat_user;
 
@@ -62,7 +62,7 @@ export default function StatsMorpion() {
         const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
-        setStatToDisplay({
+        const data2 = {
             win_horizontal: win_horizontal,
             win_vertical: win_vertical,
             win_diagonal: win_diagonal,
@@ -78,7 +78,8 @@ export default function StatsMorpion() {
             lose_abort: lose_abort,
             all_win_without_abort: all_win_without_abort,
             all_lose_without_abort: all_lose_without_abort
-        });
+        };
+        setStatToDisplay(data2);
 
         console.log("statToDisplay:",statToDisplay);
     }
@@ -121,9 +122,17 @@ export default function StatsMorpion() {
 
     useEffect(() => {
         console.log("search: ",search," currentPage: ",currentPage)
-        fetch_stats(search);
+        if (fetch_stats(search)){
+            fetch_history(search, currentPage - 1);
+        } else {
+            setCurrentPage(1);
+        }
+    }, [search]);
+
+    useEffect(() => {
+        console.log("search: ",search," currentPage: ",currentPage)
         fetch_history(search, currentPage - 1);
-    }, [search, currentPage]);
+    }, [currentPage]);
 
 
     /* form */
