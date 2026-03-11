@@ -57,6 +57,7 @@ export default function App() {
         }
         init();
         return () => {
+          SocketM.disconnect("friend");
           // if (SocketM.socket)
           //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");

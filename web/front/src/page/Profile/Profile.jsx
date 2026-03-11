@@ -32,12 +32,12 @@ export default function Profile() {
         const confirmepassword = e.target.confirmepassword.value.trim();
 
         if (!password || !confirmepassword) {
-            showAlert("handle_pass(1) Veuillez remplir tous les champs", "danger");
+            showAlert("Veuillez remplir tous les champs", "danger");
             return;
         }
 
         if (password !== confirmepassword) {
-            showAlert("handle_pass(2) Les mots de passe ne correspondent pas", "danger");
+            showAlert("Les mots de passe ne correspondent pas", "danger");
             return;
         }
 
@@ -54,7 +54,7 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        showAlert("handle_pass(3) Mot de passe mis à jour avec succès", "success");
+        showAlert("Mot de passe mis à jour avec succès", "success");
         
     }
 
@@ -62,12 +62,12 @@ export default function Profile() {
         e.preventDefault();
 
         if (!user.login || !user.login42 || !user.tel || !user.location || !user.email || !user.tel) {
-            showAlert("handle_submit(1) Veuillez remplir tous les champs", "danger");
+            showAlert("Veuillez remplir tous les champs", "danger");
             return;
         }
 
         if (user.tel[0] !== '+' || user.tel[1] !== '3' || user.tel[2] !== '3' || user.tel.length < 10) {
-            showAlert("handle_submit(2) Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
+            showAlert("Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
             return;
         }
 
@@ -83,7 +83,8 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        showAlert("handle_submit(3) Profil mis à jour avec succès", "success");
+        sessionStorage.setItem('username', repjson.username);
+        showAlert("Profil mis à jour avec succès", "success");
     };
 
     async function fetch_user_data(){

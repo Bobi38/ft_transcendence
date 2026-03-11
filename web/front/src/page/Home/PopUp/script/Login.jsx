@@ -44,10 +44,10 @@ export default function Login({setShowLog}) {
 
 
 
-        sessionStorage.setItem('username', repjson.username);
-        sessionStorage.setItem('token', repjson.token);
-        sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('type', "success");
+        sessionStorage.setItem('message', "Connexion réussie");
+        sessionStorage.setItem('token', repjson.token);
+        sessionStorage.setItem('username', repjson.username);
         setShowLog(AUTH.MAILA2F);
     };
 
