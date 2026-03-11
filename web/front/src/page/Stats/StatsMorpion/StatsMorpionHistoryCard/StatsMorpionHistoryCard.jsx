@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./StatsMorpionHistoryCard.scss";
@@ -11,7 +10,7 @@ import "./StatsMorpionHistoryCard.scss";
 import Board from "FRONT/page/all_game/MorpionDisplay/Morpion/Board/Board.jsx";
 
     
-export default function StatsMorpionHistoryCard({ stats }) {
+export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
 
     function format_stats( stats ) {
         console. log("format_stats: ",stats)
@@ -21,17 +20,23 @@ export default function StatsMorpionHistoryCard({ stats }) {
 
     const style_card = (arg) => {
         if (arg === "horizontal"){return ("scanline-win-h")}
-        else if (arg === "vertical"){return ("scanline-win-d")}
-        else if (arg === "diagonal"){return ("scanline-win-v")}
+        else if (arg === "diagonal"){return ("scanline-win-d-rl")}
+        else if (arg === "diagonal"){return ("scanline-win-d-lr")}
+        else if (arg === "vertical"){return ("scanline-win-v")}
         else return ("")
     }
 
-    const color_card = (arg)=> {
-        if (arg === "horizontal" || arg === "vertical" || arg === "diagonal"){return ("win")}
-        else if (arg === "draw") return ("draw")
-        else if (arg === "abort") return ("abort")
-        else return ("lose")
-        
+    const color_card = (how_win, winnerUser)=> {
+        console.log(winnerUser)
+        if (how_win === "draw") {
+            return ("draw")
+        } else if (how_win === "abort"){
+            return ("abort")
+        } else if (winnerUser === nameSearched){
+            return ("win")
+        } else {
+            return ("lose")
+        }
     }
     const format_time = (ms) => {
         const totalSeconds = Math.floor(ms / 1000);
@@ -54,7 +59,7 @@ export default function StatsMorpionHistoryCard({ stats }) {
 
             <div className={`game-data border-1`}>
                 <div className={`${style_card(stats.how_win)}`}></div>
-                <div className={`${color_card(stats.how_win)}`}></div>
+                <div className={`${color_card(stats.how_win, stats?.winnerUser?.name)}`}></div>
                 <p className={`time`}>time: {format_time(stats.time_player_1 + stats.time_player_2)}</p>
                 <p className={`stat`}>{`${stats.player1.name} [X] : ${stats.nb_turn_player_1} turn - MOY/${Math.round(stats.time_player_1 / stats.nb_turn_player_1)}ms`}</p>
                 <p className={`stat`}>{`${stats.player2.name} [O] : ${stats.nb_turn_player_2} turn - MOY/${Math.round(stats.time_player_2 / stats.nb_turn_player_2)}ms`}</p>

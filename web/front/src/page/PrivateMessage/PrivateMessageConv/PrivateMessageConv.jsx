@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import  SocketM  from "/app/front/tool/SocketManag.js";
+import  SocketM  from "/app/tool/SocketManag.js";
 
 /* Css */
 import "./PrivateMessageConv.scss"; 
@@ -55,7 +55,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         await add_private_message(time, login);
 
         console.log("handle_submit(3) send via WebSocket data2:", data2);
-        SocketM.sendd(data2);
+        SocketM.sendd(SocketM.socket.priv, data2);
         setInput("");
     }
 

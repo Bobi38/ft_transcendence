@@ -13,6 +13,10 @@ import StatsWiiGame from "./StatsWiiGame/StatsWiiGame.jsx";
 
 export default function Stats() {
 
+
+    const username = sessionStorage.getItem('username');
+    
+    console.log("sessionStorage.getItem('username'): ",username);
     const [selected, setSelected] = useState(null);
 
     const stats_handle = (game) => {
@@ -27,7 +31,7 @@ export default function Stats() {
     return (
         <>
             <div className={`Stats-root`}>
-                
+
                 <div className={`Stats-selection`}>
 
                     {!selected && <h3>Stats</h3>}

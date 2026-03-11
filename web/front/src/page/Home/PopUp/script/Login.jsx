@@ -2,7 +2,7 @@
 import { FaGithub } from "react-icons/fa";
 
 /* back */
-import { showAlert } from "BACK/fct1.js";
+import { showAlert } from "../../../../../tool/fct1.js";
 
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
@@ -29,7 +29,6 @@ export default function Login({setShowLog}) {
         }
 
         const api_url = `/api/auth/login`;
-
         console.log(`${api_url}`)
 
         const repjson = await useFetch(`${api_url}`, {
@@ -43,7 +42,10 @@ export default function Login({setShowLog}) {
             return;
         }
 
-        sessionStorage.setItem('token', repjson.tooken);
+
+
+        sessionStorage.setItem('username', repjson.username);
+        sessionStorage.setItem('token', repjson.token);
         sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('type', "success");
         setShowLog(AUTH.MAILA2F);

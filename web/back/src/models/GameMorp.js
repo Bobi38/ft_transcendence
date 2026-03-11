@@ -9,7 +9,7 @@ const GameMorp = sequelize.define('GameMorp', {
         autoIncrement: true,
     },
     how_win: {
-      type: DataTypes.ENUM("horizontal","diagonal","vertical", "abort", "draw"),
+      type: DataTypes.ENUM("horizontal", "diagonal_lr", "diagonal_rl", "vertical", "abort", "draw"),
       allowNull: false
     },
 
@@ -87,32 +87,3 @@ User.hasMany(GameMorp, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCAD
 GameMorp.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
 
 export default GameMorp;
-
-// GameMorp.findAll({
-//   include: [
-//     { model: User, as: 'player1' },
-//     { model: User, as: 'player2' },
-//     { model: User, as: 'winnerUser' },
-//     { model: User, as: 'loserUser' }
-//   ]
-// });
-
-// const PlayerStats = sequelize.define('PlayerStats', {
-
-//   player_id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true
-//   },
-
-//   games: {
-//     type: DataTypes.INTEGER,
-//     defaultValue: 0
-//   },
-
-//   wins: {
-//     type: DataTypes.INTEGER,
-//     defaultValue: 0
-//   },
-// await PlayerStats.increment('wins', {
-//   where: { player_id: id }
-// });

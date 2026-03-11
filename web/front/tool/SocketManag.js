@@ -1,154 +1,128 @@
+const paths = {
+    chat: "/ws/chatG",
+    priv: "/ws/chatP",
+    morp: "/ws/morp",
+    friend: "/ws/friend",
+    pong: "/ws/goat"
+};
+
 
 class SocketManag{
     constructor(){
         console.log("Création de SocketManag");
-        this.socket = null;
-        this.reco = true;
-        this.nbco = 0;
+        this.socket = {
+            chat : null,
+            priv : null,
+            morp : null,
+            friend : null,
+            pong : null
+        };
+        this.reco = {
+            chat : true,
+            priv : true,
+            morp : true,
+            friend : true,
+            pong : true
+        };
+        this.attempt = {
+            chat : 0,
+            priv : 0,
+            morp : 0,
+            friend : 0,
+            pong : 0
+        };
         this.listeners = {
             chat: new Map(),
-            game: [],
-            room: [],
-            priv: [],
+            game: new Map(),
+            room: new Map(),
+            friend: new Map(),
+            morp: new Map(),
+            priv: new Map(),
         };
     }
 
-    connect(){
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            console.log("WebSocket déjà connecté.");
-            return;
-        }
-        if (this.socket && this.socket.readyState === WebSocket.CONNECTING){
-            console.log("WebSocket statu CONNECTING")
-            return ;
-        }
+    connectsocket(name){
+        if (this.socket[name] && this.socket[name].readyState === WebSocket.OPEN) {return;}
+        if (this.socket[name] && this.socket[name].readyState === WebSocket.CONNECTING){return ;}
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host; // Inclut le port si présent
-        console.log(`${protocol}//${host}/ws`);
-        this.socket = new WebSocket(`${protocol}//${host}/ws`);
+        const host = window.location.host;
+        console.log(`${protocol}//${host}${paths[name]}`);
+        this.socket[name] = new WebSocket(`${protocol}//${host}${paths[name]}`);
         console.log("Tentative de connexion au WebSocket...");
-        this.socket.onopen = () => {
-            this.sendd(JSON.stringify({type: "auth",  mess: null}))
-        }
+        this.socket[name].onopen = () => {this.sendd(this.socket[name],{type: "auth",  mess: null})}
 
-        this.socket.onmessage = (event) => {
-            if (!event.data) {console.log("qwerty14");return;}
+        this.socket[name].onmessage = (event) => {
+            if (!event.data) {return;}
             const dataa = JSON.parse(event.data);
-            console.log("Message reçu via WebSocket:", dataa.type, dataa.mess);
-            if (dataa.type === 'message') {
+            console.log("Message reçu via WebSocket[CHATG]:", dataa.type, dataa.mess);
+            // if (dataa.type === 'message') {
                 console.log("Message reçu de type message via WebSocket:", dataa.mess);
-                console.log("Listeners chat:", this.listeners.chat);
-                console.log("Nombre de listeners chat:", this.listeners.chat.size);
-                this.listeners.chat.forEach(cb => cb(dataa));
-            }
-            if (dataa.type === 'game') {
-                this.listeners.game.forEach(cb => cb(dataa));
-            }
-            if (dataa.type === 'waitRoom') {
-                console.log("Message reçu de type waitRoom via WebSocket:", dataa.mess);
-                this.listeners.room.forEach(cb => cb(dataa));
-            }
-            if (dataa.type === 'priv_mess') {
-                console.log("Message reçu de type priv_mess via WebSocket:", dataa.mess);
-                this.listeners.priv.forEach(cb => cb(dataa));
-            }
+                this.listeners[name].forEach(cb => cb(dataa));
+            // }
             if (dataa.type === 'ping'){
                 console.log("receive PING")
                 const data = {
                     type: 'pong',
                 }
-                this.sendd(data)
+                this.sendd(this.socket[name], data)
             }
-        };
-        this.socket.onerror = (error) => {
+            if (dataa.type === 'auth_good')
+                this.attempt[name] = 0;
+        }
+        this.socket[name].onerror = (error) => {
             console.log("errr socket" + error);
         }
-        this.socket.onclose = () => {          
-            if (this.reco)
-                this.nbco++;
-                setTimeout(() => this.connect(), 300);
-        }
-        this.nbco++;
-    }
-    
-    onPriv(cb) {
-        if (!this.listeners.priv.includes(cb))
-            this.listeners.priv.push(cb);
-    }
-
-    onChat(cb, name) {
-        if (!this.listeners.chat.has(name)){
-            console.log("Ajout d'un listener chat:", cb);
-            console.log("Listeners chat avant ajout:", this.listeners.chat);
-            this.listeners.chat.set(name, cb);
-            console.log("Listeners chat après ajout:", this.listeners.chat);
+        this.socket[name].onclose = (event) => {    
+            if (event.code == 1008){
+                document.cookie = "token=; Max-Age=0; path=/;";
+                return ;
+            }
+            this.attempt[name]++;
+            if (this.attempt[name] > 10)
+                return ;
+            if (this.reco[name])
+                setTimeout(() => this.connectsocket(name), 1000);
         }
     }
 
-    offPriv(cb) {
-        this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
-    }
-    
-    // offChat(cb) {
-    //     this.listeners.chat = this.listeners.chat.filter(listener => listener !== cb);
-    // }
-
-    offChat(name) {
-        this.listeners.chat.delete(name);
+    on(type,  handle, id){
+        if (!this.listeners[type]) return;
+        this.listeners[type].set(id, handle);
     }
 
-    offGame(cb) {
-        this.listeners.game = this.listeners.game.filter(listener => listener !== cb);
+    off(type, id){
+        if (!this.listeners[type]) return;
+    this.listeners[type].delete(id);
     }
 
-    offRoom(cb) {
-        this.listeners.room = this.listeners.room.filter(listener => listener !== cb);
-    }
- 
-    offPriv(cb){
-        this.listeners.priv = this.listeners.priv.filter(listener => listener !== cb);
-    }
+    sendd (socket, data){
+        if (!socket)return ;
+        console.log("coucou je suis dans sendd" + " " + socket.readyState);
 
-    onGame(cb) {
-        this.listeners.game.push(cb);
-    }
-
-    onRoom(cb) {
-        if (!this.listeners.room.includes(cb))
-            this.listeners.room.push(cb);
-    }
-
-    nb(){
-        return this.nbco;
-    }
-
-    sendd (data){
-        console.log("In SocketManag.sendd " + this.socket.readyState);
-
-        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-            console.log("SocketManag.sendd: envoie impossible");
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            console.log("proble de socket :envoie impossible");
             return;
         }
         else
         {
             console.log("envoi du message via WebSocket:", data);
-            this.socket.send(JSON.stringify(data));
+            socket.send(JSON.stringify(data));
         }
     }
     
-    disco(){
+    disconnect(name){
+        this.reco[name] = false;
 
-        this.sendd(JSON.stringify({type: "logout"}))
-        this.reco = false;
-        this.id = null;
-        if (this.socket.readyState == WebSocket.OPEN)
-            this.socket.close();
-        this.socket = null;
+        if (this.socket[name]){
+            this.socket[name].close();
+            this.socket[name] = null;
+        }
     }
-    getState(){
-        console.log("i m in GETSTATE SOCKET");
-        if (this.socket)
-            return this.socket.readyState;
+
+
+    getState(name){
+        if (this.socket[name])
+            return this.socket[name].readyState;
         return null;
     }
 }

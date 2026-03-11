@@ -11,6 +11,7 @@ import {
  * Import your Room files
  */
 import { MyRoom } from "./rooms/MyRoom.js";
+import servRoute from "./routes/Ping.js";
 
 const server = defineServer({
     /**
@@ -41,6 +42,8 @@ const server = defineServer({
         app.get("/hi", (req, res) => {
             res.send("It's time to kick ass and chew bubblegum!");
         });
+
+        app.use("/", servRoute);
 
         /**
          * Use @colyseus/monitor

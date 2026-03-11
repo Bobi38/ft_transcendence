@@ -1,4 +1,4 @@
-import {encrypt} from '../crypt.js';
+import {encrypt} from './crypt.js';
 import {express, maj_conv, secret} from './index.js';
 import jwt from 'jsonwebtoken';
 import {User, ChatG} from './index.js';

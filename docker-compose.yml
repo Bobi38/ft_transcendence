@@ -37,38 +37,195 @@ services:
       - home
     restart: always
 
-  web:
-    build: ./web/
-    container_name: web
+  front:
+    container_name: front
+    build: ./web/front/
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web/front/:/app
+      - /app/node_modules
+
+
+  gateway:
+    build: ./web/back/
+    container_name: gateway
     environment:
       DB_USER: "bobi"
       DB_PASSWORD: 123
       DB_NAME: "TRANS"
       DB_HOST: "mysql"
       DB_PORT:  3306
-    volumes:
-  # Backend
-      - ./web/back:/app/back                  # monte tout le backend
-      - /app/back/node_modules           # garde les modules de l'image
-  # GameServer
-      - ./web/back/gameServer:/app/back/gameServer
-      - /app/back/gameServer/node_modules
-  # Frontend
-      - ./web/front:/app/front  # monte le frontend pour HMR
-      - /app/front/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - home
-    restart: always
     ports:
-      - "9000:9000"   # backend Node
-      - "5173:5173"   # Vite frontend
-      - "2567:2567"   # Colyseus backend
+      - "9000:9000"
+    volumes:
+      - ./web/back/:/app
+      - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+  
+  auth:
+    build: ./web/back/auth
+    container_name: auth
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9005:9005"
+    volumes:
+      - ./web/back/auth:/app
+      - ./web/back/src/models:/app/src/models
+      - ./web/back/src/routes:/app/src/routes
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+
+  chatp_service:
+    build: ./web/back/chat/chatP
+    container_name: chatp_service
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9002:9002"
+    volumes:
+      - ./web/back/chat/chatP:/app
+      - ./web/back/src/models:/app/src/models
+      - ./web/back/src/routes:/app/src/routes
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+
+  chatg_service:
+    build: ./web/back/chat/chatG
+    container_name: chatg_service
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./web/back/chat/chatG:/app
+      - ./web/back/src/models:/app/src/models
+      - ./web/back/src/routes:/app/src/routes
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+
+  user_service:
+    build: ./web/back/user
+    container_name: user_service
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9003:9003"
+    volumes:
+      - ./web/back/user:/app
+      - ./web/back/src/models:/app/src/models
+      - ./web/back/src/routes:/app/src/routes
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+
+  pong3d:
+    build: ./web/back/pong3D
+    container_name: pong3D
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "2567:2567"
+    secrets:
+      - cle_pswd
+      - cle_chat
+    volumes:
+      - ./web/front/media:/app/src/media
+      - ./web/back/pong3D:/app
+      - ./web/back/src/models:/app/src/models
+      - /app/node_modules
+      - ./web/back/src/routes:/app/src/routes
+
+  morpion:
+    build: ./web/back/morpion
+    container_name: morpion
+    environment:
+      DB_USER: "bobi"
+      DB_PASSWORD: 123
+      DB_NAME: "TRANS"
+      DB_HOST: "mysql"
+      DB_PORT:  3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9004:9004"
+    secrets:
+      - cle_pswd
+      - cle_chat
+    volumes:
+      - ./web/back/morpion:/app
+      - ./web/back/src/routes:/app/src/routes
+      - ./web/back/src/models:/app/src/models
+      - ./web/back/src/morpion:/app/src/morpion
+      - /app/node_modules
 
 secrets:
   data_pswd:

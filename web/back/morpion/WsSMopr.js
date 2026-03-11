@@ -1,10 +1,12 @@
 import ws from 'ws';
+import fs from 'fs';
+import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
-import {chat} from './fct.js';
-import {manager_room} from './morpion/ManagRoom.js';
-import { playMorpion as morpion } from './morpion/PlayMorpion.js';
+import {manager_room} from './src/morpion/ManagRoom.js';
+import { playMorpion as morpion } from './src/morpion/PlayMorpion.js';
 import cookie from 'cookie' ;
 
+const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
 function getCookie(name, cookieHeader) {
   if (!cookieHeader) return null;
@@ -15,8 +17,8 @@ function getCookie(name, cookieHeader) {
   return match ? decodeURIComponent(match.split('=')[1]) : null;
 }
 
-export function initWebSocket(server) {
-  const wss = new WebSocketServer({ server, path: '/ws' });
+export function initWebSMopr(server) {
+  const wss = new WebSocketServer({ server, path: '/ws/morp' });
 
   let idd = 0;
   console.log('WebSocket server initialized on path /ws');
@@ -28,49 +30,44 @@ export function initWebSocket(server) {
       // console.log('URL:', req.url);
       // console.log('Headers upgrade:', req.headers.upgrade);
       // console.log('Headers socket:', socket.id);
-      // console.log(req.headers.cookie)
+      console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
       if (!token) {
       // socket.close();
         return;
       }
 
-      let user;
-      try {
-        user = chat.decoded(token);
-      } catch {
-        socket.close();
-        return;
-      }
+      let user = jwt.verify(token, secret);
 
-      if (!user) {socket.close(); return; }
-      // console.log("uuu-------", user);
+      if (!user) {socket.close(1008, 'Unauthorized'); return; }
+      // // console.log("uuu-------", user);
       const useid = user.id;
       socket.userId = useid;
       socket.GoLogout = false;
       socket.cleanedUp = false;
       socket.isAlive = true;
 
-      const exist = chat.finduser(socket.id);
-      const id = chat.finduserId(socket.userId);
+      // const exist = chat.finduser(socket.id);
+      // const id = chat.finduserId(socket.userId);
 
       manager_room.isInRoom(useid)
         ?.getPlayer(useid)
         ?.refreshSocket(socket);
 
-      if (exist){
-        exist.socket = socket;
-        console.log("user already exist exist");
-      }
-      else if (id){
-        id.socket = socket
-        // console.log("user already exist id");
-      }
-      else{
-        // console.log("new user, add to chat sessions");
-        await chat.addtok(useid, socket, useid);
-        // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
-      }
+      // if (exist){
+      //   exist.socket = socket;
+      //   console.log("user already exist exist");
+      // }
+      // else if (id){
+      //   id.socket = socket
+      //   // console.log("user already exist id");
+      // }
+      // else{
+      //   // console.log("new user, add to chat sessions");
+      //   await chat.addtok(useid, socket, useid);
+      //   // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
+      // }
+      socket.send(JSON.stringify({type: "auth_good"}));
     }catch(err){
       console.log("err debut wsss ", err);
     }
@@ -94,46 +91,12 @@ export function initWebSocket(server) {
         //   socket.send(JSON.stringify({type: 'auth_success', id: iid, mess: 'auth goog'}));
         //   return ;
         // }
-        if (data.type === 'mess'){
-          console.log("je suis dans un type messsssssssss " , socket.id)
-          const nono = socket.userId;
-          const na = chat.finduserId(socket.userId)
-          const ni = na.username;
-          console.log ("----" , nono , "----", ni);
-          console.log("taille === ", chat.countUser());
-          for (const session of chat.sessions.values()){
-            console.log("session ", session.userId);
-            console.log("idddd " + session.userId + "   "  +  nono + "-----");
-            if (session.socket.readyState === ws.OPEN && session.userId != nono){
-                console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
-                session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: data.timer}));
-            }
-            if (session.socket.readyState === ws.OPEN && session.userId === nono){
-              console.log("MYSEFLF");
-              session.socket.send(JSON.stringify({type: 'message',monMsg: true, message: data.message, login: ni, timer: data.timer}));
-            }
-          }
-        }
-
-        if (data.type === 'priv_mess'){
-          console.log("je suis dans un type priv_messsssssssss")
-          const nono = socket.userId;
-          const na = chat.finduserId(nono);
-          const ni = na.username;
-          const send = chat.findname(data.to);
-          console.log("name" , ni, " ", data.to)
-          if (send && send.socket.readyState === ws.OPEN){
-            console.log("ca va SEND from server " + nono + " to " + send.userId + "name " + send.username);
-            send.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
-          }
-          socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
-        }
         if (data.type === "logout")
           socket.GoLogout = true;
 
         if (data.type === 'game') {
           console.log(`game : recu ${data.message}`);
-          morpion(data.message, socket);
+          morpion(data.message, socket, socket.userId);
           return ;
         }
 
@@ -201,51 +164,51 @@ export function initWebSocket(server) {
     });
     socket.on('close', () => {
       // console.log("user deco ");
-      try{
-        if (socket.cleanedUp) return; // déjà traité
-        socket.cleanedUp = true;
+      // try{
+      //   if (socket.cleanedUp) return; // déjà traité
+      //   socket.cleanedUp = true;
 
-        const id = socket.userId;
-        if (!id) return;
-      // console.log("CLOSE EVENT", code, reason);
-      // console.log("bool deco ", socket.GoLogout)
-        if (socket.GoLogout == true){
-          console.log('Utilisateur déconnNNNNecté', socket.id);
-          chat.removetokBySocketId(socket.id);
-          manager_room.removePlayer(socket.userId);
-        }
-        else{
-          setTimeout(() => {
-            const id = socket.userId
-            const reco = chat.finduserId(id)
-            if (!reco){
-              console.log('Utilisateur ne s est pas reco', socket.id);
-              chat.removetokBySocketId(socket.id);
-              manager_room.removePlayer(socket.userId);
-            }
-          }, 2500)
-        }
-      }catch(err){
-        console.log("error close in ws back ", err);
-      }
+      //   const id = socket.userId;
+      //   if (!id) return;
+      // // console.log("CLOSE EVENT", code, reason);
+      // // console.log("bool deco ", socket.GoLogout)
+      //   if (socket.GoLogout == true){
+      //     console.log('Utilisateur déconnNNNNecté', socket.id);
+      //     // chat.removetokBySocketId(socket.id);
+      //     manager_room.removePlayer(socket.userId);
+      //   }
+      //   else{
+      //     setTimeout(() => {
+      //       const id = socket.userId
+      //       const reco = chat.finduserId(id)
+      //       if (!reco){
+      //         console.log('Utilisateur ne s est pas reco', socket.id);
+      //         // chat.removetokBySocketId(socket.id);
+      //         manager_room.removePlayer(socket.userId);
+      //       }
+      //     }, 2500)
+      //   }
+      // }catch(err){
+      //   console.log("error close in ws back ", err);
+      // }
   });
   });
-  setInterval(() => {
-    console.log('Intervalle ping : je vérifie toutes les sockets');
-    for (const session of chat.sessions.values()){
-      const so = session.socket;
-      console.log(session.socket.id);
-      if (!so.isAlive) {
-        console.log('Socket morte', so.id);
-        chat.removetokBySocketId(so.id);
-        manager_room.removePlayer(so.userId);
-        // so.terminate();
-      } else {
-        session.socket.isAlive = false;
-        session.socket.send(JSON.stringify({ type: 'ping' }));
-      }
-    }
-  }, 100000);
+  // setInterval(() => {
+  //   console.log('Intervalle ping : je vérifie toutes les sockets');
+  //   for (const session of chat.sessions.values()){
+  //     const so = session.socket;
+  //     console.log(session.socket.id);
+  //     if (!so.isAlive) {
+  //       console.log('Socket morte', so.id);
+  //       chat.removetokBySocketId(so.id);
+  //       manager_room.removePlayer(so.userId);
+  //       // so.terminate();
+  //     } else {
+  //       session.socket.isAlive = false;
+  //       session.socket.send(JSON.stringify({ type: 'ping' }));
+  //     }
+  //   }
+  // }, 100000);
 }
 
 

@@ -14,8 +14,9 @@
 
 
     .scanline-win-h{@include mix.scanlines("horizontal")}
-    .scanline-win-d{@include mix.scanlines("vertical")}
-    .scanline-win-v{@include mix.scanlines("diagonal")}
+    .scanline-win-d-rl{@include mix.scanlines("diagonal-right-left")}
+    .scanline-win-d-lr{@include mix.scanlines("diagonal-left-right")}
+    .scanline-win-v{@include mix.scanlines("vertical")}
     .none{display: none;}
 
     position: relative; // INDISPENSABLE
