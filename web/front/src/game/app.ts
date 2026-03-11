@@ -54,8 +54,12 @@ export class App {
     }
 
     private async _main(): Promise<void> {
-        let colyseusSDK = new Client("ws://localhost:2567");
-        const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.host;
+        console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
+        let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
+        // let colyseusSDK = new Client("ws://localhost:2567");
+        const room = await colyseusSDK.joinOrCreate("my_room");
         console.log("Joined room " + room.roomId);
         this._room = room;
         const callback = Callbacks.get(room);

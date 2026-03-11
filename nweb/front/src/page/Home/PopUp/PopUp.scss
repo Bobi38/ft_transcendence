@@ -1,0 +1,29 @@
+.PopUp-root {
+
+    display: flex;
+    flex-direction: row;
+    background-color: aliceblue;
+    padding: 1rem;
+
+    #alert-container {
+        .danger { color: red; }
+        .success { color: green; }
+    }
+
+    .script-in-root {
+        display: flex;
+        flex-direction: column;
+
+        form{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            
+            .button-container{
+                gap: 0.5rem;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}

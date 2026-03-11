@@ -1,0 +1,78 @@
+@use "STYLE/_mixin" as mix;
+
+.PrivateMessage-root{
+	@include mix.full;
+    
+    background: blueviolet;
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    
+    display: flex;
+    flex-direction: row;
+
+    hr {
+        border: 1px solid black;
+    }
+    .big {
+        border: 2px solid black;
+    }
+    .info {
+	    @include mix.full;
+        // width: 20%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden auto;
+        scrollbar-width: thin;
+        
+        .bloc-friend-addfriend, .bloc-last-conv-friend {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            hr {
+                @include mix.fullw;
+                border: 1px solid black;
+                margin: 3px 0;
+            }            
+            .bloc-left {@include mix.fullw;
+                display: flex;
+                flex-direction: column;
+                border-radius: 0.25rem;
+                padding: 0.5rem;
+                cursor: pointer;
+                &:hover{
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
+            }
+        }
+        .bloc-friend-addfriend {align-items: center;}
+        .bloc-last-conv-friend {
+            .bloc-left {
+                p{
+                    font-size: 0.5rem;
+                }
+                .truncate ,h4{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin: 0;
+                }
+                .header-last-conv{
+                    @include mix.fullw;
+                    display: flex;
+                    justify-content: space-between;
+                    h4 {
+                        width: 70%;
+                    }
+                    span{
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+        }
+
+
+    }
+    .display-screen{
+	    @include mix.full;
+    }
+}
