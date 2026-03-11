@@ -5,6 +5,22 @@
 .StatsMorpionHistoryCard-root{
     display: flex;
     width: 100%;
+
+    .draw{@include mix.cardhistory("draw")}
+    .abort{@include mix.cardhistory("abort")}
+    .win{@include mix.cardhistory("win")}
+    .lose{@include mix.cardhistory("lose")}
+
+
+
+    .scanline-win-h{@include mix.scanlines("horizontal")}
+    .scanline-win-d-rl{@include mix.scanlines("diagonal-right-left")}
+    .scanline-win-d-lr{@include mix.scanlines("diagonal-left-right")}
+    .scanline-win-v{@include mix.scanlines("vertical")}
+    .none{display: none;}
+
+    position: relative; // INDISPENSABLE
+    
     .board-container{
         border: solid beige 2px;
         margin: 0.5rem;

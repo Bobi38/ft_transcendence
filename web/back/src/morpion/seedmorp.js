@@ -6,7 +6,7 @@ export async function seedGameMorp() {
   if (count === 0) {
     await GameMorp.bulkCreate([
       {
-        how_win: "diagonal",
+        how_win: "diagonal_rl",
         date_game: "2026-03-04 12:52:22",
         ending: "win",
         player_1: 5,
@@ -34,7 +34,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "diagonal",
+        how_win: "diagonal_rl",
         date_game: "2026-03-04 12:53:01",
         ending: "win",
         player_1: 1,
@@ -76,7 +76,7 @@ export async function seedGameMorp() {
         map: "OOXXXOOXX"
       },
       {
-        how_win: "diagonal",
+        how_win: "diagonal_rl",
         date_game: "2026-03-04 14:52:22",
         ending: "win",
         player_1: 5,
@@ -104,7 +104,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "diagonal",
+        how_win: "diagonal_rl",
         date_game: "2026-03-04 14:53:01",
         ending: "win",
         player_1: 2,
@@ -146,7 +146,7 @@ export async function seedGameMorp() {
         map: "OOXXXOOXX"
       },
       {
-        how_win: "diagonal",
+        how_win: "diagonal_rl",
         date_game: "2026-03-04 14:55:22",
         ending: "win",
         player_1: 5,
@@ -174,7 +174,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "diagonal",
+        how_win: "diagonal_lr",
         date_game: "2026-03-04 14:57:01",
         ending: "win",
         player_1: 1,
@@ -185,7 +185,7 @@ export async function seedGameMorp() {
         time_player_2: 6928,
         nb_turn_player_1: 3,
         nb_turn_player_2: 4,
-        map: "--XOXOXXO"
+        map: "X--OXOOXX"
       },
       {
         how_win: "abort",
@@ -244,7 +244,7 @@ export async function seedGameMorp() {
         map: "-OX-OX--X"
       },
       {
-        how_win: "diagonal",
+        how_win: "diagonal_rl",
         date_game: "2026-03-04 15:54:01",
         ending: "win",
         player_1: 1,

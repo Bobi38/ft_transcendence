@@ -165,7 +165,9 @@ class MorpionRoom extends Room {
                     { message: "perdu", turn: false });
 
                 console.log(`victoire avec ligne ${i}`);
-                this._how_win = ["horizontal","vertical","diagonal"][Math.floor (i / 3)];
+                this._how_win = ["horizontal","vertical","diagonal_lr"][Math.floor (i / 3)];
+                if (i === 7)
+                    this._how_win = "diagonal_rl";
                 this.handleEndGame("win", this._turn);
                 return true;
             }

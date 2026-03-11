@@ -95,19 +95,20 @@ router.get('/get_morpion_history/:page', async (req, res) => {
         }
         
         console.log("API get_morpion_history(3)");
-
-        const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: 5, offset: 0, order: [['id', 'DESC']], include: [
+        const limit = 5
+        const offsetpage = limit * page 
+        const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
     { model: User, as: 'player1', attributes: ['name'] },
     { model: User, as: 'player2', attributes: ['name'] },
     { model: User, as: 'winnerUser', attributes: ['name'] },
-    { model: User, as: 'loserUser', attributes: ['name'] }// Optionnel : pour afficher le gagnant
-  ]});
+    { model: User, as: 'loserUser', attributes: ['name'] },
+]});
 // GameMorp.findAll({where: {[Op.or]: [{player_1: to_search.id}, {player_2: to_search.id}]}}, {limit: 5, offset: 0 , order:[['id', 'DESC']]})
 
         
         console.log("API get_morpion_history(4) result_history", result_history);
 
-        return res.status(201).json({success: true, message: "data in history_user", history_user: result_history});
+        return res.status(201).json({success: true, message: "data in history_user with name on name", history_user: result_history, name: to_search.name});
 
     }catch(err){
         return res.status(500).json({success: false, message: "API get_morpion_history(catch) " + err});

@@ -14,33 +14,8 @@ import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHisto
 
 export default function StatsMorpion() {
 
-    const [currentPage, setCurrentPage] = useState(1);
     const [totalGames, setTotalGame] = useState(null);
     const [statToDisplay, setStatToDisplay] = useState(null);
-
-    async function fetch_history(login , page_nb) {
-
-        // if (page_nb < 0)
-        //     return;
-
-        const url = login 
-            ? `/api/morpion/get_morpion_history/${page_nb}?name=${login}`
-            : `/api/morpion/get_morpion_history/${page_nb}`;
-
-
-
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`,  {
-            method: "GET",
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-        }, function(repjson){
-            console.log("useFetch(info) success history_user: " , repjson.history_user);
-        })
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-    }
 
     async function fetch_stats(login) {
 
@@ -58,7 +33,7 @@ export default function StatsMorpion() {
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success))
-            return;
+            return -1;
 
         const data = repjson.stat_user;
 
@@ -87,7 +62,7 @@ export default function StatsMorpion() {
         const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
-        setStatToDisplay({
+        const data2 = {
             win_horizontal: win_horizontal,
             win_vertical: win_vertical,
             win_diagonal: win_diagonal,
@@ -103,89 +78,140 @@ export default function StatsMorpion() {
             lose_abort: lose_abort,
             all_win_without_abort: all_win_without_abort,
             all_lose_without_abort: all_lose_without_abort
-        });
+        };
+        setStatToDisplay(data2);
 
         console.log("statToDisplay:",statToDisplay);
     }
 
 
+
+    const [historyUser, setHistoryUser] = useState([]);
+
+    async function fetch_history(login , page_nb) {
+
+        // if (page_nb < 0)
+        //     return;
+
+        const url = login 
+            ? `/api/morpion/get_morpion_history/${page_nb}?name=${login}`
+            : `/api/morpion/get_morpion_history/${page_nb}`;
+
+
+
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`,  {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        }, function(repjson){
+            console.log("useFetch(info) success history_user: " , repjson.history_user);
+        })
+        if (!repjson || (repjson &&  !repjson.success))
+            return;
+        setHistoryUser(repjson.history_user);
+        setSearch(repjson.name)
+    }
+
     
-    useEffect(() => {
-        fetch_stats("");
-        fetch_history("", 0);
-        // fetch_history("nana", 0);
-        // fetch_history(null, 0);
-    }, [])
+    /* search my self or otry ther one */
+    const [search, setSearch] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+
 
     useEffect(() => {
-            // fetch_history("nana", currentPage);
+        console.log("search: ",search," currentPage: ",currentPage)
+        if (fetch_stats(search)){
+            fetch_history(search, currentPage - 1);
+        } else {
+            setCurrentPage(1);
+        }
+    }, [search]);
+
+    useEffect(() => {
+        console.log("search: ",search," currentPage: ",currentPage)
+        fetch_history(search, currentPage - 1);
     }, [currentPage]);
 
-    const [stats, setStats] = useState("OXOXXXOXO")
+
+    /* form */
+    const [inputValue, setInputValue] = useState("");
+
+
     return (
         
         <div className={`StatsMorpion-root border-base`}>
+            <h5>{search}</h5>
 
-            <div className={`history-container border-1`}>
+            <div className={`StatsMorpion-stats`} >
+                <div className={`history-container border-1`}>
 
-                <div className={`history-card-container border-2`}>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
-                    <StatsMorpionHistoryCard stats={stats.split('')}/>
+                    <div className={`history-card-container border-2`}>
+
+                        {historyUser?.map((element, index) => {
+                            return (<StatsMorpionHistoryCard key={index} stats={element} nameSearched={search}/>)
+                        })}
+
+                    </div>
+                    <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
+
                 </div>
-                <Paging totalPages={10} currentPage={currentPage} setNewPage={setCurrentPage}/>
 
-            </div>
+                <aside className={`aside border-1`}>
+                    <div className={`search border-2`}>
+                        <form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setSearch(inputValue); setCurrentPage(1);}}>
+                            <input type={`text`} value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)} 
+                                />
+                            <input type="submit" value="search" />
+                        </form>
+                    </div>
+                    <div className={`game-winrate border-2`}>
 
-{/* ------------------------------------------------------------------------ */}
+                        <div className={`wl-graph border-3`}>
 
-            <div className={`game-winrate border-1`}>
-                    
-                    <div className={`wl-graph border-2`}>
+                            <p>Graph</p>
+                            <p>win: { statToDisplay && statToDisplay.all_win_without_abort } </p>
+                            <p>lose: { statToDisplay && statToDisplay.all_lose_without_abort } </p>
+                            <p>win: { statToDisplay && statToDisplay.win_abort } </p>
+                            <p>lose: { statToDisplay && statToDisplay.lose_abort } </p>
 
-                        <p>Graph</p>
-                        <p>win: { statToDisplay && statToDisplay.all_win_without_abort } </p>
-                        <p>lose: { statToDisplay && statToDisplay.all_lose_without_abort } </p>
-                        <p>win: { statToDisplay && statToDisplay.win_abort } </p>
-                        <p>lose: { statToDisplay && statToDisplay.lose_abort } </p>
+                        </div>
+
+                        <div className={`wl-o-x border-3`}>
+
+                            <p>ox-win-loss</p>
+                            <p>winO: { statToDisplay && statToDisplay.type_O_win } </p>
+                            <p>loseO: { statToDisplay && statToDisplay.type_O_lose } </p>
+                            <p>winX: { statToDisplay && statToDisplay.type_X_win } </p>
+                            <p>loseX: { statToDisplay && statToDisplay.type_X_lose } </p>
+
+                        </div>
+
+                        <div className={`wl-horizontal border-3`}>
+
+                            <p>horizontal</p>
+                            <p>win: { statToDisplay && statToDisplay.win_horizontal } </p>
+                            <p>lose: { statToDisplay && statToDisplay.lose_horizontal } </p>
+
+                        </div>
+
+                        <div className={`wl-diagonal border-3`}>
+                            <p>diagonal</p>
+                            <p>win: { statToDisplay && statToDisplay.win_diagonal } </p>
+                            <p>lose: { statToDisplay && statToDisplay.lose_diagonal } </p>
+                        </div>
+
+                        <div className={`wl-vertical border-3`}>
+                            <p>vertical</p>
+                            <p>win: { statToDisplay && statToDisplay.win_vertical } </p>
+                            <p>lose: { statToDisplay && statToDisplay.lose_vertical } </p>
+                        </div>
 
                     </div>
 
-                    <div className={`wl-o-x border-2`}>
-
-                        <p>ox-win-loss</p>
-                        <p>winO: { statToDisplay && statToDisplay.type_O_win } </p>
-                        <p>loseO: { statToDisplay && statToDisplay.type_O_lose } </p>
-                        <p>winX: { statToDisplay && statToDisplay.type_X_win } </p>
-                        <p>loseX: { statToDisplay && statToDisplay.type_X_lose } </p>
-
-                    </div>
-
-                    <div className={`wl-horizontal border-2`}>
-
-                        <p>horizontal</p>
-                        <p>win: { statToDisplay && statToDisplay.win_horizontal } </p>
-                        <p>lose: { statToDisplay && statToDisplay.lose_horizontal } </p>
-
-                    </div>
-
-                    <div className={`wl-diagonal border-2`}>
-                        <p>diagonal</p>
-                        <p>win: { statToDisplay && statToDisplay.win_diagonal } </p>
-                        <p>lose: { statToDisplay && statToDisplay.lose_diagonal } </p>
-                    </div>
-
-                    <div className={`wl-vertical border-2`}>
-                        <p>vertical</p>
-                        <p>win: { statToDisplay && statToDisplay.win_vertical } </p>
-                        <p>lose: { statToDisplay && statToDisplay.lose_vertical } </p>
-                    </div>
-
+                </aside>
             </div>
         </div>
     )
