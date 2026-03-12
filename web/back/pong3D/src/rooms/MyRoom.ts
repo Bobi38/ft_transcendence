@@ -145,6 +145,7 @@ export class MyRoom extends Room {
        * This is a good place to validate the client's auth token.
        */
       const ourToken : string = options.token;
+      console.log(ourToken);
       if (!ourToken) {
         console.log("Failed to send authorization token");
         return false;
@@ -278,5 +279,4 @@ export class MyRoom extends Room {
     }
     console.log("room", this.roomId, "disposing and ending simulation");
   }
-
 }
