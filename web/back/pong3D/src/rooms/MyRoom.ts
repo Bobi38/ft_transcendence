@@ -37,7 +37,7 @@ export class MyRoom extends Room {
       console.log(client.sessionId, "sent a message:", message);
     },
     "synchronizeTick" : (client: Client, data: any) => {
-      console.log("Received tick synchronization request");
+      console.log("Received tick synchronization request from", client.sessionId);
       client.send("serverTick", this._tick);
     },
     "racketImpact": (client: Client, data: any) => {

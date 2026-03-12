@@ -14,6 +14,7 @@ import { StateCallbackStrategy } from "@colyseus/schema";
 import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
+import { BallSnapshot, SnapshotBuffer } from "./snapshots";
 
 export enum RoomStatus {
   WAITING = 0,
@@ -37,7 +38,9 @@ export class App {
     private _shadow : ShadowGenerator;
     private _ui : GUI;
     private _tick : number = 0;
-    private _tickOffset : number = 0;
+    //private _tickOffset : number = 0;
+    private _snapshots : SnapshotBuffer = new SnapshotBuffer();
+    
     //public playerAssets;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -70,10 +73,15 @@ export class App {
         });
     }
 
-    private _waitForTickMessage(room: Room<MyRoomState>): Promise<void> {
+    private _waitForTickMessage(room: Room<MyRoomState>, t0: number): Promise<void> {
         return new Promise((resolve) => {
             room.onMessage("serverTick", (serverTick: number) => {
-                this._tickOffset = this._tick - serverTick;
+                const t1 = Date.now();
+                //const latency = (t1 - t0) / 2;
+                const latency = (t1 - t0);
+                const serverTickNow = serverTick + Math.round(latency * 60 / 1000);
+                this._tick = serverTickNow;
+                console.log(this._tick, serverTick, serverTickNow, latency);
                 resolve();
             });
         });
@@ -116,14 +124,12 @@ export class App {
             this._setupHavok(),
             this._waitForStateOnce(room)
         ]);
+        const t0 = Date.now();
         room.send("synchronizeTick");
-        await this._waitForTickMessage(room);
-        await this._setupGameAssets();
-        // await Promise.all([
-        //     this._waitForTickMessage(room),
-        //     this._setupGameAssets()
-        // ]);
-        console.log(this._tick, this._tickOffset);
+        await Promise.all([
+            this._waitForTickMessage(room, t0),
+            this._setupGameAssets()
+        ]);
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
@@ -170,7 +176,7 @@ export class App {
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
         this._scene.onBeforeRenderObservable.add(() => {
             this._tick++;
-            console.log(this._tick, Date.now());
+            this._snapshots.saveSnapshot(this._tick, this._ball.getMeshPosition(), this._ball.getVelocity());
         });
     }
 
@@ -214,12 +220,19 @@ export class App {
         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
         
         this._callback.onChange(this._room.state.ball.position, () => {
-            const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            this._ball.positionError = newPos.subtract(this._ball.getMeshPosition());
+            const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
+            const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp);
+            this._ball.positionError = serverPos.subtract(pastPos.position);
+            //this._ball.positionError = serverPos.subtract(this._ball.getMeshPosition());
         });
         this._callback.onChange(this._room.state.ball.velocity, () => {
-            const newVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-            this._ball.setVelocity(newVel);
+            const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
+            const pastTick = this._room.state.ball.tickStamp;
+            const pastVel = this._snapshots.getSnapshotAtTick(pastTick).velocity;
+            const deltaTick = this._tick - pastTick;
+            const deltaVel = serverVel.subtract(pastVel);
+            this._ball.positionError.addInPlace(deltaVel.scale(deltaTick));
+            this._ball.setVelocity(serverVel);
         });
         this._scene.onBeforeRenderObservable.add(() => {
             if (!this._ball.positionError)
