@@ -195,8 +195,8 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/front/media:/app/src/media
       - ./web/back/pong3D:/app
+      - ./web/front/media:/app/src/media
       - ./web/back/src/models:/app/src/models
       - ./web/back/src/routes:/app/src/routes
       - /app/node_modules
