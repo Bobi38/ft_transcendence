@@ -23,6 +23,7 @@ export class MyRoom extends Room {
   private _tokens : Map<string, {auth: string, score: number, hasWon: boolean}> = new Map<string, {auth: string, score: number, hasWon: boolean}>();
   private _near : string;
   private _far: string;
+  private _tick: number = 0;
 
   maxClients = 2;
   patchRate = 50;
@@ -34,6 +35,10 @@ export class MyRoom extends Room {
        * Handle "yourMessageType" message.
        */
       console.log(client.sessionId, "sent a message:", message);
+    },
+    "synchronizeTick" : (client: Client, data: any) => {
+      console.log("Received tick synchronization request");
+      client.send("serverTick", this._tick);
     },
     "racketImpact": (client: Client, data: any) => {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
@@ -75,6 +80,10 @@ export class MyRoom extends Room {
     const deltaTime = 1 / 60;
     havokPlugin.setTimeStep(deltaTime);
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+    scene.onBeforeRenderObservable.add(() => {
+      this._tick++;
+      //console.log(this._tick, Date.now());
+    });
     this._scene = scene;
     this._engine = engine;
     this._ball = createBall(new Vector3(this.state.ball.position.x, this.state.ball.position.y, this.state.ball.position.z),
@@ -128,6 +137,8 @@ export class MyRoom extends Room {
     state.ball.velocity.x = ballVel.x;
     state.ball.velocity.y = ballVel.y;
     state.ball.velocity.z = ballVel.z;
+
+    state.ball.tickStamp = this._tick;
   }
 
   onCreate (options: any) {
@@ -136,7 +147,6 @@ export class MyRoom extends Room {
      */
     //START PHYSICS SIMULATION
     console.log("room", this.roomId, "created and starting physics simulation");
-    console.log(this.state.ball.position.x);
     this._startSimulation();
   }
 
@@ -251,7 +261,8 @@ export class MyRoom extends Room {
     /**
      * Called when the room is disposed.
      */
-    if (this.state.roomStatus != RoomStatus.WAITING)
+    console.log(this.state.roomStatus);
+    if (this.state.roomStatus != RoomStatus.WAITING && this.state.roomStatus != RoomStatus.PLAYER_DISCONNECTED)
       this._sendGameDataToDatabase();
 
     this._tokens = null;

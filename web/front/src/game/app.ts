@@ -36,6 +36,8 @@ export class App {
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadow : ShadowGenerator;
     private _ui : GUI;
+    private _tick : number = 0;
+    private _tickOffset : number = 0;
     //public playerAssets;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -63,10 +65,19 @@ export class App {
     private _waitForStateOnce(room: Room<MyRoomState>): Promise<void> {
         return new Promise((resolve) => {
             room.onStateChange.once(() => {
-            resolve();
+                resolve();
+            });
         });
-    });
-}
+    }
+
+    private _waitForTickMessage(room: Room<MyRoomState>): Promise<void> {
+        return new Promise((resolve) => {
+            room.onMessage("serverTick", (serverTick: number) => {
+                this._tickOffset = this._tick - serverTick;
+                resolve();
+            });
+        });
+    }
 
     private async _main(): Promise<void> {
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -105,13 +116,20 @@ export class App {
             this._setupHavok(),
             this._waitForStateOnce(room)
         ]);
-        console.log(room.state);
+        room.send("synchronizeTick");
+        await this._waitForTickMessage(room);
         await this._setupGameAssets();
+        // await Promise.all([
+        //     this._waitForTickMessage(room),
+        //     this._setupGameAssets()
+        // ]);
+        console.log(this._tick, this._tickOffset);
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
         this._ui = new GUI(room);
         this._ui.addWaitingUI();
+
 
         callback.listen("roomStatus", () => {
             const status = this._room.state.roomStatus;
@@ -135,41 +153,6 @@ export class App {
         callback.onChange(room.state.score, () => {
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
-        // callback.listen("won", () => {
-        //     if (!this._room.state.won)
-        //         return ;
-        //     this._player.lockControls();
-        //     this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
-        // });
-        // callback.listen("endedDisconnect", () => {
-        //     if (!this._room.state.endedDisconnect)
-        //         return ;
-        //     this._player.lockControls();
-        //     this._ui.addOtherPlayerDisconnectUI();
-        // });
-
-        // room.onDrop((code, reason) => {
-        //     console.log(`Disconnected: ${code} - ${reason}`);
-        //     localStorage.setItem("test", "test1");
-        //     //showReconnectingUI();
-        // });esult
-        // room.onReconnect(() => {
-        //     console.log("Reconnected!");
-        //     //hideReconnectingUI();
-        // });
-        // room.onLeave((code, reason) => {
-        //     console.log(`Left room: ${code}`);
- 
-        //     // if (code === CloseCode.FAILED_TO_RECONNECT) {
-        //     //     showError("Failed to reconnect. Please try again.");
-        //     // }
- 
-        //     // // Clean up and return to menu
-        //     // cleanupGame();
-        // });
-        // room.onError((code, message) => {
-        //     console.error(`Room error: ${code} - ${message}`);
-        // });
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
@@ -185,6 +168,10 @@ export class App {
         const havokPlugin = new HavokPlugin(true, havokInstance);
         havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+        this._scene.onBeforeRenderObservable.add(() => {
+            this._tick++;
+            console.log(this._tick, Date.now());
+        });
     }
 
     private async _setupGameAssets() {
@@ -211,10 +198,6 @@ export class App {
                     this._ui.disposePlayerDisconnectedUI();
                 }
             });
-        });
-        this._callback.onChange(this._room.state.ball, () => {
-            let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-            this._ball = new Ball(ballPos, 1, this.MAX_SPEED, this._shadow, this._scene);
         });
     }
 

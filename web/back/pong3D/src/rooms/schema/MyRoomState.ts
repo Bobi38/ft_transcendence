@@ -23,6 +23,7 @@ export class Quaternion extends Schema {
 export class Ball extends Schema {
   @type(Vector3) position = new Vector3();
   @type(Vector3) velocity = new Vector3();
+  @type("number") tickStamp = 0;
 }
 
 export class Player extends Schema {
