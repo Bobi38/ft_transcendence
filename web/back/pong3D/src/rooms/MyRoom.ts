@@ -1,4 +1,4 @@
-import { Room, Client, CloseCode, AuthContext } from "colyseus";
+import { Room, Client, CloseCode, AuthContext, room } from "colyseus";
 import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
 import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
@@ -136,6 +136,7 @@ export class MyRoom extends Room {
      */
     //START PHYSICS SIMULATION
     console.log("room", this.roomId, "created and starting physics simulation");
+    console.log(this.state.ball.position.x);
     this._startSimulation();
   }
 

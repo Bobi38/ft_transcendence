@@ -83,6 +83,7 @@ export class App {
             console.log("Reconnect failed or no previous session, joining new room:", e);
             room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
         }
+        console.log(room.state);
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
 
         // const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
@@ -199,6 +200,10 @@ export class App {
                 }
             });
         });
+        this._callback.onChange(this._room.state.ball, () => {
+            let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
+            this._ball = new Ball(ballPos, 1, this.MAX_SPEED, this._shadow, this._scene);
+        });
     }
 
     private _initLightAndBall(scene: Scene): ShadowGenerator {
@@ -208,16 +213,10 @@ export class App {
 
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
+        this._shadow = shadow;
         
-        let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-        this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
-        // this._scene.onBeforeRenderObservable.add(() => {
-        //     if (this._ball.getMeshPosition()._z < -23) {
-        //         this._ball.dispose();
-        //         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-        //         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
-        //     }
-        // });
+        // let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
+        // this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);

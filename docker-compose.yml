@@ -200,6 +200,8 @@ services:
       - ./web/back/src/models:/app/src/models
       - ./web/back/src/routes:/app/src/routes
       - /app/node_modules
+    cap_add:
+      - NET_ADMIN
 
   morpion:
     build: ./web/back/morpion
