@@ -1,6 +1,7 @@
 import User from './src/models/user.js';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import ws from 'ws';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
@@ -26,7 +27,7 @@ class Chat {
 
   finduserId(userId) {
     for (const session of this.sessions.values()) {
-      if (session.userId === userId) {
+      if (session.userId === userId && session.socket.readyState == ws.OPEN) {
         return session;
       }
     }

@@ -33,8 +33,7 @@ class SocketManag{
         };
         this.listeners = {
             chat: new Map(),
-            game: new Map(),
-            room: new Map(),
+            pong: new Map(),
             friend: new Map(),
             morp: new Map(),
             priv: new Map(),
@@ -112,7 +111,7 @@ class SocketManag{
     
     disconnect(name){
         this.reco[name] = false;
-
+        this.sendd(socket[name], {type: "logout"});
         if (this.socket[name]){
             this.socket[name].close();
             this.socket[name] = null;
