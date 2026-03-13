@@ -22,8 +22,8 @@ export default function StatsMorpion({ username, setUsername }) {
     async function fetch_stats() {
 
         const url = username 
-            ? `/api/morpion/get_morpion_stat?name=${username}`
-            : `/api/morpion/get_morpion_stat`;
+            ? `/api/morpion/get_stat?name=${username}`
+            : `/api/morpion/get_stat`;
 
         console.log(`${url}`)
 
@@ -67,7 +67,7 @@ export default function StatsMorpion({ username, setUsername }) {
         const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
-        const data2 = {
+        const data_formated = {
             win_horizontal: win_horizontal + 1,
             win_vertical: win_vertical,
             win_diagonal: win_diagonal,
@@ -84,7 +84,7 @@ export default function StatsMorpion({ username, setUsername }) {
             all_win_without_abort: all_win_without_abort,
             all_lose_without_abort: all_lose_without_abort
         };
-        setStatToDisplay(data2);
+        setStatToDisplay(data_formated);
         if (totalGames < data.total_game){
             setTotalGame(data.total_game);
             setNewPage(1)
@@ -99,8 +99,8 @@ export default function StatsMorpion({ username, setUsername }) {
 
 
         const url = username 
-            ? `/api/morpion/get_morpion_history/${page_nb}?name=${username}`
-            : `/api/morpion/get_morpion_history/${page_nb}`;
+            ? `/api/morpion/get_history/${page_nb}?name=${username}`
+            : `/api/morpion/get_history/${page_nb}`;
 
         console.log(`${url}`)
 

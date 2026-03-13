@@ -129,7 +129,7 @@ useEffect(() => {
 
                 </Hr>
 
-            </div> {/* PrivateMessage-root */}
+            </div>
         </>
         
     )

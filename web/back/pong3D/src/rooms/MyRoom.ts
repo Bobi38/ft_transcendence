@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import { createBall, createWalls } from "../environment.js";
 import User from "../models/user.js";
-import PongStat from "../models/PongStat.js"
+import StatPong3d from "../models/StatPong3d.js"
 import jwt from "jsonwebtoken"
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -239,7 +239,7 @@ export class MyRoom extends Room {
       let whowin, wholose;
       if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
       try {
-      await PongStat.create({Player1id: player1id, Player2id: player2id, whowin: whowin, wholose: wholose, score1: score1, score2: score2});
+      await StatPong3d.create({Player1id: player1id, Player2id: player2id, whowin: whowin, wholose: wholose, score1: score1, score2: score2});
       } catch (e) {
         console.log("Failed to store results in database", e);
       }

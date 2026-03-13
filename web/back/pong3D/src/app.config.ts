@@ -11,7 +11,7 @@ import {
  * Import your Room files
  */
 import { MyRoom } from "./rooms/MyRoom.js";
-import servRoute from "./routes/Ping.js";
+import servRoute from "./routes/Pong3d.js";
 
 const server = defineServer({
     /**

@@ -96,7 +96,7 @@ export default function HomeChat() {
 
     return (
         <>
-            <div id={`HomeChat-root`}>
+            <section id={`HomeChat-root`}>
 
                     <h3>Global Chat</h3>
                 <div className={`message-container`}>
@@ -140,7 +140,7 @@ export default function HomeChat() {
                 </form>
 
 
-            </div>
+            </section>
         </>
     )
 }
