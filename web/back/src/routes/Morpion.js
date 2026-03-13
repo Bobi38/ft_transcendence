@@ -65,13 +65,16 @@ router.get('/get_history/:page', async (req, res) => {
     try{
         console.log("API get_history(1) called");
 
-        let page = parseInt(req.params.page)
+        const page = parseInt(req.params.page)
         if (page < 0)
           return (res.status(404).json({success: false, message: `unknow page_nbr=${page_nbr}`}))
-        console.log("API get_history(2) page:", page);
+        console.log("API get_history(2.params) page:", page);
+
+        const limit = parseInt(req.query.limit)
+        console.log("API get_history(2.query) limit:", limit);
 
         let to_search = req.query.name;
-        console.log("API get_history(2) to_search:", to_search);
+        console.log("API get_history(2.query) to_search:", to_search);
 
         if (to_search !== undefined){
 
@@ -95,7 +98,6 @@ router.get('/get_history/:page', async (req, res) => {
         }
         
         console.log("API get_history(3)");
-        const limit = 5
         const offsetpage = limit * page 
         const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
     { model: User, as: 'player1', attributes: ['name'] },

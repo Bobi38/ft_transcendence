@@ -55,17 +55,16 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
     useEffect(()=> {
         const tab = default_tab();
         setTabWithDot(add_dot(tab));
-    },[currentPage])
+    },[currentPage, totalPages])
 
 
     const change_page = (arg) => {
-        console.log("newCurrentPage: ", arg)
         setNewPage(arg)
     }
 
-    useEffect(() => {
-        console.log("tabWithDot: ", tabWithDot)
-    }, [])
+    // useEffect(() => {
+    //     console.log("tabWithDot: ", tabWithDot)
+    // }, [])
 
     return (
         <div className={`Paging-root`}>

@@ -14,7 +14,8 @@ import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHisto
 
 export default function StatsMorpion({ username, setUsername }) {
 
-    const [totalGames, setTotalGame] = useState(null);
+    const limit = 5;
+    const [totalGames, setTotalGame] = useState(1);
     const [statToDisplay, setStatToDisplay] = useState(null);
     const [historyUser, setHistoryUser] = useState([]);
     const [currentPage, setNewPage] = useState(1);
@@ -84,23 +85,21 @@ export default function StatsMorpion({ username, setUsername }) {
             all_win_without_abort: all_win_without_abort,
             all_lose_without_abort: all_lose_without_abort
         };
+
         setStatToDisplay(data_formated);
+
         if (totalGames < data.total_game){
             setTotalGame(data.total_game);
             setNewPage(1)
         }
-        // console.log("statToDisplay:",statToDisplay);
     }
-
-
 
 
     async function fetch_history(page_nb) {
 
-
         const url = username 
-            ? `/api/morpion/get_history/${page_nb}?name=${username}`
-            : `/api/morpion/get_history/${page_nb}`;
+            ? `/api/morpion/get_history/${page_nb}?limit=${limit}&name=${username}`
+            : `/api/morpion/get_history/${page_nb}?limit=${limit}`;
 
         console.log(`${url}`)
 
@@ -118,7 +117,6 @@ export default function StatsMorpion({ username, setUsername }) {
 
 
     useEffect(() => {
-        // console.log("username1: ",username," currentPage: ",currentPage)
         fetch_stats();
         fetch_history(currentPage - 1);
     }, [username, currentPage]);
@@ -141,7 +139,7 @@ export default function StatsMorpion({ username, setUsername }) {
                     })}
 
                 </div>
-                <Paging totalPages={10} currentPage={currentPage} setNewPage={setNewPage}/>
+                <Paging totalPages={Math.ceil(totalGames / limit)} currentPage={currentPage} setNewPage={setNewPage}/>
 
             </div>
 
