@@ -29,6 +29,7 @@ export class MyRoom extends Room {
   patchRate = 50;
   state = new MyRoomState();
 
+  static count : number = 0;
   messages = {
     yourMessageType: (client: Client, message: any) => {
       /**
@@ -37,8 +38,8 @@ export class MyRoom extends Room {
       console.log(client.sessionId, "sent a message:", message);
     },
     "synchronizeTick" : (client: Client, data: any) => {
-      console.log("Received tick synchronization request from", client.sessionId);
-      client.send("serverTick", this._tick);
+      console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+      client.send("serverTick", {serverTick: this._tick, t0: data});
     },
     "racketImpact": (client: Client, data: any) => {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
@@ -77,8 +78,7 @@ export class MyRoom extends Room {
     console.log("HavokPhysics loaded from file");
     const havokPlugin = new HavokPlugin(true, havok);
     this._havokPlugin = havokPlugin;
-    const deltaTime = 1 / 60;
-    havokPlugin.setTimeStep(deltaTime);
+    havokPlugin.setTimeStep(1/60);
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
     scene.onBeforeRenderObservable.add(() => {
       this._tick++;

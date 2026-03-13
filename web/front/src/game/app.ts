@@ -38,9 +38,11 @@ export class App {
     private _shadow : ShadowGenerator;
     private _ui : GUI;
     private _tick : number = 0;
-    //private _tickOffset : number = 0;
+    private _tickOffset : number = 0;
+    private _offsets : number[] = [];
+    private _MAX_OFFSETS : number = 100;
     private _snapshots : SnapshotBuffer = new SnapshotBuffer();
-    
+    public latency : number = 0;
     //public playerAssets;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -76,12 +78,24 @@ export class App {
     private _waitForTickMessage(room: Room<MyRoomState>, t0: number): Promise<void> {
         return new Promise((resolve) => {
             room.onMessage("serverTick", (serverTick: number) => {
+                //console.log(this._tick);
                 const t1 = Date.now();
                 //const latency = (t1 - t0) / 2;
                 const latency = (t1 - t0);
+                this.latency = latency;
+                //console.log(latency, Math.round(latency * 60 / 1000));
                 const serverTickNow = serverTick + Math.round(latency * 60 / 1000);
-                this._tick = serverTickNow;
-                console.log(this._tick, serverTick, serverTickNow, latency);
+                //this._tick = serverTickNow;
+                const offset = serverTickNow - this._tick;
+                this._offsets.push(offset);
+                if (this._offsets.length > this._MAX_OFFSETS) {
+                    this._offsets.shift();
+                }
+                this._tickOffset = Math.round(this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length);
+                console.log("t0:", t0, "latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this._tickOffset.toString());
+                //this._tick = serverTickNow;
+                //console.log(this._tick, serverTick, serverTickNow, latency);
+                //room.send("synchronizeTick");
                 resolve();
             });
         });
@@ -124,12 +138,7 @@ export class App {
             this._setupHavok(),
             this._waitForStateOnce(room)
         ]);
-        const t0 = Date.now();
-        room.send("synchronizeTick");
-        await Promise.all([
-            this._waitForTickMessage(room, t0),
-            this._setupGameAssets()
-        ]);
+        await this._setupGameAssets()
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
@@ -159,6 +168,9 @@ export class App {
         callback.onChange(room.state.score, () => {
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
+        // const t0 = Date.now();
+        // room.send("synchronizeTick");
+        // await this._waitForTickMessage(room, t0);
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
@@ -174,9 +186,32 @@ export class App {
         const havokPlugin = new HavokPlugin(true, havokInstance);
         havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+        this._room.onMessage("serverTick", ({serverTick, t0}) => {
+                const t1 = Date.now();
+                //const latency = (t1 - t0) / 2;
+                const latency = (t1 - t0);
+                this.latency = latency;
+                const serverTickNow = serverTick + Math.round(latency * 60 / 1000);
+                const offset = serverTickNow - this._tick;
+                this._offsets.push(offset);
+                if (this._offsets.length > this._MAX_OFFSETS) {
+                    this._offsets.shift();
+                }
+                this._tickOffset = Math.round(this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length);
+                console.log("t0:", t0, "latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this._tickOffset.toString());
+            });
+        setInterval(() => {
+                const t0 = Date.now();
+                this._room.send("synchronizeTick", t0);
+                //this._waitForTickMessage(this._room, t0);
+            }, 1000);
         this._scene.onBeforeRenderObservable.add(() => {
             this._tick++;
+            //console.log(this._tick, Date.now());
             this._snapshots.saveSnapshot(this._tick, this._ball.getMeshPosition(), this._ball.getVelocity());
+            // const t0 = Date.now();
+            // this._room.send("synchronizeTick");
+            // this._waitForTickMessage(this._room, t0);
         });
     }
 
@@ -221,32 +256,55 @@ export class App {
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp);
-            this._ball.positionError = serverPos.subtract(pastPos.position);
+            //console.log(this._tick, this._room.state.ball.tickStamp, this._tickOffset , this._room.state.ball.tickStamp - this._tickOffset, this._room.state.ball.tickStamp - this._tickOffset - this._tick);
+            // const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp);
+            const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp - this._tickOffset);
+            console.log(this._tick, pastPos.tick, this._tick - pastPos.tick);
+            this._ball.positionError = serverPos.subtract(pastPos.snapshot.position);
+            this._snapshots.correctFollowingSnapshotsPos(this._ball.positionError, pastPos.tick);
+            //console.log(this._ball.positionError);
+            //console.log(this.latency);
             //this._ball.positionError = serverPos.subtract(this._ball.getMeshPosition());
         });
         this._callback.onChange(this._room.state.ball.velocity, () => {
             const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-            const pastTick = this._room.state.ball.tickStamp;
-            const pastVel = this._snapshots.getSnapshotAtTick(pastTick).velocity;
-            const deltaTick = this._tick - pastTick;
-            const deltaVel = serverVel.subtract(pastVel);
-            this._ball.positionError.addInPlace(deltaVel.scale(deltaTick));
+            const pastTick = this._room.state.ball.tickStamp - this._tickOffset;
+            // const pastTick = this._room.state.ball.tickStamp;
+            //console.log(this._tick);
+            // const pastVel = this._snapshots.getSnapshotAtTick(pastTick);
+            // const deltaTick = this._tick - pastTick;
+            // const deltaVel = serverVel.subtract(pastVel.snapshot.velocity);
+            //this._ball.positionError.addInPlace(deltaVel.scale(deltaTick / 60));
             this._ball.setVelocity(serverVel);
+            //this._snapshots.correctFollowingSnapshotsPos(this._ball.positionError, pastVel.tick);
+            //this._snapshots.correctFollowingSnapshotsVel(serverVel, pastVel.tick);
         });
         this._scene.onBeforeRenderObservable.add(() => {
-            if (!this._ball.positionError)
-                return ;
-            const patchRate = 0.05; //in seconds
-            const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
-            const fractionElapsed = patchRate / dt;
-            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
+        if (!this._ball.positionError) return;
+            const dt = this._engine.getDeltaTime() / 1000; 
+            const smoothingSpeed = 15; // Tune this: higher = faster snap, lower = looser glide
+            const correctionFactor = 1 - Math.exp(-smoothingSpeed * dt);
             const ballPos = this._ball.getMeshPosition();
-            this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
-            this._ball.positionError.scaleInPlace(1 - correctionFactor);
-            if (this._ball.positionError.lengthSquared() < Epsilon)
+            const correctionStep = this._ball.positionError.scale(correctionFactor);
+            this._ball.setMeshPosition(ballPos.add(correctionStep));
+            this._ball.positionError.subtractInPlace(correctionStep);
+            if (this._ball.positionError.lengthSquared() < 0.0001) {
                 this._ball.positionError = null;
+            }
         });
+        // this._scene.onBeforeRenderObservable.add(() => {
+        //     if (!this._ball.positionError)
+        //         return ;
+        //     const patchRate = 0.05; //in seconds
+        //     const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
+        //     const fractionElapsed = patchRate / dt;
+        //     const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
+        //     const ballPos = this._ball.getMeshPosition();
+        //     this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
+        //     this._ball.positionError.scaleInPlace(1 - correctionFactor);
+        //     if (this._ball.positionError.lengthSquared() < Epsilon)
+        //         this._ball.positionError = null;
+        // });
         return shadow;
     }
 

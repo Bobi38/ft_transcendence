@@ -10,8 +10,8 @@
 
 @mixin page {
     @include full;
-    background-color: rgb(13, 138, 187);
-    border-radius: 0.5rem;
+    background-color: rgb(152, 104, 167);
+    border-radius: 5rem;
     p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
         color: rgb(10, 201, 240);
     }

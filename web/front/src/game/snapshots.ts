@@ -19,7 +19,7 @@ export class SnapshotBuffer {
         }
     }
 
-    public getSnapshotAtTick(targetTick: number) : BallSnapshot {
+    public getSnapshotAtTick(targetTick: number) : {snapshot: BallSnapshot, tick: number} {
         let left = 0;
         let right = this._snapshots.length - 1;
 
@@ -27,7 +27,8 @@ export class SnapshotBuffer {
             const mid = Math.floor((left + right) / 2);
             const tick = this._snapshots[mid].tick;
             if (tick === targetTick) {
-                return this._snapshots[mid];
+                //console.log(targetTick, this._snapshots[mid].tick, left, right, " found");
+                return {snapshot: this._snapshots[mid], tick: mid};
             }
             if (tick < targetTick) {
                 left = mid + 1;
@@ -35,6 +36,19 @@ export class SnapshotBuffer {
                 right = mid - 1;
             }
         }
-        return (this._snapshots[left]);
+        //console.log(targetTick, this._snapshots[right].tick, left, right, " not found");
+        return ({snapshot: this._snapshots[right], tick: right});
+    }
+
+    public correctFollowingSnapshotsPos(error: Vector3, tick: number) {
+        for (let i = tick; i < this._snapshots.length; i++) {
+            this._snapshots[i].position.addInPlace(error);
+        }
+    }
+
+    public correctFollowingSnapshotsVel(newVel: Vector3, tick: number) {
+        for (let i = tick; i < this._snapshots.length; i++) {
+            this._snapshots[i].velocity = newVel;
+        }
     }
 }
