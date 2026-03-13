@@ -19,7 +19,7 @@ export class SnapshotBuffer {
         }
     }
 
-    public getSnapshotAtTick(targetTick: number) : {snapshot: BallSnapshot, tick: number} {
+    public getSnapshotAtTick(targetTick: number) : {snapshot: BallSnapshot, index: number} {
         let left = 0;
         let right = this._snapshots.length - 1;
 
@@ -27,8 +27,8 @@ export class SnapshotBuffer {
             const mid = Math.floor((left + right) / 2);
             const tick = this._snapshots[mid].tick;
             if (tick === targetTick) {
-                //console.log(targetTick, this._snapshots[mid].tick, left, right, " found");
-                return {snapshot: this._snapshots[mid], tick: mid};
+                //console.log("targetTick:", targetTick, "result:", this._snapshots[mid].tick, " found");
+                return {snapshot: this._snapshots[mid], index: mid};
             }
             if (tick < targetTick) {
                 left = mid + 1;
@@ -36,18 +36,18 @@ export class SnapshotBuffer {
                 right = mid - 1;
             }
         }
-        //console.log(targetTick, this._snapshots[right].tick, left, right, " not found");
-        return ({snapshot: this._snapshots[right], tick: right});
+        //console.log("targetTick:", targetTick, "result:", this._snapshots[right].tick, " not found");
+        return ({snapshot: this._snapshots[right], index: right});
     }
 
-    public correctFollowingSnapshotsPos(error: Vector3, tick: number) {
-        for (let i = tick; i < this._snapshots.length; i++) {
+    public correctFollowingSnapshotsPos(error: Vector3, index: number) {
+        for (let i = index; i < this._snapshots.length; i++) {
             this._snapshots[i].position.addInPlace(error);
         }
     }
 
-    public correctFollowingSnapshotsVel(newVel: Vector3, tick: number) {
-        for (let i = tick; i < this._snapshots.length; i++) {
+    public correctFollowingSnapshotsVel(newVel: Vector3, index: number) {
+        for (let i = index; i < this._snapshots.length; i++) {
             this._snapshots[i].velocity = newVel;
         }
     }

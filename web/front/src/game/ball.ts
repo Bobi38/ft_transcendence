@@ -1,4 +1,4 @@
-import { Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, Scalar, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
+import { Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
 
 export class Ball {
     private _mesh: Mesh;
@@ -8,12 +8,14 @@ export class Ball {
     private _shadow: ShadowGenerator;
     private _physicsObserver;
     public positionError: Vector3 = Vector3.Zero();
+    public visualOffset: Vector3 = Vector3.Zero();
 
     constructor(position: Vector3, diameter: number, maxSpeed: number, shadow: ShadowGenerator, scene: Scene) {
         this._scene = scene;
         this._maxSpeed = maxSpeed;
 
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
+        this._mesh.position = Vector3.Zero();
         //this._mesh.position = position;
         this._shadow = shadow;
         this._shadow.addShadowCaster(this._mesh);
@@ -29,9 +31,12 @@ export class Ball {
         ball.setMassProperties({mass: 1});
         ball.setLinearDamping(0);
         ball.setAngularDamping(0);
+        // this._mesh.parent = ballNode;
         this._mesh.parent = ballNode;
         this._body = ball;
         this._body.disablePreStep = false;
+        this._mesh.position = Vector3.Zero();
+        console.log(this._mesh.position, this._mesh.absolutePosition);
 
 
         this._physicsObserver = scene.onBeforePhysicsObservable.add(() => {
@@ -45,19 +50,27 @@ export class Ball {
                 this._body.setLinearVelocity(ballVelocity);
             }
         });
+        const physicsViewer = new PhysicsViewer(this._scene);
+        // physicsViewer.showBody(ball);
     }
 
     public setVelocity(velocity : Vector3) {
         this._body.setLinearVelocity(velocity);
     }
 
-    public setMeshPosition(position: Vector3) {
-        //this._mesh.position = position;
+    public setPhysicsBodyPosition(position: Vector3) {
         this._body.transformNode.position = position;
-        //this._aggregate.body.setTargetTransform(position, this._mesh.rotationQuaternion);
-    } 
+    }
 
-    public getMeshPosition() : Vector3 {
+    public setMeshPosition(position: Vector3) {
+        this._mesh.position = position;
+    }
+
+    public getMeshPosition() :Vector3 {
+        return(this._mesh.position.clone());
+    }
+
+    public getPhysicsBodyPosition() : Vector3 {
         return this._body.transformNode.position.clone();
     }
 
