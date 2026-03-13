@@ -225,49 +225,29 @@ export class App {
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            // const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp);
             const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp - this._tickOffset);
-            //console.log("tick:", this._tick, "converted server tick:", pastPos.snapshot.tick, "diff:", this._tick - pastPos.snapshot.tick);
-            //console.log("server tick:", this._room.state.ball.tickStamp, "offset:", this._tickOffset, "converted server tick:", this._room.state.ball.tickStamp - this._tickOffset);
             console.log("server tick:", pastPos.snapshot.tick);
-            console.log("server msg:", serverPos);
-            //this._ball.positionError.addInPlace(serverPos.subtract(pastPos.snapshot.position));
+            //console.log("server msg:", serverPos);
             const positionError = serverPos.subtract(pastPos.snapshot.position);
-            //this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(this._ball.positionError));
+            console.log("position error", positionError.lengthSquared());
+                        const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
+            console.log("vel serv:", serverVel, "vel past:", pastPos.snapshot.velocity, "vel now", this._ball.getVelocity());
             this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
-            //this._ball.setMeshPosition(this._ball.positionError.scale(-1));
             this._ball.visualOffset.subtractInPlace(positionError);
-            //console.log("positionError:", positionError, "visual offset:", this._ball.visualOffset);
-            // this._snapshots.correctFollowingSnapshotsPos(this._ball.positionError, pastPos.index);
             this._snapshots.correctFollowingSnapshotsPos(positionError, pastPos.index);
-            //this._ball.positionError = serverPos.subtract(this._ball.getPhysicsBodyPosition());
         });
         this._callback.onChange(this._room.state.ball.velocity, () => {
             const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-            const pastTick = this._room.state.ball.tickStamp - this._tickOffset;
-            const pastVel = this._snapshots.getSnapshotAtTick(pastTick);
-            const deltaTick = this._tick - pastTick;
-            const deltaVel = serverVel.subtract(pastVel.snapshot.velocity);
-            //this._ball.positionError.addInPlace(deltaVel.scale(deltaTick / 60));
-            //this._ball.setVelocity(serverVel);
-            //this._snapshots.correctFollowingSnapshotsPos(this._ball.positionError, pastVel.index);
-            //this._snapshots.correctFollowingSnapshotsVel(serverVel, pastVel.index);
+            console.log("server vel:", serverVel, "now vel:", this._ball.getVelocity());
+            this._ball.setVelocity(serverVel);
         });
         this._scene.onBeforeRenderObservable.add(() => {
-            //if (this._ball.positionError === Vector3.Zero()) return;
             if (this._ball.visualOffset.lengthSquared() < 0.0001) return;
-            //console.log("mesh position:", this._ball.getMeshPosition());
             const dt = this._engine.getDeltaTime() / 1000; 
-            const smoothingSpeed = 15; // Tune this: higher = faster snap, lower = looser glide
-            const correctionFactor = 1 - Math.exp(-smoothingSpeed * dt);
-            // const correctionStep = this._ball.positionError.scale(correctionFactor);
-            // this._ball.setMeshPosition(this._ball.getMeshPosition().add(correctionStep));
-            // this._ball.positionError.subtractInPlace(correctionStep);
+            const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
+            const correctionFactor = Math.exp(-smoothingSpeed * dt);
             this._ball.setMeshPosition(this._ball.visualOffset);
             this._ball.visualOffset.scaleInPlace(correctionFactor);
-            // if (this._ball.positionError.lengthSquared() < 0.0001) {
-            //     this._ball.positionError = Vector3.Zero();
-            // }
         });
         // this._scene.onBeforeRenderObservable.add(() => {
         //     if (!this._ball.positionError)

@@ -125,6 +125,15 @@ export class MyRoom extends Room {
     });
   }
 
+  private _isSuspiciousSpeed(oldVel: Vector3, newVel: Vector3) : boolean {
+    const isSuspicious = (
+        (Math.abs(oldVel.x) > 0.5 && newVel.x < 0.001) ||
+        (Math.abs(oldVel.y) > 0.5 && newVel.y < 0.001) ||
+        (Math.abs(oldVel.z) > 0.5 && newVel.z < 0.001)
+    );
+    return isSuspicious;
+  }
+
   onBeforePatch(state: MyRoomState) {
     const ballPos = this._ball.transformNode.position.clone();
     const ballVel = this._ball.getLinearVelocity();
@@ -134,9 +143,12 @@ export class MyRoom extends Room {
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;
 
-    state.ball.velocity.x = ballVel.x;
-    state.ball.velocity.y = ballVel.y;
-    state.ball.velocity.z = ballVel.z;
+    const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
+    if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
+      state.ball.velocity.x = ballVel.x;
+      state.ball.velocity.y = ballVel.y;
+      state.ball.velocity.z = ballVel.z;
+    }
 
     state.ball.tickStamp = this._tick;
   }

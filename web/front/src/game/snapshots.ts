@@ -3,7 +3,7 @@ import { Vector3 } from "@babylonjs/core";
 export interface BallSnapshot {
   tick: number;
   position: Vector3;
-  velocity: Vector3;
+  velocity: Vector3; //TODO: remove saving of velocity
 }
 
 export class SnapshotBuffer {
