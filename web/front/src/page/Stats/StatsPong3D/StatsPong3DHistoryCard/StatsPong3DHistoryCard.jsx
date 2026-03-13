@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 /* back */
 
 /* Css */
-import "./StatsMorpionHistoryCard.scss";
+import "./StatsPong3DHistoryCard.scss";
 
 /* Components */
 import Board from "FRONT/page/all_game/MorpionDisplay/Morpion/Board/Board.jsx";
 
     
-export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
+export default function StatsPong3DHistoryCard({ stats, nameSearched }) {
 
     function format_stats( stats ) {
         console. log("format_stats: ",stats)
@@ -47,7 +47,7 @@ export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
 
     
     return (
-        <article className={`StatsMorpionHistoryCard-root border-base`}>
+        <article className={`StatsPong3DHistoryCard-root border-base`}>
 
             <div className={`board-container`}>
                 <Board board={stats.map.split('')} isGame={false}/>

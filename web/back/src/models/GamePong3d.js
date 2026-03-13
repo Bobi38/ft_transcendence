@@ -3,82 +3,73 @@ import sequelize from './index.js';
 import User from './user.js';
 
 const GamePong3d = sequelize.define('GamePong3d', {
+    //id de la partie
     id:{
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    how_win: {
-      type: DataTypes.ENUM("horizontal", "diagonal_lr", "diagonal_rl", "vertical", "abort", "draw"),
-      allowNull: false
-    },
-
-    date_game:{
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-
-    ending: {
-      type: DataTypes.ENUM('win', 'draw', 'abort'),
-      allowNull: false,
-    },
-
-    player_1: {
+    //info des joueur
+    id_player_1: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
-    player_2: {
+    score_1: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    id_player_2: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    score_2: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
 
+    //info de la partie
+    abortwinner: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    abortloser: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     winner: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: true,
     },
-
     loser: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: true,
     },
 
-    time_player_1: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+    date_game_start: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
     },
-
-    time_player_2: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+    date_game_end: {
+        type: DataTypes.DATE,
+        allowNull: false,
     },
-
-    nb_turn_player_1: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-
-    nb_turn_player_2: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-
-    map: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
+    time: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }
+    
 
 }, {
   tableName: 'GamePong3d',
   timestamps: false,
 });
 
-User.hasMany(GamePong3d, { foreignKey: 'player_1', as: 'gamesAsPlayer1', onDelete: 'CASCADE' });
-GamePong3d.belongsTo(User, { foreignKey: 'player_1', as: 'player1' });
+User.hasMany(GamePong3d, { foreignKey: 'id_player_1', as: 'Pong3DPlayer1', onDelete: 'CASCADE' });
+GamePong3d.belongsTo(User, { foreignKey: 'id_player_1', as: 'player1' });
 
-User.hasMany(GamePong3d, { foreignKey: 'player_2', as: 'gamesAsPlayer2', onDelete: 'CASCADE' });
-GamePong3d.belongsTo(User, { foreignKey: 'player_2', as: 'player2' });
+User.hasMany(GamePong3d, { foreignKey: 'id_player_2', as: 'Pong3DPlayer2', onDelete: 'CASCADE' });
+GamePong3d.belongsTo(User, { foreignKey: 'id_player_2', as: 'player2' });
 
 User.hasMany(GamePong3d, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
 GamePong3d.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
