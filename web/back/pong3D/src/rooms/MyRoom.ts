@@ -24,6 +24,8 @@ export class MyRoom extends Room {
   private _near : string;
   private _far: string;
   private _tick: number = 0;
+  private _posToSend: Vector3;
+  private _velToSend: Vector3;
 
   maxClients = 2;
   patchRate = 50;
@@ -80,8 +82,10 @@ export class MyRoom extends Room {
     this._havokPlugin = havokPlugin;
     havokPlugin.setTimeStep(1/60);
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
-    scene.onBeforeRenderObservable.add(() => {
+    scene.onAfterPhysicsObservable.add(() => {
       this._tick++;
+      this._posToSend = this._ball.transformNode.position.clone();
+      this._velToSend = this._ball.getLinearVelocity();
       //console.log(this._tick, Date.now());
     });
     this._scene = scene;
@@ -127,16 +131,16 @@ export class MyRoom extends Room {
 
   private _isSuspiciousSpeed(oldVel: Vector3, newVel: Vector3) : boolean {
     const isSuspicious = (
-        (Math.abs(oldVel.x) > 0.5 && newVel.x < 0.001) ||
-        (Math.abs(oldVel.y) > 0.5 && newVel.y < 0.001) ||
-        (Math.abs(oldVel.z) > 0.5 && newVel.z < 0.001)
+        (Math.abs(oldVel.x) > 0.5 && Math.abs(newVel.x) < 0.001) ||
+        (Math.abs(oldVel.y) > 0.5 && Math.abs(newVel.y) < 0.001) ||
+        (Math.abs(oldVel.z) > 0.5 && Math.abs(newVel.z) < 0.001)
     );
     return isSuspicious;
   }
 
   onBeforePatch(state: MyRoomState) {
-    const ballPos = this._ball.transformNode.position.clone();
-    const ballVel = this._ball.getLinearVelocity();
+    const ballPos = this._posToSend;
+    const ballVel = this._velToSend;
     //console.log(ballPos);
     //console.log(ballVel);
     state.ball.position.x = ballPos.x;
@@ -144,7 +148,8 @@ export class MyRoom extends Room {
     state.ball.position.z = ballPos.z;
 
     const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
-    if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
+    // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
+    if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
       state.ball.velocity.x = ballVel.x;
       state.ball.velocity.y = ballVel.y;
       state.ball.velocity.z = ballVel.z;

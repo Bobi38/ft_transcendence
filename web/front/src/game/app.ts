@@ -15,6 +15,7 @@ import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
 import { BallSnapshot, SnapshotBuffer } from "./snapshots";
+import { SynchronizedClock } from "./SynchronizedClock";
 
 export enum RoomStatus {
   WAITING = 0,
@@ -42,6 +43,8 @@ export class App {
     private _offsets : number[] = [];
     private _MAX_OFFSETS : number = 5;
     private _snapshots : SnapshotBuffer = new SnapshotBuffer();
+    private _clock : SynchronizedClock = new SynchronizedClock();
+    private _serverPatch : BallSnapshot = null;
     public latency : number = 0;
     //public playerAssets;
 
@@ -166,21 +169,21 @@ export class App {
                 const latency = (t1 - t0);
                 this.latency = latency;
                 const serverTickNow = serverTick + Math.round(latency * 60 / 1000);
-                const offset = serverTickNow - this._tick;
+                const offset = serverTickNow - this._clock.tick;
                 this._offsets.push(offset);
                 if (this._offsets.length > this._MAX_OFFSETS) {
                     this._offsets.shift();
                 }
-                this._tickOffset = Math.round(this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length);
-                console.log("t0:", t0, "latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this._tickOffset.toString());
+                this._clock.tickOffset = Math.round(this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length);
+                console.log("t0:", t0, "latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this._clock.tickOffset.toString());
             });
         setInterval(() => {
                 const t0 = Date.now();
                 this._room.send("synchronizeTick", t0);
             }, 1000);
-        this._scene.onBeforeRenderObservable.add(() => {
-            this._tick++;
-            this._snapshots.saveSnapshot(this._tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+        this._scene.onAfterPhysicsObservable.add(() => {
+            this._clock.tick++;
+            this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
         });
     }
 
@@ -211,6 +214,7 @@ export class App {
         });
     }
 
+
     private _initLightAndBall(scene: Scene): ShadowGenerator {
         let light = new PointLight('PointLight', new Vector3(0,5,10), scene);
         light.diffuse = new Color3(1,1,1);
@@ -225,28 +229,39 @@ export class App {
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            const pastPos = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp - this._tickOffset);
-            console.log("server tick:", pastPos.snapshot.tick);
-            //console.log("server msg:", serverPos);
-            const positionError = serverPos.subtract(pastPos.snapshot.position);
-            console.log("position error", positionError.lengthSquared());
-                        const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-            console.log("vel serv:", serverVel, "vel past:", pastPos.snapshot.velocity, "vel now", this._ball.getVelocity());
-            this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
-            this._ball.visualOffset.subtractInPlace(positionError);
-            this._snapshots.correctFollowingSnapshotsPos(positionError, pastPos.index);
-        });
-        this._callback.onChange(this._room.state.ball.velocity, () => {
             const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-            console.log("server vel:", serverVel, "now vel:", this._ball.getVelocity());
-            this._ball.setVelocity(serverVel);
+            this._serverPatch = {tick: this._room.state.ball.tickStamp, position: serverPos, velocity: serverVel};
         });
+        this._scene.onBeforePhysicsObservable.add(() => {
+            if (!this._serverPatch) return;
+            const pastPos = this._snapshots.getSnapshotAtTick(this._serverPatch.tick - this._clock.tickOffset);
+            const positionError = this._serverPatch.position.subtract(pastPos.snapshot.position);
+            const velocityError = this._serverPatch.velocity.subtract(pastPos.snapshot.velocity);
+            console.log("position error", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared(), "tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset);
+           // console.log("vel serv:", serverVel, "vel past:", pastPos.snapshot.velocity, "vel now", this._ball.getVelocity());
+            this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
+            console.log("pos serv:", this._serverPatch.position, "pos past:", pastPos.snapshot.position, "pos now:", this._ball.getPhysicsBodyPosition());
+            //this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+            this._ball.setVelocity(this._serverPatch.velocity);
+            console.log("server vel:", this._serverPatch.velocity, "past vel:", pastPos.snapshot.velocity, "now vel:", this._ball.getVelocity());
+            this._snapshots.correctFollowingSnapshotsPos(positionError, pastPos.index);
+            this._ball.visualOffset.subtractInPlace(positionError);
+            this._serverPatch = null;
+        });
+        // this._callback.onChange(this._room.state.ball.velocity, () => {
+        //     const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
+        //     const pastVel = this._snapshots.getSnapshotAtTick(this._room.state.ball.tickStamp - this._clock.tickOffset);
+        //     const velocityError = serverVel.subtract(pastVel.snapshot.velocity);
+        //     this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+        //     console.log("server vel:", serverVel, "past vel:", pastVel.snapshot.velocity, "now vel:", this._ball.getVelocity());
+        //     //this._ball.setVelocity(serverVel);
+        // });
         this._scene.onBeforeRenderObservable.add(() => {
             if (this._ball.visualOffset.lengthSquared() < 0.0001) return;
             const dt = this._engine.getDeltaTime() / 1000; 
             const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
             const correctionFactor = Math.exp(-smoothingSpeed * dt);
-            this._ball.setMeshPosition(this._ball.visualOffset);
+            //this._ball.setMeshPosition(this._ball.visualOffset);
             this._ball.visualOffset.scaleInPlace(correctionFactor);
         });
         // this._scene.onBeforeRenderObservable.add(() => {
