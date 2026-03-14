@@ -8,13 +8,17 @@
 @mixin fullh { height: $root_height; }
 @mixin fullw { width: $root_width; }
 
-@mixin page {
+@mixin colortext($varcolor : rgb(10, 201, 240)){
+    p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
+        color: $varcolor;
+    }
+}
+
+@mixin page($varcolor : rgb(10, 201, 240)){
     @include full;
     background-color: rgb(13, 138, 187);
     border-radius: 0.5rem;
-    p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
-        color: rgb(10, 201, 240);
-    }
+    @include colortext($varcolor);
 }
 
 

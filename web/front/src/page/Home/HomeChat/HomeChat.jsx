@@ -96,7 +96,7 @@ export default function HomeChat() {
 
     return (
         <>
-            <section id={`HomeChat-root`}>
+            <section className={`HomeChat-root`}>
 
                     <h3>Global Chat</h3>
                 <div className={`message-container`}>

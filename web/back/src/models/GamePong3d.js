@@ -48,11 +48,11 @@ const GamePong3d = sequelize.define('GamePong3d', {
     date_game_start: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
     },
     date_game_end: {
         type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW,
     },
     time: {
         type: DataTypes.INTEGER,

@@ -12,18 +12,13 @@ import ContactIssue         from "./ContactIssue/ContactIssue";
 export default function ContactUs() {
 
     return (
-        
-        <>
-            <div className={`ContactUs-root`}>
+        <section className={`ContactUs-root`}>
 
-                <h3>Contacter Nous</h3>
+            <h3>Contacter Nous</h3>
+            <ContactCardDisplay/>
+            <ContactIssue/>
 
-                <ContactCardDisplay/>
-                <ContactIssue/>
-
-            </div>
-        </>
-
+        </section>
     );
 
 }
