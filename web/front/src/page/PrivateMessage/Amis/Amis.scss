@@ -11,14 +11,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap:0.5rem;
     .one-friend{
         @include mix.fullw;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+        padding: 0.7rem;
+        
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
         text-align: center;
-        padding: 1rem;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+        align-items: center;
+        
         .div-btn{
             display: flex;
             flex-direction: row;
