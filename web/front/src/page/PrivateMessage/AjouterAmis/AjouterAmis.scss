@@ -45,6 +45,11 @@
             .div-btn{
                 display: flex;
                 flex-direction: row;
+                gap: 0.4rem;
+                button{
+                    @include mix.fullw;
+                    @include mix.icone;
+                }
             }
         }
     }

@@ -57,16 +57,11 @@ export default function HomeFooter({setShowLog}) {
 					Contact us
 				</Button>
 
-                <div>
-
-                    <div>
-                        {time}
-                    </div>
-                    <div>
-                        {username}
-                    </div>
-                    <button onClick={(logout)}>
-                        logout quand pas log on enleve
+                <div className={`HomeFooter-center`}>
+                    {/* <p>{username}</p> */}
+                    <p>{time}</p>
+                    <button className={`logout`}onClick={(logout)}>
+                        Logout
                     </button>
 
                 </div>

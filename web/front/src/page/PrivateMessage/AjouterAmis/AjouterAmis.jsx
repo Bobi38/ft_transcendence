@@ -105,8 +105,21 @@ export default function AjouterAmis() {
 
             <div className={`response border-1`}>
 
-                <Hr mode={`column`} initial={100} min1={80} thickness={2}>
+                <Hr mode={`column`} initial={120} min1={100} thickness={2}>
                     <div className={`bloc1`}>
+                        <h4>Demades Envoyer</h4>
+                        {responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
+                            <div key={`me-${index}`}>
+                                <div className={`one-response border-2`}>
+                                <h5>{msg.login}</h5>
+                                    <div className={`div-btn border-3`}>
+                                        <button onClick={() => {handel_response({login: msg.login, response: false })}}>Suprimer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className={`bloc2`}>
                         <h4>Demades Recu</h4>
                         {responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
                             <div key={`other-${index}`}>
@@ -123,19 +136,7 @@ export default function AjouterAmis() {
 
 
             
-                    <div className={`bloc2`}>
-                        <h4>Demades Envoyer</h4>
-                        {responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
-                            <div key={`me-${index}`}>
-                                <div className={`one-response border-2`}>
-                                <h5>{msg.login}</h5>
-                                    <div className={`div-btn border-3`}>
-                                        <button onClick={() => {handel_response({login: msg.login, response: false })}}>Suprimer</button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+
 
                 </Hr>
 
