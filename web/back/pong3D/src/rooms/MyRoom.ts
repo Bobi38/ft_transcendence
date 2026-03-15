@@ -47,7 +47,7 @@ export class MyRoom extends Room {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
-      //this._ball.transformNode.setAbsolutePosition(ballPos);
+      this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
     },
     "bodyMoved": (client: Client, data: any) => {
@@ -119,6 +119,12 @@ export class MyRoom extends Room {
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
         this._ball.transformNode.position.set(0,3,7);
+        this.state.ball.position.x = 0;
+        this.state.ball.position.y = 3;
+        this.state.ball.position.z = 7;
+        this.state.ball.velocity.x = 0;
+        this.state.ball.velocity.y = 0;
+        this.state.ball.velocity.z = 0;
         this.broadcast('Goal!', { afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
@@ -150,11 +156,11 @@ export class MyRoom extends Room {
 
     const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
     // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
-    if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
+    //if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
       state.ball.velocity.x = ballVel.x;
       state.ball.velocity.y = ballVel.y;
       state.ball.velocity.z = ballVel.z;
-    }
+    //}
 
     state.ball.tickStamp = this._tick;
   }

@@ -18,6 +18,6 @@ export class SynchronizedClock {
         }
         this.tickOffset = this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length;
         // this.tickOffset = Math.round(this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length);
-        console.log("latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this.tickOffset.toString());
+        //console.log("latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this.tickOffset.toString());
     }
 }

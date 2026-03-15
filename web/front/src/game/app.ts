@@ -41,7 +41,9 @@ export class App {
     private _snapshots : SnapshotBuffer = new SnapshotBuffer();
     private _clock : SynchronizedClock = new SynchronizedClock();
     private _serverPatch : BallSnapshot = null;
+
     private _velCorrectionIgnored : boolean = false;
+    private _ignoreServerUntil : number = 0;
 
 
     constructor(canvas: HTMLCanvasElement) {
@@ -207,7 +209,9 @@ export class App {
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
         this._shadow = shadow;
-        
+
+        console.log(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
+        console.log(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         let ballVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
         this._ball = new Ball(ballPos, ballVel, 1, this.MAX_SPEED, shadow, this._scene);
@@ -222,11 +226,17 @@ export class App {
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return;
             const pastPos = this._snapshots.getSnapshotAtTick(this._serverPatch.tick - this._clock.tickOffset);
-            if (!pastPos)
-                return ;
+            if (!pastPos) return ;
+            
             const positionError = this._serverPatch.position.subtract(pastPos.snapshot.position);
             const velocityError = this._serverPatch.velocity.subtract(pastPos.snapshot.velocity);
             console.log("position error", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared(), "tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset);
+            if (this._serverPatch.tick - this._clock.tickOffset <= this._ignoreServerUntil) {
+                console.log("ignoring server until tick:", this._ignoreServerUntil);
+                console.log("pos serv:", this._serverPatch.position, "pos past:", pastPos.snapshot.position, "pos now:", this._ball.getPhysicsBodyPosition());
+                console.log("server vel:", this._serverPatch.velocity, "past vel:", pastPos.snapshot.velocity, "now vel:", this._ball.getVelocity());
+                return ;
+            }
             this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
             console.log("pos serv:", this._serverPatch.position, "pos past:", pastPos.snapshot.position, "pos now:", this._ball.getPhysicsBodyPosition());
             this._snapshots.correctFollowingSnapshotsPos(positionError, pastPos.index);
@@ -246,7 +256,7 @@ export class App {
         this._scene.onBeforeRenderObservable.add(() => {
             if (this._ball.visualOffset.lengthSquared() < 0.0001) return;
             const dt = this._engine.getDeltaTime() / 1000; 
-            const smoothingSpeed = 10; // higher = faster snap, lower = looser glide
+            const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
             const correctionFactor = Math.exp(-smoothingSpeed * dt);
             this._ball.setMeshPosition(this._ball.visualOffset);
             this._ball.visualOffset.scaleInPlace(correctionFactor);
@@ -270,7 +280,7 @@ export class App {
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
         const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(sessionId, playerAssets, this._scene, this._shadow, this._room);
+        this._player = new Player(this, sessionId, playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
         this._scene.registerBeforeRender(() => {
@@ -337,5 +347,10 @@ export class App {
         racketRoot.parent = hand_node;
         hand_node.parent = body;
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
+    }
+
+    public setIgnoreServer() {
+        this._ignoreServerUntil = this._clock.tick;
+        console.log("IGNORING SERVER HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA until:", this._ignoreServerUntil);
     }
 }
