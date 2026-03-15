@@ -91,4 +91,8 @@ export class Ball {
         this._body = null;
         this._scene = null;
     }
+
+    public addToBodies(bodies: PhysicsBody[]) {
+        bodies.push(this._body);
+    }
 }

@@ -2,6 +2,8 @@ import { Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox
 import { PlayerInput } from "./playerInput";
 import { Room } from "@colyseus/sdk";
 import { App } from "./app";
+import { BallSnapshot, SnapshotBuffer } from "./snapshots";
+import { RacketHistory } from "./RacketHistory";
 
 export class Player extends TransformNode {
     PLAYER_SPEED: number;
@@ -16,6 +18,9 @@ export class Player extends TransformNode {
     public sessionId: string;
     private _app : App;
     private _controlsEnabled : boolean = false;
+
+    public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
+    public racketHistory : RacketHistory = new RacketHistory();
 
     constructor(app: App, sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
         super("player", scene);
@@ -64,6 +69,7 @@ export class Player extends TransformNode {
             const ballPos = ballBody.transformNode.position.clone();
             const ballVel = ballBody.getLinearVelocity(); 
             this.room.send("racketImpact", {position: ballPos.asArray(), velocity: ballVel.asArray()});
+            this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, ballVel);
             this._app.setIgnoreServer();
         });
         const physicsViewer = new PhysicsViewer(this.scene);
@@ -81,13 +87,14 @@ export class Player extends TransformNode {
         this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
-    public updateRacket() {
+    public updateRacket(tick: number) {
         if (!this._controlsEnabled)
             return ;
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
         this.room.send("racketMoved", {position: this.racket.position.asArray(),
             rotation: this.racket.rotationQuaternion.asArray()});
+        this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
     }
 
     public getPlayerPosition() : Vector3 {

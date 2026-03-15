@@ -40,7 +40,7 @@ export class SnapshotBuffer {
     //     return ({snapshot: this._snapshots[right], index: right});
     // }
 
-        public getSnapshotAtTick(targetTick: number) : {snapshot: {tick: number, position: Vector3, velocity: Vector3}, index: number} {
+    public getSnapshotAtTickInterpolated(targetTick: number) : {snapshot: {tick: number, position: Vector3, velocity: Vector3}, index: number} {
         let left = 0;
         let right = this._snapshots.length - 1;
 
@@ -77,6 +77,26 @@ export class SnapshotBuffer {
         return { snapshot: compositeSnapshot, index: rightIndex }; //we start correcting only at rightIndex
     }
 
+    public getSnapshotAtTick(targetTick: number) : {snapshot: {tick: number, position: Vector3, velocity: Vector3}, index: number} {
+        let left = 0;
+        let right = this._snapshots.length - 1;
+
+        if (this._snapshots.length === 0)
+            return null;
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (this._snapshots[mid].tick === targetTick) {
+                return { snapshot: this._snapshots[mid], index: mid };
+            }
+            if (this._snapshots[mid].tick < targetTick) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return { snapshot: this._snapshots[right], index: right };
+    }
+
     public correctFollowingSnapshotsPos(error: Vector3, index: number) {
         for (let i = index; i < this._snapshots.length; i++) {
             this._snapshots[i].position.addInPlace(error);
@@ -87,6 +107,11 @@ export class SnapshotBuffer {
         for (let i = index; i < this._snapshots.length; i++) {
             this._snapshots[i].velocity.addInPlace(error);
         }
+    }
+
+    public clearAfterTickIncluded(tick: number) {
+        const index = this.getSnapshotAtTick(tick).index;
+        this._snapshots.splice(index);
     }
 
     public dispose() {
