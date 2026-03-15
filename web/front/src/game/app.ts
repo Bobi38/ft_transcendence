@@ -38,15 +38,11 @@ export class App {
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadow : ShadowGenerator;
     private _ui : GUI;
-    private _tick : number = 0;
-    private _tickOffset : number = 0;
-    private _offsets : number[] = [];
-    private _MAX_OFFSETS : number = 5;
     private _snapshots : SnapshotBuffer = new SnapshotBuffer();
     private _clock : SynchronizedClock = new SynchronizedClock();
     private _serverPatch : BallSnapshot = null;
-    public latency : number = 0;
-    //public playerAssets;
+    private _velCorrectionIgnored : boolean = false;
+
 
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is undefined");
@@ -91,20 +87,16 @@ export class App {
         try {
             if (reconnectionGameToken) {
                 console.log("Trying to reconnect...");
-                // Reconnect to the existing room
                 room = await colyseusSDK.reconnect<MyRoomState>(reconnectionGameToken);
             } else {
-                throw new Error("No room/session stored, joining new room");
+                throw new Error("No room/session stored");
             }
         } catch (e) {
-            //const token = sessionStorage.getItem("token");
             console.log("Reconnect failed or no previous session, joining new room:", e);
             room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
         }
-        console.log(room.state);
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
 
-        // const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
         console.log("Joined room " + room.roomId);
         this._room = room;
         const callback = Callbacks.get(room);
@@ -142,12 +134,15 @@ export class App {
                     break;
             }
         });
+        this._room.onMessage('Goal!', () => {
+            this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
+            this._ball.setMeshPosition(Vector3.Zero());
+            this._ball.setVelocity(Vector3.Zero());
+            this._snapshots.dispose();
+        });
         callback.onChange(room.state.score, () => {
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
-        // const t0 = Date.now();
-        // room.send("synchronizeTick");
-        // await this._waitForTickMessage(room, t0);
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
@@ -203,7 +198,6 @@ export class App {
         });
     }
 
-private _velCorrectionIgnored : boolean = false;
 
     private _initLightAndBall(scene: Scene): ShadowGenerator {
         let light = new PointLight('PointLight', new Vector3(0,5,10), scene);
@@ -215,7 +209,8 @@ private _velCorrectionIgnored : boolean = false;
         this._shadow = shadow;
         
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-        this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
+        let ballVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
+        this._ball = new Ball(ballPos, ballVel, 1, this.MAX_SPEED, shadow, this._scene);
         
         this._callback.onChange(this._room.state.ball.position, () => {
             const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
@@ -227,6 +222,8 @@ private _velCorrectionIgnored : boolean = false;
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return;
             const pastPos = this._snapshots.getSnapshotAtTick(this._serverPatch.tick - this._clock.tickOffset);
+            if (!pastPos)
+                return ;
             const positionError = this._serverPatch.position.subtract(pastPos.snapshot.position);
             const velocityError = this._serverPatch.velocity.subtract(pastPos.snapshot.velocity);
             console.log("position error", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared(), "tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset);

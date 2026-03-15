@@ -44,6 +44,8 @@ export class SnapshotBuffer {
         let left = 0;
         let right = this._snapshots.length - 1;
 
+        if (this._snapshots.length === 0)
+            return null;
         while (left <= right) {
             const mid = Math.floor((left + right) / 2);
             if (this._snapshots[mid].tick === targetTick) {
@@ -85,5 +87,9 @@ export class SnapshotBuffer {
         for (let i = index; i < this._snapshots.length; i++) {
             this._snapshots[i].velocity.addInPlace(error);
         }
+    }
+
+    public dispose() {
+        this._snapshots = [];
     }
 }

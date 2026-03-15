@@ -119,6 +119,7 @@ export class MyRoom extends Room {
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
         this._ball.transformNode.position.set(0,3,7);
+        this.broadcast('Goal!', { afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
       }
@@ -162,7 +163,9 @@ export class MyRoom extends Room {
     /**
      * Called when a new room is created.
      */
-    //START PHYSICS SIMULATION
+    this.state.ball.velocity.x = 0;
+    this.state.ball.velocity.y = 0;
+    this.state.ball.velocity.z = 0;
     console.log("room", this.roomId, "created and starting physics simulation");
     this._startSimulation();
   }
@@ -224,7 +227,6 @@ export class MyRoom extends Room {
   }
 
   onDrop(client: Client, code: number) {
-    // Allow the client to reconnect within 30 seconds
     console.log(`Client ${client.sessionId} dropped (code: ${code})`);
     const player = this.state.players.get(client.sessionId);
     if (player) {

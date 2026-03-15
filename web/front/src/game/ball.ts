@@ -10,7 +10,7 @@ export class Ball {
     public positionError: Vector3 = Vector3.Zero();
     public visualOffset: Vector3 = Vector3.Zero();
 
-    constructor(position: Vector3, diameter: number, maxSpeed: number, shadow: ShadowGenerator, scene: Scene) {
+    constructor(position: Vector3, velocity: Vector3, diameter: number, maxSpeed: number, shadow: ShadowGenerator, scene: Scene) {
         this._scene = scene;
         this._maxSpeed = maxSpeed;
 
@@ -36,6 +36,7 @@ export class Ball {
         this._body = ball;
         this._body.disablePreStep = false;
         this._mesh.position = Vector3.Zero();
+        this._body.setLinearVelocity(velocity);
         console.log(this._mesh.position, this._mesh.absolutePosition);
 
 
