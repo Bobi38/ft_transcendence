@@ -26,13 +26,12 @@ class ManagerRoom {
         return this._rooms.get(id);
     }
 
-    removeRoom(id, mess = null) {
-        const room = this._rooms.get(id);
+    removeRoom(room) {
         console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return;
 
-        room.remove(mess);
-        this._rooms.delete(id);
+        room.remove();
+        this._rooms.delete(room.getId());
     }
 
     isInRoom(playerId) {
@@ -63,7 +62,7 @@ class ManagerRoom {
         return newRoom;
     }
 
-    removePlayer(playerId, message = "bye bye") {
+    removePlayer(player, message = "bye bye") { //inutile
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
                 room.removePlayer(playerId, message);
@@ -78,13 +77,12 @@ class ManagerRoom {
         }
     }
 
-    removeAll(mess = null) {
-        this._rooms.forEach(r => {r.remove(mess);})
+    removeAll() {
+        this._rooms.forEach(r => {r.remove();})
         this._rooms.clear();
-        this.lobby.sendAll(mess)
     }
 
-    sendAll(mess) {
+    sendAll(mess) { //inutile
         this._rooms.forEach(
             room => room.sendAll(mess))
     }

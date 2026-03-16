@@ -15,7 +15,7 @@ function RebootTruc() {
     return (
         <button onClick={() => {
             SocketM.sendd(SocketM.socket.morp,{
-                type: "game",
+                type: "reboot",
                 message: "reboot"
             })
         }}>
@@ -42,7 +42,7 @@ function SelectSecondPlayer(){
     return (
         <button onClick={() => {
             SocketM.sendd(SocketM.socket.morp,{
-                type: "game",
+                type: "second",
                 message: "playSecond"
             })
         }}>

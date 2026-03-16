@@ -31,10 +31,10 @@ class MorpionRoom extends Room {
     }   
 
     setFirstPlayer(){
-        if (this._locked) return false;
+        if (this._locked) return null;
 
-        this._first_player = true;
-        return true;
+        this._first_player = !this._first_player;
+        return this._first_player;
     }
 
     isTurnPlayer(PlayerId){
@@ -42,7 +42,7 @@ class MorpionRoom extends Room {
     }
 
     switchTurn() {
-        const [p1, p2] = [...this._players.keys()];
+        const [p1, p2] = [...this._players];
         this._turn = this._turn === p1 ? p2 : p1;
     }
 
@@ -95,8 +95,8 @@ class MorpionRoom extends Room {
         return this._players.get(otherId);
     }
 
-    getOtheriD(currentId) {
-        return [...this._players.keys()].find(id => id !== currentId);
+    getOther(current) {
+        return [...this._players].find(p => p !== current);
     }
 
     isValidPlay(index) {

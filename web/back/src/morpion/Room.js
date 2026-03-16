@@ -5,38 +5,38 @@ class Room {
     constructor (id) {
         this._type = "default";
         this._id = id;
-        this._players = new Map();
+        this._players = new Set();
         this._min_players = 1000;
         this._max_players = null;
-        this._date_game = new Date();
+        this._date_game = new Date(); // _date of first player
+        this._start_time = null; // timestamp start game
         this._locked = false;
         this._winner = null;
-        this.out_timer = null;
-        this.limit_time = 3600 * 1000;
+        this.out_timer = null; //setTimeout fin
+        this.limit_time = 60 * 1000;
     }
 
-    getPlayer(idPlayer) {
+    getPlayer(idPlayer) { //comnent faire ? pas ici ? inutile ?
         return this._players.get(idPlayer) || null;
     }
 
-    addPlayer(socket, PlayerId) {
-        if (this.isInRoom(PlayerId)) return false;
+    addPlayer(player) {
+
+        if (this._players.has(player)) return false;
         if (this._locked) return false;
         if (this.isFull()) return false;
 
-        this._players.set(PlayerId, new Player(socket, PlayerId));
+        this._players.add(player);
  
         return true;
     }
 
-    removePlayer(playerId, message) {
+    removePlayer(player, message) {
         console.log("Players dans la room (avant suppression):", Array.from(this._players.keys()));
-        const player = this._players.get(playerId);
+        if (!this._players.has(player))
+            return this._players.size;
 
-        if (!player) return -1;
-
-        player.disconnect(message);
-        this._players.delete(playerId);
+        this._players.delete(player);
         return this._players.size
     }
 
@@ -77,6 +77,7 @@ class Room {
         }
 
         this._locked = state;
+        this._start_time = Date.now();
     }
 
     sendAll(message) {
@@ -85,10 +86,10 @@ class Room {
         this._players.forEach(player => {player.send(message);});
     }
 
-    remove(message = null) {
+    remove() {
         this.clearOutTimer();
-
-        this._players.forEach(p => {p.disconnect(message)});
+        this._players.forEach(p => {p.disconnect()})
+        this._players.clear();
     }
 
     clearOutTimer() {
