@@ -4,27 +4,37 @@
 
 .StatsMorpionHistoryCard-root{
     display: flex;
+    flex-direction: row;
+    height: 100%;
     width: 100%;
+    background: rgba(255, 255, 255, 0.900);
+    padding: 1rem;
+    border-radius: 30px;
 
+
+
+
+
+    position: relative;
     .draw{@include mix.cardhistory("draw")}
     .abort{@include mix.cardhistory("abort")}
     .win{@include mix.cardhistory("win")}
     .lose{@include mix.cardhistory("lose")}
-
-
-
+    
     .scanline-win-h{@include mix.scanlines("horizontal")}
     .scanline-win-d-rl{@include mix.scanlines("diagonal-right-left")}
     .scanline-win-d-lr{@include mix.scanlines("diagonal-left-right")}
     .scanline-win-v{@include mix.scanlines("vertical")}
-    .none{display: none;}
 
-    position: relative; // INDISPENSABLE
     
+
+
+
     .board-container{
-        border: solid beige 2px;
-        margin: 0.5rem;
+        border: solid rgb(0, 0, 0) 2px;
         padding: 0.5rem;
+        width: max-content;
+        height: 100%;
         button{
             font-size: 0.5rem;
             @include mix.icone;

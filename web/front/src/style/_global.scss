@@ -12,18 +12,28 @@ body, #root {
 p, a, input, h1, h2, h3, h4, h5, h6, button, span, li {
 	font-size: 1rem;
 	font-family: inter, roboto;
-	text-transform: uppercase;
+	// text-transform: uppercase;
 	font-weight: 600;
 	letter-spacing: 1px;
 	color: rgb(50, 71, 75);
 }
 
+@media (width <= 1000px) {
+    :root{
+        font-size: 13px;
+    }
+}
 @media (width <= 750px) {
     :root{
         font-size: 10px;
     }
 }
 
+@media (width <= 500px) {
+    :root{
+        font-size: 7px;
+    }
+}
 input {
 	text-transform: none;
 }

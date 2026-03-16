@@ -9,6 +9,7 @@ import "./StatsMorpion.scss";
 
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";   
+import Graph from "COMP/Graph/Graph.jsx"; 
 import Paging from "COMP/Paging/Paging.jsx"; 
 import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 
@@ -144,56 +145,70 @@ export default function StatsMorpion({ username, setUsername }) {
             </div>
 
             <aside className={`aside border-1`}>
+                <div className={`asidecss border-1`}>
 
-                <div className={`search border-2`}>
-                    <form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1);setInputValue("")}}>
-                        <input type={`text`} value={inputValue}
-                            onChange={(e) => {setInputValue(e.target.value);}} 
-                            />
-                        <input type={`submit`} value={`search`}/>
-                    </form>
-                </div>
-
-                <div className={`game-winrate border-2`}>
-
-                    <div className={`wl-graph border-3`}>
-
-                        <p>Graph</p>
-                        <p>win: {statToDisplay?.all_win_without_abort}</p>
-                        <p>lose: {statToDisplay?.all_lose_without_abort}</p>
-                        <p>win: {statToDisplay?.win_abort}</p>
-                        <p>lose: {statToDisplay?.lose_abort}</p>
-
+                    <div className={`search border-2`}>
+                        <form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1);setInputValue("")}}>
+                            <input type={`text`} value={inputValue}
+                                onChange={(e) => {setInputValue(e.target.value);}} 
+                                />
+                            <input type={`submit`} value={`search`}/>
+                        </form>
                     </div>
 
-                    <div className={`wl-o-x border-3`}>
+                    <div className={`game-winrate border-2`}>
 
-                        <p>ox-win-loss</p>
-                        <p>winO: {statToDisplay?.type_O_win}</p>
-                        <p>loseO: {statToDisplay?.type_O_lose}</p>
-                        <p>winX: {statToDisplay?.type_X_win}</p>
-                        <p>loseX: {statToDisplay?.type_X_lose}</p>
+                        <div className={`wl-graph border-3`}>
+                            <div className={`wl-graph2 border-5`}>
+                                <div>
+                                    <span style={{color: "blue"}}>Win:{statToDisplay?.all_win_without_abort}</span>
+                                    <span style={{color: "red"}}>Lose:{statToDisplay?.all_lose_without_abort}</span>
+                                </div>
+                                <div>
+                                    <span style={{color: "rgb(75, 75, 240)"}}>AbortWin:{statToDisplay?.win_abort}</span>
+                                    <span style={{color: "rgb(226, 43, 144)"}}>AbortLose:{statToDisplay?.lose_abort}</span>
+                                </div>
+                            </div>
+                            <Graph v1={statToDisplay?.all_win_without_abort}v2={statToDisplay?.all_lose_without_abort}v3={statToDisplay?.win_abort}v4={statToDisplay?.lose_abort}/>
+                        </div>
 
-                    </div>
+                        <div className={`wl-o-x border-3`}>
 
-                    <div className={`wl-horizontal border-3`}>
+                            {/* <p>ox-win-loss</p> */}
+                            
+                            <div>
+                                <p>Type O:</p>
+                                <p>win: {statToDisplay?.type_O_win}</p>
+                                <p>lose: {statToDisplay?.type_O_lose}</p>
+                            </div>
+                            
+                            <div>
+                                <p>Type X:</p>
+                                <p>win: {statToDisplay?.type_X_win}</p>
+                                <p>lose: {statToDisplay?.type_X_lose}</p>
+                            </div>
 
-                        <p>horizontal</p>
-                        <p>win: {statToDisplay?.win_horizontal}</p>
-                        <p>lose: {statToDisplay?.lose_horizontal}</p>
+                        </div>
 
-                    </div>
+                        <div className={`wl-horizontal border-3`}>
 
-                    <div className={`wl-diagonal border-3`}>
-                        <p>diagonal</p>
-                        <p>win: {statToDisplay?.win_diagonal}</p>
-                        <p>lose: {statToDisplay?.lose_diagonal}</p>
-                    </div>
+                            <p>horizontal</p>
+                            <p>win: {statToDisplay?.win_horizontal}</p>
+                            <p>lose: {statToDisplay?.lose_horizontal}</p>
 
-                    <div className={`wl-vertical border-3`}>
-                        <p>vertical</p>
-                        <p>win: {statToDisplay?.win_vertical}</p>
-                        <p>lose: {statToDisplay?.lose_vertical}</p>
+                        </div>
+
+                        <div className={`wl-diagonal border-3`}>
+                            <p>diagonal</p>
+                            <p>win: {statToDisplay?.win_diagonal}</p>
+                            <p>lose: {statToDisplay?.lose_diagonal}</p>
+                        </div>
+
+                        <div className={`wl-vertical border-3`}>
+                            <p>vertical</p>
+                            <p>win: {statToDisplay?.win_vertical}</p>
+                            <p>lose: {statToDisplay?.lose_vertical}</p>
+                        </div>
                     </div>
                 </div>
             </aside>
