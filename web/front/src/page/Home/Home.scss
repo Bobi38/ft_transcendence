@@ -10,10 +10,6 @@ $padding: 1.7rem;
 	justify-content: space-between;
 	background: white;
 
-	.scanlines {
-		@include mix.scanlines();
-	}
-
 	.Home-PopUp {
 		position: absolute;
 		top:0;
@@ -36,7 +32,6 @@ $padding: 1.7rem;
 		z-index: 1;
 
 		.card-container {
-			background: radial-gradient($grey, white 70%);
 			width: 65%;
 			padding: $padding * 0.75 $padding * 1.5 $padding * 0.75 0;//just magic
 			display: grid;

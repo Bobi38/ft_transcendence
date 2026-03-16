@@ -53,7 +53,7 @@ export default function AddressAutocomplete({user, setUser, isReadOnly}) {
                         {results.map((item) => (
                             <li key={item.properties.id}
                                 onClick={() => handle_select(item.properties.label)}
-                                style={{ cursor: "pointer" }}>
+                                style={{ cursor: "url(\"./media/wii_pointer.svg\"), pointer" }}>
                                 {item.properties.label}
                             </li>
                         ))}

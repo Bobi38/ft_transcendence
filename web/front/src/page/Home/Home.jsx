@@ -118,7 +118,6 @@ export default function Home() {
 	return (
 
 		<div id={`Home-root`}>
-			<div className="scanlines"></div>
 
             <div className={`${is_popup}`} >
                 <div className={`${is_popup} Home-PopUp`} >
