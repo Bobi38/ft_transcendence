@@ -122,6 +122,7 @@ export class App {
             switch (status) {
                 case RoomStatus.WAITING:
                     this._ui.showWaitingUI();
+                    this._player.lockControls();
                     break;
                 case RoomStatus.STARTED:
                     console.log("Game has started");
