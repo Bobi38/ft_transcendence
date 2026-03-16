@@ -14,6 +14,8 @@ import { StateCallbackStrategy } from "@colyseus/schema";
 import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
+import { BallSnapshot, SnapshotBuffer } from "./snapshots";
+import { SynchronizedClock } from "./SynchronizedClock";
 
 export enum RoomStatus {
   WAITING = 0,
@@ -26,6 +28,7 @@ export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
     private _scene: Scene;
+    private _havokPlugin: HavokPlugin;
     private _environment: Environment;
     private _player: Player;
     private _enemy: Enemy;
@@ -36,7 +39,13 @@ export class App {
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadow : ShadowGenerator;
     private _ui : GUI;
-    //public playerAssets;
+    private _snapshots : SnapshotBuffer = new SnapshotBuffer();
+    private _clock : SynchronizedClock = new SynchronizedClock();
+    private _serverPatch : BallSnapshot = null;
+
+    private _velCorrectionIgnored : boolean = false;
+    private _ignoreServerUntil : number = 0;
+
 
     constructor(canvas: HTMLCanvasElement) {
         if (!canvas) throw new Error("Canvas is undefined");
@@ -60,12 +69,20 @@ export class App {
         this._main();
     }
 
+    private _waitForStateOnce(room: Room<MyRoomState>): Promise<void> {
+        return new Promise((resolve) => {
+            room.onStateChange.once(() => {
+                resolve();
+            });
+        });
+    }
+
     private async _main(): Promise<void> {
-        // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        // const host = window.location.host;
-        // console.log("iciiiiiiii====   " , `${protocol}//${host}/ws/goat`);
-        // let colyseusSDK = new Client(`${protocol}//${host}/ws/goat`);
-        let colyseusSDK = new Client("ws://localhost:2567");
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const hostname = window.location.hostname;
+        console.log("iciiiiiiii====   " , `${protocol}//${hostname}:2567`);
+        let colyseusSDK = new Client(`${protocol}//${hostname}:2567`);
+        // let colyseusSDK = new Client("ws://localhost:2567");
         const token = sessionStorage.getItem("token");
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
@@ -73,32 +90,33 @@ export class App {
         try {
             if (reconnectionGameToken) {
                 console.log("Trying to reconnect...");
-                // Reconnect to the existing room
                 room = await colyseusSDK.reconnect<MyRoomState>(reconnectionGameToken);
             } else {
-                throw new Error("No room/session stored, joining new room");
+                throw new Error("No room/session stored");
             }
         } catch (e) {
-            //const token = sessionStorage.getItem("token");
             console.log("Reconnect failed or no previous session, joining new room:", e);
             room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
 
-        // const room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room");
         console.log("Joined room " + room.roomId);
         this._room = room;
         const callback = Callbacks.get(room);
         this._callback = callback;
 
         this._engine.displayLoadingUI();
-        await this._setupHavok();
-        await this._setupGameAssets();
+        await Promise.all([
+            this._setupHavok(),
+            this._waitForStateOnce(room)
+        ]);
+        await this._setupGameAssets()
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
         this._ui = new GUI(room);
         this._ui.addWaitingUI();
+
 
         callback.listen("roomStatus", () => {
             const status = this._room.state.roomStatus;
@@ -119,44 +137,15 @@ export class App {
                     break;
             }
         });
+        this._room.onMessage('Goal!', () => {
+            this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
+            this._ball.setMeshPosition(Vector3.Zero());
+            this._ball.setVelocity(Vector3.Zero());
+            this._snapshots.dispose();
+        });
         callback.onChange(room.state.score, () => {
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
-        // callback.listen("won", () => {
-        //     if (!this._room.state.won)
-        //         return ;
-        //     this._player.lockControls();
-        //     this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
-        // });
-        // callback.listen("endedDisconnect", () => {
-        //     if (!this._room.state.endedDisconnect)
-        //         return ;
-        //     this._player.lockControls();
-        //     this._ui.addOtherPlayerDisconnectUI();
-        // });
-
-        // room.onDrop((code, reason) => {
-        //     console.log(`Disconnected: ${code} - ${reason}`);
-        //     localStorage.setItem("test", "test1");
-        //     //showReconnectingUI();
-        // });esult
-        // room.onReconnect(() => {
-        //     console.log("Reconnected!");
-        //     //hideReconnectingUI();
-        // });
-        // room.onLeave((code, reason) => {
-        //     console.log(`Left room: ${code}`);
- 
-        //     // if (code === CloseCode.FAILED_TO_RECONNECT) {
-        //     //     showError("Failed to reconnect. Please try again.");
-        //     // }
- 
-        //     // // Clean up and return to menu
-        //     // cleanupGame();
-        // });
-        // room.onError((code, message) => {
-        //     console.error(`Room error: ${code} - ${message}`);
-        // });
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
@@ -169,9 +158,20 @@ export class App {
         const havokInstance = await HavokPhysics({
             locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
         });
-        const havokPlugin = new HavokPlugin(true, havokInstance);
-        havokPlugin.setTimeStep(1/60);
-        this._scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+        this._havokPlugin = new HavokPlugin(true, havokInstance);
+        this._havokPlugin.setTimeStep(1/60);
+        this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
+        this._room.onMessage("serverTick", ({serverTick, t0}) => {
+                this._clock.synchronizeClientWithServerClock(serverTick, t0);
+            });
+        setInterval(() => {
+                const t0 = Date.now();
+                this._room.send("synchronizeTick", t0);
+            }, 250);
+        this._scene.onAfterPhysicsObservable.add(() => {
+            this._clock.tick++;
+            this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+        });
     }
 
     private async _setupGameAssets() {
@@ -201,6 +201,7 @@ export class App {
         });
     }
 
+
     private _initLightAndBall(scene: Scene): ShadowGenerator {
         let light = new PointLight('PointLight', new Vector3(0,5,10), scene);
         light.diffuse = new Color3(1,1,1);
@@ -208,52 +209,105 @@ export class App {
 
         let shadow = new ShadowGenerator(1024, light);
         shadow.darkness = 0.4;
-        
+        this._shadow = shadow;
+
+        console.log(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
+        console.log(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-        this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
-        // this._scene.onBeforeRenderObservable.add(() => {
-        //     if (this._ball.getMeshPosition()._z < -23) {
-        //         this._ball.dispose();
-        //         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
-        //         this._ball = new Ball(ballPos, 1, this.MAX_SPEED, shadow, this._scene);
-        //     }
-        // });
+        let ballVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
+        this._ball = new Ball(ballPos, ballVel, 1, this.MAX_SPEED, shadow, this._scene);
+        this._ball.addToBodies(this._environment.bodies);
         
         this._callback.onChange(this._room.state.ball.position, () => {
-            const newPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-            this._ball.positionError = newPos.subtract(this._ball.getMeshPosition());
+            const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
+            const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
+            this._serverPatch = {tick: this._room.state.ball.tickStamp, position: serverPos, velocity: serverVel};
         });
-        this._callback.onChange(this._room.state.ball.velocity, () => {
-            const newVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-            this._ball.setVelocity(newVel);
-        });
-        this._scene.onBeforeRenderObservable.add(() => {
-            if (!this._ball.positionError)
+
+
+        this._scene.onBeforePhysicsObservable.add(() => {
+            if (!this._serverPatch) return ;
+            //console.log(this._serverPatch);
+            const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
+            if (!pastSnapshot) return ;
+            const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
+            const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
+            console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
+                "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
+            if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
+                this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
+                this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
+                this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+                this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
+                this._ball.visualOffset.subtractInPlace(positionError);
                 return ;
-            const patchRate = 0.05; //in seconds
-            const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
-            const fractionElapsed = patchRate / dt;
-            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
-            const ballPos = this._ball.getMeshPosition();
-            this._ball.setMeshPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
-            this._ball.positionError.scaleInPlace(1 - correctionFactor);
-            if (this._ball.positionError.lengthSquared() < Epsilon)
-                this._ball.positionError = null;
-        });
+            }
+
+            const patchTick = Math.round(this._serverPatch.tick - this._clock.tickOffset);
+            const ticksToResimulate = this._clock.tick - patchTick;
+            console.log("patchTick:", patchTick, "ticks to resim:", ticksToResimulate);
+            if (ticksToResimulate <= 0) {
+                this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
+                this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
+                this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+                this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
+                this._serverPatch = null;
+                return;
+            }
+            const preRollbackPos = this._ball.getPhysicsBodyPosition().clone();
+            this._ball.setPhysicsBodyPosition(this._serverPatch.position);
+            this._ball.setVelocity(this._serverPatch.velocity);
+            this._snapshots.clearAfterTickIncluded(patchTick);
+            this._snapshots.saveSnapshot(patchTick, this._serverPatch.position, this._serverPatch.velocity);
+            const FIXED_TIME_STEP = 1 / 60;
+            for (let i = 0; i < ticksToResimulate; i++) {
+                const simulatingTick = patchTick + i;
+                console.log("resimulating tick:", simulatingTick);
+                const historicalRacket = this._player.racketHistory.get(simulatingTick);
+                if (historicalRacket) {
+                    this._player.racketBody.transformNode.position = historicalRacket.position;
+                    this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
+                }
+                const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
+                if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+                    this._ball.setVelocity(impactSnapshot.snapshot.velocity);
+                }
+                this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
+                this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+            }
+            const postRollbackPos = this._ball.getPhysicsBodyPosition();
+            const teleportDelta = preRollbackPos.subtract(postRollbackPos);
+            this._ball.visualOffset.addInPlace(teleportDelta);
+            this._serverPatch = null;
+        });            
+        // this._scene.onBeforeRenderObservable.add(() => {
+        //     if (!this._ball.positionError)
+        //         return ;
+        //     const patchRate = 0.05; //in seconds
+        //     const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
+        //     const fractionElapsed = patchRate / dt;
+        //     const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
+        //     const ballPos = this._ball.getPhysicsBodyPosition();
+        //     this._ball.setPhysicsBodyPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
+        //     this._ball.positionError.scaleInPlace(1 - correctionFactor);
+        //     if (this._ball.positionError.lengthSquared() < Epsilon)
+        //         this._ball.positionError = null;
+        // });
         return shadow;
     }
 
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
         const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(sessionId, playerAssets, this._scene, this._shadow, this._room);
+        this._player = new Player(this, sessionId, playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
-        this._scene.registerBeforeRender(() => {
+        this._scene.onBeforePhysicsObservable.add(() => {
             this._player.updateBody();
-            this._player.updateRacket();
+            this._player.updateRacket(this._clock.tick);
             this._camera.updateCamera(isNearSide, this._player.getPlayerPosition());
         });
+        this._environment.bodies.push(this._player.racketBody);
     }
 
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
@@ -313,5 +367,14 @@ export class App {
         racketRoot.parent = hand_node;
         hand_node.parent = body;
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
+    }
+
+    public setIgnoreServer() {
+        this._ignoreServerUntil = this._clock.tick;
+        console.log("IGNORING SERVER HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA until:", this._ignoreServerUntil);
+    }
+
+    public getTick() : number {
+        return this._clock.tick;
     }
 }

@@ -2,9 +2,9 @@ import { ActionManager, Axis, ExecuteCodeAction, Plane, Quaternion, Scalar, Scen
 import { PlayerCamera } from "./PlayerCamera";
 
 export class PlayerInput {
-    private _moveDirection : Vector3;
-    private _newRacketPos : Vector3;
-    private _newRacketRot : Quaternion;
+    private _moveDirection : Vector3 = Vector3.Zero();
+    private _newRacketPos : Vector3 = Vector3.Zero();
+    private _newRacketRot : Quaternion = Quaternion.Identity();
 
     private _inputMap;
     private _scene: Scene;

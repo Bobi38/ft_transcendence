@@ -11,4 +11,5 @@ import { Vector3 } from './Vector3'
 export class Ball extends Schema {
     @type(Vector3) public position: Vector3 = new Vector3();
     @type(Vector3) public velocity: Vector3 = new Vector3();
+    @type("number") public tickStamp!: number;
 }

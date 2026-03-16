@@ -1,4 +1,4 @@
-import { Room, Client, CloseCode, AuthContext } from "colyseus";
+import { Room, Client, CloseCode, AuthContext, room } from "colyseus";
 import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
 import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
@@ -23,11 +23,15 @@ export class MyRoom extends Room {
   private _tokens : Map<string, {auth: string, score: number, hasWon: boolean}> = new Map<string, {auth: string, score: number, hasWon: boolean}>();
   private _near : string;
   private _far: string;
+  private _tick: number = 0;
+  private _posToSend: Vector3;
+  private _velToSend: Vector3;
 
   maxClients = 2;
   patchRate = 50;
   state = new MyRoomState();
 
+  static count : number = 0;
   messages = {
     yourMessageType: (client: Client, message: any) => {
       /**
@@ -35,11 +39,15 @@ export class MyRoom extends Room {
        */
       console.log(client.sessionId, "sent a message:", message);
     },
+    "synchronizeTick" : (client: Client, data: any) => {
+      console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+      client.send("serverTick", {serverTick: this._tick, t0: data});
+    },
     "racketImpact": (client: Client, data: any) => {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
-      //this._ball.transformNode.setAbsolutePosition(ballPos);
+      this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
     },
     "bodyMoved": (client: Client, data: any) => {
@@ -72,9 +80,14 @@ export class MyRoom extends Room {
     console.log("HavokPhysics loaded from file");
     const havokPlugin = new HavokPlugin(true, havok);
     this._havokPlugin = havokPlugin;
-    const deltaTime = 1 / 60;
-    havokPlugin.setTimeStep(deltaTime);
+    havokPlugin.setTimeStep(1/60);
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+    scene.onAfterPhysicsObservable.add(() => {
+      this._tick++;
+      this._posToSend = this._ball.transformNode.position.clone();
+      this._velToSend = this._ball.getLinearVelocity();
+      //console.log(this._tick, Date.now());
+    });
     this._scene = scene;
     this._engine = engine;
     this._ball = createBall(new Vector3(this.state.ball.position.x, this.state.ball.position.y, this.state.ball.position.z),
@@ -106,6 +119,13 @@ export class MyRoom extends Room {
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
         this._ball.transformNode.position.set(0,3,7);
+        this.state.ball.position.x = 0;
+        this.state.ball.position.y = 3;
+        this.state.ball.position.z = 7;
+        this.state.ball.velocity.x = 0;
+        this.state.ball.velocity.y = 0;
+        this.state.ball.velocity.z = 0;
+        this.broadcast('Goal!', { afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
       }
@@ -116,25 +136,42 @@ export class MyRoom extends Room {
     });
   }
 
+  private _isSuspiciousSpeed(oldVel: Vector3, newVel: Vector3) : boolean {
+    const isSuspicious = (
+        (Math.abs(oldVel.x) > 0.5 && Math.abs(newVel.x) < 0.001) ||
+        (Math.abs(oldVel.y) > 0.5 && Math.abs(newVel.y) < 0.001) ||
+        (Math.abs(oldVel.z) > 0.5 && Math.abs(newVel.z) < 0.001)
+    );
+    return isSuspicious;
+  }
+
   onBeforePatch(state: MyRoomState) {
-    const ballPos = this._ball.transformNode.position.clone();
-    const ballVel = this._ball.getLinearVelocity();
+    const ballPos = this._posToSend;
+    const ballVel = this._velToSend;
     //console.log(ballPos);
     //console.log(ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;
 
-    state.ball.velocity.x = ballVel.x;
-    state.ball.velocity.y = ballVel.y;
-    state.ball.velocity.z = ballVel.z;
+    const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
+    // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
+    //if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
+      state.ball.velocity.x = ballVel.x;
+      state.ball.velocity.y = ballVel.y;
+      state.ball.velocity.z = ballVel.z;
+    //}
+
+    state.ball.tickStamp = this._tick;
   }
 
   onCreate (options: any) {
     /**
      * Called when a new room is created.
      */
-    //START PHYSICS SIMULATION
+    this.state.ball.velocity.x = 0;
+    this.state.ball.velocity.y = 0;
+    this.state.ball.velocity.z = 0;
     console.log("room", this.roomId, "created and starting physics simulation");
     this._startSimulation();
   }
@@ -144,6 +181,7 @@ export class MyRoom extends Room {
        * This is a good place to validate the client's auth token.
        */
       const ourToken : string = options.token;
+      console.log(ourToken);
       if (!ourToken) {
         console.log("Failed to send authorization token");
         return false;
@@ -195,7 +233,6 @@ export class MyRoom extends Room {
   }
 
   onDrop(client: Client, code: number) {
-    // Allow the client to reconnect within 30 seconds
     console.log(`Client ${client.sessionId} dropped (code: ${code})`);
     const player = this.state.players.get(client.sessionId);
     if (player) {
@@ -249,7 +286,8 @@ export class MyRoom extends Room {
     /**
      * Called when the room is disposed.
      */
-    if (this.state.roomStatus != RoomStatus.WAITING)
+    console.log(this.state.roomStatus);
+    if (this.state.roomStatus != RoomStatus.WAITING && this.state.roomStatus != RoomStatus.PLAYER_DISCONNECTED)
       this._sendGameDataToDatabase();
 
     this._tokens = null;
@@ -277,5 +315,4 @@ export class MyRoom extends Room {
     }
     console.log("room", this.roomId, "disposing and ending simulation");
   }
-
 }
