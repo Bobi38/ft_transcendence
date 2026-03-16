@@ -87,10 +87,10 @@ class MorpionRoom extends Room {
 
     getCurrentPlayer(current = true) {
         if (current)
-            return this._players.get(this._turn);
+            return this._turn;
         
-        const other = [...this._players.keys()].find(p => p !== this._turn);
-        return this._players.get(other);
+        const other = [...this._players].find(p => p !== this._turn);
+        return other;
     }
 
     getOther(current) {

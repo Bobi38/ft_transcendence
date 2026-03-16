@@ -16,9 +16,9 @@ class Room {
         this.limit_time = 60 * 1000;
     }
 
-    getPlayer(idPlayer) { //comnent faire ? pas ici ? inutile ?
-        return this._players.get(idPlayer) || null;
-    }
+    // getPlayer(idPlayer) { //comnent faire ? pas ici ? inutile ?
+    //     return this._players.get(idPlayer) || null;
+    // }
 
     addPlayer(player) {
 
@@ -31,11 +31,12 @@ class Room {
         return true;
     }
 
-    removePlayer(player, message) {
+    removePlayer(player) {
         console.log("Players dans la room (avant suppression):", Array.from(this._players.keys()));
         if (!this._players.has(player))
             return this._players.size;
 
+        player.disconnect();
         this._players.delete(player);
         return this._players.size
     }

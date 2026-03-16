@@ -39,7 +39,12 @@ export class Player {
     setGame(game){
         if (!game?.getId()) return;
         console.log(`player register in ${game.getId()}`);
+        this.clearTurnTimer();
         this._game = game;
+        this._chrono = null;
+        this._nb_turn = 0;
+        this._play_time = 0;
+        this.first_alert = 0;
     }
 
     getGame(){
@@ -91,8 +96,8 @@ export class Player {
     }
 
     toString(){
-        console.log(`definition de player`);
-        // return `${this._id} : ${this._nick_name} play ${this._game?.getId()}`;
+        // console.log(`definition de player`);
+        return `${this._id} : ${this._nick_name} play ${this._game?.getId()}`;
     }
 
     getId(){

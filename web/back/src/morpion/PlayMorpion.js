@@ -27,29 +27,32 @@ function move(player, move){
         //voir pour indique la 
         return ;
     }
-    console.log("mess1");
+    // console.log("mess1");
     if (!game.isTurnPlayer(player)){
         player.send({message: msgs.wait, turn: false});
         return ;
     }
-    console.log("mess2");
+    // console.log("mess2");
     if (game.play(player, move)) {
-        console.log("mess3");
+        // console.log("mess3");
         if(game.checkVictory()){
-            console.log(`fin de la partie de ${game}`);
-            manager_room.removeRoom(game.getId());
+            console.log(`end of ${game}`);
+            setTimeout(() => {
+                 console.log(`party register ${game}`);
+                 manager_room.removeRoom(game);
+            }, 10000);
             return ;
         }
         game.switchTurn();
         console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
-        console.log("mess4");
+        // console.log("mess4");
         game.notifyTurn(
             {message: msgs.my_turn, turn: true},
             {message: msgs.other_turn, turn: false}
         )
-        console.log("mess5");
+        // console.log("mess5");
         game.startTurnTimer();
-        console.log("mess6");
+        // console.log("mess6");
     }
 }
 
