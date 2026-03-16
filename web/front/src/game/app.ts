@@ -227,10 +227,30 @@ export class App {
 
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return ;
-            console.log(this._serverPatch);
+            //console.log(this._serverPatch);
+            const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
+            if (!pastSnapshot) return ;
+            const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
+            const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
+            console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
+                "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
+            if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
+                this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
+                this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
+                this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+                this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
+                this._ball.visualOffset.subtractInPlace(positionError);
+                return ;
+            }
+
             const patchTick = Math.round(this._serverPatch.tick - this._clock.tickOffset);
             const ticksToResimulate = this._clock.tick - patchTick;
+            console.log("patchTick:", patchTick, "ticks to resim:", ticksToResimulate);
             if (ticksToResimulate <= 0) {
+                this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
+                this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
+                this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+                this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
                 this._serverPatch = null;
                 return;
             }
@@ -249,14 +269,9 @@ export class App {
                     this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
                 }
                 const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-                if (impactSnapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+                if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
                     this._ball.setVelocity(impactSnapshot.snapshot.velocity);
                 }
-                // ---> IMPORTANT <---
-                // If players made inputs (like swinging a racket) during these past ticks, 
-                // you MUST apply those inputs to the physics bodies here before stepping!
-
-                // Step the Havok world forward by exactly one tick
                 this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
                 this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             }
