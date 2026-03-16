@@ -57,8 +57,8 @@ function NouvellePartie({ setBoard }){
         <button onClick={() => {
             setBoard(Array(9).fill(""));
             SocketM.sendd(SocketM.socket.morp,{
-                type: "game",
-                message: "je veux jouer"
+                type: "play",
+                message: "hello"
             })
         }}>
             Nouvelle Partie

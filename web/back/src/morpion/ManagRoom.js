@@ -46,19 +46,21 @@ class ManagerRoom {
         return null;
     }
 
-    findOnePlace(socket, type = null, currentId) {
+    findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
             console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
-                room.addPlayer(socket, currentId);
+                room.addPlayer(player);
+                player.setGame(room);
                 return room;
             }
         }
         
         const newRoom = this.createRoom(type);
-        newRoom.addPlayer(socket, currentId);
+        newRoom.addPlayer(player);
+        player.setGame(newRoom);
         return newRoom;
     }
 

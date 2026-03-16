@@ -38,7 +38,7 @@ export class Player {
 
     setGame(game){
         if (!game?.getId()) return;
-        console.log(`player register in game`);
+        console.log(`player register in ${game.getId()}`);
         this._game = game;
     }
 
@@ -92,7 +92,7 @@ export class Player {
 
     toString(){
         console.log(`definition de player`);
-        return `this._id : this._nick_name`;
+        return `${this._id} : ${this._nick_name} play ${this._game.getId()}`;
     }
 
     getId(){

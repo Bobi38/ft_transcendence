@@ -1,6 +1,7 @@
 import { manager_room } from './ManagRoom.js';
 
 const msgs = {
+    welcome: "welcome",
     recherche: "search",
     wait: "wait wait",
     my_turn: "it s your turn",
@@ -13,7 +14,83 @@ const msgs = {
     second: "second player selected",
     first: "first player seleted",
     reboot: "server rebooted", // tres utile !!
-    badMove: "Move alert"
+    badMove: "Move alert",
+
+
+}
+
+
+    // if (game.play(id, message)) {
+    //     if(game.checkVictory()){
+    //         console.log(`fin de la partie de ${game}`);
+    //         manager_room.removeRoom(game.getId());
+    //         return ;
+    //     }
+    //     game.switchTurn();
+    //     console.log(` joueur ${id} a jouer sur la case ${message}`)
+    //     game.notifyTurn(
+    //         { message: "À toi de jouer", turn: true },
+    //         { message: "Tour adverse", turn: false });
+    //     game.startTurnTimer();
+    //     console.log(`le changement`);
+    // }
+function move(player, move){
+    colog(`new move ${move}`);
+
+    const game = player.getGame();
+
+    if (!game) {
+        //voir pour indique la 
+        return ;
+    }
+
+    if (!game.isTurnPlayer(player)){
+        player.send({message: msgs.wait, turn: false});
+        return ;
+    }
+
+    if (game.play(player, message)) {
+        if(game.checkVictory()){
+            console.log(`fin de la partie de ${game}`);
+            manager_room.removeRoom(game.getId());
+            return ;
+        }
+        game.switchTurn();
+        console.log(` joueur ${id} a jouer sur la case ${message}`)
+        game.notifyTurn(
+            {message: msgs.my_turn, turn: true},
+            {message: msgs.other_turn, turn: false}
+        )
+        game.startTurnTimer();
+        console.log(`le changement`);
+    }
+    
+}
+
+function searchGame(player){
+    console.log(`new search game de ${player}`);
+    let game = player.getGame();
+    if (game){
+        player.send(`you play ${game.getId()}`);
+        return ;
+    }
+
+    game = manager_room.findOnePlace("Morpion", player);
+    player.send(`new game :  you play ${game.getId()}`);
+    try{
+        game.setLock(true);
+        game.startGame(player);
+
+        game.notifyTurn(
+            {message: msgs.my_turn, turn: true},
+            {message: msgs.other_turn, turn: false}
+        )
+    }
+    catch {
+            console.log("premier set _Turn");
+            game._turn = player;
+            player.send({message: msgs.recherche, turn: false})
+    }
 }
 
 function reboot(){ // non utilise
@@ -157,4 +234,4 @@ function morpion(message, socket){
 
 }
 
-export default {morpion, reboot, playSecond, leave, msgs}
+export default {morpion, reboot, playSecond, leave, msgs, searchGame, move}

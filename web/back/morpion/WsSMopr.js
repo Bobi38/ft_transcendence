@@ -75,8 +75,12 @@ export function initWebSMopr(server) {
             m.morpion(data.message, socket, socket.userId);
             break ;
 
+          case "move":
+            m.move(socket.player, data.message);
+            break ;
+
           case "play":
-            console.log(`newgame recu`);
+            m.searchGame(socket.player);
             break ;
 
           case "leave":

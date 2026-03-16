@@ -37,8 +37,8 @@ class MorpionRoom extends Room {
         return this._first_player;
     }
 
-    isTurnPlayer(PlayerId){
-        return this._turn === PlayerId;
+    isTurnPlayer(player){
+        return this._turn === player;
     }
 
     switchTurn() {
@@ -50,14 +50,14 @@ class MorpionRoom extends Room {
         return this._turn;
     }
 
-    startGame(firstPlayerId) {
-        if (!this._players.has(firstPlayerId)) {
+    startGame(player) {
+        if (!this._players.has(player)) {
             throw new Error("Invalid player");
         }
 
         if (this._first_player){
             console.log("je set turn")
-            this._turn = firstPlayerId;
+            this._turn = player;
         }
 
         this._chrono = Date.now();
@@ -70,13 +70,11 @@ class MorpionRoom extends Room {
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
 
-        for (const [id, player] of this._players.entries()) {
-            const basePayload = {
-                board: this._board
-            };
+        const basePayload = { board: this._board };
 
+        for (const player of this._players) {
             player.send(
-                id === this._turn
+                player === this._turn
                     ? { ...basePayload, ...payloadCurrent }
                     : { ...basePayload, ...payloadOthers }
             );
@@ -91,8 +89,8 @@ class MorpionRoom extends Room {
         if (current)
             return this._players.get(this._turn);
         
-        const otherId = [...this._players.keys()].find(id => id !== this._turn);
-        return this._players.get(otherId);
+        const other = [...this._players.keys()].find(p => p !== this._turn);
+        return this._players.get(other);
     }
 
     getOther(current) {
