@@ -3,25 +3,13 @@ import "./Button.scss";
 
 /* Components */
     
-export default function Button({children, path}) {
+export default function Button({children, path, targ = "_self"}) {
 
-	if (path)
-	{
-
-		return (
-			<a className={`button`} href={path}>
-				{children}
-			</a>
-		);
-	}
-	else
-    return (
-
-		<button className={`button`}>
+	return (
+		<a className={`button`} href={path} target={`${targ}`}>
 			{children}
-		</button>
-
-	)
+		</a>
+	);
 }
 
 

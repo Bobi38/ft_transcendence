@@ -61,8 +61,8 @@ export default function Pong3D() {
     // namefct();
 
     return (
-        <div className={`Pong3D-root`}>
+        <main className={`Pong3D-root`}>
             <canvas ref={canvasRef} />
-        </div>
+        </main>
     )
 }

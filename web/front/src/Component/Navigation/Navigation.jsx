@@ -28,7 +28,7 @@ export default function Navigation({ children }) {
 
     return (
         <>
-            <section className={`Navigation-root`}>
+            <main className={`Navigation-root`}>
 
                 <div className={`children-container`}>
                     {children}
@@ -36,7 +36,7 @@ export default function Navigation({ children }) {
                 
                 <NavBar/>
 
-            </section>
+            </main>
         </>
     );
 }

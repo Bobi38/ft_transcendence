@@ -102,7 +102,7 @@ export default function Morpion() {
         const interval = setInterval(() => {
             setWait((prev) => (prev + 1) % 5);
         }, 900);
-
+        // rand "qwerqwerqwerqwerqwer";
         return () => clearInterval(interval);
     }, [msg]);
 

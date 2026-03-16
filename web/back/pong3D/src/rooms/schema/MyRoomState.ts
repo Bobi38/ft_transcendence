@@ -23,6 +23,7 @@ export class Quaternion extends Schema {
 export class Ball extends Schema {
   @type(Vector3) position = new Vector3();
   @type(Vector3) velocity = new Vector3();
+  @type("number") tickStamp = 0;
 }
 
 export class Player extends Schema {
@@ -40,9 +41,6 @@ export class Score extends Schema {
 
 export class MyRoomState extends Schema {
   @type(Ball) ball = new Ball();
-  // @type("boolean") started = false;
-  // @type("boolean") won = false;
-  // @type("boolean") endedDisconnect = false;
   @type("number") roomStatus = RoomStatus.WAITING;
   @type(Score) score = new Score();
   @type({ map: Player }) players = new MapSchema<Player>();

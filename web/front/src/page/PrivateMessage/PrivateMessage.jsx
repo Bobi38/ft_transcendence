@@ -103,16 +103,11 @@ useEffect(() => {
 
                         <div className={`bloc-last-conv-friend border-2`}>
                             {displayedInfoConv && displayedInfoConv.map((msg,index) => (
-                                <div key={index}>
-                                    {index != 0 && <hr/>}
-                                        
-                                    <div className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
-                                        <div className={`header-last-conv border-4`}>
-                                            <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
-                                        </div>
-                                        <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
+                                <div key={index} className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
+                                    <div className={`header-last-conv border-4`}>
+                                        <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
                                     </div>
-
+                                    <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
                                 </div>
                             ))}
                         </div>
@@ -129,7 +124,7 @@ useEffect(() => {
 
                 </Hr>
 
-            </div> {/* PrivateMessage-root */}
+            </div>
         </>
         
     )

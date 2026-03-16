@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 /* back */
 
 /* Css */
-import "./StatsMorpionHistoryCard.scss";
+import "./StatsPong3DHistoryCard.scss";
 
 /* Components */
 import Board from "FRONT/page/all_game/MorpionDisplay/Morpion/Board/Board.jsx";
 
     
-export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
+export default function StatsPong3DHistoryCard({ stats, nameSearched }) {
 
     function format_stats( stats ) {
         console. log("format_stats: ",stats)
@@ -47,14 +47,15 @@ export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
 
     
     return (
-        <article className={`StatsMorpionHistoryCard-root border-base`}>
-            <div className={`${style_card(stats.how_win)}`}></div>
+        <article className={`StatsPong3DHistoryCard-root border-base`}>
 
-            <div className={`board-container ${color_card(stats.how_win, stats?.winnerUser?.name)}`}>
+            <div className={`board-container`}>
                 <Board board={stats.map.split('')} isGame={false}/>
             </div>
 
             <div className={`game-data border-1`}>
+                <div className={`${style_card(stats.how_win)}`}></div>
+                <div className={`${color_card(stats.how_win, stats?.winnerUser?.name)}`}></div>
                 <p className={`time`}>time: {format_time(stats.time_player_1 + stats.time_player_2)}</p>
                 <p className={`stat`}>{`${stats.player1.name} [X] : ${stats.nb_turn_player_1} turn - MOY/${Math.round(stats.time_player_1 / stats.nb_turn_player_1)}ms`}</p>
                 <p className={`stat`}>{`${stats.player2.name} [O] : ${stats.nb_turn_player_2} turn - MOY/${Math.round(stats.time_player_2 / stats.nb_turn_player_2)}ms`}</p>

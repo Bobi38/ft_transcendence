@@ -2,7 +2,7 @@
 
 $bg_color: rgb(196, 230, 236);
 
-#HomeChat-root{
+.HomeChat-root{
 	display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -52,4 +52,11 @@ $bg_color: rgb(196, 230, 236);
         width: 100%;
     }
 
+}
+
+
+@media (width <= 1180px ) {
+    .HomeChat-root{
+        min-height: 450px;
+    }
 }

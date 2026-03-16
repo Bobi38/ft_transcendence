@@ -36,14 +36,32 @@ $padding: 1.7rem;
 
 		.card-container {
 			background: radial-gradient($grey, white 70%);
-
 			width: 65%;
 			padding: $padding * 0.75 $padding * 1.5 $padding * 0.75 0;//just magic
-			//padding-right: $padding * 2;
 			display: grid;
   			grid-template-columns: repeat(3, 1fr);
 			grid-gap: $padding * 1.5;
 			grid-auto-rows: 1fr;
+		}
+	}
+	@media (width <= 1000px) {
+		.menu{
+			overflow: hidden auto;
+			flex-direction: column;
+			.card-container {
+				padding: $padding * 0.75 $padding * 1.5 $padding * 0.75 $padding * 1.5;//just magic
+				grid-gap: $padding * 1;
+				width: 100%;
+			}
+		}
+	}
+	@media (width <= 560px) {
+		.menu{
+			.card-container {
+				padding: $padding * 0.75 0 $padding * 0.75 0;//just magic
+				grid-gap: $padding * 0.5;
+				width: 100%;
+			}
 		}
 	}
 }

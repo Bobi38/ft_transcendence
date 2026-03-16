@@ -40,15 +40,15 @@ creat:
 	chmod +x ./conf/myadmin/conf.sh
 	chmod +x ./conf/db/conf.sh
 
-logs:
-	docker compose logs -f
-
 logs%:
 	docker compose logs -f $(word $*, $(SERVICES))
 
 logs-%:
 	docker compose logs -f $*
-
+	
+logs:
+	docker compose logs -f
+	
 logst:
 	docker compose logs -f -t
 	

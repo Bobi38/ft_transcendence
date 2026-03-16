@@ -19,10 +19,10 @@ const GameMorp = sequelize.define('GameMorp', {
       defaultValue: DataTypes.NOW,
     },
 
-    ending: {
-      type: DataTypes.ENUM('win', 'draw', 'abort'),
-      allowNull: false,
-    },
+    // ending: {
+    //   type: DataTypes.ENUM('win', 'draw', 'abort'),
+    //   allowNull: false,
+    // },
 
     player_1: {
       type: DataTypes.INTEGER,

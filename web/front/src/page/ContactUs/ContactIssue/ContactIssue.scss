@@ -1,11 +1,10 @@
 @use "STYLE/variable" as *;
 
 .ContactIssue-root{
-    border-radius: $border_radius_value;
     background-color:cornflowerblue;
-    margin-bottom: 2rem;
+    border-radius: $border_radius_value;
     padding: 1rem;
-    
+
     &:hover{
         box-shadow: $shadow;
     }
@@ -15,8 +14,7 @@
     justify-content: center;
     align-items: center;
 
-    .ContactIssue-form, 
-    .ContactIssue-form div {
+    .ContactIssue-form, .ContactIssue-form div {
 
         display: flex;
         flex-direction: column;

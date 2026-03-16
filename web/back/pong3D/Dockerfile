@@ -7,6 +7,8 @@ RUN npm install
 
 COPY . .
 
+RUN apt-get update && apt-get install -y iproute2 iputils-ping && rm -rf /var/lib/apt/lists/*
+
 EXPOSE 2567
 CMD ["npm", "start"]
 #use CMD ["node", "build/index.js"] pour prod

@@ -8,13 +8,16 @@
 @mixin fullh { height: $root_height; }
 @mixin fullw { width: $root_width; }
 
-@mixin page {
-    @include full;
-    background-color: rgb(13, 138, 187);
-    border-radius: 0.5rem;
+@mixin colortext($varcolor : rgb(10, 201, 240)){
     p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
-        color: rgb(10, 201, 240);
+        color: $varcolor;
     }
+}
+
+@mixin page($varcolor : rgb(0, 81, 97)){
+    @include full;
+    background-image: linear-gradient(#76ff36, #79ff74, #78c9ff);   
+    @include colortext($varcolor);
 }
 
 
@@ -44,10 +47,9 @@
 }
 
 @mixin cardhistory($how_win: "draw"){
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    opacity: 0.2;
+    // pointer-events: none;
+    border-radius: 30px;
+    opacity: 0.8;
     z-index: 3;
     @if $how_win == "draw" {
         background: blue;
@@ -65,6 +67,7 @@
 
 @mixin scanlines($direction: "horizontal") {
 
+    border-radius: 30px;
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none;
