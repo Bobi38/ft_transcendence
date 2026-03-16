@@ -1,6 +1,8 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
 import StatMorp from './StatMorp.js';
+import StatPong3D from './StatPong3D.js';
+
 
 const User = sequelize.define('User', {
   id: {
@@ -63,6 +65,7 @@ const User = sequelize.define('User', {
 });
 
 User.hasMany(StatMorp, { as: 'statMorp', foreignKey: 'idUser' });
+User.hasMany(StatPong3D, { as: 'statPong3D', foreignKey: 'idUser' });
 
 User.afterCreate(async (user, options) => {
     await StatMorp.create({
@@ -89,6 +92,13 @@ User.afterCreate(async (user, options) => {
         type_O_abort_loser: 0,
         type_O_draw: 0,
     });
+    // await StatPong3D.create({
+    //     idUser: user.id,
+    //     total_game: 0,
+    //     time_played: 0,
+    // });
 });
+
+
 
 export default User;

@@ -30,7 +30,9 @@ creat:
 
 logs:
 	docker compose logs -f
-	
+
+logsparam:
+	docker logs -f -t $(p)
 logst:
 	docker compose logs -f -t
 	

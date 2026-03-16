@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 // import checkCo from "BACK/fct1.js"
 
 /* Css */
-import "./StatsMorpion.scss";
+import "./StatsPong3D.scss";
 
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";   
 import Paging from "COMP/Paging/Paging.jsx"; 
-import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
+import StatsPong3DHistoryCard from "./StatsPong3DHistoryCard/StatsPong3DHistoryCard";
 
-export default function StatsMorpion({ username, setUsername }) {
+export default function StatsPong3D({ username, setUsername }) {
 
     const limit = 5;
     const [totalGames, setTotalGame] = useState(1);
@@ -23,8 +23,8 @@ export default function StatsMorpion({ username, setUsername }) {
     async function fetch_stats() {
 
         const url = username 
-            ? `/api/morpion/get_stat?name=${username}`
-            : `/api/morpion/get_stat`;
+            ? `/api/pong3d/get_stat?name=${username}`
+            : `/api/pong3d/get_stat`;
 
         console.log(`${url}`)
 
@@ -98,8 +98,8 @@ export default function StatsMorpion({ username, setUsername }) {
     async function fetch_history(page_nb) {
 
         const url = username 
-            ? `/api/morpion/get_history/${page_nb}?limit=${limit}&name=${username}`
-            : `/api/morpion/get_history/${page_nb}?limit=${limit}`;
+            ? `/api/pong3d/get_history/${page_nb}?limit=${limit}&name=${username}`
+            : `/api/pong3d/get_history/${page_nb}?limit=${limit}`;
 
         console.log(`${url}`)
 
@@ -129,13 +129,13 @@ export default function StatsMorpion({ username, setUsername }) {
 
     return (
         
-        <section className={`StatsMorpion-root border-base`}>
+        <section className={`StatsPong3D-root border-base`}>
             <div className={`history-container border-1`}>
 
                 <div className={`history-card-container border-2`}>
 
                     {historyUser?.map((element, index) => {
-                        return (<StatsMorpionHistoryCard key={index} stats={element} nameSearched={username}/>)
+                        return (<StatsPong3DHistoryCard key={index} stats={element} nameSearched={username}/>)
                     })}
 
                 </div>
@@ -156,45 +156,6 @@ export default function StatsMorpion({ username, setUsername }) {
 
                 <div className={`game-winrate border-2`}>
 
-                    <div className={`wl-graph border-3`}>
-
-                        <p>Graph</p>
-                        <p>win: {statToDisplay?.all_win_without_abort}</p>
-                        <p>lose: {statToDisplay?.all_lose_without_abort}</p>
-                        <p>win: {statToDisplay?.win_abort}</p>
-                        <p>lose: {statToDisplay?.lose_abort}</p>
-
-                    </div>
-
-                    <div className={`wl-o-x border-3`}>
-
-                        <p>ox-win-loss</p>
-                        <p>winO: {statToDisplay?.type_O_win}</p>
-                        <p>loseO: {statToDisplay?.type_O_lose}</p>
-                        <p>winX: {statToDisplay?.type_X_win}</p>
-                        <p>loseX: {statToDisplay?.type_X_lose}</p>
-
-                    </div>
-
-                    <div className={`wl-horizontal border-3`}>
-
-                        <p>horizontal</p>
-                        <p>win: {statToDisplay?.win_horizontal}</p>
-                        <p>lose: {statToDisplay?.lose_horizontal}</p>
-
-                    </div>
-
-                    <div className={`wl-diagonal border-3`}>
-                        <p>diagonal</p>
-                        <p>win: {statToDisplay?.win_diagonal}</p>
-                        <p>lose: {statToDisplay?.lose_diagonal}</p>
-                    </div>
-
-                    <div className={`wl-vertical border-3`}>
-                        <p>vertical</p>
-                        <p>win: {statToDisplay?.win_vertical}</p>
-                        <p>lose: {statToDisplay?.lose_vertical}</p>
-                    </div>
                 </div>
             </aside>
         </section>

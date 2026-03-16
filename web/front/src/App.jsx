@@ -79,40 +79,39 @@ export default function App() {
     }, []);
     //fait le check co a la place de home et envoyer le result
 
-  return (
-    <>
-      {notif && (
-      <div className="global-notif">
-        {notif}
-      </div>
-      )}
-      {/* <SocketProvider> */}
-        <BrowserRouter>
-          <Routes>
+    return (
+        <>
+          {notif && (
+          <div className="global-notif">
+            {notif}
+          </div>
+          )}
+
+            <BrowserRouter>
+                <Routes>
 
 
-            {/* Home */}
-            <Route path={`/`}                       element={<Home />} />
+                    {/* Home */}
+                    <Route path={`/`}                       element={<Home />} />
 
 
-            {/* Navigation */}
-            <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
-            <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
-            <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
-            <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-            <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>     </Navigation>}/>
-            <Route path={`/Pong3D`}                 element={<Pong3D/>}/>
+                    {/* Navigation */}
+                    <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
+                    <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
+                    <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
+                    <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
+                    <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>     </Navigation>}/>
+                    <Route path={`/Pong3D`}                 element={<Pong3D/>}/>
 
 
-            {/* bad path */}
-            <Route path={`/*`}                      element={<Navigation>   <ErrorRedir/>         </Navigation>} />
+                    {/* bad path */}
+                    <Route path={`/*`}                      element={<Navigation>   <ErrorRedir/>         </Navigation>} />
 
 
-          </Routes>
-        </BrowserRouter>
-      {/* </SocketProvider> */}
-    </>
-  );
+                </Routes>
+            </BrowserRouter>
+        </>
+    );
 }
 
 

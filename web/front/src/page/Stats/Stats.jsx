@@ -8,7 +8,7 @@ import "./Stats.scss";
 
 /* Components */ 
 import StatsMorpion from "./StatsMorpion/StatsMorpion.jsx";
-import StatsWiiGame from "./StatsWiiGame/StatsWiiGame.jsx";
+import StatsPong3D from "./StatsPong3D/StatsPong3D.jsx";
 
 
 export default function Stats() {
@@ -34,7 +34,7 @@ export default function Stats() {
                 <div className={`Stats-selection`}>
 
                     <h3>Stats of {username} {selected}</h3>
-                    <button className={`Stats-btn`} onClick={() => stats_handle("WiiGame")}>Wii Game</button>
+                    <button className={`Stats-btn`} onClick={() => stats_handle("Pong3D")}>Pong3D</button>
                     <button className={`Stats-btn`} onClick={() => stats_handle("Morpion")}>Morpion</button>
 
                 </div>
@@ -45,7 +45,7 @@ export default function Stats() {
 
                     {!selected && <p>Select a game to see the stats</p>}
 
-                    {selected === "WiiGame" && <StatsWiiGame username={username} setUsername={setUsername} />}
+                    {selected === "Pong3D" && <StatsPong3D username={username} setUsername={setUsername} />}
                     {selected === "Morpion" && <StatsMorpion username={username} setUsername={setUsername} />}
                 
                 </div>

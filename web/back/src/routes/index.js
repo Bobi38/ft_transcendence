@@ -31,7 +31,7 @@ import Friend from '../models/friend.js';
 import PswEmail from '../models/PssWrdEmail.js';
 import StatMorp from '../models/StatMorp.js';
 import GameMorp from '../models/GameMorp.js';
-import HistoryMorp from '../models/HistoryMorp.js';
+import StatPong3D from '../models/StatPong3D.js';
 import {decrypt} from './crypt.js'
 
 const router = express.Router();
@@ -129,7 +129,7 @@ export {
     PswEmail,
     StatMorp,
     GameMorp,
-    HistoryMorp,
+    StatPong3D,
 };
 
 

@@ -18,6 +18,12 @@ p, a, input, h1, h2, h3, h4, h5, h6, button, span, li {
 	color: rgb(50, 71, 75);
 }
 
+@media (width <= 750px) {
+    :root{
+        font-size: 10px;
+    }
+}
+
 input {
 	text-transform: none;
 }

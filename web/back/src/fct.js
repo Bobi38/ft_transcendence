@@ -12,7 +12,6 @@ import { seedGameMorp } from './morpion/seedmorp.js';
 import PrivMess from './models/privmess.js';
 import StatMorp from './models/StatMorp.js';
 import GameMorp from './models/GameMorp.js';
-import HistoryMorp from './models/HistoryMorp.js';
 import Friend from './models/friend.js';
 import PongStat from './models/PongStat.js';
 
