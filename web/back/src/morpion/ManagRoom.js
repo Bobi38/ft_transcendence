@@ -27,7 +27,7 @@ class ManagerRoom {
     }
 
     removeRoom(room) {
-        console.log(`cherche ${id}  - quel  room ? ${room}`)
+        // console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return;
 
         room.remove();

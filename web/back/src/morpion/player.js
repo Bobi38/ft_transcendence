@@ -92,7 +92,7 @@ export class Player {
 
     toString(){
         console.log(`definition de player`);
-        return `${this._id} : ${this._nick_name} play ${this._game.getId()}`;
+        return `${this._id} : ${this._nick_name} play ${this._game?.getId()}`;
     }
 
     getId(){

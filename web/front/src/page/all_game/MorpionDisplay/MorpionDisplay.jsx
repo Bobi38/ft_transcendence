@@ -34,11 +34,11 @@ export default function MorpionDisplay() {
          
             console.log("Morpion component handleTest data:", data)
             // if (data.message !== msg){
-                setMsg(data.message);
+                // setMsg(data.message);
             // }
-            if (data.board && data.board !== board){
-                setBoard(data.board);
-            }
+            // if (data.board && data.board !== board){
+            //     setBoard(data.board);
+            // }
         };
 
         SocketM.on("morp",handleTest, "deux");
