@@ -13,7 +13,6 @@ import PrivMess from './models/privmess.js';
 import StatMorp from './models/StatMorp.js';
 import GameMorp from './models/GameMorp.js';
 import Friend from './models/friend.js';
-import PongStat from './models/PongStat.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
