@@ -12,6 +12,7 @@ import { seedGameMorp } from './morpion/seedmorp.js';
 import PrivMess from './models/privmess.js';
 import StatMorp from './models/StatMorp.js';
 import GameMorp from './models/GameMorp.js';
+import GamePong3d from './models/GamePong3d.js';
 import Friend from './models/friend.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -116,6 +117,19 @@ async function CreatPrivMess(){
   await fullmess("message numero ", Conv1);
   await fullmess("mess number ", Conv2);
   await fullmess("El ultimo numero ", Conv3);
+  await GamePong3D.create({
+    id_player_1:0,
+    score_1:0,
+    id_player_2:0,
+    score_2:0,
+    abortwinner:0,
+    abortloser:0,
+    winner:0,
+    loser:0,
+    date_game_start:0,
+    date_game_end:0,
+    time:0,
+});
 }
 
 async function CreatHistory() {

@@ -33,12 +33,12 @@ export default function MorpionDisplay() {
         const handleTest = (data) => {
          
             console.log("Morpion component handleTest data:", data)
-            if (data.message !== msg){
-                setMsg(data.message);
-            }
-            if (data.board && data.board !== board){
-                setBoard(data.board);
-            }
+            // if (data.message !== msg){
+                // setMsg(data.message);
+            // }
+            // if (data.board && data.board !== board){
+            //     setBoard(data.board);
+            // }
         };
 
         SocketM.on("morp",handleTest, "deux");

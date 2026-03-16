@@ -26,13 +26,12 @@ class ManagerRoom {
         return this._rooms.get(id);
     }
 
-    removeRoom(id, mess = null) {
-        const room = this._rooms.get(id);
-        console.log(`cherche ${id}  - quel  room ? ${room}`)
+    removeRoom(room) {
+        // console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return;
 
-        room.remove(mess);
-        this._rooms.delete(id);
+        room.remove();
+        this._rooms.delete(room.getId());
     }
 
     isInRoom(playerId) {
@@ -47,26 +46,28 @@ class ManagerRoom {
         return null;
     }
 
-    findOnePlace(socket, type = null, currentId) {
+    findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
             console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
-                room.addPlayer(socket, currentId);
+                room.addPlayer(player);
+                player.setGame(room);
                 return room;
             }
         }
         
         const newRoom = this.createRoom(type);
-        newRoom.addPlayer(socket, currentId);
+        newRoom.addPlayer(player);
+        player.setGame(newRoom);
         return newRoom;
     }
 
-    removePlayer(playerId, message = "bye bye") {
+    removePlayer(player, message = "bye bye") { //inutile
         for (const room of this._rooms.values()) {
-            if (room.isInRoom(playerId)) {
-                room.removePlayer(playerId, message);
+            if (room.isInRoom(player)) {
+                room.removePlayer(player, message);
                 console.log(`tu vois 0 ? lenght = ${room.length()}`);
                 if (room.length() === 0) {
                     console.log("oui j ai vu 0");
@@ -78,13 +79,12 @@ class ManagerRoom {
         }
     }
 
-    removeAll(mess = null) {
-        this._rooms.forEach(r => {r.remove(mess);})
+    removeAll() {
+        this._rooms.forEach(r => {r.remove();})
         this._rooms.clear();
-        this.lobby.sendAll(mess)
     }
 
-    sendAll(mess) {
+    sendAll(mess) { //inutile
         this._rooms.forEach(
             room => room.sendAll(mess))
     }

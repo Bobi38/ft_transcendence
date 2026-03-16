@@ -58,8 +58,6 @@ const GamePong3d = sequelize.define('GamePong3d', {
         type: DataTypes.INTEGER,
         allowNull: false,
     }
-    
-
 }, {
   tableName: 'GamePong3d',
   timestamps: false,
@@ -71,10 +69,10 @@ GamePong3d.belongsTo(User, { foreignKey: 'id_player_1', as: 'player1' });
 User.hasMany(GamePong3d, { foreignKey: 'id_player_2', as: 'Pong3DPlayer2', onDelete: 'CASCADE' });
 GamePong3d.belongsTo(User, { foreignKey: 'id_player_2', as: 'player2' });
 
-User.hasMany(GamePong3d, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
+User.hasMany(GamePong3d, { foreignKey: 'winner', as: 'Pong3DWon', onDelete: 'CASCADE' });
 GamePong3d.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
 
-User.hasMany(GamePong3d, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
+User.hasMany(GamePong3d, { foreignKey: 'loser', as: 'Pong3DWonLost', onDelete: 'CASCADE' });
 GamePong3d.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
 
 export default GamePong3d;

@@ -115,25 +115,28 @@ export class App {
         this._engine.hideLoadingUI();
 
         this._ui = new GUI(room);
-        this._ui.addWaitingUI();
-
+        console.log(this._room.state.roomStatus);
 
         callback.listen("roomStatus", () => {
             const status = this._room.state.roomStatus;
             switch (status) {
+                case RoomStatus.WAITING:
+                    this._ui.showWaitingUI();
+                    this._player.lockControls();
+                    break;
                 case RoomStatus.STARTED:
                     console.log("Game has started");
                     this._player.unlockControls();
-                    this._ui.disposeWaitingUI();
-                    this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear);
+                    this._ui.showNoUI();
+                    this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear, room.state.score.teamNear, room.state.score.teamFar);
                     break;
                 case RoomStatus.WON:
                     this._player.lockControls();
-                    this._ui.addEndUI(room.state.score.teamNear, room.state.score.teamFar);
+                    this._ui.showEndUI(room.state.score.teamNear, room.state.score.teamFar);
                     break;
                 case RoomStatus.PLAYER_DISCONNECTED:
                     this._player.lockControls();
-                    this._ui.addOtherPlayerDisconnectUI();
+                    this._ui.showOtherPlayerDisconnectUI();
                     break;
             }
         });
@@ -144,6 +147,7 @@ export class App {
             this._snapshots.dispose();
         });
         callback.onChange(room.state.score, () => {
+            console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);
             this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
         });
         this._engine.runRenderLoop(() => {
@@ -190,14 +194,14 @@ export class App {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 this._setupEnemy(sessionId, enemyPos, player.sideNear);
             }
-            this._callback.onChange(player, () => {
-                if (player.connected = false) {
-                    this._ui.addPlayerDisconnectedUI();
-                }
-                if (player.connected = true && this._ui.getIsPlayerDisconnectedUIShown()) {
-                    this._ui.disposePlayerDisconnectedUI();
-                }
-            });
+            // this._callback.onChange(player, () => {
+            //     if (player.connected = false) {
+            //         this._ui.addPlayerDisconnectedUI();
+            //     }
+            //     if (player.connected = true && this._ui.getIsPlayerDisconnectedUIShown()) {
+            //         this._ui.disposePlayerDisconnectedUI();
+            //     }
+            // });
         });
     }
 
@@ -240,6 +244,7 @@ export class App {
                 this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
                 this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
                 this._ball.visualOffset.subtractInPlace(positionError);
+                this._serverPatch = null;
                 return ;
             }
 
@@ -262,7 +267,6 @@ export class App {
             const FIXED_TIME_STEP = 1 / 60;
             for (let i = 0; i < ticksToResimulate; i++) {
                 const simulatingTick = patchTick + i;
-                console.log("resimulating tick:", simulatingTick);
                 const historicalRacket = this._player.racketHistory.get(simulatingTick);
                 if (historicalRacket) {
                     this._player.racketBody.transformNode.position = historicalRacket.position;
@@ -280,19 +284,19 @@ export class App {
             this._ball.visualOffset.addInPlace(teleportDelta);
             this._serverPatch = null;
         });            
-        // this._scene.onBeforeRenderObservable.add(() => {
-        //     if (!this._ball.positionError)
-        //         return ;
-        //     const patchRate = 0.05; //in seconds
-        //     const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
-        //     const fractionElapsed = patchRate / dt;
-        //     const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
-        //     const ballPos = this._ball.getPhysicsBodyPosition();
-        //     this._ball.setPhysicsBodyPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
-        //     this._ball.positionError.scaleInPlace(1 - correctionFactor);
-        //     if (this._ball.positionError.lengthSquared() < Epsilon)
-        //         this._ball.positionError = null;
-        // });
+        this._scene.onBeforeRenderObservable.add(() => {
+            if (!this._ball.positionError)
+                return ;
+            const patchRate = 0.05; //in seconds
+            const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
+            const fractionElapsed = patchRate / dt;
+            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
+            const ballPos = this._ball.getPhysicsBodyPosition();
+            this._ball.setPhysicsBodyPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
+            this._ball.positionError.scaleInPlace(1 - correctionFactor);
+            if (this._ball.positionError.lengthSquared() < Epsilon)
+                this._ball.positionError = null;
+        });
         return shadow;
     }
 

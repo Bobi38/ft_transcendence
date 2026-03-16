@@ -92,11 +92,13 @@ User.afterCreate(async (user, options) => {
         type_O_abort_loser: 0,
         type_O_draw: 0,
     });
-    // await StatPong3D.create({
-    //     idUser: user.id,
-    //     total_game: 0,
-    //     time_played: 0,
-    // });
+    await StatPong3D.create({
+    idUser: user.id,
+    total_game: 0,
+    time_played: 0,
+    win:0,
+    lose:0,
+  });
 });
 
 
