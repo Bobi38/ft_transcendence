@@ -239,7 +239,8 @@ export class MyRoom extends Room {
       player.connected = false;
     }
     this.allowReconnection(client, 5).catch(() => {
-      this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+      if (this.state.roomStatus === RoomStatus.STARTED)
+        this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
     });
   }
 
