@@ -3,8 +3,8 @@ import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
 import {manager_room} from './src/morpion/ManagRoom.js';
-import { playMorpion as morpion } from './src/morpion/PlayMorpion.js';
-import cookie from 'cookie' ;
+import m from './src/morpion/PlayMorpion.js';
+import { Player } from './src/morpion/player.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
@@ -17,6 +17,8 @@ function getCookie(name, cookieHeader) {
   return match ? decodeURIComponent(match.split('=')[1]) : null;
 }
 
+const players = new Map();
+
 export function initWebSMopr(server) {
   const wss = new WebSocketServer({ server, path: '/ws/morp' });
 
@@ -24,22 +26,19 @@ export function initWebSMopr(server) {
   console.log('WebSocket server initialized on path /ws');
   wss.on('connection', async (socket, req) => {
     try{
+      //passe toujours par ici
+      console.log(`pour comprendre what is conenction ?`);
       const iid = idd++;
       socket.id = iid;
-      // console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-      // console.log('URL:', req.url);
-      // console.log('Headers upgrade:', req.headers.upgrade);
-      // console.log('Headers socket:', socket.id);
       console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
       if (!token) {
-      // socket.close();
         return;
       }
 
       let user = jwt.verify(token, secret);
 
-      if (!user) {socket.close(1008, 'Unauthorized'); return; }
+      if (!user) {socket.close(1008, 'Unauthorized'); return;}
       // // console.log("uuu-------", user);
       const useid = user.id;
       socket.userId = useid;
@@ -47,112 +46,120 @@ export function initWebSMopr(server) {
       socket.cleanedUp = false;
       socket.isAlive = true;
 
-      // const exist = chat.finduser(socket.id);
-      // const id = chat.finduserId(socket.userId);
+      let player = players.get(useid);
+      if (!player) {
+        console.log(`new clt`);
+        player = new Player(socket)
+        players.set(useid, player);
+      }
+      else{
+        console.log(`deja connu`);
+        player.addSocket(socket);
+      }
+      socket.player = player;
+      socket.players = players;
 
-      manager_room.isInRoom(useid)
-        ?.getPlayer(useid)
-        ?.refreshSocket(socket);
-
-      // if (exist){
-      //   exist.socket = socket;
-      //   console.log("user already exist exist");
-      // }
-      // else if (id){
-      //   id.socket = socket
-      //   // console.log("user already exist id");
-      // }
-      // else{
-      //   // console.log("new user, add to chat sessions");
-      //   await chat.addtok(useid, socket, useid);
-      //   // socket.send(JSON.stringify({type: 'auth_success',id: useid,mess: 'auth ok'}));
-      // }
       socket.send(JSON.stringify({type: "auth_good"}));
     }catch(err){
       console.log("err debut wsss ", err);
     }
-    // console.log("taille =" , chat.countUser());
+
     socket.on('message', (message) => {
       try{
-        const data = JSON.parse(message.toString());
-        // console.log('=== MESSAGE REÇU ===');
-        // console.log('Type:', data.type);
-        // console.log('Contenu:', data.mess);
-        // console.log('===================');
-        // if (data.type === 'auth'){
-        //   iid = socket.userId;
-        //   const use = chat.finduser(iid);
-        //   if (use){
-        //     use.socket = socket;
-        //     console.log("user already exist");
-        //     return ;
-        //   }
-        //   chat.addtok(iid, socket);
-        //   socket.send(JSON.stringify({type: 'auth_success', id: iid, mess: 'auth goog'}));
-        //   return ;
-        // }
-        if (data.type === "logout")
-          socket.GoLogout = true;
+        console.log(`"socket on dans morpion" ${message}`);
 
-        if (data.type === 'game') {
-          console.log(`game : recu ${data.message}`);
-          morpion(data.message, socket, socket.userId);
-          return ;
-        }
+        const data = JSON.parse(message);
+        console.log(`${data.type}`);
+        switch (data.type) {
+          case "game": //move
+            m.morpion(data.message, socket, socket.userId);
+            break ;
 
-        if (data.type === 'morpion'){
-          console.log("probleme num1 si tu me vois, personne ne doit connaitre ce type");
-          let message = "";
-          console.log("je suis dans un type waitRoom");
-          console.log("user id dans wait room " + socket.userId);
-          let room = manager_room.isInRoom(socket.userId);
-          if (!room)
-            room = manager_room.findOnePlace(socket, socket.userId);
-          if (room.isFull()){
-            message = "yes";
-          }
-          else
-            message = "wait";
-          console.log("popopopo");
-          console.log("room =", room);
-          console.log("playersid size =", room.playersid.size);
-          console.log("playersid =", Array.from(room.playersid.keys()));
-          for (const player of room.playersid.values()){
-            if (player.socket.readyState === ws.OPEN){
-              console.log("ca va SEND from server waitRoom " + message + " to " + player.socket.userId);
-              player.socket.send(JSON.stringify({type: 'waitRoom', mess: message}));
-            }
+          case "move":
+            m.move(socket.player, data.message);
+            break ;
+
+          case "play":
+            m.searchGame(socket.player);
+            break ;
+
+          case "leave":
+            m.leave(socket.player);
+            break ;
+
+          case "second":
+            m.playSecond(socket.player); //ok a tster
+            break ;
+
+          case "reboot":
+            console.log(m.msgs.reboot);
+            socket.players.forEach(p => {p.send(m.msgs.reboot);});
+            m.reboot();
+            socket.players.clear();
+            break ;
+
+          default:
+            socket.player.send();
+            console.log(`defaut : ca c est etrange gere ca :${data.type}`);
           }
         }
-        if (data.type === "in-game"){
-          console.log("probleme num2 si tu me vois, personne ne doit connaitre ce type");
-          if (data.act === "role"){
-            //objectif est de repartir les roles pour savoir qui commence et qui aura les O ou les X
-            //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois
-          }
-          if (data.act === "move"){
-            //mettre a jour les move et les envoyer aux joueurs
-            //enregistre la partie/la map ici dans le back pour eviter les triches
-          }
-          if (data.act === "win"){
-            //mettre a jour la db gagant/nombre de parties jouee
-            //clean room et managerRoom
-          }
+        catch (err){
+          console.log("err morp  ws= " + err);
         }
-        if (data.type === "pong")
-          socket.isAlive = true
-
-      }catch (err){
-        console.log("err serv ws= " + err);
-      }
       });
 
-    // socket.on('close', () => {
-    //   console.log('Client déconnecté');
-    //   const index = clients.indexOf(socket);
-    //   if (index !== -1) clients.splice(index, 1);
-    //     console.log('Nombre de clients connectés :', clients.length);
-    // });
+
+      //   if (data.type === "logout")
+      //     socket.GoLogout = true;
+
+      //   if (data.type === 'game') {
+      //     console.log(`game : recu ${data.message}`);
+      //     morpion(data.message, socket, socket.userId);
+      //     return ;
+      //   }
+
+      //   if (data.type === 'morpion'){
+      //     console.log("probleme num1 si tu me vois, personne ne doit connaitre ce type");
+      //     let message = "";
+      //     console.log("je suis dans un type waitRoom");
+      //     console.log("user id dans wait room " + socket.userId);
+      //     let room = manager_room.isInRoom(socket.userId);
+      //     if (!room)
+      //       room = manager_room.findOnePlace(socket, socket.userId);
+      //     if (room.isFull()){
+      //       message = "yes";
+      //     }
+      //     else
+      //       message = "wait";
+      //     console.log("popopopo");
+      //     console.log("room =", room);
+      //     console.log("playersid size =", room.playersid.size);
+      //     console.log("playersid =", Array.from(room.playersid.keys()));
+      //     for (const player of room.playersid.values()){
+      //       if (player.socket.readyState === ws.OPEN){
+      //         console.log("ca va SEND from server waitRoom " + message + " to " + player.socket.userId);
+      //         player.socket.send(JSON.stringify({type: 'waitRoom', mess: message}));
+      //       }
+      //     }
+      //   }
+      //   if (data.type === "in-game"){
+      //     console.log("probleme num2 si tu me vois, personne ne doit connaitre ce type");
+      //     if (data.act === "role"){
+      //       //objectif est de repartir les roles pour savoir qui commence et qui aura les O ou les X
+      //       //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois
+      //     }
+      //     if (data.act === "move"){
+      //       //mettre a jour les move et les envoyer aux joueurs
+      //       //enregistre la partie/la map ici dans le back pour eviter les triches
+      //     }
+      //     if (data.act === "win"){
+      //       //mettre a jour la db gagant/nombre de parties jouee
+      //       //clean room et managerRoom
+      //     }
+      //   }
+      //   if (data.type === "pong")
+      //     socket.isAlive = true
+
 
     socket.on('pong', () =>{
       console.log("i m in PONG")
@@ -163,7 +170,7 @@ export function initWebSMopr(server) {
       console.warn('WebSocket Error:', err.message);
     });
     socket.on('close', () => {
-      // console.log("user deco ");
+      console.log("user deco ");
       // try{
       //   if (socket.cleanedUp) return; // déjà traité
       //   socket.cleanedUp = true;
