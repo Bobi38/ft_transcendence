@@ -1,3 +1,4 @@
+import { log } from 'console';
 import { manager_room } from './ManagRoom.js';
 
 const msgs = {
@@ -15,27 +16,10 @@ const msgs = {
     first: "first player seleted",
     reboot: "server rebooted", // tres utile !!
     badMove: "Move alert",
-
-
 }
 
-
-    // if (game.play(id, message)) {
-    //     if(game.checkVictory()){
-    //         console.log(`fin de la partie de ${game}`);
-    //         manager_room.removeRoom(game.getId());
-    //         return ;
-    //     }
-    //     game.switchTurn();
-    //     console.log(` joueur ${id} a jouer sur la case ${message}`)
-    //     game.notifyTurn(
-    //         { message: "À toi de jouer", turn: true },
-    //         { message: "Tour adverse", turn: false });
-    //     game.startTurnTimer();
-    //     console.log(`le changement`);
-    // }
 function move(player, move){
-    colog(`new move ${move}`);
+    console.log(`new move ${move}`);
 
     const game = player.getGame();
 
@@ -43,28 +27,30 @@ function move(player, move){
         //voir pour indique la 
         return ;
     }
-
+    console.log("mess1");
     if (!game.isTurnPlayer(player)){
         player.send({message: msgs.wait, turn: false});
         return ;
     }
-
-    if (game.play(player, message)) {
+    console.log("mess2");
+    if (game.play(player, move)) {
+        console.log("mess3");
         if(game.checkVictory()){
             console.log(`fin de la partie de ${game}`);
             manager_room.removeRoom(game.getId());
             return ;
         }
         game.switchTurn();
-        console.log(` joueur ${id} a jouer sur la case ${message}`)
+        console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
+        console.log("mess4");
         game.notifyTurn(
             {message: msgs.my_turn, turn: true},
             {message: msgs.other_turn, turn: false}
         )
+        console.log("mess5");
         game.startTurnTimer();
-        console.log(`le changement`);
+        console.log("mess6");
     }
-    
 }
 
 function searchGame(player){

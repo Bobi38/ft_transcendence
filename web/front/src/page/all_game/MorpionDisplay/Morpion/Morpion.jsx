@@ -116,7 +116,7 @@ export default function Morpion() {
                 <div className="status">
                     {msg === "search"
                         ? <>
-                            recherche en cours<span className="wait">{".".repeat(wait)}</span>
+                            searching player<span className="wait">{".".repeat(wait)}</span>
                         </>
                         : msg
                     }

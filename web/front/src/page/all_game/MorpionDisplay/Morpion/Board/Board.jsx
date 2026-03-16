@@ -12,7 +12,7 @@ export default function Board({ board , isGame }) {
 
     function handleClick(i) {
         SocketM.sendd(SocketM.socket.morp, {
-            type: "game",
+            type: "move",
             message: i,
         })
     }

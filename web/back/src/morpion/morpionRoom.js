@@ -107,18 +107,16 @@ class MorpionRoom extends Room {
     play(currentPlayer, index) {
         console.log(String(currentPlayer));
         if (this._turn !== currentPlayer) {
-            this.getPlayer(currentPlayer).send("Ce n'est pas ton tour", this._board);
+            console.log("moi pas voir de probleme")
             return false;
         }
-
-        const player = this.getCurrentPlayer();
 
         if (!this.isValidPlay(index)) {
-            player.send("Coup invalide", this._board);
+            currentPlayer.send("Coup invalide", this._board);
             return false;
         }
 
-        player.clearTurnTimer();
+        currentPlayer.clearTurnTimer();
 
         const symbol = (this.countMoves() % 2 === 0)? "X" : "O";
         this._board[index] = symbol;
@@ -127,7 +125,7 @@ class MorpionRoom extends Room {
 
         if (this._chrono !== null) {
             const timeTour = now - this._chrono;
-            player.setPlayTime(timeTour);
+            currentPlayer.setPlayTime(timeTour);
         }
 
         this._chrono = now;
@@ -182,15 +180,15 @@ class MorpionRoom extends Room {
     }
 
     startTurnTimer() {
-        const currentPlayer = this.getCurrentPlayer();
+        const p = this._turn;
         const action = () => {
-            currentPlayer.send({
+            p.send({
             message: "Dépêche-toi de jouer !",
             board: this._board
             })
         };
 
-        currentPlayer.startTurnTimer(action, 3000);
+        p.startTurnTimer(action, 3000);
     }
 
     serializeBoard() {
