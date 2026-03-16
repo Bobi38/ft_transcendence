@@ -112,7 +112,7 @@ class MorpionRoom extends Room {
         }
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send("Coup invalide", this._board);
+            currentPlayer.send("seriously !!", this._board);
             return false;
         }
 
@@ -231,7 +231,7 @@ class MorpionRoom extends Room {
             nb_turn_player_2,
 
             map: this.serializeBoard(),
-            winner,  // winner /  winner abort
+            winner: winner.getId(),
             loser
         });
 

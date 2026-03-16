@@ -161,7 +161,7 @@ export class Player {
 
     async majdb(how_win, type_player , type_winner = null) {
         
-        const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal"];
+        const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal_lr", "diagodiagonal_rl"];
         const type_player_check = ["X", "O"];
 
         if (!how_win_check.includes(how_win) || !type_player_check.includes(type_player)) {
