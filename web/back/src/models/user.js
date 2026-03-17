@@ -52,7 +52,7 @@ const User = sequelize.define('User', {
     allowNull: true,
   },
   Hostlastco: {
-    type: DataTypes.TIME,
+    type: DataTypes.STRING(256),
     allowNull: true,
     defaultValue: null,
   },

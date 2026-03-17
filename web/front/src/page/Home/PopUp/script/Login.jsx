@@ -23,9 +23,10 @@ export default function Login({setShowLog}) {
         const data = {
             email: form.email.value.trim(),
             password: form.password.value.trim(),
-            host: window.location.hostname
+            host: window.location.host
         };
 
+        alert(data.host);
         if (!data.email || !data.password) {
             showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
             return;
@@ -51,21 +52,14 @@ export default function Login({setShowLog}) {
         sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('token', repjson.token);
         sessionStorage.setItem('username', repjson.username);
-<<<<<<< HEAD
-        // if (!SocketM.getState("friend") || SocketM.getState("friend") === "closed")
-        SocketM.connectsocket("friend");
-        SocketM.sendd('friend', {type: 'co'});
-        setShowLog(AUTH.MAILA2F);
-        
-=======
         if (repjson.MPFA) {
             setShowLog(AUTH.MAILA2F);
         }
         if (!repjson.MPFA) {
             setShowLog(AUTH.CONNECTED);
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
->>>>>>> 96989f3a25765db59ec34d8742cb80a7c2254ce1
     };
+    }
 
 
 
@@ -78,7 +72,6 @@ export default function Login({setShowLog}) {
     const handle_git = () => {
         window.location.href = "/api/oauth2/github";
     };
-
     return (
         <>
             <div className={`script-in-root`}>
