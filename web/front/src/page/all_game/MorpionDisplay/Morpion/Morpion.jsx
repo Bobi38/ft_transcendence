@@ -9,6 +9,7 @@ import './Morpion.scss';
 
 /* Components */
 import Board from "./Board/Board.jsx";
+import { ColorGradient } from "@babylonjs/core";
 
 function RebootTruc() {
 
@@ -50,7 +51,7 @@ function SelectSecondPlayer(){
 }
 
 function NouvellePartie({ setBoard }){
-
+    console.log("stpppppppppppppppp");
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));

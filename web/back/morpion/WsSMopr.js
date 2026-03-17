@@ -1,8 +1,8 @@
 import ws from 'ws';
+import {manager_room} from './src/morpion/ManagRoom.js';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
-import {manager_room} from './src/morpion/ManagRoom.js';
 import m from './src/morpion/PlayMorpion.js';
 import { Player } from './src/morpion/player.js';
 
@@ -27,7 +27,7 @@ export function initWebSMopr(server) {
   wss.on('connection', async (socket, req) => {
     try{
       //passe toujours par ici
-      console.log(`pour comprendre what is conenction ?`);
+      console.log(`on commence ici`);
       const iid = idd++;
       socket.id = iid;
       console.log(req.headers.cookie)
@@ -35,9 +35,9 @@ export function initWebSMopr(server) {
       if (!token) {
         return;
       }
-
+      
       let user = jwt.verify(token, secret);
-
+      
       if (!user) {socket.close(1008, 'Unauthorized'); return;}
       // // console.log("uuu-------", user);
       const useid = user.id;
@@ -45,7 +45,7 @@ export function initWebSMopr(server) {
       socket.GoLogout = false;
       socket.cleanedUp = false;
       socket.isAlive = true;
-
+      
       let player = players.get(useid);
       if (!player) {
         console.log(`new clt`);

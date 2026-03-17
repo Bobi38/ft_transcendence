@@ -1,4 +1,4 @@
-
+import User from '../models/user.js'; 
 import StatMorp from "../models/StatMorp.js";
 
 export class Player {
@@ -185,18 +185,20 @@ export class Player {
          });
     }
 
-    getName(){
-        return this._nick_name;
-    }
+    // getName(){
+    //     return this._nick_name;
+    // }
 
-    oldgetName(){
+    async getName(){
         const time = Date.now();
 
         if (time - 20000 < this._time_refresh_name)
             return this._nick_name;
 
-        console.log(`faire le fecth ici`);
-        return this._nick_name;
+        const ll = await User.findByPk(useid);
+        this._time_refresh_name = time;
+
+        return this._nick_name = ll.name;
     }
 
     async majdb(how_win, type_player , type_winner = null) {
