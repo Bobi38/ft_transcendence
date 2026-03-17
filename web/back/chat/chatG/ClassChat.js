@@ -1,4 +1,4 @@
-import User from './src/akmodels/user.js';
+import User from './src/models/user.js';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 

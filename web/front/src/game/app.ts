@@ -140,13 +140,13 @@ export class App {
                     break;
             }
         });
-        this._room.onMessage('Goal!', () => {
+        this._room.onMessage('Goal!', (tick: number) => {
             this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
-            this._ignoreServerUntil = this._clock.tick;
+            this._ignoreServerUntil = tick;
             this._snapshots.dispose();
-            console.log("A point has been won at tick:", this._clock.tick);
+            console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
         });
         callback.onChange(room.state.score, () => {
             console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);

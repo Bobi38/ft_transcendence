@@ -44,7 +44,7 @@ export class MyRoom extends Room {
       console.log(client.sessionId, "sent a message:", message);
     },
     "synchronizeTick" : (client: Client, data: any) => {
-      console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+      //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
       client.send("serverTick", {serverTick: this._tick, t0: data});
     },
     "racketImpact": (client: Client, data: any) => {
@@ -131,7 +131,7 @@ export class MyRoom extends Room {
         this.state.ball.velocity.x = 0;
         this.state.ball.velocity.y = 0;
         this.state.ball.velocity.z = 0;
-        this.broadcast('Goal!', { afterNextPatch: true });
+        this.broadcast('Goal!', this._tick,{ afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
       }
@@ -154,7 +154,7 @@ export class MyRoom extends Room {
   onBeforePatch(state: MyRoomState) {
     const ballPos = this._posToSend;
     const ballVel = this._velToSend;
-    console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
+    //console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;

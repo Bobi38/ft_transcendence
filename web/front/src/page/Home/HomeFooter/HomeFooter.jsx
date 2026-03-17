@@ -21,10 +21,10 @@ export default function HomeFooter({setShowLog}) {
 
     function logout() {
         console.log("logout(1) called")
-        SocketM.disconnect("friend");
+        SocketM.disconnect("chat");
         SocketM.disconnect("morp");
         SocketM.disconnect("priv");
-        SocketM.disconnect("chat");
+        SocketM.disconnect("friend");
         fetch('/api/auth/logout', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
