@@ -20,8 +20,7 @@ function RebootTruc() {
                 message: "reboot"
             })
         }}>
-            Reboot (dev - ne pas utiliser - a supprimer en prod)
-        </button>
+            Reboot</button>
     );
 }
 
@@ -108,7 +107,7 @@ export default function Morpion() {
 
             <div className={`info`}>
 
-                <RebootTruc/>
+                {/* <RebootTruc/> */}
 
                 <GoOut/>
 

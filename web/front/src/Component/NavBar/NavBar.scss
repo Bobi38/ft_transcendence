@@ -1,6 +1,9 @@
 @use "STYLE/variable" as *;
 
 .NavBar-root {
+
+    min-height: 45px;
+    // min-height: 25px;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
