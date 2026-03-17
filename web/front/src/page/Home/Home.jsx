@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /* back */
-import checkCo from "../../../tool/fct1.js"
+import checkCo from "TOOL/fonction_usefull.js"
 
 /* Css */
 import "./Home.scss";

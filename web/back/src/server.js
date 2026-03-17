@@ -7,7 +7,6 @@
 // import { fileURLToPath } from 'url';
 
 // import router, { checktok } from './site/go/router.js';
-// import { majDb } from './site/fct.js';
 // import { initWebSocket } from './site/go/wsserver.js';
 
 // // Models
@@ -111,9 +110,9 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 // import { GameRoom } from './colyseus/GameRoom.js';
 // import router from './routes/index.js';
 // import router from './router.js';
-import { majDb } from './fct.js';
+import { majDb } from './CreatDB.js';
 import { initWebSocket } from './wsserver.js';
-import {addDb} from './fct.js';
+import { addDb } from './CreatDB.js';
 
 // Models
 import './models/index.js';

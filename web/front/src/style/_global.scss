@@ -34,14 +34,14 @@ p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label {
 // }
 
 // a {
-// 	color: inherit;
-//     text-decoration: none;
+// 		color: inherit;
+//    	text-decoration: none;
 // 	@include mix.cursor("pointer");
 // }
 
-// button {
-// 	@include mix.cursor("pointer");
-// }
+button {
+	// @include mix.cursor("pointer");
+}
 
 .scanlines {
 	@include mix.scanlines();

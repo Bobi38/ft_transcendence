@@ -10,10 +10,6 @@
     align-items: center;
     align-content: center;
     flex-direction: column;
-    button{
-        @include mix.icone;
-        box-shadow: 0px 0px 7px 5px #8da8c6;
-    }
     .info{
         display: flex;
         justify-content: space-between;
@@ -22,14 +18,13 @@
         flex-direction: column;
         gap: 10px;
         .status {
-          margin-bottom: 10px;
-          font-weight: bold;
+            font-weight: bold;
+            .wait {
+                display: inline-block;
+                width: 4ch;
+                text-align: left;
+            }  
         }
     }
 
-    .wait {
-        display: inline-block;
-        width: 4ch;
-        text-align: left;
-    }  
 }

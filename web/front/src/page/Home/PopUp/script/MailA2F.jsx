@@ -1,7 +1,7 @@
 /* extern */
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
-import SocketM from "../../../../../tool/SocketManag";
+import SocketM from "TOOL/SocketManag";
 
 /* back */
 

@@ -2,16 +2,16 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import  SocketM  from "/app/tool/SocketManag.js";
+import  SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
 import "./MorpionDisplay.scss";
 
 /* Components */
 import Morpion from "./Morpion/Morpion";
-
 import Board from "./Morpion/Board/Board.jsx";
-function SpecButton({ log1, log2, id }){
+
+function SpecButton({ player_1, player_2, id }){
 
     return (
         <button onClick={() => {
@@ -19,29 +19,21 @@ function SpecButton({ log1, log2, id }){
                 type: "spec", id,
             })
         }}>
-                <p>log1: x/ log2/O</p>
+            <p>{player_1}: X vs {player_2}: O</p>
         </button>
     ); 
     
 }
 
 export default function MorpionDisplay() {
+
       useEffect(() => {
-
         console.log("Morpion component called");
-
-        const handleTest = (data) => {
-         
-            console.log("Morpion component handleTest data:", data)
-            // if (data.message !== msg){
-                // setMsg(data.message);
-            // }
-            // if (data.board && data.board !== board){
-            //     setBoard(data.board);
-            // }
+        const handleSpec = (data) => {
+            console.log("Morpion component handleSpec data:", data)
         };
 
-        SocketM.on("morp",handleTest, "deux");
+        SocketM.on("morp", handleSpec, "deux");
 
         return () => {
             SocketM.off("morp", "deux");
@@ -49,14 +41,41 @@ export default function MorpionDisplay() {
 
     }, []);
 
+    let data = {
+        player_1:1,
+        player_2:2,
+        map:"---x-x-xx",
+        game_id:1,
+    }
+    // data = null;
+
     return (
     
         <div className={`MorpionDisplay-root border-base`}>
             
-            <div className={`MorpionDisplay-last-game-played border-1`}>
-                <Board board={Array("-","-","-","x","-","x","-","x","x")} isGame={true}/>
-                display les game en cours ou / deja fini 
-                <SpecButton log1={"oui"} log2={"non"} id={1} />
+            <div className={`MorpionDisplay-actual-game border-1`}>
+                {/*  spectateur  */}
+
+                {data &&
+                <div className={`MorpionDisplay-spec-game`}> 
+                    <Board board={data.map.split('')} isGame={false}/>
+                </div>}
+
+                <div className={`MorpionDisplay-spec-info`} style={{height: data ? "65%" : "100%"}}> 
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                </div>
+
             </div>
 
             <div className={`MorpionDisplay-game border-1`}>

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 /* back */
-import  SocketM  from "/app/tool/SocketManag.js";
+import  SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
 import './Morpion.scss';
@@ -114,10 +114,8 @@ export default function Morpion() {
                 <SelectSecondPlayer/>
 
                 <div className="status">
-                    {msg === "search"
-                        ? <>
-                            searching player<span className="wait">{".".repeat(wait)}</span>
-                        </>
+                    {msg === "search" ?
+                        <>searching player<span className={`wait`}>{".".repeat(wait)}</span></>
                         : msg
                     }
                 </div>
@@ -136,7 +134,7 @@ export default function Morpion() {
 // import { useState, useEffect } from "react";
 
 // /* back */
-// import  SocketM  from "/app/tool/SocketManag.js";
+// import  SocketM  from "TOOL/SocketManag.js";
 
 // /* Css */
 // import './Morpion.scss';
