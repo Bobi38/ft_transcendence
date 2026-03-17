@@ -44,7 +44,7 @@ export class App {
     private _serverPatch : BallSnapshot = null;
     private _isNear : boolean = true;
 
-    private _velCorrectionIgnored : boolean = false;
+    private _ignoredVelCorrection : boolean = false;
     private _ignoreServerUntil : number = 0;
 
 
@@ -150,6 +150,13 @@ export class App {
             this._snapshots.dispose();
             console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
         });
+        this._room.onMessage("racketImpact", (data: any) => {
+            const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
+            const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
+            this._ball.setVelocity(ballVel);
+            this._ball.setPhysicsBodyPosition(ballPos);
+            console.log("Other player hit the ball");
+        });
         callback.onChange(room.state.score, () => {
             console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);
             this._ui.updateScoreUI(this._isNear, room.state.score.teamNear, room.state.score.teamFar);
@@ -243,12 +250,14 @@ export class App {
             const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
             console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
                 "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
-            //console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
-            console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
-            if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01) {
+            console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
+            // console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
+            if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01 && !this._ignoredVelCorrection) {
                 console.log("Velocity error likely incorrect. Ignoring");
                 velocityError.set(0,0,0);
-            }
+                this._ignoredVelCorrection = true;
+            } else if (this._ignoredVelCorrection) this._ignoredVelCorrection = false;
+
             if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
                 this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
                 this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
@@ -268,6 +277,9 @@ export class App {
                 this._ball.setVelocity(this._serverPatch.velocity);
                 //this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
                 this._serverPatch = null;
+                this._ball._body.disablePreStep = false; 
+                this._ball._mesh.computeWorldMatrix(true);
+                console.log("pos corrected:", this._ball.getPhysicsBodyPosition());
                 return;
             }
             const preRollbackPos = this._ball.getPhysicsBodyPosition().clone();

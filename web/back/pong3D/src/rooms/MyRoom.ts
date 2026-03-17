@@ -53,6 +53,7 @@ export class MyRoom extends Room {
       this._ball.setLinearVelocity(ballVel);
       this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
+      this.broadcast("racketImpact", data, { except: client });
     },
     "bodyMoved": (client: Client, data: any) => {
       const playerPos = this.state.players.get(client.sessionId).position;
