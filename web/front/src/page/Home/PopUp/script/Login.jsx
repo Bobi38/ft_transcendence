@@ -21,7 +21,8 @@ export default function Login({setShowLog}) {
         const form = event.target;
         const data = {
             email: form.email.value.trim(),
-            password: form.password.value.trim()
+            password: form.password.value.trim(),
+            host: window.location.hostname
         };
 
         if (!data.email || !data.password) {
@@ -49,7 +50,11 @@ export default function Login({setShowLog}) {
         sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('token', repjson.token);
         sessionStorage.setItem('username', repjson.username);
-        setShowLog(AUTH.MAILA2F);
+        if (repjson.MPFA) {
+            setShowLog(AUTH.MAILA2F);
+        }
+        if (!repjson.MPFA) {
+            setShowLog(AUTH.CONNECTED);
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
     };
 
