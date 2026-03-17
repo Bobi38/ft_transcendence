@@ -162,11 +162,11 @@ export class MyRoom extends Room {
 
     const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
     // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
-    //if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
+    if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
       state.ball.velocity.x = ballVel.x;
       state.ball.velocity.y = ballVel.y;
       state.ball.velocity.z = ballVel.z;
-    //}
+    }
 
     state.ball.tickStamp = this._tick;
   }

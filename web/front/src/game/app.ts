@@ -235,9 +235,15 @@ export class App {
             const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
             if (!pastSnapshot) return ;
             const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
-            const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
+            let velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
             console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
                 "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
+            //console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
+            console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
+            if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01) {
+                console.log("Velocity error likely incorrect. Ignoring");
+                velocityError = Vector3.Zero();
+            }
             if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
                 this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
                 this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
@@ -272,16 +278,17 @@ export class App {
                     this._player.racketBody.transformNode.position = historicalRacket.position;
                     this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
                 }
-                const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-                if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
-                    this._ball.setVelocity(impactSnapshot.snapshot.velocity);
-                }
+                // const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
+                // if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+                //     this._ball.setVelocity(impactSnapshot.snapshot.velocity);
+                // }
                 this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
                 this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             }
             const postRollbackPos = this._ball.getPhysicsBodyPosition();
             const teleportDelta = preRollbackPos.subtract(postRollbackPos);
             this._ball.visualOffset.addInPlace(teleportDelta);
+        
             this._serverPatch = null;
         });            
         this._scene.onBeforeRenderObservable.add(() => {

@@ -54,7 +54,7 @@ export class Player extends TransformNode {
                 return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
-            const hitForward = this.racket.forward.scale(1.9);
+            const hitForward = this.racket.forward.scale(100);
             const mouseDirAvg = (this._input.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
             mouseDirAvg.scaleInPlace(1/this._input.mouseBufferSize).normalize();
             const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, 0).add(hitForward).normalize();
