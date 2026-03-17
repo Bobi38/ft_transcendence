@@ -7,7 +7,7 @@ import path from "path";
 import { createBall, createWalls } from "../environment.js";
 import User from "../models/user.js";
 import StatPong3D from "../models/StatPong3D.js"
-import GamePong3D from "../models/GamePong3d.js"
+import GamePong3D from "../models/GamePong3D.js"
 import jwt from "jsonwebtoken"
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();

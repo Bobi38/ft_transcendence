@@ -16,7 +16,6 @@ export { default as session } from 'express-session';
 export { default as QRCode } from 'qrcode';
 export { authenticator } from 'otplib';
 export { error, time } from 'console';
-// export { majDb } from '../fct.js'
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
