@@ -144,7 +144,9 @@ export class App {
             this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
+            this._ignoreServerUntil = this._clock.tick;
             this._snapshots.dispose();
+            console.log("A point has been won at tick:", this._clock.tick);
         });
         callback.onChange(room.state.score, () => {
             console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);
@@ -232,12 +234,19 @@ export class App {
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return ;
             //console.log(this._serverPatch);
+            if (this._serverPatch.tick - this._clock.tickOffset < this._ignoreServerUntil) return;
             const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
             if (!pastSnapshot) return ;
             const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
-            const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
+            let velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
             console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
                 "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
+            //console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
+            console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
+            if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01) {
+                console.log("Velocity error likely incorrect. Ignoring");
+                velocityError = Vector3.Zero();
+            }
             if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
                 this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
                 this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
@@ -272,16 +281,17 @@ export class App {
                     this._player.racketBody.transformNode.position = historicalRacket.position;
                     this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
                 }
-                const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-                if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
-                    this._ball.setVelocity(impactSnapshot.snapshot.velocity);
-                }
+                // const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
+                // if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+                //     this._ball.setVelocity(impactSnapshot.snapshot.velocity);
+                // }
                 this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
                 this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             }
             const postRollbackPos = this._ball.getPhysicsBodyPosition();
             const teleportDelta = preRollbackPos.subtract(postRollbackPos);
             this._ball.visualOffset.addInPlace(teleportDelta);
+        
             this._serverPatch = null;
         });            
         this._scene.onBeforeRenderObservable.add(() => {
@@ -303,7 +313,7 @@ export class App {
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
         const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(this, sessionId, playerAssets, this._scene, this._shadow, this._room);
+        this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
         this._scene.onBeforePhysicsObservable.add(() => {

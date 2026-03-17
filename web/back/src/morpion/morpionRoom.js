@@ -130,6 +130,12 @@ class MorpionRoom extends Room {
 
         this._chrono = now;
 
+        for (const obs of this._obs){
+            obs.send({
+                players: this._players_names,
+                other_board: this._board})
+        }
+        
         return true;
     }
 
@@ -219,7 +225,7 @@ class MorpionRoom extends Room {
         await GameMorp.create({
             how_win: this._how_win,
             // date_game: this._date_Game, ?? undefine
-            ending: this._ending,
+            // ending: this._ending, //inutile
 
             player_1, 
             player_2,

@@ -7,11 +7,13 @@ export class Player {
         this._nb_turn = 0;
         this._play_time = 0;
         this._game = null;
+        this._obs_game = null;
         this._sockets = new Map([[socket.id, socket]]);
         this._id = socket.userId;
         this._prev_data = {};
         this._chrono = null;
         this.first_alert = 0;
+        this._time_refresh_name = 0;
     }
 
     // isAlive() { // non utiliser
@@ -38,6 +40,9 @@ export class Player {
 
     setGame(game){
         if (!game?.getId()) return;
+
+        this._nick_name = this._id === 5 ? "gros batard" : "toto";// attention dev devops devel
+
         console.log(`player register in ${game.getId()}`);
         this.clearTurnTimer();
         this._game = game;
@@ -45,6 +50,26 @@ export class Player {
         this._nb_turn = 0;
         this._play_time = 0;
         this.first_alert = 0;
+    }
+
+    setObs(game){
+        if (this._obs_game === game) return;
+        
+        if (this._obs_game)
+            this._obs_game.removeObs(this);
+
+        this._obs_game = game;
+    }
+
+    removeObs(obs){
+        this._players.delete(obs);
+
+        obs.setObs(null)
+        if (this._type === "Morpion")
+            obs.send({
+                players: "",
+                other_board: Array(9).fill(" ")
+            })
     }
 
     getGame(){
@@ -158,11 +183,27 @@ export class Player {
          });
     }
 
+    getName(){
+        return this._nick_name;
+    }
+
+    oldgetName(){
+        const time = Date.now();
+
+        if (time - 20000 < this._time_refresh_name)
+            return this._nick_name;
+
+        console.log(`faire le fecth ici`);
+        return this._nick_name;
+    }
 
     async majdb(how_win, type_player , type_winner = null) {
         
-        const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal_lr", "diagodiagonal_rl"];
+        const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal"];
         const type_player_check = ["X", "O"];
+
+        if (how_win === "diagonal_rl" || how_win === "diagonal_lr")
+            how_win = "diagonal"
 
         if (!how_win_check.includes(how_win) || !type_player_check.includes(type_player)) {
             throw new Error("Invalid params");

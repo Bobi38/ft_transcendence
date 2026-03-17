@@ -4,8 +4,6 @@ import fs from 'fs';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
-
-
 class Chat {
   constructor() {
     this.sessions = new Map();
