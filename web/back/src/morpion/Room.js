@@ -6,6 +6,7 @@ class Room {
         this._type = "default";
         this._id = id;
         this._players = new Set();
+        this._obs = new Set();
         this._min_players = 1000;
         this._max_players = null;
         this._date_game = new Date(); // _date of first player
@@ -14,11 +15,47 @@ class Room {
         this._winner = null;
         this.out_timer = null; //setTimeout fin
         this.limit_time = 60 * 1000;
+        this._time_refresh_name = 0  ;
+        this._players_names = "";
     }
 
-    // getPlayer(idPlayer) { //comnent faire ? pas ici ? inutile ?
-    //     return this._players.get(idPlayer) || null;
-    // }
+    getPlayers() {
+        let time = Date.now()
+
+        if (time - 20000 < this._time_refresh)
+            return this._players_names;
+
+        this._time_refresh_name = time;
+
+        this._players_names = [...this._players]
+            .map(p => p.getName())
+            .join(" / ");
+
+        return this._players_names;
+    }
+
+    addObs(obs){
+        if (!this._locked) return ;
+
+        this._players.add(obs);
+        obs.setObs(this);
+        if (this._type === "Morpion")
+            obs.send({
+                players: this._players_names,
+                other_board: this._board,
+            })
+    }
+
+    removeObs(obs){
+        this._players.delete(obs);
+
+        obs.setObs(null)
+        if (this._type === "Morpion")
+            obs.send({
+                players: "",
+                other_board: Array(9).fill(" ")
+            })
+    }
 
     addPlayer(player) {
 
@@ -91,6 +128,7 @@ class Room {
         this.clearOutTimer();
         this._players.forEach(p => {p.disconnect()})
         this._players.clear();
+        this._obs.clear();
     }
 
     clearOutTimer() {

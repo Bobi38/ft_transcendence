@@ -98,6 +98,13 @@ export function initWebSMopr(server) {
             socket.players.clear();
             break ;
 
+          case "obs":
+            socket.player.send({list: manager_room.getList()});
+            break ;
+
+          case "obs":
+
+
           default:
             socket.player.send();
             console.log(`defaut : ca c est etrange gere ca :${data.type}`);
