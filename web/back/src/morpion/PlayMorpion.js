@@ -18,6 +18,27 @@ const msgs = {
     badMove: "Move alert",
 }
 
+function observator(player, gameId){
+    
+    if (!gameId)
+    console.log(`obs ${gameId}`);
+    if (gameId === 1){
+        const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
+        const players = {player_1: "martin", player_2:"jackiechan"};
+        player.send({
+            players,
+            other_board,
+        });
+        return ; 
+    }
+
+    const game = manager_room.getRoom(gameId);
+
+    if (!game) return ;
+
+    game.addObs(player);
+}
+
 function move(player, move){
     console.log(`new move ${move}`);
 
@@ -56,7 +77,7 @@ function move(player, move){
     }
 }
 
-function searchGame(player){
+function searchGame(player, players){
     console.log(`new search game de ${player}`);
     let game = player.getGame();
     if (game){
@@ -76,10 +97,18 @@ function searchGame(player){
         )
     }
     catch {
-            console.log("premier set _Turn");
-            game._turn = player;
-            player.send({message: msgs.recherche, turn: false})
+        console.log("premier set _Turn");
+        game._turn = player;
+        player.send({message: msgs.recherche, turn: false})
+        return false;
     }
+    console.log(`j envoie la liste`);
+    const listing = manager_room.getRoomlist();
+    console.log(`nous y sommes`);
+    for (const p of players.values()){
+        p.send({list: listing});
+    }
+    return true;
 }
 
 function reboot(){ // non utilise
@@ -103,11 +132,11 @@ function leave(player){
     console.log(`${player} ask to leave`);
     const game = player.getGame();
 
-    if (!game) return;
+    if (!game) return false;
 
     if (!game.getLock()) {
         manager_room.removeRoom(game);
-        return;
+        return false;
     }
     const loser = player;
     let winner = game.getTurn();
@@ -122,6 +151,7 @@ function leave(player){
     loser.disconnect(msgs.l_abort);
 
     setTimeout(() => {manager_room.removeRoom(game);}, 10000);
+    return true;
 }
 
 const cooldowns = new Map();
@@ -223,4 +253,4 @@ function morpion(message, socket){
 
 }
 
-export default {morpion, reboot, playSecond, leave, msgs, searchGame, move}
+export default {morpion, reboot, playSecond, leave, msgs, searchGame, move, observator}
