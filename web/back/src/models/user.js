@@ -51,13 +51,15 @@ const User = sequelize.define('User', {
     type: DataTypes.TIME,
     allowNull: true,
   },
-  win: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
+  Hostlastco: {
+    type: DataTypes.TIME,
+    allowNull: true,
+    defaultValue: null,
   },
-  total_part: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
+  Datelastco: {
+    type: DataTypes.TIME,
+    allowNull: true,
+    defaultValue: null,
   },
 }, {
   tableName: 'user_co',
