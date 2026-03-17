@@ -1,5 +1,4 @@
 import MorpionRoom from "./morpionRoom.js";
-import WaitRoom from "./waitRoom.js";
 import Room from "./Room.js";
 
 const roomTypes = {
@@ -10,7 +9,6 @@ const roomTypes = {
 class ManagerRoom {
     constructor(){
         this._roomId = (Date.now() % 50001) + 57;
-        this.lobby = new WaitRoom;
         this._rooms = new Map();
     }
 
@@ -22,17 +20,23 @@ class ManagerRoom {
         return new_room;
     }
 
+    getRoomlist(){
+        return Object.fromEntries(
+            [...this._rooms].map(([id, room]) => [id, room.getPlayers()])
+        );
+    }
+
     getRoom(id) {
         return this._rooms.get(id);
     }
 
-    removeRoom(id, mess = null) {
-        const room = this._rooms.get(id);
-        console.log(`cherche ${id}  - quel  room ? ${room}`)
-        if (!room) return;
+    removeRoom(room) {
+        // console.log(`cherche ${id}  - quel  room ? ${room}`)
+        if (!room) return false;
 
-        room.remove(mess);
-        this._rooms.delete(id);
+        room.remove();
+        this._rooms.delete(room.getId())
+        return true;
     }
 
     isInRoom(playerId) {
@@ -47,44 +51,44 @@ class ManagerRoom {
         return null;
     }
 
-    findOnePlace(socket, type = null, currentId) {
+    findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
             console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
-                room.addPlayer(socket, currentId);
+                room.addPlayer(player);
+                player.setGame(room);
                 return room;
             }
         }
         
         const newRoom = this.createRoom(type);
-        newRoom.addPlayer(socket, currentId);
+        newRoom.addPlayer(player);
+        player.setGame(newRoom);
         return newRoom;
     }
 
-    removePlayer(playerId, message = "bye bye") {
+    removePlayer(player, message = "bye bye") { //inutile
         for (const room of this._rooms.values()) {
-            if (room.isInRoom(playerId)) {
-                room.removePlayer(playerId, message);
+            if (room.isInRoom(player)) {
+                room.removePlayer(player, message);
                 console.log(`tu vois 0 ? lenght = ${room.length()}`);
                 if (room.length() === 0) {
                     console.log("oui j ai vu 0");
-                    this.removeRoom(room.getId());
+                    this.removeRoom(room);
                 }
-
                 return;
             }
         }
     }
 
-    removeAll(mess = null) {
-        this._rooms.forEach(r => {r.remove(mess);})
+    removeAll() {
+        this._rooms.forEach(r => {r.remove();})
         this._rooms.clear();
-        this.lobby.sendAll(mess)
     }
 
-    sendAll(mess) {
+    sendAll(mess) { //inutile
         this._rooms.forEach(
             room => room.sendAll(mess))
     }

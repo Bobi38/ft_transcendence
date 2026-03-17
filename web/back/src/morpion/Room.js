@@ -5,38 +5,78 @@ class Room {
     constructor (id) {
         this._type = "default";
         this._id = id;
-        this._players = new Map();
+        this._players = new Set();
+        this._obs = new Set();
         this._min_players = 1000;
         this._max_players = null;
-        this._date_game = new Date();
+        this._date_game = new Date(); // _date of first player
+        this._start_time = null; // timestamp start game
         this._locked = false;
         this._winner = null;
-        this.out_timer = null;
-        this.limit_time = 3600 * 1000;
+        this.out_timer = null; //setTimeout fin
+        this.limit_time = 60 * 1000;
+        this._time_refresh_name = 0  ;
+        this._players_names = {};
     }
 
-    getPlayer(idPlayer) {
-        return this._players.get(idPlayer) || null;
+    getPlayers() {
+        let time = Date.now()
+
+        if (time - 20000 < this._time_refresh)
+            return this._players_names;
+
+        this._time_refresh_name = time;
+        this._players_names = {};
+
+        let numero = 1;
+        this._players.forEach(p => {
+            this._players_names[`player_${numero}`] = p.getName();
+            numero++;
+        })
+        return this._players_names;
     }
 
-    addPlayer(socket, PlayerId) {
-        if (this.isInRoom(PlayerId)) return false;
+    addObs(obs){
+        if (!this._locked) return ;
+
+        this._players.add(obs);
+        obs.setObs(this);
+        if (this._type === "Morpion")
+            obs.send({
+                players: this._players_names,
+                other_board: this._board,
+            })
+    }
+
+    removeObs(obs){
+        this._players.delete(obs);
+
+        obs.setObs(null)
+        if (this._type === "Morpion")
+            obs.send({
+                players: "",
+                other_board: Array(9).fill(" ")
+            })
+    }
+
+    addPlayer(player) {
+
+        if (this._players.has(player)) return false;
         if (this._locked) return false;
         if (this.isFull()) return false;
 
-        this._players.set(PlayerId, new Player(socket, PlayerId));
+        this._players.add(player);
  
         return true;
     }
 
-    removePlayer(playerId, message) {
+    removePlayer(player) {
         console.log("Players dans la room (avant suppression):", Array.from(this._players.keys()));
-        const player = this._players.get(playerId);
+        if (!this._players.has(player))
+            return this._players.size;
 
-        if (!player) return -1;
-
-        player.disconnect(message);
-        this._players.delete(playerId);
+        player.disconnect();
+        this._players.delete(player);
         return this._players.size
     }
 
@@ -77,6 +117,7 @@ class Room {
         }
 
         this._locked = state;
+        this._start_time = Date.now();
     }
 
     sendAll(message) {
@@ -85,10 +126,11 @@ class Room {
         this._players.forEach(player => {player.send(message);});
     }
 
-    remove(message = null) {
+    remove() {
         this.clearOutTimer();
-
-        this._players.forEach(p => {p.disconnect(message)});
+        this._players.forEach(p => {p.disconnect()})
+        this._players.clear();
+        this._obs.clear();
     }
 
     clearOutTimer() {

@@ -7,10 +7,10 @@
     flex-direction: row;
     height: 100%;
     width: 100%;
+    max-height: 200px;
     background: rgba(255, 255, 255, 0.900);
     padding: 1rem;
     border-radius: 30px;
-
 
 
 
@@ -31,6 +31,10 @@
 
 
     .board-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         border: solid rgb(0, 0, 0) 2px;
         padding: 0.5rem;
         width: max-content;
@@ -41,6 +45,12 @@
             border:1px solid $second;
             box-shadow: 0px 0px 3px 2px #8da8c6;
         }
+        .Board-root {
+            height: 100%;
+            width: 100%;
+            padding: 0.5rem;
+        }
+
     }
     .game-data{
         flex: 1;

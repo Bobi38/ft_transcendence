@@ -1,9 +1,7 @@
 /* extern */
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 
 /* back */
-// import checkCo from "BACK/fct1.js"
 
 /* Css */
 import "./HomeCardWeather.scss";

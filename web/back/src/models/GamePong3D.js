@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from './index.js';
 import User from './user.js';
 
-const GamePong3d = sequelize.define('GamePong3d', {
+const GamePong3D = sequelize.define('GamePong3D', {
     //id de la partie
     id:{
         type: DataTypes.INTEGER,
@@ -11,8 +11,8 @@ const GamePong3d = sequelize.define('GamePong3d', {
     },
     //info des joueur
     id_player_1: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     score_1: {
         type: DataTypes.INTEGER,
@@ -31,18 +31,22 @@ const GamePong3d = sequelize.define('GamePong3d', {
     abortwinner: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
     abortloser: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
     winner: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
     loser: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
 
     date_game_start: {
@@ -58,23 +62,21 @@ const GamePong3d = sequelize.define('GamePong3d', {
         type: DataTypes.INTEGER,
         allowNull: false,
     }
-    
-
 }, {
-  tableName: 'GamePong3d',
+  tableName: 'GamePong3D',
   timestamps: false,
 });
 
-User.hasMany(GamePong3d, { foreignKey: 'id_player_1', as: 'Pong3DPlayer1', onDelete: 'CASCADE' });
-GamePong3d.belongsTo(User, { foreignKey: 'id_player_1', as: 'player1' });
+User.hasMany(GamePong3D, { foreignKey: 'id_player_1', as: 'Pong3DPlayer1', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'id_player_1', as: 'player1' });
 
-User.hasMany(GamePong3d, { foreignKey: 'id_player_2', as: 'Pong3DPlayer2', onDelete: 'CASCADE' });
-GamePong3d.belongsTo(User, { foreignKey: 'id_player_2', as: 'player2' });
+User.hasMany(GamePong3D, { foreignKey: 'id_player_2', as: 'Pong3DPlayer2', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'id_player_2', as: 'player2' });
 
-User.hasMany(GamePong3d, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
-GamePong3d.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
+// User.hasMany(GamePong3D, { foreignKey: 'winner', as: 'Pong3DWon', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
 
-User.hasMany(GamePong3d, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
-GamePong3d.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
+// User.hasMany(GamePong3D, { foreignKey: 'loser', as: 'Pong3DLost', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
 
-export default GamePong3d;
+export default GamePong3D;

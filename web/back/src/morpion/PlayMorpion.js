@@ -1,8 +1,162 @@
+import { log } from 'console';
 import { manager_room } from './ManagRoom.js';
+
+const msgs = {
+    welcome: "welcome",
+    recherche: "search",
+    wait: "wait wait",
+    my_turn: "it s your turn",
+    other_turn : "wait opposant",
+    w_abort: "Abort - you win",
+    l_abort: "Abort - you lose",
+    w_msg: "you win",
+    l_msg: "you lose",
+    draw: "draw",
+    second: "second player selected",
+    first: "first player seleted",
+    reboot: "server rebooted", // tres utile !!
+    badMove: "Move alert",
+}
+
+function observator(player, gameId){
+    
+    if (!gameId)
+    console.log(`obs ${gameId}`);
+    if (gameId === 1){
+        const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
+        const players = {player_1: "martin", player_2:"jackiechan"};
+        player.send({
+            players,
+            other_board,
+        });
+        return ; 
+    }
+
+    const game = manager_room.getRoom(gameId);
+
+    if (!game) return ;
+
+    game.addObs(player);
+}
+
+function move(player, move){
+    console.log(`new move ${move}`);
+
+    const game = player.getGame();
+
+    if (!game) {
+        //voir pour indique la 
+        return ;
+    }
+    // console.log("mess1");
+    if (!game.isTurnPlayer(player)){
+        player.send({message: msgs.wait, turn: false});
+        return ;
+    }
+    // console.log("mess2");
+    if (game.play(player, move)) {
+        // console.log("mess3");
+        if(game.checkVictory()){
+            console.log(`end of ${game}`);
+            setTimeout(() => {
+                 console.log(`party register ${game}`);
+                 manager_room.removeRoom(game);
+            }, 10000);
+            return ;
+        }
+        game.switchTurn();
+        console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
+        // console.log("mess4");
+        game.notifyTurn(
+            {message: msgs.my_turn, turn: true},
+            {message: msgs.other_turn, turn: false}
+        )
+        // console.log("mess5");
+        game.startTurnTimer();
+        // console.log("mess6");
+    }
+}
+
+function searchGame(player, players){
+    console.log(`new search game de ${player}`);
+    let game = player.getGame();
+    if (game){
+        player.send(`you play ${game.getId()}`);
+        return ;
+    }
+
+    game = manager_room.findOnePlace("Morpion", player);
+    player.send(`new game :  you play ${game.getId()}`);
+    try{
+        game.setLock(true);
+        game.startGame(player);
+
+        game.notifyTurn(
+            {message: msgs.my_turn, turn: true},
+            {message: msgs.other_turn, turn: false}
+        )
+    }
+    catch {
+        console.log("premier set _Turn");
+        game._turn = player;
+        player.send({message: msgs.recherche, turn: false})
+        return false;
+    }
+    console.log(`j envoie la liste`);
+    const listing = manager_room.getRoomlist();
+    console.log(`nous y sommes`);
+    for (const p of players.values()){
+        p.send({list: listing});
+    }
+    return true;
+}
+
+function reboot(){ // non utilise
+    console.log(msgs.reboot);
+    manager_room.removeAll(msgs.reboot);
+    return;
+}
+
+function playSecond(player){
+    console.log(`call play second`);
+    const game = player.getGame();
+    if (!game) return;
+
+    if (!game.setFirstPlayer())
+        player.send(`${game} : ${msgs.first}`);
+    else
+        player.send(`${game} : ${msgs.second}`);
+}
+
+function leave(player){
+    console.log(`${player} ask to leave`);
+    const game = player.getGame();
+
+    if (!game) return false;
+
+    if (!game.getLock()) {
+        manager_room.removeRoom(game);
+        return false;
+    }
+    const loser = player;
+    let winner = game.getTurn();
+    if (winner === loser){
+        winner = game.getOther();
+    }
+
+    game.handleEndGame('abort', game.getTurn());
+    winner.send({ message: "end", turn: false });
+    loser.send({ message: "end", turn: false });
+    winner.disconnect(msgs.w_abort);
+    loser.disconnect(msgs.l_abort);
+
+    setTimeout(() => {manager_room.removeRoom(game);}, 10000);
+    return true;
+}
 
 const cooldowns = new Map();
 
-export function playMorpion(message, socket){
+function morpion(message, socket){
     const id = socket.userId;
 
     if (cooldowns.has(id)) return;
@@ -98,3 +252,5 @@ export function playMorpion(message, socket){
     }
 
 }
+
+export default {morpion, reboot, playSecond, leave, msgs, searchGame, move, observator}

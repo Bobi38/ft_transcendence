@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import SocketM  from "/app/tool/SocketManag.js";
+import SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
 import "./HomeChat.scss";
@@ -80,7 +80,7 @@ export default function HomeChat() {
         
         console.log("handle_submit(2): " ,data);
         await add_message_global(time);
-        SocketM.sendd(SocketM.socket.chat, data);
+        SocketM.sendd('chat', data);
         setInput("");
     };
 

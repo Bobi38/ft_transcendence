@@ -1,6 +1,6 @@
 /* extern */
 import { Link } from "react-router-dom";
-import  SocketM  from "../../../../tool/SocketManag.js"
+import  SocketM  from "TOOL/SocketManag.js"
 import { useEffect, useState } from "react";
 
 /* back */
@@ -21,10 +21,6 @@ export default function HomeFooter({setShowLog}) {
 
     function logout() {
         console.log("logout(1) called")
-        SocketM.disconnect("friend");
-        SocketM.disconnect("morp");
-        SocketM.disconnect("priv");
-        SocketM.disconnect("chat");
         fetch('/api/auth/logout', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -35,7 +31,10 @@ export default function HomeFooter({setShowLog}) {
 
             if (data.success) {
                 setShowLog(AUTH.LOGIN)
-                SocketM.disco();
+                SocketM.disconnect('friend');
+                SocketM.disconnect('morp');
+                SocketM.disconnect('priv');
+                SocketM.disconnect('chat');
             } else {
                 console.error("logout(2) failed");
             }

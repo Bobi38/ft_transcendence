@@ -4,8 +4,6 @@ import fs from 'fs';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
-
-
 class Chat {
   constructor() {
     this.sessions = new Map();
@@ -53,7 +51,6 @@ class Chat {
   }
   decoded(token){
     try{
-      console.log("dans le decoded ", token , " " , secret);
       const decodeded = jwt.verify(token, secret);
       return decodeded;
     }catch(err){

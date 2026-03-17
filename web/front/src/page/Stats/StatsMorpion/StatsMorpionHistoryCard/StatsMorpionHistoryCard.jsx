@@ -23,7 +23,7 @@ export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
         else if (arg === "diagonal"){return ("scanline-win-d-rl")}
         else if (arg === "diagonal"){return ("scanline-win-d-lr")}
         else if (arg === "vertical"){return ("scanline-win-v")}
-        else return ("")
+        else return ("hidden")
     }
 
     const color_card = (how_win, winnerUser)=> {

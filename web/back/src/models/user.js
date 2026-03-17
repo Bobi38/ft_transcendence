@@ -51,13 +51,15 @@ const User = sequelize.define('User', {
     type: DataTypes.TIME,
     allowNull: true,
   },
-  win: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
+  Hostlastco: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+    defaultValue: null,
   },
-  total_part: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
+  Datelastco: {
+    type: DataTypes.TIME,
+    allowNull: true,
+    defaultValue: null,
   },
 }, {
   tableName: 'user_co',
@@ -92,11 +94,13 @@ User.afterCreate(async (user, options) => {
         type_O_abort_loser: 0,
         type_O_draw: 0,
     });
-    // await StatPong3D.create({
-    //     idUser: user.id,
-    //     total_game: 0,
-    //     time_played: 0,
-    // });
+    await StatPong3D.create({
+    idUser: user.id,
+    total_game: 0,
+    time_played: 0,
+    win:0,
+    lose:0,
+  });
 });
 
 

@@ -12,8 +12,8 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 // import { GameRoom } from './colyseus/GameRoom.js';
 // import router from './routes/index.js';
 // import router from './router.js';
-import { majDb } from './src/fct.js';
-import {addDb} from './src/fct.js';
+import { majDb } from './src/CreatDB.js';
+import { addDb } from './src/CreatDB.js';
 import bodyParser from 'body-parser';
 
 
@@ -21,6 +21,7 @@ import bodyParser from 'body-parser';
 import { authMiddleware } from './src/routes/index.js';
 
 dotenv.config();
+const host = process.env.VITE_DEV_HOST;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,7 +92,7 @@ app.use('/api/morpion', createProxyMiddleware({
 
 if (isDev) {
   console.log("JE SUIS DEV");
-
+  console.log("host " + host);
   const viteProxy = createProxyMiddleware({
     target: 'http://localhost:5173',
     changeOrigin: true,

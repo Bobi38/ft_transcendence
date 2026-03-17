@@ -7,6 +7,7 @@ import path from "path";
 import { createBall, createWalls } from "../environment.js";
 import User from "../models/user.js";
 import StatPong3D from "../models/StatPong3D.js"
+import GamePong3D from "../models/GamePong3D.js"
 import jwt from "jsonwebtoken"
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -20,12 +21,15 @@ export class MyRoom extends Room {
   private _nodes: TransformNode[] = [];
   private _havokPlugin: HavokPlugin;
   private _nextPlayerIndex: number = 0;
-  private _tokens : Map<string, {auth: string, score: number, hasWon: boolean}> = new Map<string, {auth: string, score: number, hasWon: boolean}>();
+  private _tokens : Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>
+    = new Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>();
   private _near : string;
   private _far: string;
   private _tick: number = 0;
   private _posToSend: Vector3;
   private _velToSend: Vector3;
+  private _timeStart: number;
+  private _timeEnd: number;
 
   maxClients = 2;
   patchRate = 50;
@@ -103,6 +107,7 @@ export class MyRoom extends Room {
         if (this.state.score.teamFar >= 3) {
           this.state.roomStatus = RoomStatus.WON;
           this._tokens.get(this._far).hasWon = true;
+          this._timeEnd = Date.now();
         }
       }
       else if (this._ball.transformNode.position.z > 40) {
@@ -112,6 +117,7 @@ export class MyRoom extends Room {
         if (this.state.score.teamNear >= 3) {
           this.state.roomStatus = RoomStatus.WON;
           this._tokens.get(this._near).hasWon = true;
+          this._timeEnd = Date.now();
         }
       }
       if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
@@ -148,19 +154,18 @@ export class MyRoom extends Room {
   onBeforePatch(state: MyRoomState) {
     const ballPos = this._posToSend;
     const ballVel = this._velToSend;
-    //console.log(ballPos);
-    //console.log(ballVel);
+    console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;
 
     const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
     // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
-    //if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
+    if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
       state.ball.velocity.x = ballVel.x;
       state.ball.velocity.y = ballVel.y;
       state.ball.velocity.z = ballVel.z;
-    //}
+    }
 
     state.ball.tickStamp = this._tick;
   }
@@ -211,7 +216,7 @@ export class MyRoom extends Room {
      * Called when a client joins the room.
      */
     console.log(client.sessionId, "joined room", this.roomId);
-    this._tokens.set(client.sessionId, {auth: auth, score: 0, hasWon: false});
+    this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
     const player = new Player();
     player.position.x = 0;
     player.position.y = 1.5;
@@ -229,17 +234,22 @@ export class MyRoom extends Room {
     if (this.state.players.size == 2) {
       console.log("Game starting");
       this.state.roomStatus = RoomStatus.STARTED;
+      this._timeStart = Date.now();
     }
   }
 
   onDrop(client: Client, code: number) {
     console.log(`Client ${client.sessionId} dropped (code: ${code})`);
     const player = this.state.players.get(client.sessionId);
-    if (player) {
+    if (player && this.state.roomStatus === RoomStatus.STARTED) {
       player.connected = false;
+      this._tokens.get(client.sessionId).hasDisconnected = true;
     }
     this.allowReconnection(client, 5).catch(() => {
-      this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+      if (this.state.roomStatus === RoomStatus.STARTED) {
+        this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+        this._timeEnd = Date.now();
+      }
     });
   }
 
@@ -247,8 +257,9 @@ export class MyRoom extends Room {
     console.log(`Client ${client.sessionId} reconnected!`);
  
     const player = this.state.players.get(client.sessionId);
-    if (player) {
-      player.connected = true;
+    if (player && this.state.roomStatus === RoomStatus.STARTED) {
+      player.connected = false;
+      this._tokens.get(client.sessionId).hasDisconnected = false;
     }
   }
 
@@ -265,21 +276,43 @@ export class MyRoom extends Room {
     this.state.players.delete(client.sessionId);
   }
 
+  async _updateDbPlayer(playerId: string, won: boolean, timePlayed: number){
+    const userData = await StatPong3D.findOne({where: {idUser: playerId}});
+    await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
+  }
+
   async _sendGameDataToDatabase() {
     const iterator = this._tokens.entries();
-      const firstPlayer = iterator.next().value;
-      const secondPlayer = iterator.next().value;
-      const player1id = firstPlayer[1].auth;
-      const player2id = secondPlayer[1].auth;
-      const score1 = firstPlayer[1].score;
-      const score2 = secondPlayer[1].score;
-      let whowin, wholose;
-      if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
+    const firstPlayer = iterator.next().value;
+    const secondPlayer = iterator.next().value;
+    const player1id = firstPlayer[1].auth;
+    const player2id = secondPlayer[1].auth;
+    const score1 = firstPlayer[1].score;
+    const score2 = secondPlayer[1].score;
+    console.log(player1id);
+    let whowin, wholose;
+    if (this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED) {
+      if (firstPlayer[1].hasDisconnected) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player2id;}
       try {
-      await StatPong3D.create({Player1id: player1id, Player2id: player2id, whowin: whowin, wholose: wholose, score1: score1, score2: score2});
+        GamePong3D.create({id_player_1: player1id, id_player_2: player2id, abortwinner: whowin, abortloser: wholose,
+          score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
+        this._updateDbPlayer(player1id, firstPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
+        this._updateDbPlayer(player2id, secondPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
       } catch (e) {
         console.log("Failed to store results in database", e);
       }
+    }
+    else {
+      if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
+      try {
+        await GamePong3D.create({id_player_1: player1id, id_player_2: player2id, winner: whowin, loser: wholose,
+          score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
+        this._updateDbPlayer(player1id, firstPlayer[1].hasWon, this._timeEnd - this._timeStart);
+        this._updateDbPlayer(player2id, secondPlayer[1].hasWon, this._timeEnd - this._timeStart);
+      } catch (e) {
+        console.log("Failed to store results in database", e);
+      }
+    }
   }
 
   onDispose() {
@@ -287,7 +320,7 @@ export class MyRoom extends Room {
      * Called when the room is disposed.
      */
     console.log(this.state.roomStatus);
-    if (this.state.roomStatus != RoomStatus.WAITING && this.state.roomStatus != RoomStatus.PLAYER_DISCONNECTED)
+    if (this.state.roomStatus != RoomStatus.WAITING)
       this._sendGameDataToDatabase();
 
     this._tokens = null;
