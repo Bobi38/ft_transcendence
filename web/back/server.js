@@ -21,6 +21,7 @@ import bodyParser from 'body-parser';
 import { authMiddleware } from './src/routes/index.js';
 
 dotenv.config();
+const host = process.env.VITE_DEV_HOST;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,7 +92,7 @@ app.use('/api/morpion', createProxyMiddleware({
 
 if (isDev) {
   console.log("JE SUIS DEV");
-
+  console.log("host " + host);
   const viteProxy = createProxyMiddleware({
     target: 'http://localhost:5173',
     changeOrigin: true,

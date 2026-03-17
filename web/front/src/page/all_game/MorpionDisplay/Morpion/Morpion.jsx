@@ -14,7 +14,7 @@ function RebootTruc() {
 
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "game",
                 message: "reboot"
             })
@@ -28,7 +28,7 @@ function GoOut(){
 
     return (
         <button onClick={() =>{
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "game",
                 message: "leave"
             })
@@ -41,7 +41,7 @@ function GoOut(){
 function SelectSecondPlayer(){
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "game",
                 message: "playSecond"
             })
@@ -56,7 +56,7 @@ function NouvellePartie({ setBoard }){
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "game",
                 message: "je veux jouer"
             })

@@ -29,7 +29,7 @@ export default function MailA2F({setShowLog}) {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        SocketM.sendd(SocketM.socket.friend, {type: 'co'});
+        SocketM.sendd('friend', {type: 'co'});
         setShowCodeInput(true);
     }
 
