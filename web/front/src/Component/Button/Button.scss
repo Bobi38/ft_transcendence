@@ -15,12 +15,10 @@
 	&:active{
 		scale: 1.15;
 	}
-	@media (width <= 1000px) {
+	@media (width <= 1000px ), (height<= 550px) {
 			padding: 0.5rem 1.0rem;
-            font-size: 0.9rem;
     }
-    @media (width <= 500px) {
+    @media (width <= 500px), (height <= 400px) {
 			padding: 0.25rem 0.5rem;
-            font-size: 0.7rem;
     }
 }

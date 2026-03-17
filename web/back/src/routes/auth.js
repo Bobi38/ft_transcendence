@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.post('/login', async (req, res) => {
   console.log("je suis dans la nouvelle route login")
-  const { email, password } = req.body;
+  const { email, password, host } = req.body;
 
   try {
     console.log("Api /login called");
@@ -38,12 +38,19 @@ router.post('/login', async (req, res) => {
     if (iid.length === 0)
       await Co.create({token: token, userId: result[0].id});
     console.log("Api /login TAILLE= " , Co.length);
-    await result[0].update({co: true});
     console.log("Api /login ID", result[0].id);
+    let MPFA;
+    if (result[0].Hostlastco === null && result[0].Datelastco === null)
+      MPFA = true;
+    if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco > (new Date() - 72 * 60 * 60 * 1000)))
+      MPFA = true;
+    if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco < (new Date() - 72 * 60 * 60 * 1000)))
+      MPFA = false;
+    await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-    res.status(201).json({  success : true , message: 'Utilisateur connecte', token: token, username: result[0].name });
+    res.status(201).json({  success : true , message: 'Utilisateur connecte', token: token, username: result[0].name, MPFA: MPFA });
     // majDb();
   } catch (err) {
     console.error(err);

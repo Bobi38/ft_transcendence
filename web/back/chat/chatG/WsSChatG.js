@@ -135,11 +135,11 @@ export function initWebSChat(server) {
     console.log('Intervalle ping : je vérifie toutes les sockets');
     for (const session of chat.sessions.values()){
       const so = session.socket;
-      console.log(session.socket.id);
+      console.log(session.socket.id, " isAlive:", so.isAlive, "readyState:", so.readyState);
       if (!so || !so.isAlive || so.readyState != ws.OPEN) {
         console.log('Socket morte', so.id);
         chat.removetokBySocketId(so.id);
-        // so.terminate();
+        so.terminate();
       } else {
         session.socket.isAlive = false;
         session.socket.send(JSON.stringify({ type: 'ping' }));

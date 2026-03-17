@@ -1,8 +1,8 @@
 import ws from 'ws';
+import {manager_room} from './src/morpion/ManagRoom.js';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
-import {manager_room} from './src/morpion/ManagRoom.js';
 import m from './src/morpion/PlayMorpion.js';
 import { Player } from './src/morpion/player.js';
 
@@ -27,7 +27,7 @@ export function initWebSMopr(server) {
   wss.on('connection', async (socket, req) => {
     try{
       //passe toujours par ici
-      console.log(`pour comprendre what is conenction ?`);
+      console.log(`on commence ici`);
       const iid = idd++;
       socket.id = iid;
       console.log(req.headers.cookie)
@@ -35,9 +35,9 @@ export function initWebSMopr(server) {
       if (!token) {
         return;
       }
-
+      
       let user = jwt.verify(token, secret);
-
+      
       if (!user) {socket.close(1008, 'Unauthorized'); return;}
       // // console.log("uuu-------", user);
       const useid = user.id;
@@ -45,7 +45,7 @@ export function initWebSMopr(server) {
       socket.GoLogout = false;
       socket.cleanedUp = false;
       socket.isAlive = true;
-
+      
       let player = players.get(useid);
       if (!player) {
         console.log(`new clt`);
@@ -57,6 +57,7 @@ export function initWebSMopr(server) {
         player.addSocket(socket);
       }
       socket.player = player;
+
       socket.players = players;
 
       socket.send(JSON.stringify({type: "auth_good"}));
@@ -71,16 +72,16 @@ export function initWebSMopr(server) {
         const data = JSON.parse(message);
         console.log(`${data.type}`);
         switch (data.type) {
-          case "game": //move
-            m.morpion(data.message, socket, socket.userId);
-            break ;
+          // case "game": //move
+          //   m.morpion(data.message, socket, socket.userId);
+          //   break ;
 
           case "move":
             m.move(socket.player, data.message);
             break ;
 
           case "play":
-            m.searchGame(socket.player);
+            m.searchGame(socket.player, socket.players);
             break ;
 
           case "leave":
@@ -88,7 +89,8 @@ export function initWebSMopr(server) {
             break ;
 
           case "second":
-            m.playSecond(socket.player); //ok a tster
+            console.log();
+            m.playSecond(socket.player);
             break ;
 
           case "reboot":
@@ -98,12 +100,10 @@ export function initWebSMopr(server) {
             socket.players.clear();
             break ;
 
-          case "obs":
-            socket.player.send({list: manager_room.getList()});
+          case "spec":
+            m.observator(socket.player, data.id)
+            // socket.player.send({list: manager_room.getList()});
             break ;
-
-          case "obs":
-
 
           default:
             socket.player.send();

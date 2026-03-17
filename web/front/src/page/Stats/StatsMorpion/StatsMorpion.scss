@@ -18,13 +18,17 @@ $width_game_winrate: 100% - $width_history;
     
     .history-container {
         width: $width_history;
-        // padding-right: 0;
         
         scrollbar-width: thin;
         display: flex;
         flex-direction: column;
         
         .history-card-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            
             height: calc(100% - 58px);
             overflow-y: auto;
             display: flex;
@@ -77,7 +81,7 @@ $width_game_winrate: 100% - $width_history;
                         display: flex;
                         flex-direction: row;
                         justify-content: space-around;
-                        // align-items: cener; 
+                        gap:0.5rem;
                         div{
                             display: flex;
                             flex-direction: column;
@@ -91,6 +95,23 @@ $width_game_winrate: 100% - $width_history;
                     display: flex;
                     flex-direction: row;
                     justify-content: space-around;
+                    gap:0.5rem;
+                }
+                @media (width <= 1300px) {
+                    .wl-graph{
+                        .wl-graph2{
+                            flex-direction: column;
+                        }
+                    }
+                        
+                    .wl-o-x{
+                        flex-direction: column;
+                    }
+                }
+                @media (width <= 1300px) {
+                    .game-winrate {
+                        overflow: hidden auto;
+                    }
                 }
                 
                 // .wl-horizontal{

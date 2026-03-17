@@ -5,6 +5,7 @@ import { FaGithub } from "react-icons/fa";
 import { showAlert } from "TOOL/fonction_usefull.js";
 import SocketM from "TOOL/SocketManag.js";
 
+
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
@@ -21,9 +22,11 @@ export default function Login({setShowLog}) {
         const form = event.target;
         const data = {
             email: form.email.value.trim(),
-            password: form.password.value.trim()
+            password: form.password.value.trim(),
+            host: window.location.host
         };
 
+        alert(data.host);
         if (!data.email || !data.password) {
             showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
             return;
@@ -49,9 +52,17 @@ export default function Login({setShowLog}) {
         sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('token', repjson.token);
         sessionStorage.setItem('username', repjson.username);
-        setShowLog(AUTH.MAILA2F);
+
+        if (repjson.MPFA) {
+            setShowLog(AUTH.MAILA2F);
+        }
+        
+        if (!repjson.MPFA) {
+            setShowLog(AUTH.NONE);
+
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
     };
+    }
 
 
 
@@ -64,7 +75,6 @@ export default function Login({setShowLog}) {
     const handle_git = () => {
         window.location.href = "/api/oauth2/github";
     };
-
     return (
         <>
             <div className={`script-in-root`}>

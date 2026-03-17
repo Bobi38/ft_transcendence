@@ -9,18 +9,18 @@ import './Morpion.scss';
 
 /* Components */
 import Board from "./Board/Board.jsx";
+import { ColorGradient } from "@babylonjs/core";
 
 function RebootTruc() {
 
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "reboot",
                 message: "reboot"
             })
         }}>
-            Reboot (dev - ne pas utiliser - a supprimer en prod)
-        </button>
+            Reboot</button>
     );
 }
 
@@ -28,7 +28,7 @@ function GoOut(){
 
     return (
         <button onClick={() =>{
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "leave",
             })
         }}>
@@ -40,7 +40,7 @@ function GoOut(){
 function SelectSecondPlayer(){
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "second",
             })
         }}>
@@ -50,11 +50,11 @@ function SelectSecondPlayer(){
 }
 
 function NouvellePartie({ setBoard }){
-
+    console.log("stpppppppppppppppp");
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "play",
             })
         }}>
@@ -107,7 +107,7 @@ export default function Morpion() {
 
             <div className={`info`}>
 
-                <RebootTruc/>
+                {/* <RebootTruc/> */}
 
                 <GoOut/>
 
@@ -146,7 +146,7 @@ export default function Morpion() {
 //   return (
 //     <button
 //       onClick={() =>
-//         SocketM.sendd(SocketM.socket.morp, {
+//         SocketM.sendd('morp', {
 //           type: "reboot",
 //           mess: "reboot"
 //         })
@@ -160,7 +160,7 @@ export default function Morpion() {
 // function GoOut(){
 //   return (
 //   <button onClick={() =>
-//     SocketM.sendd(SocketM.socket.morp, {
+//     SocketM.sendd('morp', {
 //         type: "leave",
 //         mess: "bye bye"
 //       })
@@ -174,7 +174,7 @@ export default function Morpion() {
 // function SelectSecondPlayer(){
 //   return (
 //   <button onClick={() =>
-//     SocketM.sendd(SocketM.socket.morp, {
+//     SocketM.sendd('morp', {
 //         type: "second",
 //         mess: "fairplay"
 //       })
@@ -188,7 +188,7 @@ export default function Morpion() {
 // function NewParty(){
 //   return (
 //   <button onClick={() =>
-//     SocketM.sendd(SocketM.socket.morp, {
+//     SocketM.sendd('morp', {
 //         type: "play",
 //         mess: "start"
 //       })

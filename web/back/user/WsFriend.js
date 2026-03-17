@@ -103,6 +103,7 @@ export function initWebSFriend(server) {
       // else{
         await chat.addtok(useid, socket, useid);
       // }
+      socket.send(JSON.stringify({type: 'co_good'}));
     }catch(err){
       console.log("err debut wsss ", err);
     }
