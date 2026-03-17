@@ -56,7 +56,7 @@ export default function Login({setShowLog}) {
             setShowLog(AUTH.MAILA2F);
         }
         if (!repjson.MPFA) {
-            setShowLog(AUTH.CONNECTED);
+            setShowLog(AUTH.NONE);
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
     };
     }

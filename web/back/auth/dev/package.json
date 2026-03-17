@@ -2,10 +2,10 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./AuthServ.js",
+  "main": "../AuthServ.js",
 "scripts": {
-  "dev": "nodemon AuthServ.js",
-  "start": "node AuthServ.js"
+  "dev": "nodemon ../AuthServ.js",
+  "start": "node ../AuthServ.js"
 },
   "dependencies": {
     "bcrypt": "^5.1.1",

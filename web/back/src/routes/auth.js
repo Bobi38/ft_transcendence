@@ -37,16 +37,25 @@ router.post('/login', async (req, res) => {
     console.log("Api /login apres token");
     if (iid.length === 0)
       await Co.create({token: token, userId: result[0].id});
-    console.log("Api /login TAILLE= " , Co.length);
-    console.log("Api /login ID", result[0].id);
+    console.log(result[0].Hostlastco + " " + host)
+    console.log(result[0].Datelastco)
+    const now = new Date();
+    const limit = new Date(now.getTime() - 10 * 60 * 1000);
     let MPFA;
+    console.log(limit);
     if (result[0].Hostlastco === null && result[0].Datelastco === null)
       MPFA = true;
-    if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco > (new Date() - 72 * 60 * 60 * 1000)))
+    else if (result[0].Hostlastco != host)
       MPFA = true;
-    if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco < (new Date() - 72 * 60 * 60 * 1000)))
+    else if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco < limit))
+      MPFA = true;
+    else if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco > limit))
       MPFA = false;
-    await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
+    else
+      MPFA = true;
+    console.log(MPFA);
+    if (MPFA == false)
+      await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });

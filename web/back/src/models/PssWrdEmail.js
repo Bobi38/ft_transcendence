@@ -18,7 +18,7 @@ const PswEmail = sequelize.define('PswEmail', {
         allowNull: false,
     },
     Code:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(512),
         allowNull: false,
     },
     DateCreate:{
