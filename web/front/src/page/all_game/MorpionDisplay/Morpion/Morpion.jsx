@@ -114,10 +114,8 @@ export default function Morpion() {
                 <SelectSecondPlayer/>
 
                 <div className="status">
-                    {msg === "search"
-                        ? <>
-                            searching player<span className="wait">{".".repeat(wait)}</span>
-                        </>
+                    {msg === "search" ?
+                        <>searching player<span className={`wait`}>{".".repeat(wait)}</span></>
                         : msg
                     }
                 </div>
