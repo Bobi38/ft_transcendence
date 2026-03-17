@@ -16,7 +16,7 @@ import QRCode from 'qrcode';
 import {authenticator} from 'otplib';
 import { error, time } from 'console';
 
-import {majDb}  from './fct.js';
+import { majDb }  from './CreatDB.js';
 
 import User  from './models/user.js';
 import Co  from './models/connect.js';

@@ -1,10 +1,8 @@
-import User from './src/models/user.js';
+import User from './src/akmodels/user.js';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
-
-
 
 class Chat {
   constructor() {
@@ -53,7 +51,6 @@ class Chat {
   }
   decoded(token){
     try{
-      console.log("dans le decoded ", token , " " , secret);
       const decodeded = jwt.verify(token, secret);
       return decodeded;
     }catch(err){
