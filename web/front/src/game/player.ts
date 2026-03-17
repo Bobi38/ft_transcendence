@@ -7,7 +7,7 @@ import { RacketHistory } from "./RacketHistory";
 
 export class Player extends TransformNode {
     PLAYER_SPEED: number;
-    public camera;
+    public camera : UniversalCamera;
     public scene: Scene;
     public room: Room;
     private _input : PlayerInput;
@@ -22,8 +22,9 @@ export class Player extends TransformNode {
     public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
     public racketHistory : RacketHistory = new RacketHistory();
 
-    constructor(app: App, sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
+    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
         super("player", scene);
+        this.camera = camera;
         this._app = app;
         this.sessionId = sessionId;
         this.scene = scene;
@@ -54,22 +55,28 @@ export class Player extends TransformNode {
                 return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
-            const hitForward = this.racket.forward.scale(100);
+            const hitForward = this.camera.getForwardRay().direction.scale(2);
             const mouseDirAvg = (this._input.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
             mouseDirAvg.scaleInPlace(1/this._input.mouseBufferSize).normalize();
+            if (mouseDirAvg.lengthSquared() > 0.001) {
+                mouseDirAvg.normalize();
+            } else {
+                mouseDirAvg.set(0,0);
+            }
             const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, 0).add(hitForward).normalize();
             console.log(hitDirection);
             const mouseAvgSpeed = this._input.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this._input.mouseBufferSize;
-            const power = Scalar.SmoothStep(0, 200, mouseAvgSpeed) / 10;
+            const power = Scalar.SmoothStep(50, 200, mouseAvgSpeed) / 10;
             console.log(mouseAvgSpeed, power);
 
-            ballBody.setLinearVelocity(hitDirection.scale(power));
+            const newVel = hitDirection.scale(power);
+            ballBody.setLinearVelocity(newVel);
             //ballBody.applyImpulse(hitDirection.scale(power), event.point);
 
+            console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel);
             const ballPos = ballBody.transformNode.position.clone();
-            const ballVel = ballBody.getLinearVelocity(); 
-            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: ballVel.asArray()});
-            this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, ballVel);
+            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray()});
+            this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);
             this._app.setIgnoreServer();
         });
         const physicsViewer = new PhysicsViewer(this.scene);

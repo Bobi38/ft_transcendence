@@ -144,7 +144,9 @@ export class App {
             this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
+            this._ignoreServerUntil = this._clock.tick;
             this._snapshots.dispose();
+            console.log("A point has been won at tick:", this._clock.tick);
         });
         callback.onChange(room.state.score, () => {
             console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);
@@ -232,6 +234,7 @@ export class App {
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return ;
             //console.log(this._serverPatch);
+            if (this._serverPatch.tick - this._clock.tickOffset < this._ignoreServerUntil) return;
             const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
             if (!pastSnapshot) return ;
             const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
@@ -310,7 +313,7 @@ export class App {
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
         const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(this, sessionId, playerAssets, this._scene, this._shadow, this._room);
+        this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadow, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
         this._scene.onBeforePhysicsObservable.add(() => {
