@@ -1,3 +1,15 @@
+SERVICES = \
+	mysql \
+	myadmin \
+	gateway \
+	chatp_service \
+	user_service \
+	chatg_service \
+	auth \
+	morpion \
+	front \
+	pong3d
+
 all:	secrets creat compose
 
 compose:
@@ -28,6 +40,12 @@ creat:
 	chmod +x ./conf/myadmin/conf.sh
 	chmod +x ./conf/db/conf.sh
 
+logs%:
+	docker compose logs -f $(word $*, $(SERVICES))
+
+logs-%:
+	docker compose logs -f $*
+	
 logs:
 	docker compose logs -f
 	

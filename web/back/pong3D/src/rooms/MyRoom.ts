@@ -1,4 +1,4 @@
-import { Room, Client, CloseCode, AuthContext } from "colyseus";
+import { Room, Client, CloseCode, AuthContext, room } from "colyseus";
 import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
 import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
@@ -6,7 +6,8 @@ import fs from "fs";
 import path from "path";
 import { createBall, createWalls } from "../environment.js";
 import User from "../models/user.js";
-import PongStat from "../models/PongStat.js"
+import StatPong3D from "../models/StatPong3D.js"
+import GamePong3D from "../models/GamePong3D.js"
 import jwt from "jsonwebtoken"
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -20,14 +21,21 @@ export class MyRoom extends Room {
   private _nodes: TransformNode[] = [];
   private _havokPlugin: HavokPlugin;
   private _nextPlayerIndex: number = 0;
-  private _tokens : Map<string, {auth: string, score: number, hasWon: boolean}> = new Map<string, {auth: string, score: number, hasWon: boolean}>();
+  private _tokens : Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>
+    = new Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>();
   private _near : string;
   private _far: string;
+  private _tick: number = 0;
+  private _posToSend: Vector3;
+  private _velToSend: Vector3;
+  private _timeStart: number;
+  private _timeEnd: number;
 
   maxClients = 2;
   patchRate = 50;
   state = new MyRoomState();
 
+  static count : number = 0;
   messages = {
     yourMessageType: (client: Client, message: any) => {
       /**
@@ -35,11 +43,15 @@ export class MyRoom extends Room {
        */
       console.log(client.sessionId, "sent a message:", message);
     },
+    "synchronizeTick" : (client: Client, data: any) => {
+      console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+      client.send("serverTick", {serverTick: this._tick, t0: data});
+    },
     "racketImpact": (client: Client, data: any) => {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
-      //this._ball.transformNode.setAbsolutePosition(ballPos);
+      this._ball.transformNode.setAbsolutePosition(ballPos);
       console.log(client.sessionId,  "hit the ball: ", data);
     },
     "bodyMoved": (client: Client, data: any) => {
@@ -72,9 +84,14 @@ export class MyRoom extends Room {
     console.log("HavokPhysics loaded from file");
     const havokPlugin = new HavokPlugin(true, havok);
     this._havokPlugin = havokPlugin;
-    const deltaTime = 1 / 60;
-    havokPlugin.setTimeStep(deltaTime);
+    havokPlugin.setTimeStep(1/60);
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
+    scene.onAfterPhysicsObservable.add(() => {
+      this._tick++;
+      this._posToSend = this._ball.transformNode.position.clone();
+      this._velToSend = this._ball.getLinearVelocity();
+      //console.log(this._tick, Date.now());
+    });
     this._scene = scene;
     this._engine = engine;
     this._ball = createBall(new Vector3(this.state.ball.position.x, this.state.ball.position.y, this.state.ball.position.z),
@@ -90,6 +107,7 @@ export class MyRoom extends Room {
         if (this.state.score.teamFar >= 3) {
           this.state.roomStatus = RoomStatus.WON;
           this._tokens.get(this._far).hasWon = true;
+          this._timeEnd = Date.now();
         }
       }
       else if (this._ball.transformNode.position.z > 40) {
@@ -99,6 +117,7 @@ export class MyRoom extends Room {
         if (this.state.score.teamNear >= 3) {
           this.state.roomStatus = RoomStatus.WON;
           this._tokens.get(this._near).hasWon = true;
+          this._timeEnd = Date.now();
         }
       }
       if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
@@ -106,6 +125,13 @@ export class MyRoom extends Room {
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
         this._ball.transformNode.position.set(0,3,7);
+        this.state.ball.position.x = 0;
+        this.state.ball.position.y = 3;
+        this.state.ball.position.z = 7;
+        this.state.ball.velocity.x = 0;
+        this.state.ball.velocity.y = 0;
+        this.state.ball.velocity.z = 0;
+        this.broadcast('Goal!', { afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
       }
@@ -116,25 +142,41 @@ export class MyRoom extends Room {
     });
   }
 
+  private _isSuspiciousSpeed(oldVel: Vector3, newVel: Vector3) : boolean {
+    const isSuspicious = (
+        (Math.abs(oldVel.x) > 0.5 && Math.abs(newVel.x) < 0.001) ||
+        (Math.abs(oldVel.y) > 0.5 && Math.abs(newVel.y) < 0.001) ||
+        (Math.abs(oldVel.z) > 0.5 && Math.abs(newVel.z) < 0.001)
+    );
+    return isSuspicious;
+  }
+
   onBeforePatch(state: MyRoomState) {
-    const ballPos = this._ball.transformNode.position.clone();
-    const ballVel = this._ball.getLinearVelocity();
-    //console.log(ballPos);
-    //console.log(ballVel);
+    const ballPos = this._posToSend;
+    const ballVel = this._velToSend;
+    console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;
 
-    state.ball.velocity.x = ballVel.x;
-    state.ball.velocity.y = ballVel.y;
-    state.ball.velocity.z = ballVel.z;
+    const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
+    // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
+    if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
+      state.ball.velocity.x = ballVel.x;
+      state.ball.velocity.y = ballVel.y;
+      state.ball.velocity.z = ballVel.z;
+    }
+
+    state.ball.tickStamp = this._tick;
   }
 
   onCreate (options: any) {
     /**
      * Called when a new room is created.
      */
-    //START PHYSICS SIMULATION
+    this.state.ball.velocity.x = 0;
+    this.state.ball.velocity.y = 0;
+    this.state.ball.velocity.z = 0;
     console.log("room", this.roomId, "created and starting physics simulation");
     this._startSimulation();
   }
@@ -144,6 +186,7 @@ export class MyRoom extends Room {
        * This is a good place to validate the client's auth token.
        */
       const ourToken : string = options.token;
+      console.log(ourToken);
       if (!ourToken) {
         console.log("Failed to send authorization token");
         return false;
@@ -173,7 +216,7 @@ export class MyRoom extends Room {
      * Called when a client joins the room.
      */
     console.log(client.sessionId, "joined room", this.roomId);
-    this._tokens.set(client.sessionId, {auth: auth, score: 0, hasWon: false});
+    this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
     const player = new Player();
     player.position.x = 0;
     player.position.y = 1.5;
@@ -191,18 +234,22 @@ export class MyRoom extends Room {
     if (this.state.players.size == 2) {
       console.log("Game starting");
       this.state.roomStatus = RoomStatus.STARTED;
+      this._timeStart = Date.now();
     }
   }
 
   onDrop(client: Client, code: number) {
-    // Allow the client to reconnect within 30 seconds
     console.log(`Client ${client.sessionId} dropped (code: ${code})`);
     const player = this.state.players.get(client.sessionId);
-    if (player) {
+    if (player && this.state.roomStatus === RoomStatus.STARTED) {
       player.connected = false;
+      this._tokens.get(client.sessionId).hasDisconnected = true;
     }
     this.allowReconnection(client, 5).catch(() => {
-      this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+      if (this.state.roomStatus === RoomStatus.STARTED) {
+        this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+        this._timeEnd = Date.now();
+      }
     });
   }
 
@@ -210,8 +257,9 @@ export class MyRoom extends Room {
     console.log(`Client ${client.sessionId} reconnected!`);
  
     const player = this.state.players.get(client.sessionId);
-    if (player) {
-      player.connected = true;
+    if (player && this.state.roomStatus === RoomStatus.STARTED) {
+      player.connected = false;
+      this._tokens.get(client.sessionId).hasDisconnected = false;
     }
   }
 
@@ -228,27 +276,50 @@ export class MyRoom extends Room {
     this.state.players.delete(client.sessionId);
   }
 
+  async _updateDbPlayer(playerId: string, won: boolean, timePlayed: number){
+    const userData = await StatPong3D.findOne({where: {idUser: playerId}});
+    await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
+  }
+
   async _sendGameDataToDatabase() {
     const iterator = this._tokens.entries();
-      const firstPlayer = iterator.next().value;
-      const secondPlayer = iterator.next().value;
-      const player1id = firstPlayer[1].auth;
-      const player2id = secondPlayer[1].auth;
-      const score1 = firstPlayer[1].score;
-      const score2 = secondPlayer[1].score;
-      let whowin, wholose;
-      if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
+    const firstPlayer = iterator.next().value;
+    const secondPlayer = iterator.next().value;
+    const player1id = firstPlayer[1].auth;
+    const player2id = secondPlayer[1].auth;
+    const score1 = firstPlayer[1].score;
+    const score2 = secondPlayer[1].score;
+    console.log(player1id);
+    let whowin, wholose;
+    if (this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED) {
+      if (firstPlayer[1].hasDisconnected) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player2id;}
       try {
-      await PongStat.create({Player1id: player1id, Player2id: player2id, whowin: whowin, wholose: wholose, score1: score1, score2: score2});
+        GamePong3D.create({id_player_1: player1id, id_player_2: player2id, abortwinner: whowin, abortloser: wholose,
+          score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
+        this._updateDbPlayer(player1id, firstPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
+        this._updateDbPlayer(player2id, secondPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
       } catch (e) {
         console.log("Failed to store results in database", e);
       }
+    }
+    else {
+      if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
+      try {
+        await GamePong3D.create({id_player_1: player1id, id_player_2: player2id, winner: whowin, loser: wholose,
+          score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
+        this._updateDbPlayer(player1id, firstPlayer[1].hasWon, this._timeEnd - this._timeStart);
+        this._updateDbPlayer(player2id, secondPlayer[1].hasWon, this._timeEnd - this._timeStart);
+      } catch (e) {
+        console.log("Failed to store results in database", e);
+      }
+    }
   }
 
   onDispose() {
     /**
      * Called when the room is disposed.
      */
+    console.log(this.state.roomStatus);
     if (this.state.roomStatus != RoomStatus.WAITING)
       this._sendGameDataToDatabase();
 
@@ -277,5 +348,4 @@ export class MyRoom extends Room {
     }
     console.log("room", this.roomId, "disposing and ending simulation");
   }
-
 }

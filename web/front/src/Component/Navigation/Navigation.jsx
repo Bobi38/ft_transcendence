@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 
 /* back */
-import checkCo from "../../../tool/fct1.js"
+import checkCo from "TOOL/fonction_usefull.js"
 
 /* Css */
 import "./Navigation.scss";
@@ -28,7 +28,7 @@ export default function Navigation({ children }) {
 
     return (
         <>
-            <section className={`Navigation-root`}>
+            <main className={`Navigation-root`}>
 
                 <div className={`children-container`}>
                     {children}
@@ -36,7 +36,7 @@ export default function Navigation({ children }) {
                 
                 <NavBar/>
 
-            </section>
+            </main>
         </>
     );
 }

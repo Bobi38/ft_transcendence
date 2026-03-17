@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /* back */
-import checkCo from "../../../../tool/fct1.js"
+import checkCo from "TOOL/fonction_usefull.js"
 
 /* Css */
 import "./Pong3D.scss";
@@ -61,8 +61,8 @@ export default function Pong3D() {
     // namefct();
 
     return (
-        <div className={`Pong3D-root`}>
+        <main className={`Pong3D-root`}>
             <canvas ref={canvasRef} />
-        </div>
+        </main>
     )
 }

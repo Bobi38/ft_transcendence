@@ -3,7 +3,7 @@ import sequelize from './index.js';
 import User from './user.js';
 
 const GameMorp = sequelize.define('GameMorp', {
-    id:{
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -13,15 +13,10 @@ const GameMorp = sequelize.define('GameMorp', {
       allowNull: false
     },
 
-    date_game:{
+    date_game: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
-    },
-
-    ending: {
-      type: DataTypes.ENUM('win', 'draw', 'abort'),
-      allowNull: false,
     },
 
     player_1: {
@@ -35,32 +30,38 @@ const GameMorp = sequelize.define('GameMorp', {
     },
 
     winner: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
     },
 
     loser: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
     },
 
     time_player_1: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
     time_player_2: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
     nb_turn_player_1: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
     nb_turn_player_2: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
@@ -80,10 +81,10 @@ GameMorp.belongsTo(User, { foreignKey: 'player_1', as: 'player1' });
 User.hasMany(GameMorp, { foreignKey: 'player_2', as: 'gamesAsPlayer2', onDelete: 'CASCADE' });
 GameMorp.belongsTo(User, { foreignKey: 'player_2', as: 'player2' });
 
-User.hasMany(GameMorp, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
+// User.hasMany(GameMorp, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
 GameMorp.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
 
-User.hasMany(GameMorp, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
+// User.hasMany(GameMorp, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
 GameMorp.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
 
 export default GameMorp;

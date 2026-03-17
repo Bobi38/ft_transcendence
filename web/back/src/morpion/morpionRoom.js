@@ -31,18 +31,18 @@ class MorpionRoom extends Room {
     }   
 
     setFirstPlayer(){
-        if (this._locked) return false;
+        if (this._locked) return null;
 
-        this._first_player = true;
-        return true;
+        this._first_player = !this._first_player;
+        return this._first_player;
     }
 
-    isTurnPlayer(PlayerId){
-        return this._turn === PlayerId;
+    isTurnPlayer(player){
+        return this._turn === player;
     }
 
     switchTurn() {
-        const [p1, p2] = [...this._players.keys()];
+        const [p1, p2] = [...this._players];
         this._turn = this._turn === p1 ? p2 : p1;
     }
 
@@ -50,14 +50,14 @@ class MorpionRoom extends Room {
         return this._turn;
     }
 
-    startGame(firstPlayerId) {
-        if (!this._players.has(firstPlayerId)) {
+    startGame(player) {
+        if (!this._players.has(player)) {
             throw new Error("Invalid player");
         }
 
         if (this._first_player){
             console.log("je set turn")
-            this._turn = firstPlayerId;
+            this._turn = player;
         }
 
         this._chrono = Date.now();
@@ -70,13 +70,11 @@ class MorpionRoom extends Room {
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
 
-        for (const [id, player] of this._players.entries()) {
-            const basePayload = {
-                board: this._board
-            };
+        const basePayload = { board: this._board };
 
+        for (const player of this._players) {
             player.send(
-                id === this._turn
+                player === this._turn
                     ? { ...basePayload, ...payloadCurrent }
                     : { ...basePayload, ...payloadOthers }
             );
@@ -89,14 +87,14 @@ class MorpionRoom extends Room {
 
     getCurrentPlayer(current = true) {
         if (current)
-            return this._players.get(this._turn);
+            return this._turn;
         
-        const otherId = [...this._players.keys()].find(id => id !== this._turn);
-        return this._players.get(otherId);
+        const other = [...this._players].find(p => p !== this._turn);
+        return other;
     }
 
-    getOtheriD(currentId) {
-        return [...this._players.keys()].find(id => id !== currentId);
+    getOther(current) {
+        return [...this._players].find(p => p !== current);
     }
 
     isValidPlay(index) {
@@ -109,18 +107,16 @@ class MorpionRoom extends Room {
     play(currentPlayer, index) {
         console.log(String(currentPlayer));
         if (this._turn !== currentPlayer) {
-            this.getPlayer(currentPlayer).send("Ce n'est pas ton tour", this._board);
+            console.log("moi pas voir de probleme")
             return false;
         }
-
-        const player = this.getCurrentPlayer();
 
         if (!this.isValidPlay(index)) {
-            player.send("Coup invalide", this._board);
+            currentPlayer.send("seriously !!", this._board);
             return false;
         }
 
-        player.clearTurnTimer();
+        currentPlayer.clearTurnTimer();
 
         const symbol = (this.countMoves() % 2 === 0)? "X" : "O";
         this._board[index] = symbol;
@@ -129,11 +125,17 @@ class MorpionRoom extends Room {
 
         if (this._chrono !== null) {
             const timeTour = now - this._chrono;
-            player.setPlayTime(timeTour);
+            currentPlayer.setPlayTime(timeTour);
         }
 
         this._chrono = now;
 
+        for (const obs of this._obs){
+            obs.send({
+                players: this._players_names,
+                other_board: this._board})
+        }
+        
         return true;
     }
 
@@ -184,15 +186,15 @@ class MorpionRoom extends Room {
     }
 
     startTurnTimer() {
-        const currentPlayer = this.getCurrentPlayer();
+        const p = this._turn;
         const action = () => {
-            currentPlayer.send({
+            p.send({
             message: "Dépêche-toi de jouer !",
             board: this._board
             })
         };
 
-        currentPlayer.startTurnTimer(action, 3000);
+        p.startTurnTimer(action, 3000);
     }
 
     serializeBoard() {
@@ -223,7 +225,7 @@ class MorpionRoom extends Room {
         await GameMorp.create({
             how_win: this._how_win,
             // date_game: this._date_Game, ?? undefine
-            ending: this._ending,
+            // ending: this._ending, //inutile
 
             player_1, 
             player_2,
@@ -235,7 +237,7 @@ class MorpionRoom extends Room {
             nb_turn_player_2,
 
             map: this.serializeBoard(),
-            winner,  // winner /  winner abort
+            winner: winner.getId(),
             loser
         });
 

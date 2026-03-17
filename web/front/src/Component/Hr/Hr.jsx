@@ -66,9 +66,12 @@ export default function Hr({ children, mode = 'row', min1 = 100, min2 = 100, ini
             <div style={{ [isCol ? 'height' : 'width']: `${size1}px` }}>
                 {children[0]}
             </div>
-                    
-            <hr onPointerDown={() => { isDragging.current = true; document.body.style.cursor = isCol ? 'row-resize' : 'col-resize'; }}
+            {/*<hr onPointerDown={() => { isDragging.current = true; document.body.style.cursor = isCol ? 'row-resize' : 'col-resize'; }}
                 style={{ [isCol ? 'height' : 'width']: thickness, cursor: isCol ? 'row-resize' : 'col-resize', 
+                background: 'black', border: 'none', margin: 0}}
+            />*/}
+			<hr onPointerDown={() => { isDragging.current = true;}}
+                style={{ [isCol ? 'height' : 'width']: thickness,
                 background: 'black', border: 'none', margin: 0}}
             />
 

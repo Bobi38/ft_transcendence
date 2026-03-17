@@ -2,8 +2,8 @@
 import { FaGithub } from "react-icons/fa";
 
 /* back */
-import { showAlert } from "../../../../../tool/fct1.js";
-import SocketM from "../../../../../tool/SocketManag.js";
+import { showAlert } from "TOOL/fonction_usefull.js";
+import SocketM from "TOOL/SocketManag.js";
 
 
 /* Css */

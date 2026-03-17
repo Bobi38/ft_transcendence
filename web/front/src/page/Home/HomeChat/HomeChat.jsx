@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import SocketM  from "/app/tool/SocketManag.js";
+import SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
 import "./HomeChat.scss";
@@ -96,7 +96,7 @@ export default function HomeChat() {
 
     return (
         <>
-            <div id={`HomeChat-root`}>
+            <section className={`HomeChat-root`}>
 
                     <h3>Global Chat</h3>
                 <div className={`message-container`}>
@@ -140,7 +140,7 @@ export default function HomeChat() {
                 </form>
 
 
-            </div>
+            </section>
         </>
     )
 }

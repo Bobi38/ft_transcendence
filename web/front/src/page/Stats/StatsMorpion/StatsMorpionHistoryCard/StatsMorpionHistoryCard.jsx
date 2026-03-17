@@ -47,25 +47,20 @@ export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
 
     
     return (
-        <div className={`StatsMorpionHistoryCard-root border-base`}>
+        <article className={`StatsMorpionHistoryCard-root border-base`}>
+            <div className={`${style_card(stats.how_win)}`}></div>
 
-            {/* <div className={`${style_card(stats.how_win)}`}></div>
-            <div className={`${color_card(stats.how_win)}`}></div> */}
-
-            <div className={`board-container`}>
+            <div className={`board-container ${color_card(stats.how_win, stats?.winnerUser?.name)}`}>
                 <Board board={stats.map.split('')} isGame={false}/>
             </div>
 
-
             <div className={`game-data border-1`}>
-                <div className={`${style_card(stats.how_win)}`}></div>
-                <div className={`${color_card(stats.how_win, stats?.winnerUser?.name)}`}></div>
                 <p className={`time`}>time: {format_time(stats.time_player_1 + stats.time_player_2)}</p>
                 <p className={`stat`}>{`${stats.player1.name} [X] : ${stats.nb_turn_player_1} turn - MOY/${Math.round(stats.time_player_1 / stats.nb_turn_player_1)}ms`}</p>
                 <p className={`stat`}>{`${stats.player2.name} [O] : ${stats.nb_turn_player_2} turn - MOY/${Math.round(stats.time_player_2 / stats.nb_turn_player_2)}ms`}</p>
             </div>
 
-        </div>
+        </article>
     )
 }
 

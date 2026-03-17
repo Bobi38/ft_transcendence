@@ -1,6 +1,6 @@
 /* extern */
 import { Link } from "react-router-dom";
-import  SocketM  from "../../../../tool/SocketManag.js"
+import  SocketM  from "TOOL/SocketManag.js"
 import { useEffect, useState } from "react";
 
 /* back */
@@ -50,22 +50,17 @@ export default function HomeFooter({setShowLog}) {
 
     return (
         <>
-            <div className={`HomeFooter-root`}>
+            <nav className={`HomeFooter-root`}>
 
 				<Button path={`/ContactUs`}>
 					Contact us
 				</Button>
 
-                <div>
-
-                    <div>
-                        {time}
-                    </div>
-                    <div>
-                        {username}
-                    </div>
-                    <button onClick={(logout)}>
-                        logout quand pas log on enleve
+                <div className={`HomeFooter-center`}>
+                    {/* <p>{username}</p> */}
+                    <p>{time}</p>
+                    <button className={`logout`}onClick={(logout)}>
+                        Logout
                     </button>
 
                 </div>
@@ -74,7 +69,7 @@ export default function HomeFooter({setShowLog}) {
 					Profile
 				</Button>
 
-            </div>
+            </nav>
         </>
     );
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 
 /*back*/
-import { showAlert } from "../../../tool/fct1.js";
+import { showAlert } from "TOOL/fonction_usefull.js";
 
 /* Css */
 import "./Profile.scss";
@@ -108,125 +108,116 @@ export default function Profile() {
     
 
     return (
-        <>
-            <div id={`Profile-root`}>
+        <section className={`Profile-root`}>
 
 
-                <h3>Mon Profil</h3>
+            <h3>Mon Profil</h3>
 
 
-                <div className={`edit`} onClick={() => setIsReadOnly(!isReadOnly)}>{/* isReadOnly default true*/}
-                     <VscEdit />{isReadOnly ? " Edit " : " Editing "}<VscEdit />  
+            <div className={`edit`} onClick={() => setIsReadOnly(!isReadOnly)}>{/* isReadOnly default true*/}
+                    <VscEdit />{isReadOnly ? " Edit " : " Editing "}<VscEdit />  
+            </div>
+
+
+            <div id={`alert-container`}>
+                {/* ne pas creat une div faire un innertext */}
+            </div>
+
+
+            <div className={`form-container`}>
+
+                <form className={``} onSubmit={handle_submit}>
+
+                    <label htmlFor={`login`}>Login</label>
+                    <input  type={`text`}
+                            id={`login`}
+                            name={`login`}
+                            value={user.login ?? ""}
+                            readOnly={isReadOnly}
+                            onChange={(e) => setUser({ ...user, login: e.target.value }) }
+                            /> 
+
+                    <label htmlFor={`login42`}>Login-42</label>
+                    <input  type={`text`}
+                            id={`login42`}
+                            name={`login42`}
+                            value={user.login42 ?? ""}
+                            readOnly={isReadOnly}
+                            onChange={(e) => setUser({ ...user, login42: e.target.value }) }
+                            /> 
+
+                    <label htmlFor={`email`} className={``}>Email</label>
+                    <input  type={`email`}
+                            id={`email`}
+                            name={`email`}
+                            title={`Can't be changed`}
+                            value={user.email}
+                            readOnly={true}
+                            onChange={(e) => setUser({ ...user, email: e.target.value }) }
+                            /> 
+
+
+                    <label htmlFor={`tel`}>Téléphone</label> 
+                    <input  type={`tel`}
+                            id={`tel`}
+                            name={`tel`}
+                            value={user.tel ?? ""}
+                            readOnly={isReadOnly}
+                            onChange={(e) => setUser({ ...user, tel: e.target.value }) }
+                            /> 
+
+                    <label htmlFor={`location`}>Location</label>
+                    <AddressAutocomplete user={user} setUser={setUser} isReadOnly={isReadOnly}/>
+
+                    <button type={`submit`}>Modifier mes informations</button>
+                    
+                </form>
+
+
+                <div className={`change-password`} onClick={() => setShowFormPassword(!showFormPassword)}>
+                    Changer de mot de passe
                 </div>
 
+                <div className={showFormPassword ? "visible" : "hidden"}>
 
-                <div id={`alert-container`}>
-                    {/* ne pas creat une div faire un innertext */}
-                </div>
+                    <form className="password-form" onSubmit={handle_pass}>
 
+                        <label htmlFor="password">Nouveau Mot de passe</label>
+                        <div className="input-wrapper">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                name="password"
+                                className="password-field"
+                                placeholder="Votre nouveau mot de passe"
+                            />
+                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            </span>
+                        </div>
 
-                <div className={`form-container`}>
+                        <label htmlFor="confirmepassword">Confirmer Mot de passe</label>
+                        <div className="input-wrapper">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="confirmepassword"
+                                name="confirmepassword"
+                                className="password-field"
+                                placeholder="Confirmation du nouveau mot de passe"
+                            />
+                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            </span>
+                        </div>
 
-                    <form className={``} onSubmit={handle_submit}>
-
-                        <label htmlFor={`login`}>Login</label>
-                        <input  type={`text`}
-                                id={`login`}
-                                name={`login`}
-                                value={user.login ?? ""}
-                                readOnly={isReadOnly}
-                                onChange={(e) => setUser({ ...user, login: e.target.value }) }
-                                /> 
-
-                        <label htmlFor={`login42`}>Login-42</label>
-                        <input  type={`text`}
-                                id={`login42`}
-                                name={`login42`}
-                                value={user.login42 ?? ""}
-                                readOnly={isReadOnly}
-                                onChange={(e) => setUser({ ...user, login42: e.target.value }) }
-                                /> 
-
-                        <label htmlFor={`email`} className={``}>Email<span >Can't be changed</span></label>
-                        <input  type={`email`}
-                                id={`email`}
-                                name={`email`}
-                                title={`Can't be changed`}
-                                value={user.email}
-                                readOnly={true}
-                                onChange={(e) => setUser({ ...user, email: e.target.value }) }
-                                /> 
-
-
-                        <label htmlFor={`tel`}>Téléphone</label> 
-                        <input  type={`tel`}
-                                id={`tel`}
-                                name={`tel`}
-                                value={user.tel ?? ""}
-                                readOnly={isReadOnly}
-                                onChange={(e) => setUser({ ...user, tel: e.target.value }) }
-                                /> 
-
-                        <label htmlFor={`location`}>Location</label>
-                        <AddressAutocomplete user={user} setUser={setUser} isReadOnly={isReadOnly}/>
-
-                        <button type={`submit`}>Modifier mes informations</button>
-                        
+                        <button type="submit" className="submit-btn">Modifier mon mot de passe</button>
+                    
                     </form>
 
+                </div>
+            </div>
 
-                    {/* <div className={`change-password`}
-                         onClick={() => setShowFormPassword(!showFormPassword)}>
-                        Changer de mot de passe
-
-
-                        <div className={showFormPassword ? "visible" : "hidden"}>
-
-                        <form className={``} onSubmit={handle_pass}>
-
-                                <label htmlFor={`password`}>Nouveau Mot de passe</label>
-                                <div className={``}>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        id={`password`}
-                                        name={`password`}
-                                        placeholder={`Votre nouveau mot de passe`}
-                                        />
-
-                                    <span   className={``}
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            >
-                                        {showPassword ? <VscEyeClosed /> : <VscEye />}
-                                    </span>
-                                </div>
-
-
-                                <label htmlFor={`confirmepassword`}>Confirmer Mot de passe</label>
-                                <div className={``}>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        id={`confirmepassword`}
-                                        name={`confirmepassword`}
-                                        placeholder={`Confirmation du nouveau mot de passe`}
-                                        />
-
-                                    <span   className={`Profile-eye-icon`}
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            >
-                                        {showPassword ? <VscEyeClosed /> : <VscEye />}
-                                    </span>
-                                </div>
-
-                                
-                                <button type={`submit`}>Modifier mon mot de passe</button>
-                            </form>
-                        </div>
-                    </div> */}
-
-                </div>{/* className={`form-container`} */}
-
-            </div>{/* id={`Profile-root`} */}
-        </>
+        </section>
     )
 }
 

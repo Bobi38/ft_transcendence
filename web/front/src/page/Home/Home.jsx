@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /* back */
-import checkCo from "../../../tool/fct1.js"
+import checkCo from "TOOL/fonction_usefull.js"
 
 /* Css */
 import "./Home.scss";
@@ -117,32 +117,24 @@ export default function Home() {
 
 	return (
 
-		<section id={`Home-root`}>
-			<div className="scanlines"></div>
+		<div id={`Home-root`}>
+
             <div className={`${is_popup}`} >
-
                 <div className={`${is_popup} Home-PopUp`} >
-
-
                     {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
-
                 </div>
-
             </div>
 
-			<div className={`menu`}>
-
-				<div className={`card-container`}>
+			<main className={`menu`}>
+				<section className={`card-container`}>
 					{cards}
-				</div>
-
+				</section>
                 <HomeChat/>
-
-			</div>
+			</main>
 
 			<HomeFooter setShowLog={setShowLog}/>
 
-		</section>
+		</div>
 	)
 }
 

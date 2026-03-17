@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-import  SocketM  from "/app/tool/SocketManag.js";
+import  SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
 import "./PrivateMessageConv.scss"; 
@@ -58,7 +58,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         SocketM.sendd('priv', data2);
         setInput("");
     }
-
+    console.log("displayedMessages:",displayedMessages);
     return (
         <>
             <div className={`PrivateMessageConv-root border-0`}>
@@ -66,21 +66,29 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
                     <h5>{login}</h5>
 
                     <div className="message border-1">
-                        <div>
+                            {displayedMessages && displayedMessages.map((msg, index) => { return (
 
-                            {displayedMessages && displayedMessages.map((msg, index) => { return ( 
-
-                                <div key={index} className={`border-2`}>
-
-                                    {index != 0 && <hr/>}
-                                    <h3>{msg.login}</h3>
-                                    <p>{msg.message}</p>
+                                <div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
+                                    
+                                    {/* {index != 0 && <hr/>} */}
+                                    {msg.monMsg ? (
+                                        <div>
+                                            <div><span>{msg.timer}</span></div>
+                                            <p>{msg.message}</p>
+                                        </div>
+                                    ) : (
+                                        <div >
+                                            <div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
+                                            <p>{msg.message}</p>
+                                        </div>
+                                    )}
+                                    {/* <h3>{msg.login}</h3>
+                                    <p>{msg.message}</p> */}
 
                                 </div>
 
                             );})}
 
-                        </div>
 
                     </div>
 

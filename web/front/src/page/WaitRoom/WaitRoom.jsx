@@ -1,7 +1,6 @@
 import "./waitRoom.scss";
-import SocketM from "../../../tool/SocketManag.js";
+import SocketM from "TOOL/SocketManag.js";
 import { useEffect, useState} from "react";
-import { useNavigate} from "react-router-dom";
 
 function Training(){
   return (

@@ -12,8 +12,8 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 // import { GameRoom } from './colyseus/GameRoom.js';
 // import router from './routes/index.js';
 // import router from './router.js';
-import { majDb } from './src/fct.js';
-import {addDb} from './src/fct.js';
+import { majDb } from './src/CreatDB.js';
+import { addDb } from './src/CreatDB.js';
 import bodyParser from 'body-parser';
 
 

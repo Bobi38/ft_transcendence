@@ -16,7 +16,6 @@ export { default as session } from 'express-session';
 export { default as QRCode } from 'qrcode';
 export { authenticator } from 'otplib';
 export { error, time } from 'console';
-// export { majDb } from '../fct.js'
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -31,7 +30,7 @@ import Friend from '../models/friend.js';
 import PswEmail from '../models/PssWrdEmail.js';
 import StatMorp from '../models/StatMorp.js';
 import GameMorp from '../models/GameMorp.js';
-import HistoryMorp from '../models/HistoryMorp.js';
+import StatPong3D from '../models/StatPong3D.js';
 import {decrypt} from './crypt.js'
 
 const router = express.Router();
@@ -129,7 +128,7 @@ export {
     PswEmail,
     StatMorp,
     GameMorp,
-    HistoryMorp,
+    StatPong3D,
 };
 
 

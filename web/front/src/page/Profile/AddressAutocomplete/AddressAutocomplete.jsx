@@ -2,7 +2,6 @@
 import { useState } from "react";
 
 /*back*/
-// import { showAlert } from "BACK/fct1.js";
 
 /* Css */
 import "./AddressAutocomplete.scss";
@@ -39,32 +38,30 @@ export default function AddressAutocomplete({user, setUser, isReadOnly}) {
     };
 
   return (
-        <>
-            <div className={`AddressAutocomplete-root`}>
+        <div className={`AddressAutocomplete-root`}>
 
-                <input type={`text`} id={`location`} name={`location`}
-                       value={user.location || ""} onChange={handle_change}
-                       readOnly={isReadOnly}
-                       placeholder={`Entrez votre adresse`}/>
+            <input type={`text`} id={`location`} name={`location`}
+                    value={user.location || ""} onChange={handle_change}
+                    readOnly={isReadOnly}
+                    placeholder={`Entrez votre adresse`}/>
 
-                {results && 
-                    <div className={`AddressAutocomplete-list-item`}>
-                        <ul>
+            {results && 
+                <div className={`AddressAutocomplete-list-item`}>
+                    <ul>
 
-                            {results.map((item) => (
-                                <li key={item.properties.id}
-                                    onClick={() => handle_select(item.properties.label)}
-                                    style={{ cursor: "pointer" }}>
-                                    {item.properties.label}
-                                </li>
-                            ))}
+                        {results.map((item) => (
+                            <li key={item.properties.id}
+                                onClick={() => handle_select(item.properties.label)}
+                                style={{ cursor: "url(\"./media/wii_pointer.svg\"), pointer" }}>
+                                {item.properties.label}
+                            </li>
+                        ))}
 
-                        </ul>
-                    </div>
-                }
+                    </ul>
+                </div>
+            }
 
 
-            </div>
-        </>
+        </div>
     );
 }

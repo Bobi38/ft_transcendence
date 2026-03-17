@@ -1,6 +1,6 @@
 import GameMorp from "../models/GameMorp.js";
 
-export async function seedGameMorp() {
+export async function CreatGameMorp() {
   const count = await GameMorp.count();
 
   if (count === 0) {

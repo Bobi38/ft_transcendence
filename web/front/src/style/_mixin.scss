@@ -8,27 +8,47 @@
 @mixin fullh { height: $root_height; }
 @mixin fullw { width: $root_width; }
 
-@mixin page {
-    @include full;
-    background-color: rgb(13, 138, 187);
-    border-radius: 0.5rem;
+@mixin colortext($varcolor : rgb(10, 201, 240)){
     p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
-        color: rgb(10, 201, 240);
+        color: $varcolor;
     }
+}
+
+@mixin page($varcolor : rgb(0, 81, 97)){
+    @include full;
+    background-image: linear-gradient(#76ff36, #79ff74, #78c9ff);
+    @include colortext($varcolor);
+}
+
+@mixin cursor($type)
+{
+	@if $type == "pointer" {
+		cursor: url("MEDIA/wii_pointer.png") 5 5, pointer;
+	}
+	@else if $type == "grab" {
+		cursor: url("MEDIA/wii_grab.png") 10 30, grab;
+	}
+	@else if $type == "text" {
+		cursor: url("MEDIA/wii_pencil.png") 5 5, text;
+	}
+	@else{
+		cursor: url("MEDIA/wii_default.png") 5 5, auto;
+	}
 }
 
 
 @mixin icone{
-    
     transition: all 0.2s;
     padding: 0.6rem;
 
-    background: radial-gradient(#ffffff 40%, $main);
-	box-shadow: 0px 0px 7px 5px $main-dark;
+    background: radial-gradient(#ffffff 60%, $main);
+	//box-shadow: 0px 0px 2px 7px $main-dark;
 
-    border:4px solid $second;
-    border-radius:25px;
-    cursor: pointer;
+    border: 8px solid rgb(189, 189, 189);
+    border-radius: 25px;
+	// @include cursor("pointer");
+
+
     &:hover {
         outline: none;
 
@@ -44,10 +64,9 @@
 }
 
 @mixin cardhistory($how_win: "draw"){
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    opacity: 0.2;
+    // pointer-events: none;
+    border-radius: 30px;
+    opacity: 0.8;
     z-index: 3;
     @if $how_win == "draw" {
         background: blue;

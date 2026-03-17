@@ -3,6 +3,7 @@ import { Room } from "@colyseus/sdk";
 
 export class GUI {
     private _room : Room;
+    private _ui: AdvancedDynamicTexture = null;
     private _waiting4Player : AdvancedDynamicTexture;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
@@ -14,9 +15,16 @@ export class GUI {
         this._room = room;
     }
 
+    private _setAndDispose(newUi : AdvancedDynamicTexture) {
+        if (this._ui) {
+            this._ui.dispose();
+        }
+        this._ui = newUi;
+    }
+
     private _gameOverUI(text: string) {
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        this._end = ui;
+        this._setAndDispose(ui);
 
         const banner = new Rectangle();
         banner.width = "500px";
@@ -68,14 +76,13 @@ export class GUI {
         menuBtn.onPointerClickObservable.add(() => {
             window.location.href = "/";
             console.log("Return to menu clicked");
-});
-
-panel.addControl(menuBtn);
+        });
+        panel.addControl(menuBtn);
     }
 
-    public addWaitingUI() {
+    public showWaitingUI() {
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        this._waiting4Player = ui;
+        this._setAndDispose(ui);
 
         const banner = new Rectangle();
         banner.width = "500px";
@@ -109,12 +116,12 @@ panel.addControl(menuBtn);
         }, 500);
     }
 
-    public disposeWaitingUI() {
-        this._waiting4Player.dispose();
-        this._waiting4Player = null;
-    }
+    // public disposeWaitingUI() {
+    //     this._waiting4Player.dispose();
+    //     this._waiting4Player = null;
+    // }
 
-    public addScoreUI(isNear: boolean) {
+    public addScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
         this._isPlayerNear = isNear;
         this._score = AdvancedDynamicTexture.CreateFullscreenUI("ui");
 
@@ -147,7 +154,10 @@ panel.addControl(menuBtn);
         stack.addControl(scoreLabel);
 
         this._scoreText = new TextBlock();
-        this._scoreText.text = "0 : 0";
+        if (this._isPlayerNear)
+            this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
+        else
+            this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
         this._scoreText.color = "white";
         this._scoreText.fontSize = 14;
         this._scoreText.fontWeight = "bold";
@@ -164,16 +174,16 @@ panel.addControl(menuBtn);
             this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
     }
 
-    public addEndUI(scoreNear: number, scoreFar: number) {
+    public showEndUI(scoreNear: number, scoreFar: number) {
         if (this._isPlayerNear && scoreNear >= 3 || !this._isPlayerNear && scoreFar >= 3)
             this._gameOverUI("Congratulations! You win");
         else
             this._gameOverUI("Loser lol");
     }
 
-    public addPlayerDisconnectedUI() {
+    public showPlayerDisconnectedUI() {
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        this._playerDisconnected = ui;
+        this._setAndDispose(ui);
 
         const banner = new Rectangle();
         banner.width = "500px";
@@ -207,16 +217,22 @@ panel.addControl(menuBtn);
         }, 500);
     }
 
-    public disposePlayerDisconnectedUI() {
-        this._playerDisconnected.dispose();
-        this._playerDisconnected = null;
-    }
+    // public disposePlayerDisconnectedUI() {
+    //     this._playerDisconnected.dispose();
+    //     this._playerDisconnected = null;
+    // }
 
     public getIsPlayerDisconnectedUIShown() : boolean {
         return (this._playerDisconnected != null)
     }
 
-    public addOtherPlayerDisconnectUI() {
+    public showOtherPlayerDisconnectUI() {
         this._gameOverUI("Other player disconnected");
+    }
+
+    public showNoUI() {
+        if (this._ui) {
+            this._ui.dispose();
+        }
     }
 }

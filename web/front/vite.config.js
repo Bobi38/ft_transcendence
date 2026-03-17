@@ -45,6 +45,7 @@ export default defineConfig({
       'COMP': path.resolve(__dirname, './src/Component'),
       'HOOKS': path.resolve(__dirname, './src/hooks'),
       'STYLE': path.resolve(__dirname, './src/style'),
+      'TOOL': path.resolve(__dirname, './tool'),
       'BACK': path.resolve(__dirname, '/app/back/src'),
       'MEDIA': path.resolve(__dirname, '/app/media'),
     },

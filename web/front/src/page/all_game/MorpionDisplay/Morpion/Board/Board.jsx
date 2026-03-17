@@ -1,7 +1,7 @@
 /* extern */
 
 /* back */
-import  SocketM  from "/app/tool/SocketManag.js";
+import  SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
 import "./Board.scss";
@@ -11,8 +11,8 @@ import "./Board.scss";
 export default function Board({ board , isGame }) {
 
     function handleClick(i) {
-        SocketM.sendd('morp', {
-            type: "game",
+        SocketM.sendd(SocketM.socket.morp, {
+            type: "move",
             message: i,
         })
     }

@@ -1,10 +1,13 @@
 import { Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 import { Room } from "@colyseus/sdk";
+import { App } from "./app";
+import { BallSnapshot, SnapshotBuffer } from "./snapshots";
+import { RacketHistory } from "./RacketHistory";
 
 export class Player extends TransformNode {
     PLAYER_SPEED: number;
-    public camera;
+    public camera : UniversalCamera;
     public scene: Scene;
     public room: Room;
     private _input : PlayerInput;
@@ -13,10 +16,16 @@ export class Player extends TransformNode {
     public racketBody: PhysicsBody;
     public hand_node: TransformNode;
     public sessionId: string;
+    private _app : App;
     private _controlsEnabled : boolean = false;
 
-    constructor(sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
+    public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
+    public racketHistory : RacketHistory = new RacketHistory();
+
+    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
         super("player", scene);
+        this.camera = camera;
+        this._app = app;
         this.sessionId = sessionId;
         this.scene = scene;
         this.room = room;
@@ -46,20 +55,29 @@ export class Player extends TransformNode {
                 return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
-            const hitForward = 0.9;
+            const hitForward = this.camera.getForwardRay().direction.scale(2);
             const mouseDirAvg = (this._input.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
             mouseDirAvg.scaleInPlace(1/this._input.mouseBufferSize).normalize();
-            const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, hitForward).normalize();
+            if (mouseDirAvg.lengthSquared() > 0.001) {
+                mouseDirAvg.normalize();
+            } else {
+                mouseDirAvg.set(0,0);
+            }
+            const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, 0).add(hitForward).normalize();
             console.log(hitDirection);
             const mouseAvgSpeed = this._input.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this._input.mouseBufferSize;
-            const power = Scalar.SmoothStep(0, 200, mouseAvgSpeed) / 10;
+            const power = Scalar.SmoothStep(50, 200, mouseAvgSpeed) / 10;
             console.log(mouseAvgSpeed, power);
 
-            ballBody.applyImpulse(hitDirection.scale(power), event.point);
+            const newVel = hitDirection.scale(power);
+            ballBody.setLinearVelocity(newVel);
+            //ballBody.applyImpulse(hitDirection.scale(power), event.point);
 
+            console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel);
             const ballPos = ballBody.transformNode.position.clone();
-            const ballVel = ballBody.getLinearVelocity(); 
-            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: ballVel.asArray()});
+            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray()});
+            this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);
+            this._app.setIgnoreServer();
         });
         const physicsViewer = new PhysicsViewer(this.scene);
         physicsViewer.showBody(colRacketBody);
@@ -76,13 +94,14 @@ export class Player extends TransformNode {
         this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
-    public updateRacket() {
+    public updateRacket(tick: number) {
         if (!this._controlsEnabled)
             return ;
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
         this.room.send("racketMoved", {position: this.racket.position.asArray(),
             rotation: this.racket.rotationQuaternion.asArray()});
+        this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
     }
 
     public getPlayerPosition() : Vector3 {

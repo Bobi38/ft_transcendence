@@ -18,7 +18,7 @@ $width_game_winrate: 100% - $width_history;
     
     .history-container {
         width: $width_history;
-        padding-right: 0;
+        // padding-right: 0;
         
         scrollbar-width: thin;
         display: flex;
@@ -29,55 +29,83 @@ $width_game_winrate: 100% - $width_history;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            padding: 0.5rem;
             gap: 0.5rem;
         }
         
     }
     .aside{
-        
-        display: flex;
-        flex-direction: column;
         width: $width_game_winrate;
         height: 100%;
-        padding-bottom: 0.5rem;
-        .search {
+        padding: 0.5rem;
+        .asidecss{
+            padding: 0.5rem;
             display: flex;
             flex-direction: column;
-            padding: 0.3rem;
-            .searchmorp {
-                input[type="text"] {
-                    width: 100%;
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.700);
+            .search {
+                display: flex;
+                flex-direction: column;
+                padding: 0.3rem;
+                .searchmorp {
+                    input[type="text"] {
+                        width: 100%;
+                    }
                 }
             }
-        }
-        .game-winrate {
-            overflow: hidden auto;
-            width: 100%;
-            
-            .wl-graph, .wl-o-x, .wl-horizontal,
-            .wl-diagonal, .wl-vertical {
-                padding: 0.5rem;
+            .game-winrate {
+                overflow: hidden auto;
+                height: 100%;
+                width: 100%;
+                
+                .wl-graph, .wl-o-x, .wl-horizontal,
+                .wl-diagonal, .wl-vertical {
+                    padding: 0.5rem;
+                }
+                
+                .wl-graph{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    .wl-graph2{
+                        width: 100%;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-around;
+                        // align-items: cener; 
+                        div{
+                            display: flex;
+                            flex-direction: column;
+                            
+                        }
+                    }
+                    
+                }
+                
+                .wl-o-x{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-around;
+                }
+                
+                // .wl-horizontal{
+                    
+                // }
+                
+                // .wl-diagonal{
+                    
+                // }
+                
+                // .wl-vertical{
+                    
+                // }
             }
-            
-            // .wl-graph{
-                
-            // }
-            
-            // .wl-o-x{
-                
-            // }
-            
-            // .wl-horizontal{
-                
-            // }
-            
-            // .wl-diagonal{
-                
-            // }
-            
-            // .wl-vertical{
-                
-            // }
         }
     }
 }
+    

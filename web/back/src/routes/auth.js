@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
     console.log("Api /login called");
     const result = await User.findAll({ where: { mail: email } });
     if (result.length === 0)
-        return res.status(500).json({success: false, message: 'Email not find'});
+        return res.status(404).json({success: false, message: 'Email not find'});
     const DecrypPass = await bcrypt.compare(password, result[0].password);
     if (!DecrypPass)
         return res.status(500).json({success: false, message: 'Password not valid'});
