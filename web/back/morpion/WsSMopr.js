@@ -57,6 +57,7 @@ export function initWebSMopr(server) {
         player.addSocket(socket);
       }
       socket.player = player;
+
       socket.players = players;
 
       socket.send(JSON.stringify({type: "auth_good"}));
@@ -71,16 +72,16 @@ export function initWebSMopr(server) {
         const data = JSON.parse(message);
         console.log(`${data.type}`);
         switch (data.type) {
-          case "game": //move
-            m.morpion(data.message, socket, socket.userId);
-            break ;
+          // case "game": //move
+          //   m.morpion(data.message, socket, socket.userId);
+          //   break ;
 
           case "move":
             m.move(socket.player, data.message);
             break ;
 
           case "play":
-            m.searchGame(socket.player);
+            m.searchGame(socket.player, socket.players);
             break ;
 
           case "leave":
@@ -88,7 +89,8 @@ export function initWebSMopr(server) {
             break ;
 
           case "second":
-            m.playSecond(socket.player); //ok a tster
+            console.log();
+            m.playSecond(socket.player);
             break ;
 
           case "reboot":
@@ -98,12 +100,10 @@ export function initWebSMopr(server) {
             socket.players.clear();
             break ;
 
-          case "obs":
-            socket.player.send({list: manager_room.getList()});
+          case "spec":
+            m.observator(socket.player, data.id)
+            // socket.player.send({list: manager_room.getList()});
             break ;
-
-          case "obs":
-
 
           default:
             socket.player.send();

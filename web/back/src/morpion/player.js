@@ -1,3 +1,4 @@
+
 import StatMorp from "../models/StatMorp.js";
 
 export class Player {
@@ -106,6 +107,7 @@ export class Player {
                 console.error("WebSocket player.send error:", err);
             }
         }
+        console.log(data);
     }
 
     disconnect(message) {

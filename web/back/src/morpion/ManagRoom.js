@@ -32,10 +32,11 @@ class ManagerRoom {
 
     removeRoom(room) {
         // console.log(`cherche ${id}  - quel  room ? ${room}`)
-        if (!room) return;
+        if (!room) return false;
 
         room.remove();
-        this._rooms.delete(room.getId());
+        this._rooms.delete(room.getId())
+        return true;
     }
 
     isInRoom(playerId) {
