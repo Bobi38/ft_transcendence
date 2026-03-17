@@ -45,7 +45,7 @@ export default function App() {
             console.log("App.jsx useEffect(1) SocketM.connect() called");
 
             const handle_friend_co = (data) => {
-              console.log("friend connected:", data.login);
+              console.log("friend HANDLE:");
               if (data.type == 'co')
                 setNotif(`${data.login} vient de se connecter`);
               if (data.type == 'deco')

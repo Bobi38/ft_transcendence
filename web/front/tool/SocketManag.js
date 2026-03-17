@@ -31,6 +31,13 @@ class SocketManag{
             friend : 0,
             pong : 0
         };
+        this.queue = {
+            chat : [],
+            priv : [],
+            morp : [],
+            friend : [],
+            pong : []
+        };
         this.listeners = {
             chat: new Map(),
             pong: new Map(),
@@ -48,7 +55,11 @@ class SocketManag{
         console.log(`${protocol}//${host}${paths[name]}`);
         this.socket[name] = new WebSocket(`${protocol}//${host}${paths[name]}`);
         console.log("Tentative de connexion au WebSocket...");
-        this.socket[name].onopen = () => {this.sendd(this.socket[name],{type: "auth",  mess: null})}
+        this.socket[name].onopen = () => {
+            this.sendd(name,{type: "auth",  mess: null});
+            console.log("WebSocket connecté avec succès.");
+            this.flushQueue(name);
+        }
 
         this.socket[name].onmessage = (event) => {
             if (!event.data) {return;}
@@ -59,14 +70,17 @@ class SocketManag{
                 this.listeners[name].forEach(cb => cb(dataa));
             // }
             if (dataa.type === 'ping'){
-                console.log("receive PING")
+                console.log("receive PING ", name)
                 const data = {
                     type: 'pong',
                 }
-                this.sendd(this.socket[name], data)
+                this.sendd(name, data)
             }
             if (dataa.type === 'auth_good')
                 this.attempt[name] = 0;
+            if (dataa.type === 'co_good' && name === "friend"){
+                this.flushQueue(name);
+            }
         }
         this.socket[name].onerror = (error) => {
             console.log("errr socket" + error);
@@ -94,30 +108,42 @@ class SocketManag{
     this.listeners[type].delete(id);
     }
 
-    sendd (socket, data){
-        if (!socket)return ;
+    sendd (name, data){
+        console.log("sendd called with data:", data);
+        const socket = this.socket[name];
+        if (!socket){
+            console.log("pas de socket pour " + name);
+            return ;
+        }
         console.log("coucou je suis dans sendd" + " " + socket.readyState);
 
-        if (!socket || socket.readyState !== WebSocket.OPEN) {
+        if (socket.readyState !== WebSocket.OPEN) {
             console.log("proble de socket :envoie impossible");
+            this.queue[name].push(data);
             return;
         }
-        else
-        {
-            console.log("envoi du message via WebSocket:", data);
-            socket.send(JSON.stringify(data));
-        }
+        console.log("envoi du message via WebSocket:", data, " to socket:", name);
+        socket.send(JSON.stringify(data));
     }
     
     disconnect(name){
         this.reco[name] = false;
-        this.sendd(socket[name], {type: "logout"});
+        this.sendd(this.socket[name], {type: "logout"});
         if (this.socket[name]){
             this.socket[name].close();
             this.socket[name] = null;
         }
     }
 
+    flushQueue(name){
+        const socket = this.socket[name];
+        const q = this.queue[name];
+
+        while(q.length > 0){
+            const msg = q.shift();
+            this.sendd(name, msg);
+        }
+    }
 
     getState(name){
         if (this.socket[name])
