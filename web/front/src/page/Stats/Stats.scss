@@ -2,17 +2,15 @@
 @use "STYLE/_mixin" as mix;
 
 .Stats-root{
-    
-	@include mix.page;
-    
-    padding: 1rem;
 
+	@include mix.page;
 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;/*en haut*/
     text-align: center;
     gap: 0.5rem;
+    padding: 1rem;
 
     .Stats-selection{
 
@@ -22,15 +20,14 @@
             border-radius: 0.5rem;
             padding: 0.5rem 1rem;
             margin: 0.5rem;
-			// @include mix.cursor("pointer");
             font-size: 1rem;
-            
+
             &:hover{
                 background-color: rgba(0, 0, 0, 0.3);
             }
         }
     }
-        
+
     .Stats-container{
         height: 0;
         width: 100%;
@@ -39,5 +36,4 @@
             color: rgb(2, 119, 143);
         }
     }
-
 }

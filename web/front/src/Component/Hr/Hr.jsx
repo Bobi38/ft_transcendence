@@ -49,7 +49,7 @@ export default function Hr({ children, mode = 'row', min1 = 100, min2 = 100, ini
     useEffect(() => {
         const stop = () => {
             isDragging.current = false;
-            document.body.style.cursor = 'default';
+            //document.body.style.cursor = 'default';
         };
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', stop);

@@ -26,7 +26,7 @@
 		cursor: url("MEDIA/wii_pointer.png") 5 5, pointer;
 	}
 	@else if $type == "grab" {
-		cursor: url("MEDIA/wii_grab.png") 10 30, grab;
+		cursor: url("MEDIA/wii_grab.png") 5 5, grab;
 	}
 	@else if $type == "text" {
 		cursor: url("MEDIA/wii_pencil.png") 5 5, text;
@@ -46,7 +46,7 @@
 
     border: 0.5rem solid rgb(189, 189, 189);
     border-radius: 25px;
-	// @include cursor("pointer");
+	 @include cursor("pointer");
 
     &:hover {
         outline: none;
