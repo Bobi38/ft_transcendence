@@ -1,12 +1,11 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// import { SocketProvider } from "../tool/SocketContext"
 import { useEffect, useState } from "react";
-import checkCo from "../tool/fct1.js"
+import checkCo from "TOOL/fonction_usefull.js"
 
 /* back */
-import SocketM from "../tool/SocketManag";
+import SocketM from "TOOL/SocketManag";
 
 /* Css */
 import './style/index.scss'
@@ -21,20 +20,10 @@ import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
 import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
-// import WaitRoom         from    "FRONT/page/WaitRoom/WaitRoom.jsx";
 
 // ./src/page/all_game
-// import MorpionTraining  from    "FRONT/page/all_game/Morpion/MorpionTraining.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
-
-
-//     const data = {}
-      // data = [...type_O_horizontal_l]
-//     un.increment(data);
-//     console.log(un);
-// }
-
 
 
 export default function App() {

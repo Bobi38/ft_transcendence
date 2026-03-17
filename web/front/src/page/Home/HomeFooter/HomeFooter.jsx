@@ -1,6 +1,6 @@
 /* extern */
 import { Link } from "react-router-dom";
-import  SocketM  from "../../../../tool/SocketManag.js"
+import  SocketM  from "TOOL/SocketManag.js"
 import { useEffect, useState } from "react";
 
 /* back */

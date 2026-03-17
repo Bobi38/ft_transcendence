@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 
 /*back*/
-import { showAlert } from "../../../tool/fct1.js";
+import { showAlert } from "TOOL/fonction_usefull.js";
 
 /* Css */
 import "./Profile.scss";
