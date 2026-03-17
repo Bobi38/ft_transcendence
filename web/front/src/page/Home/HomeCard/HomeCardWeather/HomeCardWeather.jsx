@@ -52,7 +52,7 @@ export default function HomeCardWeather() {
 
 		setActiveWeather({
 			backgroundImage: `url(${weather.icon})`,
-			backgroundSize: 'cover',
+			//backgroundSize: 'cover',
 			// width: '100%',
 			// height: '100%',
 			// opacity: '100%',
