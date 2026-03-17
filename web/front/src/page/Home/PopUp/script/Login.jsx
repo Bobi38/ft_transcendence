@@ -52,11 +52,14 @@ export default function Login({setShowLog}) {
         sessionStorage.setItem('message', "Connexion réussie");
         sessionStorage.setItem('token', repjson.token);
         sessionStorage.setItem('username', repjson.username);
+
         if (repjson.MPFA) {
             setShowLog(AUTH.MAILA2F);
         }
+        
         if (!repjson.MPFA) {
-            setShowLog(AUTH.CONNECTED);
+            setShowLog(AUTH.NONE);
+
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
     };
     }
