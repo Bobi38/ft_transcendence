@@ -80,10 +80,10 @@ GameMorp.belongsTo(User, { foreignKey: 'player_1', as: 'player1' });
 User.hasMany(GameMorp, { foreignKey: 'player_2', as: 'gamesAsPlayer2', onDelete: 'CASCADE' });
 GameMorp.belongsTo(User, { foreignKey: 'player_2', as: 'player2' });
 
-User.hasMany(GameMorp, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
+// User.hasMany(GameMorp, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
 GameMorp.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
 
-User.hasMany(GameMorp, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
+// User.hasMany(GameMorp, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
 GameMorp.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
 
 export default GameMorp;

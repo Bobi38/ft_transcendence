@@ -24,7 +24,7 @@
 		.me, .other {
 			border: 4px solid $second;
 			border-radius: 25px;
-			@include mix.cursor("pointer");
+			// @include mix.cursor("pointer");
 
 			&:hover {
 				outline: none;

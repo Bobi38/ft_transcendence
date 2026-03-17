@@ -13,7 +13,7 @@
 
     .edit {
         background-color: rgba(0, 0, 0, 0.2);
-		@include mix.cursor("pointer");
+		// @include mix.cursor("pointer");
         padding: 0.75rem;
         border-radius: 0.5rem;
         &:hover {
@@ -60,7 +60,7 @@
             align-items: center;
             
             background-color: rgba(0, 0, 0, 0.2);
-			@include mix.cursor("pointer");
+			// @include mix.cursor("pointer");
             padding: 0.75rem;
             border-radius: 0.5rem;
             &:hover {
@@ -90,7 +90,7 @@
                 .toggle-icon {
                     position: absolute;
                     right: 12px;
-					@include mix.cursor("pointer");
+					// @include mix.cursor("pointer");
                     display: flex;
                     align-items: center;
                     color: #666;
