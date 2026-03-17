@@ -3,7 +3,7 @@ import sequelize from './index.js';
 import User from './user.js';
 
 const GameMorp = sequelize.define('GameMorp', {
-    id:{
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -13,16 +13,11 @@ const GameMorp = sequelize.define('GameMorp', {
       allowNull: false
     },
 
-    date_game:{
+    date_game: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-
-    // ending: {
-    //   type: DataTypes.ENUM('win', 'draw', 'abort'),
-    //   allowNull: false,
-    // },
 
     player_1: {
       type: DataTypes.INTEGER,
@@ -35,32 +30,38 @@ const GameMorp = sequelize.define('GameMorp', {
     },
 
     winner: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
     },
 
     loser: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
     },
 
     time_player_1: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
     time_player_2: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
     nb_turn_player_1: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 
     nb_turn_player_2: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
 

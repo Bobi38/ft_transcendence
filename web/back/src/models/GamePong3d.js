@@ -11,8 +11,8 @@ const GamePong3d = sequelize.define('GamePong3d', {
     },
     //info des joueur
     id_player_1: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     score_1: {
         type: DataTypes.INTEGER,
@@ -31,18 +31,22 @@ const GamePong3d = sequelize.define('GamePong3d', {
     abortwinner: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
     abortloser: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
     winner: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
     loser: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: null,
     },
 
     date_game_start: {

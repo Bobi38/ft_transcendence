@@ -163,6 +163,20 @@ async function CreatHistory() {
 
     // const deux = await StatMorp.findOne({where: {idUser: 1}});
 
+    await GameMorp.create({
+        how_win:"abort",
+        date_game:0,
+        player_1:1,
+        player_2:2,
+        winner:null,
+        loser:null,
+        time_player_1:0,
+        time_player_2:0,
+        nb_turn_player_1:0,
+        nb_turn_player_2:0,
+        map:"0",
+    });
+
       await GamePong3d.create({
           id_player_1:1,
           score_1:0,
@@ -170,8 +184,8 @@ async function CreatHistory() {
           score_2:0,
           abortwinner:0,
           abortloser:0,
-          winner:1,
-          loser:2,
+          winner:null,
+          loser:null,
           date_game_start:0,
           date_game_end:0,
           time:0,
