@@ -15,7 +15,7 @@ function RebootTruc() {
 
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "reboot",
                 message: "reboot"
             })
@@ -28,7 +28,7 @@ function GoOut(){
 
     return (
         <button onClick={() =>{
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "leave",
             })
         }}>
@@ -40,7 +40,7 @@ function GoOut(){
 function SelectSecondPlayer(){
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "second",
             })
         }}>
@@ -54,7 +54,7 @@ function NouvellePartie({ setBoard }){
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd('morp',{
                 type: "play",
             })
         }}>
@@ -146,7 +146,7 @@ export default function Morpion() {
 //   return (
 //     <button
 //       onClick={() =>
-//         SocketM.sendd(SocketM.socket.morp, {
+//         SocketM.sendd('morp', {
 //           type: "reboot",
 //           mess: "reboot"
 //         })
@@ -160,7 +160,7 @@ export default function Morpion() {
 // function GoOut(){
 //   return (
 //   <button onClick={() =>
-//     SocketM.sendd(SocketM.socket.morp, {
+//     SocketM.sendd('morp', {
 //         type: "leave",
 //         mess: "bye bye"
 //       })
@@ -174,7 +174,7 @@ export default function Morpion() {
 // function SelectSecondPlayer(){
 //   return (
 //   <button onClick={() =>
-//     SocketM.sendd(SocketM.socket.morp, {
+//     SocketM.sendd('morp', {
 //         type: "second",
 //         mess: "fairplay"
 //       })
@@ -188,7 +188,7 @@ export default function Morpion() {
 // function NewParty(){
 //   return (
 //   <button onClick={() =>
-//     SocketM.sendd(SocketM.socket.morp, {
+//     SocketM.sendd('morp', {
 //         type: "play",
 //         mess: "start"
 //       })

@@ -64,9 +64,9 @@ class SocketManag{
         this.socket[name].onmessage = (event) => {
             if (!event.data) {return;}
             const dataa = JSON.parse(event.data);
-            console.log("Message reçu via WebSocket[CHATG]:", dataa.type, dataa.mess);
+            console.log("Message reçu via WebSocket[" + name + "]:", dataa.type, dataa.mess);
             // if (dataa.type === 'message') {
-                console.log("Message reçu de type message via WebSocket:", dataa.mess);
+                console.log("Message reçu de type message via WebSocket[" + name + "]:", dataa.mess);
                 this.listeners[name].forEach(cb => cb(dataa));
             // }
             if (dataa.type === 'ping'){
