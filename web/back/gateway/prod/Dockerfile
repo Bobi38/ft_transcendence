@@ -8,10 +8,10 @@ COPY gateway/package*.json ./
 
 RUN npm install
 
-COPY gateway/src /app
+COPY gateway/src/ /app
 
 
-COPY /models/ ./src/models/
+COPY models/ ./models/
 
 
 ENV NODE_ENV=production

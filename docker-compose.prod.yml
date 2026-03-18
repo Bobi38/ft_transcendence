@@ -5,9 +5,9 @@ services:
     ports:
     - "9443:443"
     networks:
-    - home
+      - home
     depends_on:
-    - gateway
+      - gateway
     secrets:
     - source: nginx_cert
       target: nginx.crt
