@@ -94,6 +94,10 @@ export class SnapshotBuffer {
                 right = mid - 1;
             }
         }
+        if (right == -1) {
+            console.log("Snapshot of", targetTick, "is not stored");
+            return null;
+        }
         return { snapshot: this._snapshots[right], index: right };
     }
 

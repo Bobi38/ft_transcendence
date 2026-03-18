@@ -53,6 +53,8 @@ export class Player extends TransformNode {
         colRacketBody.getCollisionObservable().add((event) => {
             if (event.type != PhysicsEventType.COLLISION_STARTED)
                 return ;
+            if (app.isResimming)
+                return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
             const hitForward = this.camera.getForwardRay().direction.scale(2);
@@ -73,9 +75,9 @@ export class Player extends TransformNode {
             ballBody.setLinearVelocity(newVel);
             //ballBody.applyImpulse(hitDirection.scale(power), event.point);
 
-            console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel);
             const ballPos = ballBody.transformNode.position.clone();
-            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray()});
+            console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel, "ballPos:", ballPos, "tick:", this._app._clock.tick);
+            this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._app.getTick()});
             this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);
             this._app.setIgnoreServer();
         });
