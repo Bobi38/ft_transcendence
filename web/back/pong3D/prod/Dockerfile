@@ -7,7 +7,7 @@ RUN npm install
 
 COPY pong3D/src ./src
 COPY models/user.js ./models
-COPY models/statPong3D.js ./models
+COPY models/StatPong3D.js ./models
 COPY models/GamePong3D.js ./models
 
 WORKDIR /app

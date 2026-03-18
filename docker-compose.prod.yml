@@ -7,7 +7,7 @@ services:
     networks:
     - home
     depends_on:
-    - web
+    - gateway
     secrets:
     - source: nginx_cert
       target: nginx.crt
@@ -55,7 +55,9 @@ services:
 
   front:
     container_name: front
-    build: ./web_prod/front/
+    build: 
+      context: ./web/front
+      dockerfile: prod/Dockerfile
     depends_on:
       mysql:
         condition: service_healthy
@@ -222,6 +224,10 @@ secrets:
     file: ./conf/secrets/cle_chat
   cle_pswd:
     file: ./conf/secrets/cle_pswd
+  nginx_cert:
+    file: ./conf/secrets/nginx.crt
+  nginx_key:
+    file: ./conf/secrets/nginx.key
 
 networks:
   home:
