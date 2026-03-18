@@ -9,7 +9,6 @@ import './Morpion.scss';
 
 /* Components */
 import Board from "./Board/Board.jsx";
-import { ColorGradient } from "@babylonjs/core";
 
 function RebootTruc() {
 
@@ -44,13 +43,12 @@ function SelectSecondPlayer(){
                 type: "second",
             })
         }}>
-            je veux jouer en second
+            second / first
         </button>
     ); 
 }
 
 function NouvellePartie({ setBoard }){
-    console.log("stpppppppppppppppp");
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));
@@ -58,7 +56,7 @@ function NouvellePartie({ setBoard }){
                 type: "play",
             })
         }}>
-            Nouvelle Partie
+            Search Game
         </button>
     );
 }
@@ -107,7 +105,7 @@ export default function Morpion() {
 
             <div className={`info`}>
 
-                {/* <RebootTruc/> */}
+                <RebootTruc/>
 
                 <GoOut/>
 

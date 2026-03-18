@@ -113,7 +113,7 @@ class Room {
 
     setLock(state) {
         if (state === true && this._players.size < this._min_players) {
-            throw new Error("Nombre de joueurs minimum non atteint");
+            throw new Error("need more player");
         }
 
         this._locked = state;
@@ -128,6 +128,7 @@ class Room {
 
     remove() {
         this.clearOutTimer();
+        this._obs.forEach(o => o.send({other_board: Array(9).fill(" ")}))
         this._players.forEach(p => {p.disconnect()})
         this._players.clear();
         this._obs.clear();

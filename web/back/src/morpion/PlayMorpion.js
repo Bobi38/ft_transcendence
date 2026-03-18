@@ -20,7 +20,6 @@ const msgs = {
 
 function observator(player, gameId){
     
-    if (!gameId)
     console.log(`obs ${gameId}`);
     if (gameId === 1){
         const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
@@ -34,7 +33,11 @@ function observator(player, gameId){
 
     const game = manager_room.getRoom(gameId);
 
-    if (!game) return ;
+    if (!game){
+        const list = manager_room.list;
+        player.send({message: "unknow Game", list});
+        return ;
+    }
 
     game.addObs(player);
 }
@@ -95,19 +98,18 @@ function searchGame(player, players){
             {message: msgs.my_turn, turn: true},
             {message: msgs.other_turn, turn: false}
         )
+        manager_room.refreshRoomList(true);
     }
     catch {
         console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})
-        return false;
+        return ;
     }
-    console.log(`j envoie la liste`);
-    const listing = manager_room.getRoomlist();
-    console.log(`nous y sommes`);
-    for (const p of players.values()){
-        p.send({list: listing});
-    }
+    // console.log(`j envoie la liste`);
+    // for (const p of players.values()){
+    //     p.send(manager_room.list);
+    // }
     return true;
 }
 
