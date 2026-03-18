@@ -1,0 +1,43 @@
+@use "STYLE/variable" as *;
+@use "STYLE/_mixin" as mix;
+
+.Stats-root{
+    
+	@include mix.page;
+    
+    padding: 1rem;
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;/*en haut*/
+    text-align: center;
+    gap: 0.5rem;
+
+    .Stats-selection{
+
+        .Stats-btn{
+            background-color: rgba(0, 0, 0, 0.150);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+			// @include mix.cursor("pointer");
+            font-size: 1rem;
+            
+            &:hover{
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+        }
+    }
+        
+    .Stats-container{
+        height: 0;
+        width: 100%;
+        flex: 1;
+         li , li button {
+            color: rgb(2, 119, 143);
+        }
+    }
+
+}

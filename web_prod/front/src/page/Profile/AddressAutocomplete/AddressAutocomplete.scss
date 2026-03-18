@@ -1,0 +1,26 @@
+.AddressAutocomplete-root{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .AddressAutocomplete-list-item {
+        
+        ul {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        li {
+            display: inline-block;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            border-bottom: 1px solid #ccc;
+            border-radius: 0.5rem;
+            &:hover{
+                background-color: #f0f0f0;
+            }
+        }
+    }
+}

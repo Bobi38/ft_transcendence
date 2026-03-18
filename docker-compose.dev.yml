@@ -39,7 +39,7 @@ services:
 
   front:
     container_name: front
-    build: ./web/front/
+    build: ./web_dev/front/
     depends_on:
       mysql:
         condition: service_healthy
@@ -48,12 +48,12 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./web/front/:/app
+      - ./web_dev/front/:/app
       - /app/node_modules
 
 
   gateway:
-    build: ./web/back/
+    build: ./web_dev/back
     container_name: gateway
     environment:
       DB_USER: "bobi"
@@ -69,14 +69,14 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./web/back/:/app
+      - ./web_dev/back/:/app
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
   
   auth:
-    build: ./web/back/auth
+    build: ./web_dev/back/auth
     container_name: auth
     environment:
       DB_USER: "bobi"
@@ -92,16 +92,16 @@ services:
     ports:
       - "9005:9005"
     volumes:
-      - ./web/back/auth:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web_dev/back/auth:/app
+      - ./web_dev/back/src/models:/app/src/models
+      - ./web_dev/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   chatp_service:
-    build: ./web/back/chat/chatP
+    build: ./web_dev/back/chat/chatP
     container_name: chatp_service
     environment:
       DB_USER: "bobi"
@@ -117,16 +117,16 @@ services:
     ports:
       - "9002:9002"
     volumes:
-      - ./web/back/chat/chatP:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web_dev/back/chat/chatP:/app
+      - ./web_dev/back/src/models:/app/src/models
+      - ./web_dev/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   chatg_service:
-    build: ./web/back/chat/chatG
+    build: ./web_dev/back/chat/chatG
     container_name: chatg_service
     environment:
       DB_USER: "bobi"
@@ -142,16 +142,16 @@ services:
     ports:
       - "9001:9001"
     volumes:
-      - ./web/back/chat/chatG:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web_dev/back/chat/chatG:/app
+      - ./web_dev/back/src/models:/app/src/models
+      - ./web_dev/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   user_service:
-    build: ./web/back/user
+    build: ./web_dev/back/user
     container_name: user_service
     environment:
       DB_USER: "bobi"
@@ -167,16 +167,16 @@ services:
     ports:
       - "9003:9003"
     volumes:
-      - ./web/back/user:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web_dev/back/user:/app
+      - ./web_dev/back/src/models:/app/src/models
+      - ./web_dev/back/src/routes:/app/src/routes
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
 
   pong3d:
-    build: ./web/back/pong3D
+    build: ./web_dev/back/pong3D
     container_name: pong3d
     environment:
       DB_USER: "bobi"
@@ -195,16 +195,16 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/pong3D:/app
-      - ./web/front/media:/app/src/media
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web_dev/back/pong3D:/app
+      - ./web_dev/front/media:/app/src/media
+      - ./web_dev/back/src/models:/app/src/models
+      - ./web_dev/back/src/routes:/app/src/routes
       - /app/node_modules
     cap_add:
       - NET_ADMIN
 
   morpion:
-    build: ./web/back/morpion
+    build: ./web_dev/back/morpion
     container_name: morpion
     environment:
       DB_USER: "bobi"
@@ -223,10 +223,10 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/morpion:/app
-      - ./web/back/src/routes:/app/src/routes
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/morpion:/app/src/morpion
+      - ./web_dev/back/morpion:/app
+      - ./web_dev/back/src/routes:/app/src/routes
+      - ./web_dev/back/src/models:/app/src/models
+      - ./web_dev/back/src/morpion:/app/src/morpion
       - /app/node_modules
 
 secrets:
