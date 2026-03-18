@@ -50,7 +50,6 @@ function SelectSecondPlayer(){
 }
 
 function NouvellePartie({ setBoard }){
-    console.log("stpppppppppppppppp");
     return (
         <button onClick={() => {
             setBoard(Array(9).fill(""));

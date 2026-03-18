@@ -15,7 +15,7 @@ function SpecButton({ player_1, player_2, id }){
 
     return (
         <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
+            SocketM.sendd(`morp`,{
                 type: "spec", id,
             })
         }}>
