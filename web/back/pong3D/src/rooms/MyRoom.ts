@@ -72,7 +72,9 @@ export class MyRoom extends Room {
           this._ball.transformNode.computeWorldMatrix(true);
       }
       console.log(client.sessionId,  "hit the ball: ", data, "at servert tick:", this._tick);
+      console.log("new pos:", this._ball.transformNode.position.clone(), "new vel:", this._ball.getLinearVelocity());
       this.broadcast("racketImpact", data, { except: client });
+      client.send("impactResponse", this._tick);
     },
     "bodyMoved": (client: Client, data: any) => {
       const playerPos = this.state.players.get(client.sessionId).position;

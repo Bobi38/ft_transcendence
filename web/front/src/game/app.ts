@@ -47,6 +47,7 @@ export class App {
     private _ignoredVelCorrection : boolean = false;
     private _ignoreServerUntil : number = 0;
     public  isResimming : boolean = false;
+    public  recentImpact : boolean = false;
 
 
     constructor(canvas: HTMLCanvasElement) {
@@ -164,6 +165,7 @@ export class App {
             this._snapshots.clearAfterTickIncluded(data.tick);
             this._snapshots.saveSnapshot(data.tick, ballPos, ballVel);
             const FIXED_TIME_STEP = 1 / 60;
+            const preRollbackPos = this._ball.getPhysicsBodyPosition();
             for (let i = 0; i < ticksToResimulate; i++) {
                 const simulatingTick = impactTick + i;
                 this._ball._body.disablePreStep = false;
@@ -172,7 +174,13 @@ export class App {
                 // console.log(this._ball.getPhysicsBodyPosition());
                 this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             }
+            const postRollbackPos = this._ball.getPhysicsBodyPosition();
+            const teleportDelta = preRollbackPos.subtract(postRollbackPos);
+            this._ball.visualOffset.addInPlace(teleportDelta);
             console.log("Other player hit the ball");
+        });
+        this._room.onMessage("impactResponse", (tick) => {
+            this.recentImpact = true;
         });
         callback.onChange(room.state.score, () => {
             console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);
@@ -292,7 +300,7 @@ export class App {
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return ;
             //console.log(this._serverPatch);
-            if (this._serverPatch.tick < this._ignoreServerUntil) {
+            if (this.recentImpact || this._clock.tick < this._ignoreServerUntil) {
                 this._serverPatch = null;
                 return;
             }
@@ -431,19 +439,14 @@ export class App {
         //     this._ball.visualOffset.addInPlace(teleportDelta);
         
         //     this._serverPatch = null;
-        // });            
+        // });
         this._scene.onBeforeRenderObservable.add(() => {
-            if (!this._ball.positionError)
-                return ;
-            const patchRate = 0.05; //in seconds
-            const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
-            const fractionElapsed = patchRate / dt;
-            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
-            const ballPos = this._ball.getPhysicsBodyPosition();
-            this._ball.setPhysicsBodyPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
-            this._ball.positionError.scaleInPlace(1 - correctionFactor);
-            if (this._ball.positionError.lengthSquared() < Epsilon)
-                this._ball.positionError = null;
+            if (this._ball.visualOffset.lengthSquared() < 0.0001) return;
+            const dt = this._engine.getDeltaTime() / 1000; 
+            const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
+            const correctionFactor = Math.exp(-smoothingSpeed * dt);
+            //this._ball.setMeshPosition(this._ball.visualOffset);
+            this._ball.visualOffset.scaleInPlace(correctionFactor);
         });
         return shadow;
     }
@@ -519,11 +522,6 @@ export class App {
         racketRoot.parent = hand_node;
         hand_node.parent = body;
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
-    }
-
-    public setIgnoreServer() {
-        this._ignoreServerUntil = this._clock.tick;
-        console.log("IGNORING SERVER HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA until:", this._ignoreServerUntil);
     }
 
     public getTick() : number {
