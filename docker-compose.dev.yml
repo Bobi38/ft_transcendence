@@ -39,7 +39,7 @@ services:
 
   front:
     container_name: front
-    build: ./web_dev/front/
+    build: ./web/front/
     depends_on:
       mysql:
         condition: service_healthy
@@ -48,12 +48,14 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./web_dev/front/:/app
+      - ./web/front/:/app
       - /app/node_modules
 
 
   gateway:
-    build: ./web_dev/back
+    build:
+      context: ./web/back/gateway
+      dockerfile: dev/Dockerfile
     container_name: gateway
     environment:
       DB_USER: "bobi"
@@ -69,14 +71,17 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./web_dev/back/:/app
-      - /app/node_modules
+      - ./web/back/gateway/src:/app
+      - ./web/back/models:/app/models
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
   
   auth:
-    build: ./web_dev/back/auth
+    build:
+      context: ./web/back/auth
+      dockerfile: dev/Dockerfile
     container_name: auth
     environment:
       DB_USER: "bobi"
@@ -92,16 +97,17 @@ services:
     ports:
       - "9005:9005"
     volumes:
-      - ./web_dev/back/auth:/app
-      - ./web_dev/back/src/models:/app/src/models
-      - ./web_dev/back/src/routes:/app/src/routes
-      - /app/node_modules
+      - ./web/back/auth/src:/app
+      - ./web/back/models:/app/models
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   chatp_service:
-    build: ./web_dev/back/chat/chatP
+    build: 
+      context: ./web/back/chat/chatP
+      dockerfile: dev/Dockerfile
     container_name: chatp_service
     environment:
       DB_USER: "bobi"
@@ -117,16 +123,17 @@ services:
     ports:
       - "9002:9002"
     volumes:
-      - ./web_dev/back/chat/chatP:/app
-      - ./web_dev/back/src/models:/app/src/models
-      - ./web_dev/back/src/routes:/app/src/routes
-      - /app/node_modules
+      - ./web/back/chat/chatP/src:/app
+      - ./web/back/src/models:/app/models
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   chatg_service:
-    build: ./web_dev/back/chat/chatG
+    build: 
+      context: ./web/back/chat/chatG
+      dockerfile: dev/Dockerfile
     container_name: chatg_service
     environment:
       DB_USER: "bobi"
@@ -142,16 +149,17 @@ services:
     ports:
       - "9001:9001"
     volumes:
-      - ./web_dev/back/chat/chatG:/app
-      - ./web_dev/back/src/models:/app/src/models
-      - ./web_dev/back/src/routes:/app/src/routes
-      - /app/node_modules
+      - ./web/back/chat/chatG/src:/app
+      - ./web/back/src/models:/app/models
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   user_service:
-    build: ./web_dev/back/user
+    build: 
+      context: ./web/back/user
+      dockerfile: dev/Dockerfile
     container_name: user_service
     environment:
       DB_USER: "bobi"
@@ -167,16 +175,17 @@ services:
     ports:
       - "9003:9003"
     volumes:
-      - ./web_dev/back/user:/app
-      - ./web_dev/back/src/models:/app/src/models
-      - ./web_dev/back/src/routes:/app/src/routes
-      - /app/node_modules
+      - ./web/back/user/src:/app
+      - ./web/back/src/models:/app/models
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   pong3d:
-    build: ./web_dev/back/pong3D
+    build: 
+      context: ./web/back/pong3D
+      dockerfile: dev/Dockerfile
     container_name: pong3d
     environment:
       DB_USER: "bobi"
@@ -195,16 +204,17 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web_dev/back/pong3D:/app
-      - ./web_dev/front/media:/app/src/media
-      - ./web_dev/back/src/models:/app/src/models
-      - ./web_dev/back/src/routes:/app/src/routes
-      - /app/node_modules
+      - ./web/back/pong3D:/app
+      - ./web/front/media:/app/src/media
+      - ./web/back/models:/app/src/models
     cap_add:
       - NET_ADMIN
+    restart: always
 
   morpion:
-    build: ./web_dev/back/morpion
+    build: 
+      context: ./web/back/morpion
+      dockerfile: dev/Dockerfile
     container_name: morpion
     environment:
       DB_USER: "bobi"
@@ -223,11 +233,9 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web_dev/back/morpion:/app
-      - ./web_dev/back/src/routes:/app/src/routes
-      - ./web_dev/back/src/models:/app/src/models
-      - ./web_dev/back/src/morpion:/app/src/morpion
-      - /app/node_modules
+      - ./web/back/morpion/src:/app
+      - ./web/back/src/models:/app/models
+    restart: always
 
 secrets:
   data_pswd:

@@ -64,7 +64,9 @@ services:
 
 
   gateway:
-    build: ./web_prod/back
+    build:
+      context: ./web/back
+      dockerfile: gateway/prod/Dockerfile
     container_name: gateway
     environment:
       DB_USER: "bobi"
@@ -82,7 +84,9 @@ services:
     - cle_chat
   
   auth:
-    build: ./web_prod/back/auth
+    build: 
+      context: ./web/back
+      dockerfile: auth/prod/Dockerfile
     container_name: auth
     environment:
       DB_USER: "bobi"
@@ -100,7 +104,9 @@ services:
     - cle_chat
 
   chatp_service:
-    build: ./web_prod/back/chat/chatP
+    build: 
+      context: ./web/back
+      dockerfile: chat/chatP/prod/Dockerfile
     container_name: chatp_service
     environment:
       DB_USER: "bobi"
@@ -120,7 +126,9 @@ services:
     - cle_chat
 
   chatg_service:
-    build: ./web_prod/back/chat/chatG
+    build: 
+      context: ./web/back
+      dockerfile: chat/chatG/prod/Dockerfile
     container_name: chatg_service
     environment:
       DB_USER: "bobi"
@@ -140,7 +148,9 @@ services:
     - cle_chat
 
   user_service:
-    build: ./web_prod/back/user
+    build:
+      context: ./web/back
+      dockerfile: user/prod/Dockerfile
     container_name: user_service
     environment:
       DB_USER: "bobi"
@@ -160,7 +170,9 @@ services:
     - cle_chat
 
   pong3d:
-    build: ./web_prod/back/pong3D
+    build: 
+      context: ./web/back
+      dockerfile: pong3D/prod/Dockerfile
     container_name: pong3d
     environment:
       DB_USER: "bobi"
@@ -182,7 +194,9 @@ services:
       - NET_ADMIN
 
   morpion:
-    build: ./web_prod/back/morpion
+    build:
+      context: ./web/back
+      dockerfile: morpion/prod/Dockerfile
     container_name: morpion
     environment:
       DB_USER: "bobi"
