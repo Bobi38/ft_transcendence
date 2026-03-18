@@ -4,11 +4,8 @@ import { Room } from "@colyseus/sdk";
 export class GUI {
     private _room : Room;
     private _ui: AdvancedDynamicTexture = null;
-    private _waiting4Player : AdvancedDynamicTexture;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
-    private _isPlayerNear : boolean;
-    private _end : AdvancedDynamicTexture;
     private _playerDisconnected : AdvancedDynamicTexture = null;
 
     constructor (room: Room) {
@@ -122,7 +119,6 @@ export class GUI {
     // }
 
     public addScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
-        this._isPlayerNear = isNear;
         this._score = AdvancedDynamicTexture.CreateFullscreenUI("ui");
 
         const scorePanel = new Rectangle();
@@ -154,7 +150,7 @@ export class GUI {
         stack.addControl(scoreLabel);
 
         this._scoreText = new TextBlock();
-        if (this._isPlayerNear)
+        if (isNear)
             this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
         else
             this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
@@ -167,15 +163,15 @@ export class GUI {
         stack.addControl(this._scoreText);
     }
 
-    public updateScoreUI(scoreNear: number, scoreFar: number) {
-        if (this._isPlayerNear)
+    public updateScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
+        if (isNear)
             this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
         else
             this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
     }
 
-    public showEndUI(scoreNear: number, scoreFar: number) {
-        if (this._isPlayerNear && scoreNear >= 3 || !this._isPlayerNear && scoreFar >= 3)
+    public showEndUI(isNear: boolean, scoreNear: number, scoreFar: number) {
+        if (isNear && scoreNear >= 3 || !isNear && scoreFar >= 3)
             this._gameOverUI("Congratulations! You win");
         else
             this._gameOverUI("Loser lol");

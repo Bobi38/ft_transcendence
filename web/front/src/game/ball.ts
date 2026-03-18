@@ -1,8 +1,8 @@
 import { Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
 
 export class Ball {
-    private _mesh: Mesh;
-    private _body: PhysicsBody;
+    public _mesh: Mesh;
+    public _body: PhysicsBody;
     private _maxSpeed: number;
     private _scene: Scene;
     private _shadow: ShadowGenerator;
