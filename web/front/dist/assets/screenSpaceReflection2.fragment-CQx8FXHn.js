@@ -1,0 +1,1 @@
+import{aa as e,ia as t}from"./index-CHiGcwTe.js";t();export{e as screenSpaceReflection2PixelShaderWGSL};

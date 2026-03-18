@@ -1,0 +1,1 @@
+import{Is as e,Ls as t}from"./index-CHiGcwTe.js";e();export{t as openpbrPixelShaderWGSL};

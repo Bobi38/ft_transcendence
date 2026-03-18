@@ -1,0 +1,1 @@
+import{lo as e,uo as t}from"./index-CHiGcwTe.js";e();export{t as meshUVSpaceRendererPixelShaderWGSL};

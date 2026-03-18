@@ -1,0 +1,1 @@
+import{Ho as e,Vo as t}from"./index-CHiGcwTe.js";e();export{t as defaultVertexShaderWGSL};

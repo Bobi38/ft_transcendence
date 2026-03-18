@@ -2,9 +2,9 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./server.js",
+  "main": "src/server.js",
 "scripts": {
-  "start": "node server.js"
+  "start": "src/node server.js"
 },
   "dependencies": {
     "bcrypt": "^5.1.1",

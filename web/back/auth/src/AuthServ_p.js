@@ -7,9 +7,9 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
 //router
-import authroute from './src/routes/auth_p.js'
-import oauth2route from './src/routes/Oauth2_p.js'
-import securoute from './src/routes/secu_p.js'
+import authroute from './routes/auth_p.js'
+import oauth2route from './routes/Oauth2_p.js'
+import securoute from './routes/secu_p.js'
 
 dotenv.config();
 

@@ -1,0 +1,1 @@
+import{$s as e,ec as t}from"./index-CHiGcwTe.js";e();export{t as pbrVertexShaderWGSL};

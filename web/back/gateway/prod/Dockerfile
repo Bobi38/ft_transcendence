@@ -8,7 +8,7 @@ COPY gateway/package*.json ./
 
 RUN npm install
 
-COPY gateway/src ./src
+COPY gateway/src /app
 
 
 COPY /models/ ./src/models/
@@ -17,4 +17,4 @@ COPY /models/ ./src/models/
 ENV NODE_ENV=production
 
 EXPOSE 9000
-CMD ["npm", "run"]
+CMD ["npm", "start"]

@@ -1,8 +1,8 @@
 import ws from 'ws';
 import { WebSocketServer } from 'ws';
 import {chat} from './ClassChat.js';
-import Friend from './src/models/friend.js';
-import User from './src/models/user.js';
+import Friend from './models/friend.js';
+import User from './models/user.js';
 
 function getCookie(name, cookieHeader) {
   if (!cookieHeader) return null;

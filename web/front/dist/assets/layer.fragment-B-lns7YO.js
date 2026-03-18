@@ -1,0 +1,1 @@
+import{Gl as e,Wl as t}from"./index-CHiGcwTe.js";t();export{e as layerPixelShader};

@@ -16,7 +16,7 @@ all:
 
 prod: secrets creat compose_prod
 
-dev: secrets creat compose_prod
+dev: secrets creat compose_dev
 
 compose_dev:
 	docker compose -f docker-compose.dev.yml up -d

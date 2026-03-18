@@ -1,0 +1,1 @@
+import{Oy as e,ky as t}from"./index-CHiGcwTe.js";e();export{t as morphTargetsVertexDeclaration};

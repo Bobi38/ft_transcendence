@@ -1,0 +1,1 @@
+import{Jr as e,Yr as t}from"./index-CHiGcwTe.js";t();export{e as fxaaPixelShaderWGSL};

@@ -97,8 +97,8 @@ services:
     ports:
       - "9005:9005"
     volumes:
-      - ./web/back/auth/src:/app
-      - ./web/back/models:/app/models
+      - ./web/back/auth/src:/app/src
+      - ./web/back/models:/app/src/models
     secrets:
     - cle_pswd
     - cle_chat

@@ -1,0 +1,1 @@
+import{Qm as e}from"./index-CHiGcwTe.js";export{e as KHR_texture_transform};
