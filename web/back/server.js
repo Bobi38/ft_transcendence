@@ -86,28 +86,30 @@ app.use('/api/morpion', createProxyMiddleware({
   changeOrigin: true
 }))
 
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
 
 
 
+// if (isDev) {
+//   console.log("JE SUIS DEV");
+//   console.log("host " + host);
+//   const viteProxy = createProxyMiddleware({
+//     target: 'http://localhost:5173',
+//     changeOrigin: true,
+//     ws: true,
+//   });
 
-if (isDev) {
-  console.log("JE SUIS DEV");
-  console.log("host " + host);
-  const viteProxy = createProxyMiddleware({
-    target: 'http://localhost:5173',
-    changeOrigin: true,
-    ws: true,
-  });
-
-  app.use('/', viteProxy);
-} else {
-  console.log("JE SUIS PROOOOOOOOOODDDDDDDDDDDd")
-  // 🔹 En prod : servir le dist
-  app.use(express.static(path.join(__dirname, 'site/go/dist')));//TODO prod
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'site/go/dist', 'index.html'));//TODO prod
-  });
-}
+//   app.use('/', viteProxy);
+// } else {
+//   console.log("JE SUIS PROOOOOOOOOODDDDDDDDDDDd")
+//   // 🔹 En prod : servir le dist
+//   app.use(express.static(path.join(__dirname, 'site/go/dist')));//TODO prod
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'site/go/dist', 'index.html'));//TODO prod
+//   });
+// }
 
 (async () => {
   try {
