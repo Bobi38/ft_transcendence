@@ -13,7 +13,7 @@ FROM node:24.13.0 AS prod
 
 
 WORKDIR /app
-COPY package*.json ./
+COPY auth/package*.json ./
 
 
 

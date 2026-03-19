@@ -2,7 +2,7 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./UserServ.js",
+  "main": "UserServ.js",
 "scripts": {
   "dev": "nodemon UserServ.js",
   "start": "node UserServ.js"

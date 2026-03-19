@@ -1,4 +1,4 @@
-FROM node:24.13.0
+FROM node:24.13.0 AS prod
 
 
 WORKDIR /app
@@ -21,3 +21,14 @@ ENV NODE_ENV=production
 
 EXPOSE 9003
 CMD ["npm", "start"]
+
+FROM node:24.13.0 AS dev
+
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+
+EXPOSE 9003
+CMD ["npm", "run", "dev"]
