@@ -1,4 +1,5 @@
 import Room from './Room.js'
+import { Player } from './player.js';
 import GameMorp from "../models/GameMorp.js";
 
 class MorpionRoom extends Room {
@@ -205,6 +206,14 @@ class MorpionRoom extends Room {
 
     async majdb (winner = null) {
 
+        console.log(`save DB`);
+        for (const p of this._players){
+            if (!(p instanceof Player)){
+                console.log(`don t save waith Bot`);
+                return; 
+            }
+        }
+ 
         const isEven = this.countMoves() % 2 === 0;
 
         const p1 = isEven

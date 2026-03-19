@@ -1,9 +1,10 @@
-import ws from 'ws';
+
 import {manager_room} from './src/morpion/ManagRoom.js';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
 import m from './src/morpion/PlayMorpion.js';
+import { Bot } from './src/morpion/bot.js';
 import { Player } from './src/morpion/player.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -83,9 +84,17 @@ export function initWebSMopr(server) {
             m.searchGame(socket.player, socket.players);
             break ;
 
+          case "bot":
+            const bot = Bot.create();
+            const players = socket.players;
+            players.set(bot.getId(), bot);
+            console.log("creation bot", players.size);
+            m.searchGame(bot, players);
+            break ;
+
           case "leave":
             m.leave(socket.player);
-            break ;
+            break;
 
           case "second":
             console.log();

@@ -24,14 +24,22 @@ function RebootTruc() {
 }
 
 function GoOut(){
+    function sendType(s_type){
+        SocketM.sendd('morp',{
+                type: s_type,
+            })   
+    }
 
     return (
-        <button onClick={() =>{
-            SocketM.sendd('morp',{
-                type: "leave",
-            })
-        }}>
-            je veux partir
+        <button 
+            onClick={() =>{sendType("leave")}}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                sendType('bot');               
+            }}
+            style={{ cursor: 'add bot' }}
+            >
+                je veux partir
         </button>
     );
 }
