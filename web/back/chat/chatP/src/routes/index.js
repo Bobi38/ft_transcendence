@@ -1,5 +1,5 @@
 export {default as express}  from 'express';
-export {jwt} from 'jsonwebtoken';
+export { default as jwt } from 'jsonwebtoken';
 import { Op } from 'sequelize';
 export { Op };
 import fs from 'fs';

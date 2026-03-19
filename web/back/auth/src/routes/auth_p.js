@@ -79,19 +79,6 @@ router.post('/register', async (req, res) => {
         const CrypPass = await bcrypt.hash(password, 10);
         console.log("3")
         const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
-        const un = await StatMorp.create({
-          idUser: result.id, total_game: 0, time_played: 0, nb_turn_played: 0,
-          type_X_horizontal_winner: 0,type_X_horizontal_loser: 0, // h
-          type_X_vertical_winner: 0,type_X_vertical_loser: 0,     // d
-          type_X_diagonal_winner: 0,type_X_diagonal_loser: 0,     // v
-          type_X_abort_winner: 0,type_X_abort_loser: 0,           // abort
-          type_X_draw: 0,                                         // draw
-          type_O_horizontal_winner: 0,type_O_horizontal_loser: 0,
-          type_O_vertical_winner: 0,type_O_vertical_loser: 0,     // d
-          type_O_diagonal_winner: 0,type_O_diagonal_loser: 0,     // v
-          type_O_abort_winner: 0,type_O_abort_loser: 0,           // abort
-          type_O_draw: 0,                                         // draw
-        });
         console.log("Api /register ID", result.insertId);
         res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
         // majDb();

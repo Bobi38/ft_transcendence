@@ -85,38 +85,6 @@ app.use('/api/morpion', createProxyMiddleware({
   changeOrigin: true
 }))
 
-if (!isDev) {
-  app.use('/ws/chatG', createProxyMiddleware({
-    target: 'ws://chatg_service:9001',
-    changeOrigin: true,
-    ws: true,
-  }));
-
-  app.use('/ws/chatP', createProxyMiddleware({
-    target: 'ws://chatp_service:9002',
-    changeOrigin: true,
-    ws: true,
-  }));
-
-  app.use('/ws/friend', createProxyMiddleware({
-    target: 'ws://user_service:9003',
-    changeOrigin: true,
-    ws: true,
-  }));
-
-  app.use('/ws/morp', createProxyMiddleware({
-    target: 'ws://morpion:9004',
-    changeOrigin: true,
-    ws: true,
-  }));
-
-  app.use('/ws/goat', createProxyMiddleware({
-    target: 'http://pong3d:2567',
-    changeOrigin: true,
-    ws: true,
-    pathRewrite: {'^/ws/goat' : ''},
-  }));
-}
 
 app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
 

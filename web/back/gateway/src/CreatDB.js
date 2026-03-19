@@ -14,6 +14,7 @@ import StatMorp from './models/StatMorp.js';
 
 import GamePong3D from './models/GamePong3D.js';
 import StatPong3D from './models/StatPong3D.js';
+import PswEmail from './models/PssWrdEmail.js';
 
 // creatdb
 import { CreatGameMorp } from './morpion/seedmorp.js';
