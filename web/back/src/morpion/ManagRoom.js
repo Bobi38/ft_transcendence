@@ -32,6 +32,7 @@ class ManagerRoom {
         }
 
         Object.assign(this.list, newList);
+        console.log(this.list);
     }
 
     getRoom(id) {
@@ -61,7 +62,7 @@ class ManagerRoom {
 
     findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
-            console.log("Checking room ->", room.toString());
+            // console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
@@ -95,11 +96,6 @@ class ManagerRoom {
         this._rooms.forEach(r => {r.remove();})
         this._rooms.clear();
     }
-
-    // sendAll(mess) { //inutile
-    //     this._rooms.forEach(
-    //         room => room.sendAll(mess))
-    // }
 
     startOutTimer(game) {
         game.clearOutTimer();

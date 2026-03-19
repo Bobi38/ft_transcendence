@@ -43,12 +43,11 @@ function observator(player, gameId){
 }
 
 function move(player, move){
-    console.log(`new move ${move}`);
+    // console.log(`new move ${move}`);
 
     const game = player.getGame();
 
     if (!game) {
-        //voir pour indique la 
         return ;
     }
     // console.log("mess1");
@@ -60,9 +59,9 @@ function move(player, move){
     if (game.play(player, move)) {
         // console.log("mess3");
         if(game.checkVictory()){
-            console.log(`end of ${game}`);
+            // console.log(`end of ${game}`);
             setTimeout(() => {
-                 console.log(`party register ${game}`);
+                //  console.log(`party register ${game}`);
                  manager_room.removeRoom(game);
             }, 10000);
             return ;
@@ -106,14 +105,10 @@ function searchGame(player, players){
         player.send({message: msgs.recherche, turn: false})
         return ;
     }
-    // console.log(`j envoie la liste`);
-    // for (const p of players.values()){
-    //     p.send(manager_room.list);
-    // }
     return true;
 }
 
-function reboot(){ // non utilise
+function reboot(){
     console.log(msgs.reboot);
     manager_room.removeAll(msgs.reboot);
     return;

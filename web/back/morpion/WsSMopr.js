@@ -24,7 +24,7 @@ export function initWebSMopr(server) {
   const wss = new WebSocketServer({ server, path: '/ws/morp' });
 
   let idd = 0;
-  console.log('WebSocket server initialized on path /ws');
+  // console.log('WebSocket server initialized on path /ws');
   wss.on('connection', async (socket, req) => {
     try{
 
@@ -48,7 +48,7 @@ export function initWebSMopr(server) {
       
       let player = players.get(useid);
       if (!player) {
-        console.log(`new clt`);
+        // console.log(`new clt`);
         player = await Player.create(socket);
         players.set(useid, player);
         player.list = manager_room.list;
@@ -56,7 +56,7 @@ export function initWebSMopr(server) {
       }
 
       else{
-        console.log(`deja connu`);
+        // console.log(`deja connu`);
         player.addSocket(socket);
       }
       socket.player = player;
@@ -87,9 +87,15 @@ export function initWebSMopr(server) {
           case "bot":
             const bot = Bot.create();
             const players = socket.players;
+
             players.set(bot.getId(), bot);
             console.log("creation bot", players.size);
             m.searchGame(bot, players);
+
+            setTimeout(() => {
+              console.log("clear ", bot);
+              players.delete(bot);
+            }, 120000);
             break ;
 
           case "leave":
@@ -102,7 +108,7 @@ export function initWebSMopr(server) {
             break ;
 
           case "reboot":
-            console.log(m.msgs.reboot);
+            // console.log(m.msgs.reboot);
             socket.players.forEach(p => {p.send(m.msgs.reboot);});
             m.reboot();
             socket.players.clear();
@@ -124,7 +130,7 @@ export function initWebSMopr(server) {
       });
 
     socket.on('pong', () =>{
-      console.log("i m in PONG")
+      // console.log("i m in PONG")
       socket.isAlive = true;
     })
     socket.on('error', (err) => {
