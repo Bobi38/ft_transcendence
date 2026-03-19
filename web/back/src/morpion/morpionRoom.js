@@ -1,6 +1,7 @@
 import Room from './Room.js'
 import { Player } from './player.js';
 import GameMorp from "../models/GameMorp.js";
+import m from './PlayMorpion.js' 
 
 class MorpionRoom extends Room {
     constructor (id) {
@@ -113,7 +114,7 @@ class MorpionRoom extends Room {
         }
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send("seriously !!", this._board);
+            currentPlayer.send({message: m.msgs.badMove, board: this._board});
             return false;
         }
 

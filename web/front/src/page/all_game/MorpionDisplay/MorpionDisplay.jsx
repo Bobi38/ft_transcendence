@@ -15,7 +15,7 @@ function SpecButton({ player_1, player_2, id }){
 
     return (
         <button onClick={() => {
-            SocketM.sendd(`morp`,{
+            SocketM.sendd(`morp`,{  
                 type: "spec", id,
             })
         }}>
@@ -27,8 +27,31 @@ function SpecButton({ player_1, player_2, id }){
 
 export default function MorpionDisplay() {
 
-     const [list, setList] = useState(null);
-     const [specSelect, setSpecSelect] = useState(null);
+    const [list, setList] = useState(null);
+    const [specSelect, setSpecSelect] = useState(null);
+
+    function addBot(nb){
+        if (typeof nb !== "number" || isNaN(nb)) {
+            nb = 1;
+        }
+
+        for (let i = 1; i <= nb; i++){
+            setTimeout(() => {
+                SocketM.sendd(`morp`,{
+                    type: "bot"
+                });
+            }, i * 100);
+        }
+    }
+
+    // Expose addBot à la console
+    useEffect(() => {
+        window.addBot = addBot;
+
+        return () => {
+            delete window.addBot;
+        };
+    }, []);
 
     useEffect(() => {
         console.log("Morpion component called");
@@ -83,16 +106,6 @@ export default function MorpionDisplay() {
                             )
                         })
                     }
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
                     <SpecButton player_1={"oui"} player_2={"non"} id={1} />
                     <SpecButton player_1={"oui"} player_2={"non"} id={1} />
                 </div>

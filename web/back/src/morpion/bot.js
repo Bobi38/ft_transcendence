@@ -50,10 +50,9 @@ export class Bot {
     }
     
     send(data) {
-        if (data.message === undefined
-            || (data.message != m.msgs.my_turn
-            && data.message != m.msgs.badMove))
-            return ;
+        // console.log(data.message , " ==== " ,m.msgs.badMove, " || ", m.msgs.my_turn);
+        if (data.message === undefined) return ;
+        if (data.message != m.msgs.my_turn && data.message != m.msgs.badMove) return ;
 
         this._nb_turn++;
         
@@ -61,7 +60,6 @@ export class Bot {
             ? this.getRandomEmptyIndex()
             : Math.floor(Math.random() * this._game.getboard().length);
         
-        console.log("bot doit jouer : ", nb);
         setTimeout(() => {m.move(this, nb)}, 2000);
     }
     
