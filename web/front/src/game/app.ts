@@ -421,9 +421,9 @@ export class App {
         if (isPlayer && !isNearSide) {
             body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
         }
-        // if (!isPlayer && !isNearSide) {
-        //     body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
-        // }
+        if (!isPlayer && !isNearSide) {
+            body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+        }
 
         body.position = position;
         let bodymtl = new StandardMaterial("red", this._scene);
