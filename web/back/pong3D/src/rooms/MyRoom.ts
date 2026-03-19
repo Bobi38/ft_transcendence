@@ -257,6 +257,9 @@ export class MyRoom extends Room {
     this.state.players.set(client.sessionId, player);
     this._nextPlayerIndex++;
     if (this.state.players.size == 2) {
+      if (this._tokens.get(this._near).auth === this._tokens.get(this._far).auth) {
+        throw new Error("Same player joined twice!");
+      }
       console.log("Game starting");
       this.state.roomStatus = RoomStatus.STARTED;
       this._timeStart = Date.now();

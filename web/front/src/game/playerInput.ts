@@ -114,7 +114,6 @@ export class PlayerInput {
                 }
             }
             localAxisX.normalize();
-            console.log("Y axis:", localAxisY, "X axis:", localAxisX);
             const localAxisZ = Vector3.Cross(localAxisX, localAxisY).normalize();
             const targetRotation = Quaternion.RotationQuaternionFromAxis(localAxisX, localAxisY, localAxisZ);
 
