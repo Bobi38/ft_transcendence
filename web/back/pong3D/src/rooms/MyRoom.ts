@@ -175,6 +175,8 @@ export class MyRoom extends Room {
   }
 
   onBeforePatch(state: MyRoomState) {
+    if (!this._posToSend)
+      return ;
     const ballPos = this._posToSend;
     const ballVel = this._velToSend;
     // console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);

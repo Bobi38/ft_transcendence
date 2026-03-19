@@ -196,12 +196,12 @@ export class App {
                 this._clock.tick++;
                 this._clock.setbackAccumulator();
                 this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-                console.log("Adding supplementary physics step");
+                //console.log("Adding supplementary physics step");
             } else if (acc <= -1000/60) {
                 this._havokPlugin.setTimeStep(0);
                 this._clock.tickSkipped = true;
                 this._clock.addbackAccumulator();
-                console.log("Skipping a physics step");
+                //console.log("Skipping a physics step");
             }
 
             this._scene.render();
@@ -226,9 +226,6 @@ export class App {
         this._havokPlugin = new HavokPlugin(true, havokInstance);
         this._havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
-        // this._room.onMessage("serverTick", ({serverTick, t0}) => {
-        //         this._clock.synchronizeClientWithServerClock(serverTick, t0);
-        //     });
         this._room.onMessage("initialTick", (serverTick) => {
             this._clock.setInitialClientClock(serverTick);
         });
@@ -371,81 +368,12 @@ export class App {
             this._serverPatch = null;
         });            
 
-
-        // this._scene.onBeforePhysicsObservable.add(() => {
-        //     if (!this._serverPatch) return ;
-        //     //console.log(this._serverPatch);
-        //     if (this._serverPatch.tick - this._clock.tickOffset < this._ignoreServerUntil) return;
-        //     const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
-        //     if (!pastSnapshot) return ;
-        //     const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
-        //     const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
-        //     console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
-        //         "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
-        //     console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
-        //     // console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
-        //     if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01 && !this._ignoredVelCorrection) {
-        //         console.log("Velocity error likely incorrect. Ignoring");
-        //         velocityError.set(0,0,0);
-        //         this._ignoredVelCorrection = true;
-        //     } else if (this._ignoredVelCorrection) this._ignoredVelCorrection = false;
-
-        //     if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
-        //         this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
-        //         this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
-        //         this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
-        //         this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
-        //         this._ball.visualOffset.subtractInPlace(positionError);
-        //         this._serverPatch = null;
-        //         return ;
-        //     }
-
-        //     const patchTick = Math.round(this._serverPatch.tick - this._clock.tickOffset);
-        //     const ticksToResimulate = this._clock.tick - patchTick;
-        //     console.log("patchTick:", patchTick, "ticks to resim:", ticksToResimulate);
-        //     if (ticksToResimulate <= 0) {
-        //         this._ball.setPhysicsBodyPosition(this._serverPatch.position);
-        //         //this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
-        //         this._ball.setVelocity(this._serverPatch.velocity);
-        //         //this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
-        //         this._serverPatch = null;
-        //         this._ball._body.disablePreStep = false; 
-        //         this._ball._mesh.computeWorldMatrix(true);
-        //         console.log("pos corrected:", this._ball.getPhysicsBodyPosition());
-        //         return;
-        //     }
-        //     const preRollbackPos = this._ball.getPhysicsBodyPosition().clone();
-        //     this._ball.setPhysicsBodyPosition(this._serverPatch.position);
-        //     this._ball.setVelocity(this._serverPatch.velocity);
-        //     this._snapshots.clearAfterTickIncluded(patchTick);
-        //     this._snapshots.saveSnapshot(patchTick, this._serverPatch.position, this._serverPatch.velocity);
-        //     const FIXED_TIME_STEP = 1 / 60;
-        //     for (let i = 0; i < ticksToResimulate; i++) {
-        //         const simulatingTick = patchTick + i;
-        //         const historicalRacket = this._player.racketHistory.get(simulatingTick);
-        //         if (historicalRacket) {
-        //             this._player.racketBody.transformNode.position = historicalRacket.position;
-        //             this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
-        //         }
-        //         // const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-        //         // if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
-        //         //     this._ball.setVelocity(impactSnapshot.snapshot.velocity);
-        //         // }
-        //         this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
-        //         this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-        //     }
-        //     const postRollbackPos = this._ball.getPhysicsBodyPosition();
-        //     const teleportDelta = preRollbackPos.subtract(postRollbackPos);
-        //     this._ball.visualOffset.addInPlace(teleportDelta);
-        
-        //     this._serverPatch = null;
-        // });
         this._scene.onBeforeRenderObservable.add(() => {
             if (this._ball.visualOffset.lengthSquared() < 0.0001) return;
             const dt = this._engine.getDeltaTime() / 1000; 
             const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
             const correctionFactor = Math.exp(-smoothingSpeed * dt);
-            //this._ball.setMeshPosition(this._ball.visualOffset);
+            this._ball.setMeshPosition(this._ball.visualOffset);
             this._ball.visualOffset.scaleInPlace(correctionFactor);
         });
         return shadow;
@@ -467,7 +395,7 @@ export class App {
 
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
         const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
-        this._enemy = new Enemy(this._scene, enemyAssets, this._shadow);
+        this._enemy = new Enemy(this._scene, enemyAssets, this._shadow, isNearSide);
         this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
             const newPos = this._room.state.players.get(sessionId).position;
             this._enemy.registerBody(new Vector3(newPos.x, newPos.y, newPos.z));
@@ -490,9 +418,12 @@ export class App {
         if (isPlayer) {
             body.isVisible = false;
         }
-        if (!isPlayer && !isNearSide) {
+        if (isPlayer && !isNearSide) {
             body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
         }
+        // if (!isPlayer && !isNearSide) {
+        //     body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+        // }
 
         body.position = position;
         let bodymtl = new StandardMaterial("red", this._scene);
