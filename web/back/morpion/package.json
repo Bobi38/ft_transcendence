@@ -2,7 +2,7 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./GameServ.js",
+  "main": "GameServ.js",
 "scripts": {
   "dev": "nodemon GameServ.js",
   "start": "node GameServ.js"

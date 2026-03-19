@@ -1,4 +1,16 @@
-FROM node:24.13.0
+FROM node:24.13.0 as dev
+
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+
+EXPOSE 9004
+CMD ["npm", "run", "dev"]
+
+
+FROM node:24.13.0 AS prod
 
 
 WORKDIR /app

@@ -1,12 +1,23 @@
-FROM node:24.13.0
+FROM node:24.13.0 AS dev
 
 
 WORKDIR /app
-COPY chat/chatG/package*.json ./
+COPY package*.json ./
+RUN npm install
+
+
+EXPOSE 9001
+CMD ["npm", "run", "dev"]
+
+FROM node:24.13.0 AS prod
+
+
+WORKDIR /app
+COPY package*.json ./
 
 RUN npm install
 
-COPY chat/chatG/src /app
+COPY src /app
 COPY models/index.js ./models/index.js
 COPY models/test.js ./models/test.js
 COPY models/user.js ./models/user.js
@@ -17,3 +28,4 @@ ENV NODE_ENV=production
 
 EXPOSE 9001
 CMD ["npm", "start"]
+

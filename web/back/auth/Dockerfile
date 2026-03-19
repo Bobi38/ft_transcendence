@@ -1,8 +1,19 @@
-FROM node:24.13.0
+FROM node:24.13.0 AS dev
 
 
 WORKDIR /app
-COPY auth/package*.json ./
+COPY package*.json ./
+RUN npm install
+
+
+EXPOSE 9005
+CMD ["npm", "run", "dev"]
+
+FROM node:24.13.0 AS prod
+
+
+WORKDIR /app
+COPY package*.json ./
 
 
 

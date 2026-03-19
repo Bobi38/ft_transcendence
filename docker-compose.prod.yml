@@ -57,7 +57,8 @@ services:
     container_name: front
     build: 
       context: ./web/front
-      dockerfile: prod/Dockerfile
+      dockerfile: Dockerfile
+      target: prod
     depends_on:
       mysql:
         condition: service_healthy
@@ -68,7 +69,8 @@ services:
   gateway:
     build:
       context: ./web/back
-      dockerfile: gateway/prod/Dockerfile
+      dockerfile: gateway/
+      target: prod
     container_name: gateway
     environment:
       DB_USER: "bobi"
@@ -88,7 +90,8 @@ services:
   auth:
     build: 
       context: ./web/back
-      dockerfile: auth/prod/Dockerfile
+      dockerfile: auth/
+      target: prod
     container_name: auth
     environment:
       DB_USER: "bobi"
@@ -108,7 +111,8 @@ services:
   chatp_service:
     build: 
       context: ./web/back
-      dockerfile: chat/chatP/prod/Dockerfile
+      dockerfile: chat/chatP/
+      target: prod
     container_name: chatp_service
     environment:
       DB_USER: "bobi"
@@ -130,7 +134,8 @@ services:
   chatg_service:
     build: 
       context: ./web/back
-      dockerfile: chat/chatG/prod/Dockerfile
+      dockerfile: chat/chatG/
+      target: prod
     container_name: chatg_service
     environment:
       DB_USER: "bobi"
@@ -152,7 +157,8 @@ services:
   user_service:
     build:
       context: ./web/back
-      dockerfile: user/prod/Dockerfile
+      dockerfile: user/
+      target: prod
     container_name: user_service
     environment:
       DB_USER: "bobi"
@@ -174,7 +180,8 @@ services:
   pong3d:
     build: 
       context: ./web/back
-      dockerfile: pong3D/prod/Dockerfile
+      dockerfile: pong3D/Dockerfile
+      target: prod
     container_name: pong3d
     environment:
       DB_USER: "bobi"
@@ -198,7 +205,8 @@ services:
   morpion:
     build:
       context: ./web/back
-      dockerfile: morpion/prod/Dockerfile
+      dockerfile: morpion/
+      target: prod
     container_name: morpion
     environment:
       DB_USER: "bobi"
