@@ -165,11 +165,6 @@ function morpion(message, socket){
 
     let game = manager_room.isInRoom(id);
 
-    // if (!game){
-
-    //     manager_room.lobby.addPlayer(socket, id);
-    // }
-
     if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
         return;
