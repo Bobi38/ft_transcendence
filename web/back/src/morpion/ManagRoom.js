@@ -10,6 +10,8 @@ class ManagerRoom {
     constructor(){
         this._roomId = (Date.now() % 50001) + 57;
         this._rooms = new Map();
+
+        this.list = {};
     }
 
     createRoom(type = "default") {
@@ -20,10 +22,17 @@ class ManagerRoom {
         return new_room;
     }
 
-    getRoomlist(){
-        return Object.fromEntries(
+    refreshRoomList() {
+        const newList = Object.fromEntries(
             [...this._rooms].map(([id, room]) => [id, room.getPlayers()])
         );
+
+        for (const key in this.list) {
+            delete this.list[key];
+        }
+
+        Object.assign(this.list, newList);
+        console.log(this.list);
     }
 
     getRoom(id) {
@@ -32,11 +41,11 @@ class ManagerRoom {
 
     removeRoom(room) {
         // console.log(`cherche ${id}  - quel  room ? ${room}`)
-        if (!room) return false;
+        if (!room) return ;
 
         room.remove();
         this._rooms.delete(room.getId())
-        return true;
+        this.refreshRoomList();
     }
 
     isInRoom(playerId) {
@@ -53,7 +62,7 @@ class ManagerRoom {
 
     findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
-            console.log("Checking room ->", room.toString());
+            // console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
                     && !room.getLock()) {
@@ -88,11 +97,6 @@ class ManagerRoom {
         this._rooms.clear();
     }
 
-    sendAll(mess) { //inutile
-        this._rooms.forEach(
-            room => room.sendAll(mess))
-    }
-
     startOutTimer(game) {
         game.clearOutTimer();
 
@@ -106,7 +110,7 @@ class ManagerRoom {
             this._roomId = (Date.now() % 50001) + 57;
 
         let increment = this._roomId;
-        increment = ((increment % 31) + 1) * ((increment % 7) + 1);
+        increment = ((increment % 31) + 1) * ((increment % 53) + 1);
 
         this._roomId += increment;
 
