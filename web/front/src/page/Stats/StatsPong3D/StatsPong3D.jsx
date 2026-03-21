@@ -44,45 +44,8 @@ export default function StatsPong3D({ username, setUsername }) {
 
         const data = repjson.stat_user;
 
-        const win_horizontal = data.type_X_horizontal_winner + data.type_O_horizontal_winner
-        const win_vertical = data.type_X_vertical_winner + data.type_O_vertical_winner
-        const win_diagonal = data.type_X_diagonal_winner + data.type_O_diagonal_winner
-
-
-        const lose_horizontal = data.type_X_horizontal_loser + data.type_O_horizontal_loser
-        const lose_vertical = data.type_X_vertical_loser + data.type_O_vertical_loser
-        const lose_diagonal = data.type_X_diagonal_loser + data.type_O_diagonal_loser
-
-
-        const type_X_win = data.type_X_horizontal_winner + data.type_X_vertical_winner + data.type_X_diagonal_winner
-        const type_X_lose = data.type_X_horizontal_loser + data.type_X_vertical_loser + data.type_X_diagonal_loser
-        
-        const type_O_win = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
-        const type_O_lose = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
-        
-        const win_abort = data.type_X_abort_winner + data.type_O_abort_winner
-        const draw = data.type_X_draw + data.type_O_draw
-        const lose_abort = data.type_X_abort_loser + data.type_O_abort_loser
-        
-        const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
-        const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
-
         const data_formated = {
-            win_horizontal: win_horizontal + 1,
-            win_vertical: win_vertical,
-            win_diagonal: win_diagonal,
-            lose_horizontal: lose_horizontal,
-            lose_vertical: lose_vertical,
-            lose_diagonal: lose_diagonal,
-            type_X_win: type_X_win,
-            type_X_lose: type_X_lose,
-            type_O_win: type_O_win,
-            type_O_lose: type_O_lose,
-            win_abort: win_abort,
-            draw: draw,
-            lose_abort: lose_abort,
-            all_win_without_abort: all_win_without_abort,
-            all_lose_without_abort: all_lose_without_abort
+
         };
 
         setStatToDisplay(data_formated);
@@ -155,9 +118,34 @@ export default function StatsPong3D({ username, setUsername }) {
 
                 <div className={`game-winrate border-2`}>
 
+                    <div>
+                        win:1
+                        lose:1
+                    </div>
+                
+                    <div>
+                        abort win:0
+                        abort lose:0
+                    </div>
+                    <div>
+                        total time player: 8:00
+                        total ball hit: 80
+                    </div>
+                    <div>
+                        Moy time/game: 4:00
+                        Moy ballhit/game: 40
+                    </div>
+
                 </div>
             </aside>
         </section>
     )
 }
 
+
+// total_game:
+// time_played:
+// win:
+// lose:
+// total_ballhit: tballhit / tgame = moy ballhit/game
+    
