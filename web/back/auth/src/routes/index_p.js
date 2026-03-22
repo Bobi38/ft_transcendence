@@ -4,6 +4,7 @@ export { default as fs } from 'fs';
 export { default as jwt } from 'jsonwebtoken';
 export { default as nodemailer } from 'nodemailer';
 export { default as crypto } from 'crypto';
+export { default as validator } from 'validator';
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';

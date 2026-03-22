@@ -4,7 +4,7 @@
   "type": "module",
   "main": "UserServ.js",
 "scripts": {
-  "dev": "nodemon UserServ.js",
+  "dev": "nodemon src/UserServ.js",
   "start": "node UserServ.js"
 },
   "dependencies": {

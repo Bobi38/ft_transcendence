@@ -8,7 +8,7 @@ import User from './models/user.js';
 import Friend from './models/friend.js';
 import PrivChat from './models/privchat.js';
 import PrivMess from './models/privmess.js';
-
+import chatG from './models/test.js';
 import GameMorp from './models/GameMorp.js';
 import StatMorp from './models/StatMorp.js';
 

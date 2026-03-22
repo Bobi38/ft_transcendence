@@ -4,7 +4,7 @@
   "type": "module",
   "main": "AuthServ_p.js",
 "scripts": {
-  "dev": "nodemon AuthServ_p.js",
+  "dev": "nodemon src/AuthServ_p.js",
   "start": "node AuthServ_p.js"
 },
   "dependencies": {

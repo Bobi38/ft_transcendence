@@ -23,7 +23,6 @@ router.get('/all_friend', async (req, res) => {
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
-    console.log("1 f");
 	const result = await User.findAll({
 					where: { id: decoded.id },
 					include: [{

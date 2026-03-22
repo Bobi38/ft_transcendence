@@ -83,6 +83,9 @@ router.post('/maila2f_check_code' , async (req, res) => {
   try{
     console.log("API /maila2f_check_code called")
     const {code, host} = req.body;
+    if (!code || !host) {
+      return res.status(400).json({ success: false, message: 'Missing fields' });
+    }
     console.log("API /maila2f_check_code je suis dans verif")
     console.log(code);
     const token = req.cookies.token;

@@ -30,6 +30,9 @@ router.post('/add_message_global', async (req, res) => {
   try{
     console.log("Api /add_message_global called");
     const chat = req.body;
+    if (!chat.message || !chat.time) {
+      return res.status(400).json({ success: false, message: 'Missing fields' });
+    }
     if (chat.send == "")
       res.status(201)({success: true});
     const tok = req.cookies.token

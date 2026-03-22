@@ -4,7 +4,7 @@
   "type": "module",
   "main": "GameServ.js",
 "scripts": {
-  "dev": "nodemon GameServ.js",
+  "dev": "nodemon src/GameServ.js",
   "start": "node GameServ.js"
 },
   "dependencies": {

@@ -5,7 +5,7 @@
   "main": "ChatServ.js",
 "scripts": {
   "start": "node ChatServ.js",
-  "dev": "nodemon ChatServ.js"
+  "dev": "nodemon src/ChatServ.js"
 },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -24,5 +24,9 @@
     "validator": "^13.15.26",
     "ws": "^8.16.0",
     "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.2",
+    "nodemon": "^2.0.22"
   }
 }

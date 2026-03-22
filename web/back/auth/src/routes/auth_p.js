@@ -5,7 +5,7 @@ import
   Co,
 }from './index_p.js'
 
-import { bcrypt, jwt, express, secret} from './index_p.js';
+import { bcrypt, jwt, express, validator, secret} from './index_p.js';
 
 const router = express.Router();
 
@@ -15,6 +15,12 @@ router.post('/login', async (req, res) => {
 
   try {
     console.log("Api /login called");
+    if (!email || !password || !host) {
+      return res.status(400).json({ success: false, message: 'Missing fields' });
+    }
+    if (!validator.isEmail(email)){
+      return res.status(400).json({ success: false, message: 'Invalid email format' });
+    }
     const result = await User.findAll({ where: { mail: email } });
     if (result.length === 0)
         return res.status(404).json({success: false, message: 'Email not find'});
@@ -65,6 +71,9 @@ router.post('/register', async (req, res) => {
     const { name, password, email } = req.body;
     try {
       console.log("1")
+      if (!name || !password || !email) {
+        return res.status(400).json({ success: false, message: 'Missing fields' });
+      }
         const find = await User.findAll({ where: { mail: email } });
         if (find.length != 0) {
           if (find[0].OAuth == true)

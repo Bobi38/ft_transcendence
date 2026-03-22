@@ -75,8 +75,9 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./web/back/gateway/src:/app
-      - ./web/back/models:/app/models
+      - ./web/back/gateway:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
@@ -102,8 +103,9 @@ services:
     ports:
       - "9005:9005"
     volumes:
-      - ./web/back/auth/src:/app/src
+      - ./web/back/auth:/app
       - ./web/back/models:/app/src/models
+      - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
@@ -129,8 +131,9 @@ services:
     ports:
       - "9002:9002"
     volumes:
-      - ./web/back/chat/chatP/src:/app
-      - ./web/back/src/models:/app/models
+      - ./web/back/chat/chatP:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
@@ -156,8 +159,9 @@ services:
     ports:
       - "9001:9001"
     volumes:
-      - ./web/back/chat/chatG/src:/app
-      - ./web/back/src/models:/app/models
+      - ./web/back/chat/chatG:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
@@ -183,8 +187,9 @@ services:
     ports:
       - "9003:9003"
     volumes:
-      - ./web/back/user/src:/app
-      - ./web/back/src/models:/app/models
+      - ./web/back/user:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
@@ -216,6 +221,7 @@ services:
       - ./web/back/pong3D:/app
       - ./web/front/media:/app/src/media
       - ./web/back/models:/app/src/models
+      - /app/node_modules
     cap_add:
       - NET_ADMIN
     restart: always
@@ -243,8 +249,9 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/morpion/src:/app
-      - ./web/back/src/models:/app/models
+      - ./web/back/morpion:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
     restart: always
 
 secrets:

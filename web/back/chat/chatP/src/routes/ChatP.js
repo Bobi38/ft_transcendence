@@ -8,6 +8,9 @@ router.post('/add_message_private', async (req, res) => {
   try{
     console.log("in add 1");
     const data = req.body;
+    if (!data.message || !data.time) {
+      return res.status(400).json({ success: false, message: 'Missing fields' });
+    }
     const tok1 = req.cookies.token;
     const id1 = jwt.verify(tok1, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
@@ -35,6 +38,9 @@ router.post('/add_message_private', async (req, res) => {
 router.post('/get_chat_private', async (req, res) => {
     try{
         const {token} = req.body;
+        if (!token) {
+          return res.status(400).json({ success: false, message: 'Missing fields' });
+        }
         const my_token = req.cookies.token;
         const id1 = jwt.verify(my_token, secret);
         const id2 = await User.findOne({ where: { name: token}});
