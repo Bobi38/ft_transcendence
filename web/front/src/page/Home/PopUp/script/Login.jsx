@@ -61,9 +61,8 @@ export default function Login({setShowLog}) {
             setShowLog(AUTH.NONE);
 
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
-    };
-
-
+    	};
+	}
 
 
     const register_mode = () => {
