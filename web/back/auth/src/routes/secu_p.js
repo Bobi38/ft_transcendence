@@ -102,7 +102,7 @@ router.post('/maila2f_check_code' , async (req, res) => {
       return res.status(201).json({success: true, message:"good"});
     }
     else
-      return res.status(500).json({success: true, message:"wrong"})
+      return res.status(400).json({success: true, message:"wrong"})
   }catch(err){
     return res.status(500).json({success: false, message: "back check_code" + err});
   }

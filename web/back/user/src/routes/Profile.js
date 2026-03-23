@@ -72,7 +72,7 @@ router.post('/majPass', async(req,res) => {
       await result.update({password: CrypPass});
       return res.status(201).json({success: true, message: "goog"});
     }
-    return res.status(500).json({success: false, message: "password empty"});
+    return res.status(404).json({success: false, message: "password empty"});
   }catch(err){
     res.status(500).json({success: false, message: "error majpass ", err});
   }

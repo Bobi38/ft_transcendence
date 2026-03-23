@@ -10,8 +10,6 @@ router.get('/get_chat_global', async (req, res) => {
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
-    if (result.length === 0)
-        return res.status(500).json({success: false, message: 'ERROR USER NOT FOUND'});
     const conv = await ChatG.findAll({order:[['id', 'DESC']], limit: 30});
     const name = await User.findAll({attributes: ['id', 'name']});
     let ret = "";
