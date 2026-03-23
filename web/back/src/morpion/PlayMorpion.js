@@ -18,13 +18,36 @@ const msgs = {
     badMove: "Move alert",
 }
 
+function observator(player, gameId){
+    
+    console.log(`obs ${gameId}`);
+    if (gameId === 1){
+        const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
+        const players = {player_1: "martin", player_2:"jackiechan"};
+        player.send({
+            players,
+            other_board,
+        });
+        return ; 
+    }
+
+    const game = manager_room.getRoom(gameId);
+
+    if (!game){
+        const list = manager_room.list;
+        player.send({message: "unknow Game", list});
+        return ;
+    }
+
+    game.addObs(player);
+}
+
 function move(player, move){
-    console.log(`new move ${move}`);
+    // console.log(`new move ${move}`);
 
     const game = player.getGame();
 
     if (!game) {
-        //voir pour indique la 
         return ;
     }
     // console.log("mess1");
@@ -36,9 +59,9 @@ function move(player, move){
     if (game.play(player, move)) {
         // console.log("mess3");
         if(game.checkVictory()){
-            console.log(`end of ${game}`);
+            // console.log(`end of ${game}`);
             setTimeout(() => {
-                 console.log(`party register ${game}`);
+                //  console.log(`party register ${game}`);
                  manager_room.removeRoom(game);
             }, 10000);
             return ;
@@ -56,7 +79,7 @@ function move(player, move){
     }
 }
 
-function searchGame(player){
+function searchGame(player, players){
     console.log(`new search game de ${player}`);
     let game = player.getGame();
     if (game){
@@ -74,15 +97,18 @@ function searchGame(player){
             {message: msgs.my_turn, turn: true},
             {message: msgs.other_turn, turn: false}
         )
+        manager_room.refreshRoomList(true);
     }
     catch {
-            console.log("premier set _Turn");
-            game._turn = player;
-            player.send({message: msgs.recherche, turn: false})
+        console.log("premier set _Turn");
+        game._turn = player;
+        player.send({message: msgs.recherche, turn: false})
+        return ;
     }
+    return true;
 }
 
-function reboot(){ // non utilise
+function reboot(){
     console.log(msgs.reboot);
     manager_room.removeAll(msgs.reboot);
     return;
@@ -103,11 +129,11 @@ function leave(player){
     console.log(`${player} ask to leave`);
     const game = player.getGame();
 
-    if (!game) return;
+    if (!game) return false;
 
     if (!game.getLock()) {
         manager_room.removeRoom(game);
-        return;
+        return false;
     }
     const loser = player;
     let winner = game.getTurn();
@@ -122,6 +148,7 @@ function leave(player){
     loser.disconnect(msgs.l_abort);
 
     setTimeout(() => {manager_room.removeRoom(game);}, 10000);
+    return true;
 }
 
 const cooldowns = new Map();
@@ -137,11 +164,6 @@ function morpion(message, socket){
     // console.log(`connecte dans play Morpion ${message} de ${id}`)
 
     let game = manager_room.isInRoom(id);
-
-    // if (!game){
-
-    //     manager_room.lobby.addPlayer(socket, id);
-    // }
 
     if (message === "reboot") {
         manager_room.removeAll("le serveur a reboot");
@@ -223,4 +245,4 @@ function morpion(message, socket){
 
 }
 
-export default {morpion, reboot, playSecond, leave, msgs, searchGame, move}
+export default {morpion, reboot, playSecond, leave, msgs, searchGame, move, observator}

@@ -11,7 +11,7 @@ import "./Board.scss";
 export default function Board({ board , isGame }) {
 
     function handleClick(i) {
-        SocketM.sendd(SocketM.socket.morp, {
+        SocketM.sendd("morp", {
             type: "move",
             message: i,
         })

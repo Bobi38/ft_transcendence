@@ -88,7 +88,7 @@ useEffect(() => {
         <>
             <div className={`PrivateMessage-root border-0`}>
 
-                <Hr initial={160} min1={160} thickness={5}>
+                <Hr initial={205} min1={90} thickness={5}>
 
                     <div className={`info border-1`}>
 
@@ -104,9 +104,9 @@ useEffect(() => {
                             {displayedInfoConv && displayedInfoConv.map((msg,index) => (
                                 <div key={index} className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
                                     <div className={`header-last-conv border-4`}>
-                                        <h4>{msg.login}</h4><span>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</span>
+                                        <h4>{msg.login}</h4><p>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</p>
                                     </div>
-                                    <p className={`truncate`} style={{ fontSize: "0.5rem" }}>{msg.lastMessage}</p>
+                                    <p className={`truncate`}>{msg.lastMessage}</p>
                                 </div>
                             ))}
                         </div>

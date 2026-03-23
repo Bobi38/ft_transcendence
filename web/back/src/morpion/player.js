@@ -1,3 +1,4 @@
+import User from '../models/user.js'; 
 import StatMorp from "../models/StatMorp.js";
 
 export class Player {
@@ -14,19 +15,13 @@ export class Player {
         this._chrono = null;
         this.first_alert = 0;
         this._time_refresh_name = 0;
+        this._time_last_active = 0;
+        this.list = null;
     }
-
-    // isAlive() { // non utiliser
-    //     return this._socket && this._socket.readyState === 1;
-    // }
-
-    // refreshSocket(socket){ // a changer (probalbement remplacer par addSocket)
-    //     this._socket = socket;
-    //     this.send();
-    // }
 
     addSocket(socket){
         this._sockets.set(socket.id, socket);
+        this._time_last_active = Date.now();
 
         console.log(`player are ${this._sockets.size} sockets`)
         for (const [id, s] of this._sockets) {
@@ -38,12 +33,19 @@ export class Player {
         this.send();
     }
 
+    isInactived(){
+        console.log(`pour verif timeOOOut player`);
+        if (this._time_last_active + 30000 < Date.now())
+            return false;
+        console.log("time out 30s for eval");
+
+        return true;
+    }
+
     setGame(game){
         if (!game?.getId()) return;
 
-        this._nick_name = this._id === 5 ? "gros batard" : "toto";// attention dev devops devel
-
-        console.log(`player register in ${game.getId()}`);
+        console.log(`start ${game.getId()}`);
         this.clearTurnTimer();
         this._game = game;
         this._chrono = null;
@@ -67,7 +69,7 @@ export class Player {
         obs.setObs(null)
         if (this._type === "Morpion")
             obs.send({
-                players: "",
+                players: null,
                 other_board: Array(9).fill(" ")
             })
     }
@@ -76,23 +78,21 @@ export class Player {
         return this._game;
     }
 
-    send(data) {
-
-        if (data === undefined) {
-            data = this._prev_data;
-            if (!data) return;
-        } else {
-            this._prev_data = structuredClone(data);
-        }
-
+    save(data) {
         const payload =
             typeof data === "string"
                 ? { message: data }
                 : data;
+        Object.assign(this._prev_data, payload);
+    }
 
-        const all  = JSON.stringify({
-                type: "game",
-                ...payload
+    send(data) {
+        if (data !== undefined)
+            this.save(data)
+        
+        const all = JSON.stringify({
+                ...structuredClone(this._prev_data),
+                list: structuredClone(this.list)
             });
 
         // console.log("JSON envoyé au client:", all);
@@ -106,6 +106,7 @@ export class Player {
                 console.error("WebSocket player.send error:", err);
             }
         }
+        // console.log(all);
     }
 
     disconnect(message) {
@@ -121,8 +122,7 @@ export class Player {
     }
 
     toString(){
-        // console.log(`definition de player`);
-        return `${this._id} : ${this._nick_name} play ${this._game?.getId()}`;
+        return `${this._nick_name} play ${this._game?.getId()}`;
     }
 
     getId(){
@@ -183,17 +183,30 @@ export class Player {
          });
     }
 
-    getName(){
-        return this._nick_name;
+    static async create(socket){
+        const player = new Player(socket);
+        const time = Date.now()
+        
+        player.refreshName(time);
+        player._time_last_active = time;
+
+        return player;
     }
 
-    oldgetName(){
+    async refreshName(time){
+        const ll = await User.findByPk(this._id);
+        this._time_refresh_name = time;
+        this._nick_name = ll.name        
+    }
+
+    getName(){
         const time = Date.now();
 
-        if (time - 20000 < this._time_refresh_name)
+        if (this._nick_name && time - 20000 < this._time_refresh_name)
             return this._nick_name;
 
-        console.log(`faire le fecth ici`);
+        this.refreshName(time);
+
         return this._nick_name;
     }
 
@@ -219,6 +232,5 @@ export class Player {
 
         const userstat = await StatMorp.findOne({where: {idUser: this._id}});
         await userstat.increment(data);
-
     }
 }

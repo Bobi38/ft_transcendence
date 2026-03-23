@@ -43,16 +43,38 @@ export class MyRoom extends Room {
        */
       console.log(client.sessionId, "sent a message:", message);
     },
+    // "synchronizeTick" : (client: Client, data: any) => {
+    //   //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+    //   client.send("serverTick", {serverTick: this._tick, t0: data});
+    // },
+    "initialTick" : (client: Client, data: any) => {
+      //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+      client.send("initialTick", this._tick);
+    },
     "synchronizeTick" : (client: Client, data: any) => {
-      console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
-      client.send("serverTick", {serverTick: this._tick, t0: data});
+      //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
+      client.send("synchronizeTick", this._tick);
     },
     "racketImpact": (client: Client, data: any) => {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
-      this._ball.transformNode.setAbsolutePosition(ballPos);
-      console.log(client.sessionId,  "hit the ball: ", data);
+      const ticksToResimulate = this._tick - data.tick;
+      console.log("impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
+      this._ball.transformNode.position = ballPos;
+      this._ball.setLinearVelocity(ballVel);
+      this._ball.transformNode.computeWorldMatrix(true);
+      this._ball.disablePreStep = false;
+      const FIXED_TIME_STEP = 1 / 60;
+      for (let i = 0; i < ticksToResimulate; i++) {
+          this._ball.disablePreStep = false;
+          this._havokPlugin.executeStep(FIXED_TIME_STEP, this._bodies);
+          this._ball.transformNode.computeWorldMatrix(true);
+      }
+      console.log(client.sessionId,  "hit the ball: ", data, "at servert tick:", this._tick);
+      console.log("new pos:", this._ball.transformNode.position.clone(), "new vel:", this._ball.getLinearVelocity());
+      this.broadcast("racketImpact", data, { except: client });
+      client.send("impactResponse", this._tick);
     },
     "bodyMoved": (client: Client, data: any) => {
       const playerPos = this.state.players.get(client.sessionId).position;
@@ -90,7 +112,7 @@ export class MyRoom extends Room {
       this._tick++;
       this._posToSend = this._ball.transformNode.position.clone();
       this._velToSend = this._ball.getLinearVelocity();
-      //console.log(this._tick, Date.now());
+      // console.log("server tick:", this._tick, "Date.now:", Date.now());
     });
     this._scene = scene;
     this._engine = engine;
@@ -131,13 +153,14 @@ export class MyRoom extends Room {
         this.state.ball.velocity.x = 0;
         this.state.ball.velocity.y = 0;
         this.state.ball.velocity.z = 0;
-        this.broadcast('Goal!', { afterNextPatch: true });
+        this.broadcast('Goal!', this._tick,{ afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
       }
     });
 
     engine.runRenderLoop(() => {
+      // console.log(this._engine.getDeltaTime());
       scene.render();
     });
   }
@@ -154,7 +177,7 @@ export class MyRoom extends Room {
   onBeforePatch(state: MyRoomState) {
     const ballPos = this._posToSend;
     const ballVel = this._velToSend;
-    console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
+    // console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;

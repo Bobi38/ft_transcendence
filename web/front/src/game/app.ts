@@ -40,11 +40,14 @@ export class App {
     private _shadow : ShadowGenerator;
     private _ui : GUI;
     private _snapshots : SnapshotBuffer = new SnapshotBuffer();
-    private _clock : SynchronizedClock = new SynchronizedClock();
+    public _clock : SynchronizedClock = new SynchronizedClock();
     private _serverPatch : BallSnapshot = null;
+    private _isNear : boolean = true;
 
-    private _velCorrectionIgnored : boolean = false;
+    private _ignoredVelCorrection : boolean = false;
     private _ignoreServerUntil : number = 0;
+    public  isResimming : boolean = false;
+    public  recentImpact : boolean = false;
 
 
     constructor(canvas: HTMLCanvasElement) {
@@ -117,6 +120,7 @@ export class App {
         this._ui = new GUI(room);
         console.log(this._room.state.roomStatus);
 
+        this._isNear = room.state.players.get(this._player.sessionId).sideNear;
         callback.listen("roomStatus", () => {
             const status = this._room.state.roomStatus;
             switch (status) {
@@ -128,11 +132,11 @@ export class App {
                     console.log("Game has started");
                     this._player.unlockControls();
                     this._ui.showNoUI();
-                    this._ui.addScoreUI(room.state.players.get(this._player.sessionId).sideNear, room.state.score.teamNear, room.state.score.teamFar);
+                    this._ui.addScoreUI(this._isNear, room.state.score.teamNear, room.state.score.teamFar);
                     break;
                 case RoomStatus.WON:
                     this._player.lockControls();
-                    this._ui.showEndUI(room.state.score.teamNear, room.state.score.teamFar);
+                    this._ui.showEndUI(this._isNear, room.state.score.teamNear, room.state.score.teamFar);
                     break;
                 case RoomStatus.PLAYER_DISCONNECTED:
                     this._player.lockControls();
@@ -140,20 +144,75 @@ export class App {
                     break;
             }
         });
-        this._room.onMessage('Goal!', () => {
+        this._room.onMessage('Goal!', (tick: number) => {
             this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
-            this._ignoreServerUntil = this._clock.tick;
+            this._ignoreServerUntil = tick;
             this._snapshots.dispose();
-            console.log("A point has been won at tick:", this._clock.tick);
+            console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
+        });
+        this._room.onMessage("racketImpact", (data: any) => {
+            const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
+            const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
+            const impactTick = data.tick;
+            const ticksToResimulate = this._clock.tick - data.tick;
+            console.log("impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
+            this._ball.setPhysicsBodyPosition(ballPos);
+            this._ball.setVelocity(ballVel);
+            this._ball._body.transformNode.computeWorldMatrix(true);
+            this._ball._body.disablePreStep = false;
+            this._snapshots.clearAfterTickIncluded(data.tick);
+            this._snapshots.saveSnapshot(data.tick, ballPos, ballVel);
+            const FIXED_TIME_STEP = 1 / 60;
+            const preRollbackPos = this._ball.getPhysicsBodyPosition();
+            for (let i = 0; i < ticksToResimulate; i++) {
+                const simulatingTick = impactTick + i;
+                this._ball._body.disablePreStep = false;
+                this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
+                this._ball._body.transformNode.computeWorldMatrix(true);
+                // console.log(this._ball.getPhysicsBodyPosition());
+                this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+            }
+            const postRollbackPos = this._ball.getPhysicsBodyPosition();
+            const teleportDelta = preRollbackPos.subtract(postRollbackPos);
+            this._ball.visualOffset.addInPlace(teleportDelta);
+            console.log("Other player hit the ball");
+        });
+        this._room.onMessage("impactResponse", (tick) => {
+            this.recentImpact = true;
         });
         callback.onChange(room.state.score, () => {
             console.log("is this firing?", room.state.score.teamFar, room.state.score.teamNear);
-            this._ui.updateScoreUI(room.state.score.teamNear, room.state.score.teamFar);
+            this._ui.updateScoreUI(this._isNear, room.state.score.teamNear, room.state.score.teamFar);
         });
         this._engine.runRenderLoop(() => {
+            this._havokPlugin.setTimeStep(1/60);
+            this._clock.updateAccumulator(this._engine.getDeltaTime());
+            const acc = this._clock.getAccumulator();
+            // console.log("accumulator:", acc);
+            if (acc >= 1000/60) {
+                this._havokPlugin.executeStep(1/60, this._environment.bodies);
+                this._clock.tick++;
+                this._clock.setbackAccumulator();
+                this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+                console.log("Adding supplementary physics step");
+            } else if (acc <= -1000/60) {
+                this._havokPlugin.setTimeStep(0);
+                this._clock.tickSkipped = true;
+                this._clock.addbackAccumulator();
+                console.log("Skipping a physics step");
+            }
+
             this._scene.render();
+
+            if (this._clock.tickSkipped) {
+                this._clock.tickSkipped = false;
+            } else {
+                this._clock.tick++;
+                this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+            }
+            // console.log("client tick:", this._clock.tick, "Date.now:", Date.now())
         });
         window.addEventListener('resize', () => {
             this._engine.resize();
@@ -167,17 +226,25 @@ export class App {
         this._havokPlugin = new HavokPlugin(true, havokInstance);
         this._havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
-        this._room.onMessage("serverTick", ({serverTick, t0}) => {
-                this._clock.synchronizeClientWithServerClock(serverTick, t0);
-            });
+        // this._room.onMessage("serverTick", ({serverTick, t0}) => {
+        //         this._clock.synchronizeClientWithServerClock(serverTick, t0);
+        //     });
+        this._room.onMessage("initialTick", (serverTick) => {
+            this._clock.setInitialClientClock(serverTick);
+        });
+        this._room.onMessage("synchronizeTick", (serverTick) => {
+            this._clock.updateAccumulatorSlew(serverTick)
+        });
+        this._room.send("initialTick");
         setInterval(() => {
                 const t0 = Date.now();
                 this._room.send("synchronizeTick", t0);
             }, 250);
-        this._scene.onAfterPhysicsObservable.add(() => {
-            this._clock.tick++;
-            this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-        });
+        // this._scene.onAfterPhysicsObservable.add(() => {
+        //     this._clock.tick++;
+        //     // console.log("client tick:", this._clock.tick, "Date.now:", Date.now())
+        //     this._snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+        // });
     }
 
     private async _setupGameAssets() {
@@ -230,23 +297,33 @@ export class App {
             this._serverPatch = {tick: this._room.state.ball.tickStamp, position: serverPos, velocity: serverVel};
         });
 
-
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this._serverPatch) return ;
             //console.log(this._serverPatch);
-            if (this._serverPatch.tick - this._clock.tickOffset < this._ignoreServerUntil) return;
-            const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
-            if (!pastSnapshot) return ;
-            const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
-            let velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
-            console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
-                "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
-            //console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
-            console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
-            if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01) {
-                console.log("Velocity error likely incorrect. Ignoring");
-                velocityError = Vector3.Zero();
+            if (this.recentImpact || this._clock.tick < this._ignoreServerUntil) {
+                this._serverPatch = null;
+                return;
             }
+
+            this._clock.updateAccumulatorSlew(this._serverPatch.tick);
+            const pastSnapshot = this._snapshots.getSnapshotAtTick(this._serverPatch.tick);
+            if (!pastSnapshot) {
+                this._serverPatch = null; 
+                return ;
+            }
+
+            const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
+            const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
+            console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick,
+                "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
+            console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position, "now pos:", this._ball.getPhysicsBodyPosition());
+            console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity, "now vel:", this._ball.getVelocity());
+            // if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01 && !this._ignoredVelCorrection) {
+            //     console.log("Velocity error likely incorrect. Ignoring");
+            //     velocityError.set(0,0,0);
+            //     this._ignoredVelCorrection = true;
+            // } else if (this._ignoredVelCorrection) this._ignoredVelCorrection = false;
+
             if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
                 this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
                 this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
@@ -257,22 +334,17 @@ export class App {
                 return ;
             }
 
-            const patchTick = Math.round(this._serverPatch.tick - this._clock.tickOffset);
+            const patchTick = this._serverPatch.tick;
             const ticksToResimulate = this._clock.tick - patchTick;
             console.log("patchTick:", patchTick, "ticks to resim:", ticksToResimulate);
-            if (ticksToResimulate <= 0) {
-                this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
-                this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
-                this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
-                this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
-                this._serverPatch = null;
-                return;
-            }
-            const preRollbackPos = this._ball.getPhysicsBodyPosition().clone();
+            const preRollbackPos = this._ball.getPhysicsBodyPosition();
             this._ball.setPhysicsBodyPosition(this._serverPatch.position);
             this._ball.setVelocity(this._serverPatch.velocity);
+            this._ball._body.transformNode.computeWorldMatrix(true);
+            this._ball._body.disablePreStep = false;
             this._snapshots.clearAfterTickIncluded(patchTick);
             this._snapshots.saveSnapshot(patchTick, this._serverPatch.position, this._serverPatch.velocity);
+            this.isResimming = true;
             const FIXED_TIME_STEP = 1 / 60;
             for (let i = 0; i < ticksToResimulate; i++) {
                 const simulatingTick = patchTick + i;
@@ -281,31 +353,100 @@ export class App {
                     this._player.racketBody.transformNode.position = historicalRacket.position;
                     this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
                 }
-                // const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-                // if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
-                //     this._ball.setVelocity(impactSnapshot.snapshot.velocity);
-                // }
+                this._ball._body.disablePreStep = false;
+                const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
+                if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+                    this._ball.setVelocity(impactSnapshot.snapshot.velocity);
+                }
                 this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
+                this._ball._body.transformNode.computeWorldMatrix(true);
+                console.log(this._ball.getPhysicsBodyPosition());
                 this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             }
+            this.isResimming = false;
             const postRollbackPos = this._ball.getPhysicsBodyPosition();
             const teleportDelta = preRollbackPos.subtract(postRollbackPos);
             this._ball.visualOffset.addInPlace(teleportDelta);
         
             this._serverPatch = null;
         });            
+
+
+        // this._scene.onBeforePhysicsObservable.add(() => {
+        //     if (!this._serverPatch) return ;
+        //     //console.log(this._serverPatch);
+        //     if (this._serverPatch.tick - this._clock.tickOffset < this._ignoreServerUntil) return;
+        //     const pastSnapshot = this._snapshots.getSnapshotAtTickInterpolated(this._serverPatch.tick - this._clock.tickOffset);
+        //     if (!pastSnapshot) return ;
+        //     const positionError = this._serverPatch.position.subtract(pastSnapshot.snapshot.position);
+        //     const velocityError = this._serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
+        //     console.log("tick:", this._clock.tick, "server tick:", this._serverPatch.tick - this._clock.tickOffset,
+        //         "position error:", positionError.lengthSquared(), "velocity error:", velocityError.lengthSquared());
+        //     console.log("server pos:", this._serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
+        //     // console.log("server vel:", this._serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
+        //     if (velocityError.lengthSquared() > 10 && positionError.lengthSquared() < 0.01 && !this._ignoredVelCorrection) {
+        //         console.log("Velocity error likely incorrect. Ignoring");
+        //         velocityError.set(0,0,0);
+        //         this._ignoredVelCorrection = true;
+        //     } else if (this._ignoredVelCorrection) this._ignoredVelCorrection = false;
+
+        //     if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
+        //         this._ball.setPhysicsBodyPosition(this._ball.getPhysicsBodyPosition().add(positionError));
+        //         this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
+        //         this._ball.setVelocity(this._ball.getVelocity().add(velocityError));
+        //         this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
+        //         this._ball.visualOffset.subtractInPlace(positionError);
+        //         this._serverPatch = null;
+        //         return ;
+        //     }
+
+        //     const patchTick = Math.round(this._serverPatch.tick - this._clock.tickOffset);
+        //     const ticksToResimulate = this._clock.tick - patchTick;
+        //     console.log("patchTick:", patchTick, "ticks to resim:", ticksToResimulate);
+        //     if (ticksToResimulate <= 0) {
+        //         this._ball.setPhysicsBodyPosition(this._serverPatch.position);
+        //         //this._snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
+        //         this._ball.setVelocity(this._serverPatch.velocity);
+        //         //this._snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
+        //         this._serverPatch = null;
+        //         this._ball._body.disablePreStep = false; 
+        //         this._ball._mesh.computeWorldMatrix(true);
+        //         console.log("pos corrected:", this._ball.getPhysicsBodyPosition());
+        //         return;
+        //     }
+        //     const preRollbackPos = this._ball.getPhysicsBodyPosition().clone();
+        //     this._ball.setPhysicsBodyPosition(this._serverPatch.position);
+        //     this._ball.setVelocity(this._serverPatch.velocity);
+        //     this._snapshots.clearAfterTickIncluded(patchTick);
+        //     this._snapshots.saveSnapshot(patchTick, this._serverPatch.position, this._serverPatch.velocity);
+        //     const FIXED_TIME_STEP = 1 / 60;
+        //     for (let i = 0; i < ticksToResimulate; i++) {
+        //         const simulatingTick = patchTick + i;
+        //         const historicalRacket = this._player.racketHistory.get(simulatingTick);
+        //         if (historicalRacket) {
+        //             this._player.racketBody.transformNode.position = historicalRacket.position;
+        //             this._player.racketBody.transformNode.rotationQuaternion = historicalRacket.rotation;
+        //         }
+        //         // const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
+        //         // if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+        //         //     this._ball.setVelocity(impactSnapshot.snapshot.velocity);
+        //         // }
+        //         this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
+        //         this._snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+        //     }
+        //     const postRollbackPos = this._ball.getPhysicsBodyPosition();
+        //     const teleportDelta = preRollbackPos.subtract(postRollbackPos);
+        //     this._ball.visualOffset.addInPlace(teleportDelta);
+        
+        //     this._serverPatch = null;
+        // });
         this._scene.onBeforeRenderObservable.add(() => {
-            if (!this._ball.positionError)
-                return ;
-            const patchRate = 0.05; //in seconds
-            const dt = this._engine.getDeltaTime() / 1000; // time between frames in seconds
-            const fractionElapsed = patchRate / dt;
-            const correctionFactor = 1 - Math.pow(0.05, fractionElapsed); //see what happen when framerate slower than patchRate
-            const ballPos = this._ball.getPhysicsBodyPosition();
-            this._ball.setPhysicsBodyPosition(ballPos.add(this._ball.positionError.scale(correctionFactor)));
-            this._ball.positionError.scaleInPlace(1 - correctionFactor);
-            if (this._ball.positionError.lengthSquared() < Epsilon)
-                this._ball.positionError = null;
+            if (this._ball.visualOffset.lengthSquared() < 0.0001) return;
+            const dt = this._engine.getDeltaTime() / 1000; 
+            const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
+            const correctionFactor = Math.exp(-smoothingSpeed * dt);
+            //this._ball.setMeshPosition(this._ball.visualOffset);
+            this._ball.visualOffset.scaleInPlace(correctionFactor);
         });
         return shadow;
     }
@@ -381,11 +522,6 @@ export class App {
         racketRoot.parent = hand_node;
         hand_node.parent = body;
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
-    }
-
-    public setIgnoreServer() {
-        this._ignoreServerUntil = this._clock.tick;
-        console.log("IGNORING SERVER HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA until:", this._ignoreServerUntil);
     }
 
     public getTick() : number {

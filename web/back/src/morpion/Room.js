@@ -16,7 +16,7 @@ class Room {
         this.out_timer = null; //setTimeout fin
         this.limit_time = 60 * 1000;
         this._time_refresh_name = 0  ;
-        this._players_names = "";
+        this._players_names = {};
     }
 
     getPlayers() {
@@ -26,11 +26,13 @@ class Room {
             return this._players_names;
 
         this._time_refresh_name = time;
+        this._players_names = {};
 
-        this._players_names = [...this._players]
-            .map(p => p.getName())
-            .join(" / ");
-
+        let numero = 1;
+        this._players.forEach(p => {
+            this._players_names[`player_${numero}`] = p.getName();
+            numero++;
+        })
         return this._players_names;
     }
 
@@ -111,7 +113,7 @@ class Room {
 
     setLock(state) {
         if (state === true && this._players.size < this._min_players) {
-            throw new Error("Nombre de joueurs minimum non atteint");
+            throw new Error("need more player");
         }
 
         this._locked = state;
@@ -126,6 +128,7 @@ class Room {
 
     remove() {
         this.clearOutTimer();
+        this._obs.forEach(o => o.send({other_board: Array(9).fill(" ")}))
         this._players.forEach(p => {p.disconnect()})
         this._players.clear();
         this._obs.clear();

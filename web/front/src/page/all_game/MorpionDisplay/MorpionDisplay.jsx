@@ -10,27 +10,66 @@ import "./MorpionDisplay.scss";
 /* Components */
 import Morpion from "./Morpion/Morpion";
 import Board from "./Morpion/Board/Board.jsx";
+import { ColorGradient } from "@babylonjs/core";
 
-function SpecButton({ player_1, player_2, id }){
+function SpecButton({ player_1, player_2, id }) {
+    const handleClick = () => {
+        SocketM.sendd("morp", {  
+            type: "spec",
+            id,
+        });
+    };
 
     return (
-        <button onClick={() => {
-            SocketM.sendd(SocketM.socket.morp,{
-                type: "spec", id,
-            })
-        }}>
-            <p>{player_1}: X vs {player_2}: O</p>
+        <button onClick={handleClick}>
+            <p>{player_1} (X) vs {player_2} (O)</p>
         </button>
-    ); 
-    
+    );
 }
 
 export default function MorpionDisplay() {
+    
+    const [list, setList] = useState({});
+    const [specSelect, setSpecSelect] = useState(Array(9).fill(" "));
 
-      useEffect(() => {
+    function addBot(nb){
+        if (typeof nb !== "number" || isNaN(nb)) {
+            nb = 1;
+        }
+    
+        for (let i = 1; i <= nb; i++){
+            setTimeout(() => {
+                SocketM.sendd(`morp`,{
+                    type: "bot"
+                });
+            }, i * 100);
+        }
+    }
+    
+    useEffect(() => {
+        window.addBot = addBot;
+    
+        return () => {
+            delete window.addBot;
+        };
+    }, []);
+
+    useEffect(() => {
         console.log("Morpion component called");
+
         const handleSpec = (data) => {
             console.log("Morpion component handleSpec data:", data)
+                // setSpecSelect({other_board: data.other_board, player: data.player})
+            if (data?.other_board){
+
+                setSpecSelect(data.other_board)
+
+            }
+            if (data?.list){
+                console.log("taille list:", Object.keys(data.list).length);
+                setList(data.list);
+            }
+
         };
 
         SocketM.on("morp", handleSpec, "deux");
@@ -57,23 +96,25 @@ export default function MorpionDisplay() {
                 {/*  spectateur  */}
 
                 {data &&
-                <div className={`MorpionDisplay-spec-game`}> 
-                    <Board board={data.map.split('')} isGame={false}/>
-                </div>}
+                    <div className={`MorpionDisplay-spec-game`}> 
+                        <Board board={specSelect} isGame={false}/>
+                        {/* <p>login1: X</p>
+                        <Board board={data.map.split('')} isGame={false}/>
+                        <p>login2: 0</p> */}
+                    </div>
+                }
 
-                <div className={`MorpionDisplay-spec-info`} style={{height: data ? "65%" : "100%"}}> 
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
-                    <SpecButton player_1={"oui"} player_2={"non"} id={1} />
+                <div className={`MorpionDisplay-spec-info`} style={{height: data ? "65%" : "100%"}}>
+                    {
+                        Object.entries(list).map(([id, game]) => (
+                            <SpecButton
+                                key={id}
+                                id={id}
+                                player_1={game.player_1}
+                                player_2={game.player_2}
+                            />
+                        ))
+                    }
                 </div>
 
             </div>

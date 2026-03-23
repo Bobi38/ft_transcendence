@@ -1,5 +1,7 @@
 import Room from './Room.js'
+import { Player } from './player.js';
 import GameMorp from "../models/GameMorp.js";
+import m from './PlayMorpion.js' 
 
 class MorpionRoom extends Room {
     constructor (id) {
@@ -107,12 +109,12 @@ class MorpionRoom extends Room {
     play(currentPlayer, index) {
         console.log(String(currentPlayer));
         if (this._turn !== currentPlayer) {
-            console.log("moi pas voir de probleme")
+            // console.log("moi pas voir de probleme")
             return false;
         }
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send("seriously !!", this._board);
+            currentPlayer.send({message: m.msgs.badMove, board: this._board});
             return false;
         }
 
@@ -177,6 +179,7 @@ class MorpionRoom extends Room {
         }
 
         if (!this._board.includes(" ")) {
+            console.log(`draw : ${this}`);
             this.sendAll({message: "egalite", board: this._board, turn: false} );
             this.handleEndGame("draw");
             return true;
@@ -205,6 +208,14 @@ class MorpionRoom extends Room {
 
     async majdb (winner = null) {
 
+        // console.log(`save DB`);
+        for (const p of this._players){
+            if (!(p instanceof Player)){
+                console.log(`don t save with Bot`);
+                return; 
+            }
+        }
+ 
         const isEven = this.countMoves() % 2 === 0;
 
         const p1 = isEven
