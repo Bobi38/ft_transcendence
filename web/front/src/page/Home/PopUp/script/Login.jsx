@@ -62,7 +62,7 @@ export default function Login({setShowLog}) {
 
         SocketM.sendd(SocketM.socket.friend, {type: 'co'});
     };
-    }
+
 
 
 
