@@ -48,7 +48,7 @@
     border-radius: 25px;
 	@include cursor("pointer");
 
-    &:hover {
+    &:hover, &:focus {
         outline: none;
 
         border-radius: 30px;

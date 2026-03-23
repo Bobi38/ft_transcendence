@@ -60,3 +60,9 @@ $bg_color: rgb(196, 230, 236);
         min-height: 450px;
     }
 }
+
+@media (width <= 560px ) {
+    .HomeChat-root{
+        display: none;
+    }
+}
