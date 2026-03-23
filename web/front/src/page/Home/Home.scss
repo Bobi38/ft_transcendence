@@ -40,7 +40,7 @@ $padding: 1.7rem;
 			grid-auto-rows: 1fr;
 		}
 	}
-	@media (width <= 1000px) {
+	@media (width <= $tablet) {
 		.menu{
 			overflow: hidden auto;
 			flex-direction: column;
@@ -52,7 +52,7 @@ $padding: 1.7rem;
 		}
 	}
 
-	@media (width <= 560px) {
+	@media (width <= $phone) {
 		.menu {
 			padding: 2rem;
 			padding-bottom: 0;

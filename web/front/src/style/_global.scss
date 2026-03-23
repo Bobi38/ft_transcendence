@@ -58,18 +58,17 @@ button, label, select, option, li, input[type="submit"] {
     text-align: center;
 }
 
-@media (width <= 1000px) {
+:root{
+	font-size: 16px;
+}
+
+@media (width <= $tablet) {
 	:root{
 		font-size: 13px;
 	}
 }
-@media (width <= 750px) {
+@media (width <= $phone) {
 	:root{
 		font-size: 10px;
-	}
-}
-@media (width <= 500px) {
-	:root{
-		font-size: 7px;
 	}
 }

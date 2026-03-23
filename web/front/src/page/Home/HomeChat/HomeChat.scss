@@ -55,13 +55,13 @@ $bg_color: rgb(196, 230, 236);
 }
 
 
-@media (width <= 1180px ) {
+@media (width <= $tablet ) {
     .HomeChat-root{
         min-height: 450px;
     }
 }
 
-@media (width <= 560px ) {
+@media (width <= $phone ) {
     .HomeChat-root{
         display: none;
     }

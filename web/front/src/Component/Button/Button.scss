@@ -17,10 +17,10 @@
 	&:active{
 		scale: 1.15;
 	}
-	@media (width <= 1000px), (height <= 550px) {
+	@media (width <= $tablet) {
 		padding: 0.5rem 1.0rem;
     }
-    @media (width <= 500px), (height <= 400px) {
+    @media (width <= $phone) {
 		padding: 0.25rem 0.5rem;
     }
 }

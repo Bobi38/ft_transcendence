@@ -1,5 +1,6 @@
 
 @use "STYLE/_mixin" as mix;
+@use "STYLE/_variable" as *;
 
 .HomeFooter-root {
 	padding: 0 2rem;
@@ -24,7 +25,7 @@
             box-shadow: 0px 0px 4px 2px #8da8c6;
         }
     }
-	@media (width <= 1000px) {
+	@media (width <= $tablet) {
 		box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.4);
 	}
 }
