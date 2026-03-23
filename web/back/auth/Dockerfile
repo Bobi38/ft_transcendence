@@ -9,7 +9,7 @@ RUN npm install
 EXPOSE 9005
 CMD ["npm", "run", "dev"]
 
-FROM node:24.13.0 AS prod
+FROM node:20 AS prod
 
 
 WORKDIR /app

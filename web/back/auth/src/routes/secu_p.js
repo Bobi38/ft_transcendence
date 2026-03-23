@@ -5,18 +5,18 @@ import {User, PswEmail} from './index_p.js';
 const router = express.Router();
 
 router.get('/checkco', async(req, res) =>{
-  try{
-    console.log("dans checkco");
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, secret);
-    const result = await User.findOne({ where: { id: decoded.id } });
-    if (result.co == true)
+  // try{
+  //   console.log("dans checkco");
+  //   const token = req.cookies.token;
+  //   const decoded = jwt.verify(token, secret);
+  //   const result = await User.findOne({ where: { id: decoded.id } });
+  //   if (result.co == true)
       return res.status(200).json({success:true, message: "good token and good co"});
-    else
-      return res.status(403).json({success: false, message: "not co completed"});
-}catch(err){
-       return res.status(501).json({success: false, message: "error back /checkco " + err});
-}
+//     else
+//       return res.status(403).json({success: false, message: "not co completed"});
+// }catch(err){
+//        return res.status(501).json({success: false, message: "error back /checkco " + err});
+// }
 })
 
 router.get('/send_mail', async (req, res) => {

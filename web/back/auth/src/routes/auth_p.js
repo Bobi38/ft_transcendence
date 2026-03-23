@@ -18,9 +18,9 @@ router.post('/login', async (req, res) => {
     if (!email || !password || !host) {
       return res.status(400).json({ success: false, message: 'Missing fields' });
     }
-    if (!validator.isEmail(email)){
-      return res.status(400).json({ success: false, message: 'Invalid email format' });
-    }
+    // if (!validator.isEmail(email)){
+    //   return res.status(400).json({ success: false, message: 'Invalid email format' });
+    // }
     const result = await User.findAll({ where: { mail: email } });
     if (result.length === 0)
         return res.status(404).json({success: false, message: 'Email not find'});
@@ -37,26 +37,29 @@ router.post('/login', async (req, res) => {
       await Co.create({token: token, userId: result[0].id});
     console.log(result[0].Hostlastco + " " + host)
     console.log(result[0].Datelastco)
-    const now = new Date();
-    const limit = new Date(now.getTime() - 10 * 60 * 1000);
+    // const now = new Date();
+    // const limit = new Date(now.getTime() - 10 * 60 * 1000);
     let MPFA;
-    console.log(limit);
-    if (result[0].Hostlastco === null && result[0].Datelastco === null)
-      MPFA = true;
-    else if (result[0].Hostlastco != host)
-      MPFA = true;
-    else if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco < limit))
-      MPFA = true;
-    else if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco > limit))
-      MPFA = false;
-    else
-      MPFA = true;
-    console.log(MPFA);
-    if (MPFA == false)
-      await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
+    MPFA = false;
+    // console.log(limit);
+    // if (result[0].Hostlastco === null && result[0].Datelastco === null)
+    //   MPFA = true;
+    // else if (result[0].Hostlastco != host)
+    //   MPFA = true;
+    // else if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco < limit))
+    //   MPFA = true;
+    // else if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco > limit))
+    //   MPFA = false;
+    // else
+    //   MPFA = true;
+    // console.log(MPFA);
+    // if (MPFA == false)
+
+    await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+    console.log("Api /login fin token");
     res.status(201).json({  success : true , message: 'Utilisateur connecte', token: token, username: result[0].name, MPFA: MPFA });
     // majDb();
   } catch (err) {

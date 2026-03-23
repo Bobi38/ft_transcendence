@@ -64,6 +64,7 @@ services:
         condition: service_healthy
     networks:
       - home
+    restart: always
 
 
   gateway:
@@ -86,6 +87,7 @@ services:
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
   
   auth:
     build: 
@@ -107,6 +109,7 @@ services:
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   chatp_service:
     build: 
@@ -130,6 +133,7 @@ services:
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   chatg_service:
     build: 
@@ -153,6 +157,7 @@ services:
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   user_service:
     build:
@@ -176,6 +181,7 @@ services:
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   pong3d:
     build: 
@@ -201,6 +207,7 @@ services:
       - cle_chat
     cap_add:
       - NET_ADMIN
+    restart: always
 
   morpion:
     build:
@@ -224,6 +231,7 @@ services:
     secrets:
       - cle_pswd
       - cle_chat
+    restart: always
 
 secrets:
   data_pswd:

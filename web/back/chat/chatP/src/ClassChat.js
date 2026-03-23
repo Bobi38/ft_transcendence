@@ -35,7 +35,7 @@ class Chat {
 
   findname(name){
     for (const session of this.sessions.values()) {
-      if (session.username === name) {
+      if (session.username === name && session.socket.readyState === ws.OPEN) {
         return session;
       }
     }
