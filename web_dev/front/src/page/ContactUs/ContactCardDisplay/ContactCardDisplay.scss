@@ -1,0 +1,12 @@
+.ContactCardDisplay-root{
+    width: 100%;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1rem;
+}
+

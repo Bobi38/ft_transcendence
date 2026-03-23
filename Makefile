@@ -10,12 +10,25 @@ SERVICES = \
 	front \
 	pong3d
 
-all:	secrets creat compose
+all:
+	@echo "⚠️ Vous devez utiliser 'make dev' ou 'make prod' !" 
+	@exit 1
+
+prod: secrets creat compose_prod
+
+dev: secrets creat compose_dev
+
+compose_dev:
+	docker compose -f docker-compose.dev.yml up -d
+
+compose_prod:
+	docker compose -f docker-compose.prod.yml up -d
+
 
 compose:
 	docker compose up -d
 
-down:
+down_dev:
 	docker compose down -v
 
 prune:

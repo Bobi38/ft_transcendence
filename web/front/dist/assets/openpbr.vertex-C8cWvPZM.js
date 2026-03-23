@@ -1,0 +1,1 @@
+import{Rs as e,zs as t}from"./index-CHiGcwTe.js";e();export{t as openpbrVertexShaderWGSL};

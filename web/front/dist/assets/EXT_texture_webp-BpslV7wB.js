@@ -1,0 +1,1 @@
+import{Ch as e}from"./index-CHiGcwTe.js";export{e as EXT_texture_webp};

@@ -1,0 +1,1 @@
+import{Jc as e,qc as t}from"./index-CHiGcwTe.js";t();export{e as lightVxUboDeclarationWGSL};

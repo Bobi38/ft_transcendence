@@ -1,0 +1,1 @@
+import{va as e,ya as t}from"./index-CHiGcwTe.js";e();export{t as particlesVertexShaderWGSL};

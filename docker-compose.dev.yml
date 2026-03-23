@@ -39,7 +39,10 @@ services:
 
   front:
     container_name: front
-    build: ./web/front/
+    build: 
+      context: ./web/front
+      dockerfile: Dockerfile
+      target: dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -53,7 +56,10 @@ services:
 
 
   gateway:
-    build: ./web/back/
+    build:
+      context: ./web/back/gateway
+      dockerfile: Dockerfile
+      target: dev
     container_name: gateway
     environment:
       DB_USER: "bobi"
@@ -69,14 +75,19 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./web/back/:/app
+      - ./web/back/gateway:/app
+      - ./web/back/models:/app/src/models
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
   
   auth:
-    build: ./web/back/auth
+    build:
+      context: ./web/back/auth
+      dockerfile: Dockerfile
+      target : dev
     container_name: auth
     environment:
       DB_USER: "bobi"
@@ -93,15 +104,18 @@ services:
       - "9005:9005"
     volumes:
       - ./web/back/auth:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web/back/models:/app/src/models
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   chatp_service:
-    build: ./web/back/chat/chatP
+    build: 
+      context: ./web/back/chat/chatP
+      dockerfile: Dockerfile
+      target: dev
     container_name: chatp_service
     environment:
       DB_USER: "bobi"
@@ -118,15 +132,18 @@ services:
       - "9002:9002"
     volumes:
       - ./web/back/chat/chatP:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web/back/models:/app/src/models
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   chatg_service:
-    build: ./web/back/chat/chatG
+    build: 
+      context: ./web/back/chat/chatG
+      dockerfile: Dockerfile
+      target: dev
     container_name: chatg_service
     environment:
       DB_USER: "bobi"
@@ -143,15 +160,18 @@ services:
       - "9001:9001"
     volumes:
       - ./web/back/chat/chatG:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web/back/models:/app/src/models
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   user_service:
-    build: ./web/back/user
+    build: 
+      context: ./web/back/user
+      dockerfile: Dockerfile
+      target: dev
     container_name: user_service
     environment:
       DB_USER: "bobi"
@@ -168,15 +188,18 @@ services:
       - "9003:9003"
     volumes:
       - ./web/back/user:/app
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web/back/models:/app/src/models
       - /app/node_modules
     secrets:
     - cle_pswd
     - cle_chat
+    restart: always
 
   pong3d:
-    build: ./web/back/pong3D
+    build: 
+      context: ./web/back/pong3D
+      dockerfile: Dockerfile
+      target: dev
     container_name: pong3d
     environment:
       DB_USER: "bobi"
@@ -197,14 +220,17 @@ services:
     volumes:
       - ./web/back/pong3D:/app
       - ./web/front/media:/app/src/media
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/routes:/app/src/routes
+      - ./web/back/models:/app/src/models
       - /app/node_modules
     cap_add:
       - NET_ADMIN
+    restart: always
 
   morpion:
-    build: ./web/back/morpion
+    build: 
+      context: ./web/back/morpion
+      dockerfile: Dockerfile
+      target: dev
     container_name: morpion
     environment:
       DB_USER: "bobi"
@@ -224,10 +250,9 @@ services:
       - cle_chat
     volumes:
       - ./web/back/morpion:/app
-      - ./web/back/src/routes:/app/src/routes
-      - ./web/back/src/models:/app/src/models
-      - ./web/back/src/morpion:/app/src/morpion
+      - ./web/back/models:/app/src/models
       - /app/node_modules
+    restart: always
 
 secrets:
   data_pswd:

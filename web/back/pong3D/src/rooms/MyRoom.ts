@@ -217,6 +217,10 @@ export class MyRoom extends Room {
       let decoded;
       try {
         decoded = jwt.verify(ourToken, secret);
+        if (typeof decoded === "string" || !("id" in decoded)) {
+          console.log("Invalid token");
+          return false;
+        }
       } catch (e) {
         console.log("Verification failed:", e);
       }

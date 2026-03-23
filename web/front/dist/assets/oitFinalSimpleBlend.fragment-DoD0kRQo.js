@@ -1,0 +1,2 @@
+import{JC as e,YC as t,sw as n}from"./index-CHiGcwTe.js";var r,i,a;n((()=>{t(),r=`oitFinalSimpleBlendPixelShader`,i=`precision highp float;uniform sampler2D uFrontColor;void main() {ivec2 fragCoord=ivec2(gl_FragCoord.xy);vec4 frontColor=texelFetch(uFrontColor,fragCoord,0);glFragColor=frontColor;}
+`,e.ShadersStore[r]||(e.ShadersStore[r]=i),a={name:r,shader:i}}))();export{a as oitFinalSimpleBlendPixelShader};

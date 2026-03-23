@@ -1,0 +1,1 @@
+import{a as e,o as t}from"./index-CHiGcwTe.js";e();export{t as spritesPixelShaderWGSL};

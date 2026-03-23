@@ -1,0 +1,1 @@
+import{Mb as e,Nb as t}from"./index-CHiGcwTe.js";t();export{e as fogFragmentDeclaration};

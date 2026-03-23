@@ -1,0 +1,1 @@
+import{Gg as e,Kg as t}from"./index-CHiGcwTe.js";t();export{e as geometryPixelShader};

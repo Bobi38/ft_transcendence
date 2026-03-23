@@ -1,0 +1,44 @@
+@use "STYLE/variable" as *;
+//    var.$border_value;
+
+// @use "STYLE/_mixin" as mix;
+//    @include mix.full;
+
+.Paging-root{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $root_width;
+    height: 58px;
+    padding: 0.5rem;
+    gap: 30px;
+    ul {
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // background-color: $accent;
+        gap: 5px;
+        padding: 0.3rem;
+        border-radius: 25px;
+        button {
+            background: none;
+            border: none;
+        }
+        .onhover:hover, .active {
+            background-color: $active;
+        }
+        li {
+            list-style-type: none; // disabled le dot
+            background-color: white;
+            border-radius: 25px;
+            padding: 0.4rem;
+
+        }
+    }
+}
+
+
+
+
+

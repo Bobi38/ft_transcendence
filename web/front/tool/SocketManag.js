@@ -155,3 +155,59 @@ class SocketManag{
 const SocketM = new SocketManag();
 
 export default SocketM;
+
+
+/*
+connectSocket(name) {
+  if (this.socket[name] && (this.socket[name].readyState === WebSocket.OPEN || this.socket[name].readyState === WebSocket.CONNECTING)) {
+    return;
+  }
+
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  const pathsGateway = {
+    chatG: '/ws/chatG',
+    chatP: '/ws/chatP',
+    friend: '/ws/friend',
+    morp: '/ws/morp',
+    goat: '/ws/goat',
+  };
+
+  const serviceFallback = {
+    chatG: 'ws://chatg_service:9001',
+    chatP: 'ws://chatp_service:9002',
+    friend: 'ws://user_service:9003',
+    morp: 'ws://morpion:9004',
+    goat: 'ws://pong3d:2567',
+  };
+
+  const urlGateway = `${protocol}//${host}${pathsGateway[name]}`;
+
+  const tryDirect = () => {
+    console.warn(`Fallback direct WebSocket pour ${name}`);
+    this.socket[name] = new WebSocket(`${serviceFallback[name]}${pathsGateway[name]}`);
+    this.attachSocketEvents(name);
+  };
+
+  try {
+    this.socket[name] = new WebSocket(urlGateway);
+    this.attachSocketEvents(name);
+
+    this.socket[name].onclose = (event) => {
+      console.warn(`Gateway WebSocket fermé pour ${name}: ${event.reason}, tentative fallback`);
+      tryDirect();
+    };
+
+    this.socket[name].onerror = (err) => {
+      console.warn(`Erreur WebSocket gateway pour ${name}:`, err);
+      this.socket[name].close();
+      tryDirect();
+    };
+
+  } catch (err) {
+    console.warn(`Impossible de se connecter au gateway WS ${name}:`, err);
+    tryDirect();
+  }
+
+  console.log(`Tentative de connexion au WebSocket ${name}...`);
+}*/

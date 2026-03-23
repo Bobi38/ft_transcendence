@@ -17,7 +17,7 @@ export default function MailA2F({setShowLog}) {
     const [showCodeInput, setShowCodeInput] = useState(false);
 
 
-    async function maila2f_send_mail() {
+    async function maila2f_send_code() {
         const url = `/api/secu/send_mail`;
 
         console.log(`${url}`)
@@ -27,9 +27,11 @@ export default function MailA2F({setShowLog}) {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         });
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-        SocketM.sendd('friend', {type: 'co'});
+        if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
+            return ;
+        }
+        
         setShowCodeInput(true);
     }
 
@@ -39,24 +41,26 @@ export default function MailA2F({setShowLog}) {
         e.preventDefault();
 
         const formData = new FormData(e.target);
+        const data = {
+            code: formData.get("code"),
+            host:  window.location.host
+        }
         const code = formData.get("code");
 
         const url = `/api/secu/maila2f_check_code`;
-        const data ={
-            code: code,
-            host: window.location.host
-        }
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({data}),
+            body: JSON.stringify(data),
         })
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-
+        if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
+            return ;
+        }
+        SocketM.sendd('friend', {type: 'co'});
         setShowLog(AUTH.NONE);
     }
 
@@ -67,7 +71,7 @@ export default function MailA2F({setShowLog}) {
                 <h4>MailA2F</h4>
                 
                 {!showCodeInput && (
-                    <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_mail(e);}}>
+                    <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
                       Envoyer mail de verification
                     </button>
                 )}
@@ -80,7 +84,7 @@ export default function MailA2F({setShowLog}) {
 
                       <div className={`button-container`}>
                           <button type={`submit`} className={``}>Valider</button>
-                          <button type={`button`} className={``} onClick={maila2f_send_mail}>Renvoyer un mail de verification</button>
+                          <button type={`button`} className={``} onClick={maila2f_send_code}>Renvoyer un mail de verification</button>
                       </div>
                   </form>
 

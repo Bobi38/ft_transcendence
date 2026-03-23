@@ -1,0 +1,1 @@
+import{Th as e}from"./index-CHiGcwTe.js";export{e as EXT_mesh_gpu_instancing};

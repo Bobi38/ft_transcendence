@@ -1,0 +1,30 @@
+@use "STYLE/_variable" as *;
+
+@use "STYLE/_mixin" as mix;
+
+.Morpion-root{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    .info{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+        flex-direction: column;
+        gap: 10px;
+        .status {
+            font-weight: bold;
+            .wait {
+                display: inline-block;
+                width: 4ch;
+                text-align: left;
+            }  
+        }
+    }
+
+}

@@ -1,0 +1,1 @@
+import{iy as e,ry as t}from"./index-CHiGcwTe.js";e();export{t as gaussianSplattingPixelShaderWGSL};
