@@ -6,6 +6,13 @@ const router = express.Router();
 
 router.get('/checkco', async(req, res) =>{
   console.log("dans checkco");
+  // const token = req.cookies.token;
+  // const decoded = jwt.verify(token, secret);
+  // const result = await User.findOne({ where: { id: decoded.id } });
+  // if (!result || !result.co) {
+  //   console.log("checkco not co");
+  //   return res.status(401).json({success:false, message: "not connected"});
+  // }
   res.status(201).json({success:true, message: "good token and good co"});
 })
 
@@ -71,16 +78,18 @@ router.get('/recupPswd', async (req, res) => {
 router.post("/maila2f_check_code" , async (req, res) => {
   try{
     console.log("API /maila2f_check_code called")
-    const {code} = req.body;
+    const {code, host} = req.body;
     console.log("API /maila2f_check_code je suis dans verif")
     console.log(code);
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id }, include: {model: PswEmail, as: 'code' , where :{type: 1}} });
     console.log(result.code.Code)
-    if (code && code === result.code.Code && new Date() < result.code.DateCreate + 60 * 1000){
+    const isMatch = await bcrypt.compare(code, result.code.Code);
+    if (code && isMatch && Date.now() < new Date(result.code.DateCreate).getTime() + 60 * 1000){
       const co = await result.getCode({where: {type: 1}});
       await co.destroy();
+      await result.update({co: true,Hostlastco: host, Datelastco: new Date()});
       return res.status(201).json({success: true, message:"good"});
     }
     else

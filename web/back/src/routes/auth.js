@@ -39,14 +39,22 @@ router.post('/login', async (req, res) => {
       await Co.create({token: token, userId: result[0].id});
     console.log("Api /login TAILLE= " , Co.length);
     console.log("Api /login ID", result[0].id);
+    const now = Date.now();
+    const tenMinutesAgo = now - 10 * 60 * 1000;
+    const lastCo = new Date(result[0].Datelastco).getTime();
     let MPFA;
     if (result[0].Hostlastco === null && result[0].Datelastco === null)
       MPFA = true;
-    if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco > (new Date() - 72 * 60 * 60 * 1000)))
+    else if (result[0].Hostlastco == host && result[0].Datelastco != null && (lastCo > tenMinutesAgo))
       MPFA = true;
-    if (result[0].Hostlastco == host && result[0].Datelastco != null && (result[0].Datelastco < (new Date() - 72 * 60 * 60 * 1000)))
+    else if (result[0].Hostlastco == host && result[0].Datelastco != null && (lastCo < tenMinutesAgo))
       MPFA = false;
-    await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
+    else if (result[0].Hostlastco != host)
+      MPFA = true;
+    else
+      MPFA = false;
+    if (MPFA == false)
+      await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });

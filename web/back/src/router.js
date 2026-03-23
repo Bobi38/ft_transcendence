@@ -229,6 +229,13 @@ router.get('/getname', CheckName, async(req, res) =>{
 
 router.get('/checkco', async(req, res) =>{
   console.log("dans checkco");
+  const token = req.cookies.token;
+  const decoded = jwt.verify(token, secret);
+  const result = await User.findOne({ where: { id: decoded.id } });
+  if (!result || !result.co) {
+    console.log("checkco not co");
+    return res.status(401).json({success:false, message: "not connected"});
+  }
   res.status(201).json({success:true, message: "good token and good co"});
 })
 
