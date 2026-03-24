@@ -53,7 +53,7 @@ export default function HomeChat() {
 
     useEffect( () => {
         fetch_global_message()
-        
+		
         const init = async () => {
             const handle_global_message = (data) => {
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
@@ -77,70 +77,47 @@ export default function HomeChat() {
 
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
         const data = {type: "mess", message: input, timer: time};
-        
+
         console.log("handle_submit(2): " ,data);
         await add_message_global(time);
         SocketM.sendd('chat', data);
         setInput("");
     };
 
-
-
-
-
-
-
-
-
-
-
     return (
-        <>
-            <section className={`HomeChat-root`}>
+		<section className={`HomeChat-root`}>
 
-                    <h3>Global Chat</h3>
-                <div className={`message-container`}>
+			<h3>Global Chat</h3>
+			<div className={`message-container`}>
 
-                    {displayedMessages && displayedMessages.map((msg, index) => (
+				{displayedMessages && displayedMessages.map((msg, index) => (
 
-                        <div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
-                            {/* {() => {console.log("in html:", index)}} */}
-                            {msg.monMsg ? (
-                                <div className={`message`}>
-                                    <div>{msg.timer}</div>
-                                    <p>{msg.message}</p>
-                                </div>
-                            ) : (
-                                <div className={`message`}>
-                                    <div><strong>{msg.login}</strong>{msg.timer}</div>
-                                    <p>{msg.message}</p>
-                                </div>
-                            )}
+					<div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
+						{/* {() => {console.log("in html:", index)}} */}
+						{msg.monMsg ? (
+							<div className={`message`}>
+								<div>{msg.timer}</div>
+								<p>{msg.message}</p>
+							</div>
+						) : (
+							<div className={`message`}>
+								<div><strong>{msg.login}</strong>{msg.timer}</div>
+								<p>{msg.message}</p>
+							</div>
+						)}
 
-                        </div>
-                    ))}
-                </div>
+					</div>
+				))}
+			</div>
 
-
-
-
-
-
-
-
-
-
-                <form onSubmit={handle_submit}>
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        />
-                    <button type="submit">Envoyer</button>
-                </form>
-
-
-            </section>
-        </>
+			<form onSubmit={handle_submit}>
+				<input
+					type="text"
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					/>
+				<button type="submit">Send</button>
+			</form>
+		</section>
     )
 }

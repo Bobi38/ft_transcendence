@@ -10,9 +10,8 @@ import "./Navigation.scss";
 /* Components */
 import NavBar from "FRONT/Component/NavBar/NavBar.jsx";
 
-    
 export default function Navigation({ children }) {
-    
+
     const navigate = useNavigate();
 
     const connection_check = async () => {
@@ -27,16 +26,14 @@ export default function Navigation({ children }) {
 
 
     return (
-        <>
-            <main className={`Navigation-root`}>
+		<main className={`Navigation-root`}>
 
-                <div className={`children-container`}>
-                    {children}
-                </div>
-                
-                <NavBar/>
+			<div className={`children-container`}>
+				{children}
+			</div>
 
-            </main>
-        </>
+			<NavBar/>
+
+		</main>
     );
 }

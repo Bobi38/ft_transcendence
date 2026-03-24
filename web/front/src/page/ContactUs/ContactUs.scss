@@ -1,17 +1,27 @@
-
 @use "STYLE/_mixin" as mix;
 
-
 .ContactUs-root{
-    
-	@include mix.page(rgb(14, 69, 78));
-    
+	@include mix.page;
+
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     text-align: center;
-    
+
     gap: 0.5rem;
     padding: 1rem;
     overflow: hidden auto;
+
+	.ContactCardDisplay-root{
+		width: 100%;
+
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+
+		gap: 1rem;
+		padding-bottom: 1rem;
+	}
 }

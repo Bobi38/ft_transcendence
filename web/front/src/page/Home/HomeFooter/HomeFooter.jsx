@@ -45,9 +45,7 @@ export default function HomeFooter({setShowLog}) {
         <>
             <nav className={`HomeFooter-root`}>
 
-				<Button path={`/ContactUs`}>
-					Contact us
-				</Button>
+				<Button path={`/`}> Home </Button>
 
                 <div className={`HomeFooter-center`}>
                     {/* <p>{username}</p> */}
@@ -57,11 +55,8 @@ export default function HomeFooter({setShowLog}) {
                     </button>
 
                 </div>
-                
-				<Button path={`/Profile`}>
-					Profile
-				</Button>
 
+				<Button path={`/ContactUs`}>Contact Us</Button>
             </nav>
         </>
     );

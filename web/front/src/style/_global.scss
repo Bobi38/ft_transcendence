@@ -6,11 +6,12 @@
     margin: 0;
     padding: 0;
 	scrollbar-width: thin;
-	scrollbar-color: #888 transparent;
+	scrollbar-color: $second-dark transparent;
 }
 
 body {
 	@include mix.cursor("default");
+	background-color: white;
 }
 
 body, #root {

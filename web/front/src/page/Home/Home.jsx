@@ -29,7 +29,7 @@ const cards_content = [
 	{ text:"Morpion", path: "/Morpion" },
 	{ text:"Pong3D", path: "/Pong3D" },
 	{ text:"Pond2D", path: "/Pond2D" },
-	{ text:"Nothing", path: "/Nothing" },
+	{ text:"Contact Us", path: "/ContactUs" },
 	{ text:"Stats", path: "/Stats" },
 	{ text:"Nothing", path: "/Nothing" },
 ]

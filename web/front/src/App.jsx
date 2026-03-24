@@ -1,11 +1,10 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import { useEffect, useState } from "react";
-import checkCo from "TOOL/fonction_usefull.js"
 
 /* back */
 import SocketM from "TOOL/SocketManag";
+import checkCo from "TOOL/fonction_usefull.js"
 
 /* Css */
 import './style/index.scss'
@@ -79,23 +78,17 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
 
-
                     {/* Home */}
-                    <Route path={`/`}                       element={<Home />} />
-
-
-                    {/* Navigation */}
-                    <Route path={`/ContactUs`}              element={<Navigation>   <ContactUs/>          </Navigation>}/>
-                    <Route path={`/PrivateMessage`}         element={<Navigation>   <PrivateMessage/>     </Navigation>}/>
-                    <Route path={`/Profile`}                element={<Navigation>   <Profile/>            </Navigation>}/>
-                    <Route path={`/Stats`}                  element={<Navigation>   <Stats/>              </Navigation>}/>
-                    <Route path={`/Morpion`}                element={<Navigation>   <MorpionDisplay/>     </Navigation>}/>
-                    <Route path={`/Pong3D`}                 element={<Pong3D/>}/>
-
+                    <Route path={`/`}               element={<Navigation> <Home />          </Navigation>} />
+                    <Route path={`/ContactUs`}      element={<Navigation> <ContactUs/>      </Navigation>}/>
+                    <Route path={`/PrivateMessage`} element={<Navigation> <PrivateMessage/> </Navigation>}/>
+                    <Route path={`/Profile`}        element={<Navigation> <Profile/>        </Navigation>}/>
+                    <Route path={`/Stats`}          element={<Navigation> <Stats/>          </Navigation>}/>
+                    <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay/> </Navigation>}/>
+                    <Route path={`/Pong3D`}         element={<Pong3D/>}/>
 
                     {/* bad path */}
-                    <Route path={`/*`}                      element={<Navigation>   <ErrorRedir/>         </Navigation>} />
-
+                    <Route path={`/*`}              element={<Navigation> <ErrorRedir/>     </Navigation>} />
 
                 </Routes>
             </BrowserRouter>
