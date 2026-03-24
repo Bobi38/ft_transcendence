@@ -73,15 +73,23 @@ export function initWebSMopr(server) {
         console.log(`"socket on dans morpion" ${message}`);
 
         const data = JSON.parse(message);
+
+
         console.log(`${data.type}`);
         switch (data.type) {
+
+          case "updatename":
+            m.updateName(socket.player, data.new_name);
+            socket.players.forEach(p => {p.sendList();});
+            break;
 
           case "move":
             m.move(socket.player, data.message);
             break ;
 
           case "play":
-            m.searchGame(socket.player, socket.players);
+            if (m.searchGame(socket.player))
+              socket.players.forEach(p => {p.sendList();});
             break ;
 
           case "bot":
@@ -99,7 +107,8 @@ export function initWebSMopr(server) {
             break ;
 
           case "leave":
-            m.leave(socket.player);
+            if(m.leave(socket.player));
+              socket.players.forEach(p => {p.sendList();});
             break;
 
           case "second":

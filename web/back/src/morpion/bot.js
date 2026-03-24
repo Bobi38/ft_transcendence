@@ -50,7 +50,8 @@ export class Bot {
     }
     
     send(data) {
-        // console.log(data.message , " ==== " ,m.msgs.badMove, " || ", m.msgs.my_turn);
+        console.log("bot a recu ", data);
+        console.log(data.message , " ==== " ,m.msgs.badMove, " || ", m.msgs.my_turn);
         if (data.message === undefined) return ;
         if (data.message != m.msgs.my_turn && data.message != m.msgs.badMove) return ;
 

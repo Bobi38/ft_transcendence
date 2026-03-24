@@ -166,6 +166,12 @@ function leave(player){
     return true;
 }
 
+function updateName(player, nickname) {
+    player._nick_name = nickname;
+
+    manager_room.refreshlist();
+}
+
 const cooldowns = new Map();
 
 // function morpion(message, socket){
@@ -260,4 +266,4 @@ const cooldowns = new Map();
 
 // }
 
-export default {reboot, playSecond, leave, msgs, searchGame, move, observator}
+export default {reboot, playSecond, leave, msgs, searchGame, move, observator, updateName}
