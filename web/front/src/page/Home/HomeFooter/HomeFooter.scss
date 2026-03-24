@@ -21,7 +21,7 @@
         gap: 0.5rem;
 
         .logout{
-            @include mix.icone;
+            @include mix.default_card;
             box-shadow: 0px 0px 4px 2px #8da8c6;
         }
     }

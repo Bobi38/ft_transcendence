@@ -32,7 +32,7 @@
             }            
             .bloc-left {
                 @include mix.fullw;
-                @include mix.icone;
+                @include mix.default_card;
             }
         }
         .bloc-friend-addfriend {gap:0.5rem;align-items: center;}

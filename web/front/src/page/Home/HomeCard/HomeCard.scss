@@ -7,7 +7,7 @@
     align-items: center;
 	overflow: hidden;
 
-    @include mix.icone;
+    @include mix.default_card;
 
 	p {
 		text-align: center;
