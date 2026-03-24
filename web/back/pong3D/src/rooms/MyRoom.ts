@@ -273,8 +273,10 @@ export class MyRoom extends Room {
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = true;
     }
+    if (this.state.roomStatus === RoomStatus.STARTED)
+      this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
     this.allowReconnection(client, 5).catch(() => {
-      if (this.state.roomStatus === RoomStatus.STARTED) {
+      if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
         this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
         this._timeEnd = Date.now();
       }
@@ -285,7 +287,8 @@ export class MyRoom extends Room {
     console.log(`Client ${client.sessionId} reconnected!`);
  
     const player = this.state.players.get(client.sessionId);
-    if (player && this.state.roomStatus === RoomStatus.STARTED) {
+    if (player && this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+      this.state.roomStatus = RoomStatus.STARTED;
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = false;
     }

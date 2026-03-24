@@ -22,7 +22,8 @@ export enum RoomStatus {
   WAITING = 0,
   STARTED = 1,
   WON = 2,
-  PLAYER_DISCONNECTED = 3
+  PLAYER_DISCONNECTED = 3,
+  AWAITING_RECONNECTION = 4
 }
 
 export class App {
@@ -218,10 +219,29 @@ export class App {
                     this._player.lockControls();
                     this._ui.showOtherPlayerDisconnectUI();
                     break;
+                case RoomStatus.AWAITING_RECONNECTION:
+                    this._player.lockControls();
+                    this._ui.showAwaitingReconnectionUI();
+                    break;
             }
         });
         this._callback.onChange(this._room.state.score, () => {
             this._ui.updateScoreUI(this._isNear, this._room.state.score.teamNear, this._room.state.score.teamFar);
+        });
+        this._room.onDrop((code, reason) => {
+            console.log("Connection dropped attempting to reconnect...");
+            console.log("code:", code, "reason:", reason);
+            this._player.lockControls();
+            this._ui.showAwaitingReconnectionUI();
+        });
+        this._room.onReconnect(() => {
+            console.log("successfully reconnected to the room!");
+            this._player.unlockControls();
+            this._ui.showNoUI();
+        });
+        this._room.onLeave(() => {
+            console.log("Failed to reconnect on time");
+            this._ui.showFailedReconnectionUI();
         });
     }
 

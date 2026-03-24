@@ -4,7 +4,8 @@ export enum RoomStatus {
   WAITING = 0,
   STARTED = 1,
   WON = 2,
-  PLAYER_DISCONNECTED = 3
+  PLAYER_DISCONNECTED = 3,
+  AWAITING_RECONNECTION = 4
 }
 
 export class Vector3 extends Schema {
