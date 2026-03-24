@@ -93,6 +93,13 @@ export function initWebSChat(server) {
           socket.GoLogout = true;
         if (data.type === "pong")
           socket.isAlive = true;
+        if (data.type === 'updateName'){
+          const nono = socket.userId;
+          for (const session of chat.sessions.values()){
+            if (session.userId == nono && session.username == data.old_name)
+              session.username = data.new_name;
+          }
+        }       
       }catch (err){
         console.log("err serv ws= " + err);
       }

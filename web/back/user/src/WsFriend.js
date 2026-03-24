@@ -125,6 +125,13 @@ export function initWebSFriend(server) {
           }
 
         }
+        if (data.type === 'updateName'){
+          const nono = socket.userId;
+          for (const session of chat.sessions.values()){
+            if (session.userId == nono && session.username == data.old_name)
+              session.username = data.new_name;
+          }
+        }
         if (data.type === "logout")
           socket.GoLogout = true;
         if (data.type === "pong")

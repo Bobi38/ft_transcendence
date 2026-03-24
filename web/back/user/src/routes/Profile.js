@@ -27,6 +27,7 @@ router.post('/updateProfil', async(req, res) => {
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
+    const oldname = result.name;
     console.log("API /updateProfil dans update profil", user);
     const name = await User.findAll({where :{name: user.login}})
     if ((name.length != 0) && (name.id != result.id))
@@ -54,7 +55,7 @@ router.post('/updateProfil', async(req, res) => {
       console.log("adress good");
       await result.update({adress: user.location});
     }
-    res.status(201).json({success: true, message: "data in username", username: user.login})
+    res.status(201).json({success: true, message: "data in username", username: user.login, oldname: oldname});
   }catch(err){
     res.status(500).json({success: false, message: "error updateProfil " , err});
   }

@@ -4,6 +4,7 @@ import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 
 /*back*/
 import { showAlert } from "TOOL/fonction_usefull.js";
+import {SocketM} from "TOOL/SocketManag.js";
 
 /* Css */
 import "./Profile.scss";
@@ -84,6 +85,13 @@ export default function Profile() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         sessionStorage.setItem('username', repjson.username);
+        if (repjson.oldname !== repjson.username) {
+            SocketM.sendd('friend', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
+            SocketM.sendd('chat', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
+            SocketM.sendd('priv', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
+            SocketM.sendd('morp', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
+        }
+
         showAlert("Profil mis à jour avec succès", "success");
     };
 
