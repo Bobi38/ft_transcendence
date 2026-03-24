@@ -10,6 +10,7 @@ import "./Pong3D.scss";
 
 /* Components */
 import { App as GameApp } from "FRONT/game/app.ts";
+import Button from "FRONT/Component/Button/Button.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Pong3D() {
@@ -61,7 +62,7 @@ export default function Pong3D() {
 
     return (
         <main className={`Pong3D-root`}>
-			<a href="/" className="button">home</a>
+			<Button path="/">Home</Button>
             <canvas ref={canvasRef} />
         </main>
     )

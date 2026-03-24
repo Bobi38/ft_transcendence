@@ -1,9 +1,5 @@
 /* extern */
-import { Link } from "react-router-dom";
 import  SocketM  from "TOOL/SocketManag.js"
-import { useEffect, useState } from "react";
-
-/* back */
 
 /* Css */
 import "./HomeFooter.scss"
@@ -15,9 +11,6 @@ import useClock from "FRONT/hooks/useClock.jsx";
 
 
 export default function HomeFooter({setShowLog}) {
-
-
-    const username = sessionStorage.getItem('username');
 
     function logout() {
         console.log("logout(1) called")
