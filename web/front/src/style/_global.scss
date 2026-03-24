@@ -29,20 +29,20 @@ p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label strong {
 input, textarea {
  	text-transform: none;
  	@include mix.cursor("text");
- }
+}
 
- hr {
- 	@include mix.cursor("grab");
- }
+hr {
+	@include mix.cursor("grab");
+}
 
- a {
+a {
 	color: inherit;
 	text-decoration: none;
- 	@include mix.cursor("pointer");
- }
+	@include mix.cursor("pointer");
+}
 
 button, label, select, option, li, input[type="submit"] {
-	 @include mix.cursor("pointer");
+	@include mix.cursor("pointer");
 }
 
 .scanlines {
@@ -58,18 +58,17 @@ button, label, select, option, li, input[type="submit"] {
     text-align: center;
 }
 
-@media (width <= 1000px) {
+:root{
+	font-size: 16px;
+}
+
+@media (width <= $tablet) {
 	:root{
 		font-size: 13px;
 	}
 }
-@media (width <= 750px) {
+@media (width <= $phone) {
 	:root{
 		font-size: 10px;
-	}
-}
-@media (width <= 500px) {
-	:root{
-		font-size: 7px;
 	}
 }

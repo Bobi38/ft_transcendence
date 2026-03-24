@@ -14,7 +14,7 @@ import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Pong3D() {
 
-    
+
     const navigate = useNavigate();
 
     const canvasRef = useRef(null);
@@ -24,7 +24,6 @@ export default function Pong3D() {
 
         const init = async () => {
             const isConnected = await checkCo();
-            
             if (!isConnected) {
                 navigate('/');
                 return;
@@ -62,6 +61,7 @@ export default function Pong3D() {
 
     return (
         <main className={`Pong3D-root`}>
+			<a href="/" className="button">home</a>
             <canvas ref={canvasRef} />
         </main>
     )

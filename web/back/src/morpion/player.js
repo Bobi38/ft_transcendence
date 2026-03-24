@@ -106,7 +106,7 @@ export class Player {
                 console.error("WebSocket player.send error:", err);
             }
         }
-        console.log(all);
+        // console.log(all);
     }
 
     disconnect(message) {
