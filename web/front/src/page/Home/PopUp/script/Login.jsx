@@ -10,11 +10,13 @@ import SocketM from "TOOL/SocketManag.js";
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 
 import useFetch from "HOOKS/useFetch.jsx";
 
-export default function Login({setShowLog}) {
+export default function Login() {
+
+    const {setShowLog, showLog} = useAuth();
 
     const login_submit = async (event) => {
 

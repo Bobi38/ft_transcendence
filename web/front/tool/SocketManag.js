@@ -132,6 +132,7 @@ class SocketManag{
         if (this.socket[name]){
             this.socket[name].close();
             this.socket[name] = null;
+            console.log("WebSocket déconnecté pour " + name);
         }
     }
 

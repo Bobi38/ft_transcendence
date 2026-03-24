@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import checkCo from "TOOL/fonction_usefull.js"
+import {AUTH, useAuth} from "TOOL/AuthContext.jsx"
 
 /* back */
 import SocketM from "TOOL/SocketManag";
@@ -28,6 +29,7 @@ import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/Morpi
 
 export default function App() {
   const [notif, setNotif] = useState(null);
+  const { showLog } = useAuth();
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
@@ -65,7 +67,7 @@ export default function App() {
           //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
         };
-    }, []);
+    }, [showLog]);
     //fait le check co a la place de home et envoyer le result
 
     return (

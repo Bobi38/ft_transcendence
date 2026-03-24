@@ -9,10 +9,12 @@ import SocketM from "TOOL/SocketManag";
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 import useFetch from "HOOKS/useFetch.jsx";
 
-export default function MailA2F({setShowLog}) {
+export default function MailA2F() {
+
+    const {setShowLog, showLog} = useAuth();
 
     const [showCodeInput, setShowCodeInput] = useState(false);
 

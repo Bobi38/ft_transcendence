@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import "./HomeFooter.scss"
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH } from "TOOL/AuthContext.jsx";
 import Button from "FRONT/Component/Button/Button.jsx"
 import useClock from "FRONT/hooks/useClock.jsx";
 

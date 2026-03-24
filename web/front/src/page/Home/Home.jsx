@@ -1,6 +1,7 @@
 /* extern */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
 
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
@@ -15,17 +16,11 @@ import HomeCard from "./HomeCard/HomeCard.jsx";
 import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 import HomeFooter from "./HomeFooter/HomeFooter.jsx";
 
-export const AUTH = {
-    NONE: 0,
-    LOGIN: 1,
-    MAILA2F: 2,
-    REGISTER: 3,
-};
 
 
 export default function Home() {
 
-    const [showLog, setShowLog] = useState(AUTH.NONE);
+    const { showLog, setShowLog } = useAuth();
 
     const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
 
