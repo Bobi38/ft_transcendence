@@ -29,7 +29,7 @@ export default function ContactUs() {
         <section className={`ContactUs-root`}>
 
             <h1>Contact us !</h1>
-			<section className="ContactCardDisplay-root">
+			<section className="cardContainer">
 				{teamMembers.map((member, index) => (
 					<ContactCard key={index} {...member} />
 				))}

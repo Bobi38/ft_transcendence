@@ -5,19 +5,16 @@
     height: $root_height;
     width: $root_width;
 }
+
 @mixin fullh { height: $root_height; }
 @mixin fullw { width: $root_width; }
 
-@mixin colortext($varcolor : rgb(10, 201, 240)){
+@mixin page($varcolor : rgb(0, 81, 97)){
+	@include full;
+
     p, a, input, h1, h2, h3, h4, h5, h6, button, span , li {
         color: $varcolor;
     }
-}
-
-@mixin page($varcolor : rgb(0, 81, 97)){
-    @include full;
-    background-image: linear-gradient(#76ff36, #79ff74, #78c9ff);
-    @include colortext($varcolor);
 }
 
 @mixin cursor($type)

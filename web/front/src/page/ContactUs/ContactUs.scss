@@ -8,11 +8,15 @@
     justify-content: flex-start;
     text-align: center;
 
-    gap: 0.5rem;
-    padding: 1rem;
+    gap: 1rem;
+    padding: 1rem 2rem;
     overflow: hidden auto;
 
-	.ContactCardDisplay-root{
+	h1 {
+		font-size: 2rem;
+	}
+
+	.cardContainer{
 		width: 100%;
 
 		display: flex;
@@ -21,7 +25,7 @@
 		align-items: center;
 		justify-content: center;
 
-		gap: 1rem;
+		gap: 2rem;
 		padding-bottom: 1rem;
 	}
 }
