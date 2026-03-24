@@ -53,7 +53,7 @@ export class Player extends TransformNode {
         colRacketBody.getCollisionObservable().add((event) => {
             if (event.type != PhysicsEventType.COLLISION_STARTED)
                 return ;
-            if (app.isResimming)
+            if (app.getIsResimming())
                 return ;
             console.log("impulse added");
             const ballBody = event.collidedAgainst;
@@ -79,7 +79,7 @@ export class Player extends TransformNode {
             console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel, "ballPos:", ballPos, "tick:", this._app._clock.tick);
             this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._app.getTick()});
             this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);
-            this._app.recentImpact = true;
+            this._app.setRecentImpact();
         });
         const physicsViewer = new PhysicsViewer(this.scene);
         physicsViewer.showBody(colRacketBody);
@@ -128,5 +128,13 @@ export class Player extends TransformNode {
 
     public lockControls() {
         this._controlsEnabled = false;
+    }
+
+    public setRacketPos(position: Vector3) {
+        this.racketBody.transformNode.position = position;
+    }
+
+    public setRacketRot(rotation: Quaternion) {
+        this.racketBody.transformNode.rotationQuaternion = rotation;
     }
 }
