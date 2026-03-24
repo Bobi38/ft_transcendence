@@ -105,7 +105,7 @@ export const authMiddleware = async (req, res, next) => {
   }
 
   // console.log("token valid");
-  next();
+  return next();
 }
 
 function CheckName(req, res, next){

@@ -35,21 +35,24 @@ export default function MailA2F({setShowLog}) {
 
 
 
-    async function maila2f_send_mail(e) {
+    async function maila2f_check_code(e) {
         e.preventDefault();
 
         const formData = new FormData(e.target);
         const code = formData.get("code");
 
         const url = `/api/secu/maila2f_check_code`;
-
+        const data ={
+            code: code,
+            host: window.location.host
+        }
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({code}),
+            body: JSON.stringify({data}),
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;

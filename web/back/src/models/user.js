@@ -57,7 +57,7 @@ const User = sequelize.define('User', {
     defaultValue: null,
   },
   Datelastco: {
-    type: DataTypes.TIME,
+    type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null,
   },
