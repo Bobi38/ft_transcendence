@@ -81,6 +81,9 @@ export class Environment {
         let wall_left = MeshBuilder.CreateBox("wall_left", {size: 1}, this._scene);
         let wall_right = MeshBuilder.CreateBox("wall_right", {size: 1}, this._scene);
 
+        wall_right.checkCollisions = true;
+        wall_left.checkCollisions = true;
+
         ground.scaling = ToVec3(env.groundDimensions);
         ceiling.scaling = ToVec3(env.groundDimensions);
         wall_left.scaling = ToVec3(env.wallDimensions);
