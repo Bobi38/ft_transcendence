@@ -12,12 +12,106 @@ export class Player {
         this._sockets = new Map([[socket.id, socket]]);
         this._id = socket.userId;
         this._prev_data = {};
+        this._last_message = "";
         this._chrono = null;
         this.first_alert = 0;
         this._time_refresh_name = 0;
         this._time_last_active = 0;
         this.list = null;
     }
+
+    sendGame(data = {}) {
+        const payload = {
+            type: "game",
+            ...data
+        };
+
+        if (this._game) {
+            payload.board = structuredClone(this._game._board);
+        }
+
+        if (this._obs_game) {
+            payload.other_board = structuredClone(this._obs_game._board);
+            payload.players = this._obs_game.players;
+        }
+
+        const json = JSON.stringify(payload);
+
+        for (const socket of this._sockets.values()) {
+            if (socket?.readyState === 1) {
+                socket.send(json);
+            }
+        }
+    }
+
+    sendMessage(msg) {
+        if (msg !== undefined) {
+            this._last_message = msg;
+        }
+
+        const payload = {
+            type: "message",
+            message: this._last_message
+        };
+
+        const json = JSON.stringify(payload);
+
+        for (const socket of this._sockets.values()) {
+            if (socket?.readyState === 1) {
+                socket.send(json);
+            }
+        }
+    }
+
+    buildPayload(data) {
+        let payload = {};
+
+        if (typeof data === "string") {
+            this.message = data;
+            payload.message = data;
+        }
+
+        else if (data) {
+            if (data.message) {
+                this.message = data.message;
+            }
+            payload = { ...data };
+        }
+
+        if (!payload.message && this._message) {
+            payload.message = this._message;
+        }
+
+        if (this.list) {
+            payload.list = structuredClone(this.list);
+        }
+
+        if (this._game) {
+            payload.board = structuredClone(this._game._board);
+        }
+
+        if (this._obs_game) {
+            payload.other_board = structuredClone(this._obs_game._board);
+            payload.players = this._obs_game.players;
+        }
+
+        return payload;
+    }
+
+    // send(data) {
+    //     const payload = this.buildPayload(data);
+    //     const json = JSON.stringify(payload);
+
+    //     for (const socket of this._sockets.values()) {
+    //         try {
+    //             if (socket?.readyState === 1) {
+    //                 socket.send(json);
+    //             }
+    //         } catch (err) {
+    //             console.error("WebSocket send error:", err);
+    //         }
+    //     }
+    // }
 
     addSocket(socket){
         this._sockets.set(socket.id, socket);
@@ -29,7 +123,7 @@ export class Player {
                 this._sockets.delete(id);
             }
         }
-        console.log(`player are ${this._sockets.size} sockets`)
+        console.log(`add socket player are ${this._sockets.size} sockets`)
         this.send();
     }
 
@@ -74,11 +168,54 @@ export class Player {
             })
     }
 
+    sendObs() {
+        console.log("observation de ", this.getName());
+        if (!this._obs_game) {
+            this._obs_game = this._game;
+            return ;
+        }
+        console.log("observation .....");
+        
+        const all = JSON.stringify({
+                players: this._obs_game.getPlayers(),
+                other_board: this._obs_game._board,
+            });
+
+        console.log(all)
+
+        for (const socket of this._sockets.values()){
+            try {
+                // console.log(`ready state = ${socket?.readyState}`);
+                if (socket?.readyState === 1)
+                    socket.send(all);
+            } catch (err) {
+                console.error("WebSocket player.send error:", err);
+            }
+        }
+        // console.log(all);
+    }
+
+    sendList() {
+        const all = JSON.stringify({
+            list: structuredClone(this.list),
+        });
+
+        for (const socket of this._sockets.values()){
+            try {
+
+                if (socket?.readyState === 1)
+                    socket.send(all);
+            } catch (err) {
+                console.error("WebSocket player.send error:", err);
+            }
+        }
+    }
+
     getGame(){
         return this._game;
     }
 
-    save(data) {
+    saveMessage(data) {
         const payload =
             typeof data === "string"
                 ? { message: data }
@@ -87,19 +224,29 @@ export class Player {
     }
 
     send(data) {
-        if (data !== undefined)
-            this.save(data)
+        console.log(`${this.getName()} doit recevoir data :${JSON.stringify(data)}`);
+        if (data === undefined){
+            console.log(`data indefini`);
+            this.sendObs();
+            return ; //plus tard je referais cette partie
+        }
         
-        const all = JSON.stringify({
-                ...structuredClone(this._prev_data),
-                list: structuredClone(this.list)
-            });
+        const new_message =
+            typeof data === "string"
+                ? data
+                : data?.message;
 
-        // console.log("JSON envoyé au client:", all);
+        if (new_message !== undefined) {
+            this._last_message = new_message;
+        }
+        const all = JSON.stringify({
+                ...data,
+                message: this._last_message,
+        });
 
         for (const socket of this._sockets.values()){
             try {
-                // console.log(`ready state = ${socket?.readyState}`);
+  
                 if (socket?.readyState === 1)
                     socket.send(all);
             } catch (err) {
@@ -202,7 +349,7 @@ export class Player {
     getName(){
         const time = Date.now();
 
-        if (this._nick_name && time - 20000 < this._time_refresh_name)
+        if (this._nick_name && time - 5000 < this._time_refresh_name)
             return this._nick_name;
 
         this.refreshName(time);
@@ -232,5 +379,6 @@ export class Player {
 
         const userstat = await StatMorp.findOne({where: {idUser: this._id}});
         await userstat.increment(data);
+        this.disconnect();
     }
 }

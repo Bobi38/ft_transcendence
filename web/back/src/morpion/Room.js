@@ -115,7 +115,7 @@ class Room {
         if (state === true && this._players.size < this._min_players) {
             throw new Error("need more player");
         }
-
+        console.log("etat lock = ", state);
         this._locked = state;
         this._start_time = Date.now();
     }
@@ -129,7 +129,7 @@ class Room {
     remove() {
         this.clearOutTimer();
         this._obs.forEach(o => o.send({other_board: Array(9).fill(" ")}))
-        this._players.forEach(p => {p.disconnect()})
+        // this._players.forEach(p => {p.disconnect()})
         this._players.clear();
         this._obs.clear();
     }

@@ -120,6 +120,7 @@ export function initWebSMopr(server) {
             break ;
 
           default:
+            console.log(`defaut de wsmorp`);
             socket.player.send();
             // console.log(`defaut : ca c est etrange gere ca :${data.type}`);
           }

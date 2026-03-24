@@ -63,6 +63,10 @@ export class Bot {
         setTimeout(() => {m.move(this, nb)}, 2000);
     }
     
+    sendList() {
+        return ;
+    }
+
     isInactived(){
         console.log(`pour verif timeOOOut player`);
         if (this._time_last_active + 120000 < Date.now())

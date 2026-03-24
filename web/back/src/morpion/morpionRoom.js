@@ -28,8 +28,8 @@ class MorpionRoom extends Room {
             [0, 4, 8],
             [2, 4, 6],
         ];
-        this.player1 = null;
-        this.player2 = null;
+        // this.player1 = null;
+        // this.player2 = null;
     }   
 
     setFirstPlayer(){
@@ -71,7 +71,7 @@ class MorpionRoom extends Room {
 
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
-
+        console.log(`tu me vois          ttttttt`);
         const basePayload = { board: this._board };
 
         for (const player of this._players) {
@@ -210,8 +210,11 @@ class MorpionRoom extends Room {
 
         // console.log(`save DB`);
         for (const p of this._players){
+
             if (!(p instanceof Player)){
                 console.log(`don t save with Bot`);
+                for (const pl of this._players)
+                    pl._game = null;
                 return; 
             }
         }
