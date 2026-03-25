@@ -62,7 +62,7 @@ export default function Pong3D() {
 
     return (
         <main className={`Pong3D-root`}>
-			<Button path="/">Home</Button>
+			<a href="/" className="button">Home</a>
             <canvas ref={canvasRef} />
         </main>
     )
