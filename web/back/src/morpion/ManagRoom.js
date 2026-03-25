@@ -26,7 +26,7 @@ class ManagerRoom {
         delete this.list[room_id];
     }
 
-    refreshlist() {
+    refreshList() {
         const currentIds = new Set(Object.keys(this.list));
 
         for (const [id, room] of this._rooms) {
@@ -37,9 +37,10 @@ class ManagerRoom {
         for (const id of currentIds) {
             delete this.list[id];
         }
+        console.log(this.list);
     }
 
-    refreshRoomList() { // ancienne version
+    refreshRoomList() {
         const newList = Object.fromEntries(
             [...this._rooms].map(([id, room]) => [id, room.getPlayers()])
         );

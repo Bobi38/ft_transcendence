@@ -199,6 +199,7 @@ export class Player {
         const all = JSON.stringify({
             list: structuredClone(this.list),
         });
+        console.log(`list recu`, all);
 
         for (const socket of this._sockets.values()){
             try {
@@ -347,6 +348,7 @@ export class Player {
     }
 
     getName(){
+        return this._nick_name;
         const time = Date.now();
 
         if (this._nick_name && time - 5000 < this._time_refresh_name)

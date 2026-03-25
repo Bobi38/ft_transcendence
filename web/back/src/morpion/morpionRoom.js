@@ -71,7 +71,7 @@ class MorpionRoom extends Room {
 
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
-        console.log(`tu me vois          ttttttt`);
+        // console.log(`tu me vois          ttttttt`);
         const basePayload = { board: this._board };
 
         for (const player of this._players) {
@@ -196,7 +196,7 @@ class MorpionRoom extends Room {
             board: this._board
             })
         };
-
+        console.log(`mess16`);
         p.startTurnTimer(action, 3000);
     }
 

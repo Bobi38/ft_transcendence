@@ -85,31 +85,40 @@ function move(player, move){
 }
 
 function searchGame(player, players){
-    console.log(`new search game de ${player}`);
+    console.log("ENTRY searchGame");
+
     let game = player.getGame();
     if (game){
         player.send(`you play ${game.getId()}`);
         return false;
     }
+    console.log("game existant ?", game);
 
     game = manager_room.findOnePlace("Morpion", player);
     player.send(`new game :  you play ${game.getId()}`);
     try{
         game.setLock(true);
-        console.log(` step 111111 je ne viens pas la pourquoi`);
+        console.log(` step 111111 la partie a deux joueurs`);
         game.startGame(player);
-        console.log(` step 222222 je ne viens pas la pourquoi`);
+        console.log(` step 222222 le jeu peut commencer`);
+
+        manager_room.refreshList();
+
+        console.log('combien de joueur enregistrer', players.size);
+        players.forEach(p => {p.sendList();});
 
         game.notifyTurn(
             {message: msgs.my_turn, turn: true},
             {message: msgs.other_turn, turn: false}
         )
-        manager_room.refreshRoomList();
-        for (p of players){
-            p.sendList();
-        }
+
+        console.log("step 33333333   liste rafraichi");
+        console.log("AVANT RETURN TRUE");
+        return true;
+
     }
     catch {
+        // console.log(ERREUR DANS searchGame :", e);
         console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})

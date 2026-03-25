@@ -88,8 +88,13 @@ export function initWebSMopr(server) {
             break ;
 
           case "play":
-            if (m.searchGame(socket.player))
-              socket.players.forEach(p => {p.sendList();});
+            if (m.searchGame(socket.player, socket.players)){
+              console.log('recu true');
+              // if (!socket.players)
+              //   console.log('probleme player');
+              // console.log('combien de joueur enregistrer', socket.players.size);
+              // socket.players.forEach(p => {p.sendList();});
+            }
             break ;
 
           case "bot":
