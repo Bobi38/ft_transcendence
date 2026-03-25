@@ -1,4 +1,6 @@
 import m from "./PlayMorpion.js"
+import checkBestMove from "./BestMove.js";
+import { Player } from "./player.js";
 
 export class Bot {
     static count = 0;
@@ -52,11 +54,19 @@ export class Bot {
     send(data) {
         if (data.message === undefined) return ;
         if (data.message != m.msgs.my_turn && data.message != m.msgs.badMove) return ;
+        if (this._play_time === 0) {
+            this._play_time++;
+            if(this._game.getOther(this) instanceof Player)
+                this._play_time++;
+        }
+
+        if (this._play_time === 2)
+            return m.move(this, checkBestMove(this._game.getboard()));
 
         this._nb_turn++;
         
         const nb = this._nb_turn > 15
-            ? this.getRandomEmptyIndex()
+            ? checkBestMove(this._game.getboard())
             : Math.floor(Math.random() * this._game.getboard().length);
         
         setTimeout(() => {

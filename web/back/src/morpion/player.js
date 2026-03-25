@@ -98,21 +98,6 @@ export class Player {
         return payload;
     }
 
-    // send(data) {
-    //     const payload = this.buildPayload(data);
-    //     const json = JSON.stringify(payload);
-
-    //     for (const socket of this._sockets.values()) {
-    //         try {
-    //             if (socket?.readyState === 1) {
-    //                 socket.send(json);
-    //             }
-    //         } catch (err) {
-    //             console.error("WebSocket send error:", err);
-    //         }
-    //     }
-    // }
-
     addSocket(socket){
         this._sockets.set(socket.id, socket);
         this._time_last_active = Date.now();
@@ -171,7 +156,7 @@ export class Player {
     sendObs() {
         console.log("observation de ", this.getName());
         if (!this._obs_game) {
-            this._obs_game = this._game;
+            // this._obs_game = this._game;
             return ;
         }
         console.log("observation .....");
