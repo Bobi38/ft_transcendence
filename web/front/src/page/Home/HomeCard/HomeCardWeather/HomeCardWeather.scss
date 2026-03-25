@@ -1,20 +1,8 @@
 @use "STYLE/_variable" as *;
 @use "STYLE/_mixin" as mix;
 
-.HomeCardWeather-root {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-	overflow: hidden;
-
-    @include mix.default_card;
-
+.HomeCardWeather {
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
-
-	p {
-		text-align: center;
-		overflow-wrap: anywhere;
-	}
 }
