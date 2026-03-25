@@ -9,6 +9,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+	padding: 0.5rem;
     .add{
         @include mix.fullw;
         display: flex;
@@ -18,10 +19,10 @@
     }
     .response{
         @include mix.full;
-        padding: 0.5rem;
+        padding: 0.5rem 0;
         .bloc1,.bloc2{
             @include mix.full;
-            overflow :hidden auto; 
+            overflow :hidden auto;
         }
         .bloc1{padding-bottom: 0.5rem;}
         .bloc2{padding-top: 0.5rem;}
@@ -38,7 +39,7 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            
+
             &:hover {
                 background-color: rgba(0, 0, 0, 0.100);
             }

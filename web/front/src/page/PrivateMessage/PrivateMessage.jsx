@@ -92,8 +92,8 @@ useEffect(() => {
 				<div className={`info border-1`}>
 
 					<div className={`bloc-friend-addfriend border-2`}>
-						<div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }><p>Friend request</p></div>
 						<div className="bloc-left border-3" onClick={() => {setGoToAction(2); setGoToConv(null)} }><p>Friend list</p></div>
+						<div className="bloc-left border-3" onClick={() => {setGoToAction(1); setGoToConv(null)} }><p>Friend request</p></div>
 					</div>
 
 					<hr className={`big`}/>

@@ -63,12 +63,12 @@ export default function MailA2F({setShowLog}) {
     return (
         <>
             <div className={`script-in-root`}>
-              
+
                 <h4>MailA2F</h4>
-                
+
                 {!showCodeInput && (
                     <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_mail(e);}}>
-                      Envoyer mail de verification
+						Send mail verification
                     </button>
                 )}
 
@@ -80,7 +80,7 @@ export default function MailA2F({setShowLog}) {
 
                       <div className={`button-container`}>
                           <button type={`submit`} className={``}>Valider</button>
-                          <button type={`button`} className={``} onClick={maila2f_send_mail}>Renvoyer un mail de verification</button>
+                          <button type={`button`} className={``} onClick={maila2f_send_mail}>Send a new mail verification</button>
                       </div>
                   </form>
 

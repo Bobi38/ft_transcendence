@@ -107,7 +107,7 @@ export default function AjouterAmis() {
                 <Hr mode={`column`} initial={120} min1={100} thickness={2}>
 
                     <div className={`bloc1`}>
-                        <h4>Demades Envoyer</h4>
+                        <h4>Sended request</h4>
                         {responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
                             <div key={`me-${index}`}>
                                 <div className={`one-response border-2`}>
@@ -122,7 +122,7 @@ export default function AjouterAmis() {
 
 
                     <div className={`bloc2`}>
-                        <h4>Demades Recu</h4>
+                        <h4>Receve request</h4>
                         {responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
                             <div key={`other-${index}`}>
                                 <div className={`one-response border-2`}>
