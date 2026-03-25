@@ -7,10 +7,18 @@ import "./Button.scss";
 
 export default function Button({children, path, targ = "_self"}) {
 
+	if (path)
+	{
+		return (
+			<Link className={`button`} to={path} target={`${targ}`}>
+				{children}
+			</Link>
+		);
+	}
 	return (
-		<Link className={`button`} to={path} target={`${targ}`}>
+		<button className={`button`}>
 			{children}
-		</Link>
+		</button>
 	);
 }
 

@@ -38,11 +38,6 @@ input, textarea {
  	@include mix.cursor("text");
 }
 
-hr {
-	@include mix.cursor("grab");
-}
-
-
 button, label, select, option, li, input[type="submit"] {
 	@include mix.cursor("pointer");
 }

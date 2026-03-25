@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import  SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
-import "./PrivateMessageConv.scss"; 
+import "./PrivateMessageConv.scss";
 
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";
@@ -18,7 +18,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
     async function add_private_message(time, login){
         if (!time || !login)
             return;
-        
+
         const url = `/api/chatP/add_message_private`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
@@ -39,12 +39,12 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
             return;
         console.log("good");
     }
-    
+
     const handler_submit = async (e) => {
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
-        
+
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
         const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: login}
 
@@ -60,48 +60,48 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
     }
     console.log("displayedMessages:",displayedMessages);
     return (
-        <>
-            <div className={`PrivateMessageConv-root border-0`}>
+		<div className={`PrivateMessageConv-root border-0`}>
 
-                    <h5>{login}</h5>
+			<h1>{login}</h1>
 
-                    <div className="message border-1">
-                            {displayedMessages && displayedMessages.map((msg, index) => { return (
+			<hr />
 
-                                <div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
-                                    
-                                    {/* {index != 0 && <hr/>} */}
-                                    {msg.monMsg ? (
-                                        <div>
-                                            <div><span>{msg.timer}</span></div>
-                                            <p>{msg.message}</p>
-                                        </div>
-                                    ) : (
-                                        <div >
-                                            <div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
-                                            <p>{msg.message}</p>
-                                        </div>
-                                    )}
-                                    {/* <h3>{msg.login}</h3>
-                                    <p>{msg.message}</p> */}
+			<div className="message border-1">
+					{displayedMessages && displayedMessages.map((msg, index) => { return (
 
-                                </div>
+						<div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
 
-                            );})}
+							{/* {index != 0 && <hr/>} */}
+							{msg.monMsg ? (
+								<div>
+									<div><span>{msg.timer}</span></div>
+									<p>{msg.message}</p>
+								</div>
+							) : (
+								<div >
+									<div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
+									<p>{msg.message}</p>
+								</div>
+							)}
+							{/* <h3>{msg.login}</h3>
+							<p>{msg.message}</p> */}
+
+						</div>
+
+					);})}
 
 
-                    </div>
+			</div>
 
-                    <form onSubmit={handler_submit}>
-                        <input type="text"
-                        value = {input}
-                        onChange={(e) => setInput(e.target.value)}
-                        />
-                        <button type="submit">button</button>
-                    </form>
+			<form onSubmit={handler_submit}>
+				<input type="text"
+				value = {input}
+				onChange={(e) => setInput(e.target.value)}
+				/>
+				<button className="button" type="submit">Send</button>
+			</form>
 
-            </div>
-        </>
+		</div>
     )
 }
 
