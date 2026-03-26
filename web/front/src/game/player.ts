@@ -22,7 +22,7 @@ export class Player extends TransformNode {
     public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
     public racketHistory : RacketHistory = new RacketHistory();
 
-    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadowGenerator: ShadowGenerator, room: Room) {
+    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[], room: Room) {
         super("player", scene);
         this.camera = camera;
         this._app = app;
@@ -36,7 +36,16 @@ export class Player extends TransformNode {
         this.racket = assets.racketNode;
         // this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
         // this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
-        shadowGenerator.addShadowCaster(this.mesh, true);
+        shadows[0].addShadowCaster(this.mesh, true);
+        shadows[1].addShadowCaster(this.mesh, true);
+        shadows[0].usePercentageCloserFiltering = true;
+        shadows[1].usePercentageCloserFiltering = true;
+        shadows[0].filteringQuality = ShadowGenerator.QUALITY_MEDIUM;
+        shadows[1].filteringQuality = ShadowGenerator.QUALITY_MEDIUM;
+        shadows[0].useContactHardeningShadow = true;
+        shadows[1].useContactHardeningShadow = true;
+        shadows[0].contactHardeningLightSizeUVRatio = 0.05;
+        shadows[1].contactHardeningLightSizeUVRatio = 0.05;
         // shadowGenerator.addShadowCaster(scene.getMeshByName("racket"), false);
         // shadowGenerator.addShadowCaster(scene.getMeshByName("hand"), false);
         // shadowGenerator.addShadowCaster(scene.getMeshByName("stick"), false);

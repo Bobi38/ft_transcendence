@@ -1,6 +1,6 @@
-import { Room, Client, CloseCode, AuthContext, room } from "colyseus";
+import { Room, Client, CloseCode, AuthContext } from "colyseus";
 import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
-import { ArcRotateCamera, HavokPlugin, MeshBuilder, NullEngine, PhysicsBody, PhysicsImpostor, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core"
+import { ArcRotateCamera, HavokPlugin, NullEngine, PhysicsBody, PhysicsShape, Scene, TransformNode, Vector3 } from "@babylonjs/core"
 import HavokPhysics from "@babylonjs/havok";
 import fs from "fs";
 import path from "path";
@@ -30,6 +30,7 @@ export class MyRoom extends Room {
   private _velToSend: Vector3;
   private _timeStart: number;
   private _timeEnd: number;
+  private _served : boolean = true;
 
   maxClients = 2;
   patchRate = 50;
@@ -43,16 +44,10 @@ export class MyRoom extends Room {
        */
       console.log(client.sessionId, "sent a message:", message);
     },
-    // "synchronizeTick" : (client: Client, data: any) => {
-    //   //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
-    //   client.send("serverTick", {serverTick: this._tick, t0: data});
-    // },
     "initialTick" : (client: Client, data: any) => {
-      //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
       client.send("initialTick", this._tick);
     },
     "synchronizeTick" : (client: Client, data: any) => {
-      //console.log(MyRoom.count++, "Received tick synchronization request from", client.sessionId);
       client.send("synchronizeTick", this._tick);
     },
     "racketImpact": (client: Client, data: any) => {
@@ -71,7 +66,7 @@ export class MyRoom extends Room {
           this._havokPlugin.executeStep(FIXED_TIME_STEP, this._bodies);
           this._ball.transformNode.computeWorldMatrix(true);
       }
-      console.log(client.sessionId,  "hit the ball: ", data, "at servert tick:", this._tick);
+      console.log(client.sessionId,  "hit the ball: ", data, "at server tick:", this._tick);
       console.log("new pos:", this._ball.transformNode.position.clone(), "new vel:", this._ball.getLinearVelocity());
       this.broadcast("racketImpact", data, { except: client });
       client.send("impactResponse", this._tick);
@@ -112,7 +107,6 @@ export class MyRoom extends Room {
       this._tick++;
       this._posToSend = this._ball.transformNode.position.clone();
       this._velToSend = this._ball.getLinearVelocity();
-      // console.log("server tick:", this._tick, "Date.now:", Date.now());
     });
     this._scene = scene;
     this._engine = engine;
@@ -146,13 +140,23 @@ export class MyRoom extends Room {
                         console.log(this._ball.transformNode.position);
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
-        this._ball.transformNode.position.set(0,3,7);
-        this.state.ball.position.x = 0;
-        this.state.ball.position.y = 3;
-        this.state.ball.position.z = 7;
         this.state.ball.velocity.x = 0;
         this.state.ball.velocity.y = 0;
         this.state.ball.velocity.z = 0;
+        this.state.ball.position.x = 0;
+        this.state.ball.position.y = 3;
+        this.state.ball.position.z = 7;
+        this._ball.transformNode.position.set(0,3,7);
+
+
+        // if (this._served) {
+        //   this._ball.transformNode.position.set(0,3,7);
+        //   this.state.ball.position.z = 7;
+        // } else {
+        //   this._ball.transformNode.position.set(0,3,13);
+        //   this.state.ball.position.z = 13;
+        // }
+        
         this.broadcast('Goal!', this._tick,{ afterNextPatch: true });
         //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
          //       console.log(this._ball.transformNode.position);
@@ -303,6 +307,7 @@ export class MyRoom extends Room {
     }
     else
       console.log(client.sessionId, "left room", this.roomId, "with code", code);
+    this._engine.stopRenderLoop();
     this.lock();
     this.state.players.delete(client.sessionId);
   }

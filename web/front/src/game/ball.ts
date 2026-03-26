@@ -8,7 +8,7 @@ export class Ball {
     public _body: PhysicsBody;
     private _maxSpeed: number;
     private _scene: Scene;
-    private _shadow: ShadowGenerator;
+    private _shadows: ShadowGenerator[];
     private _physicsObserver;
     private _clock: SynchronizedClock;
     private _app: App;
@@ -21,7 +21,7 @@ export class Ball {
     public  isResimming : boolean = false;
     
 
-    constructor(position: Vector3, velocity: Vector3, diameter: number, maxSpeed: number, shadow: ShadowGenerator, scene: Scene, clock: SynchronizedClock, app: App) {
+    constructor(position: Vector3, velocity: Vector3, diameter: number, maxSpeed: number, shadows: ShadowGenerator[], scene: Scene, clock: SynchronizedClock, app: App) {
         this._app = app;
         this._scene = scene;
         this._maxSpeed = maxSpeed;
@@ -29,8 +29,17 @@ export class Ball {
 
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
         this._mesh.position = Vector3.Zero();
-        this._shadow = shadow;
-        this._shadow.addShadowCaster(this._mesh);
+        this._shadows = shadows;
+        this._shadows[0].addShadowCaster(this._mesh);
+        this._shadows[1].addShadowCaster(this._mesh);
+        this._shadows[0].usePercentageCloserFiltering = true;
+        this._shadows[1].usePercentageCloserFiltering = true;
+        this._shadows[0].filteringQuality = ShadowGenerator.QUALITY_MEDIUM;
+        this._shadows[1].filteringQuality = ShadowGenerator.QUALITY_MEDIUM;
+        this._shadows[0].useContactHardeningShadow = true;
+        this._shadows[1].useContactHardeningShadow = true;
+        this._shadows[0].contactHardeningLightSizeUVRatio = 0.05;
+        this._shadows[1].contactHardeningLightSizeUVRatio = 0.05;
 
         const ballNode = new TransformNode("ballNode", this._scene);
         ballNode.position = position;
@@ -179,7 +188,8 @@ export class Ball {
     }
 
     public dispose() {
-        this._shadow.removeShadowCaster(this._mesh);
+        this._shadows[0].removeShadowCaster(this._mesh);
+        this._shadows[1].removeShadowCaster(this._mesh);
         this._scene.onBeforePhysicsObservable.remove(this._physicsObserver);
         this._body.shape.dispose();
         this._body.dispose();

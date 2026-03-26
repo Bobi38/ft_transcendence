@@ -39,7 +39,7 @@ export class App {
     private _ball: Ball;
     private _room : Room<MyRoomState>;
     private _callback : StateCallbackStrategy<MyRoomState>;
-    private _shadow : ShadowGenerator;
+    private _shadows : ShadowGenerator[] = [];
     private _ui : GUI;
     public  _clock : SynchronizedClock = new SynchronizedClock();
     private _isNear : boolean = true;
@@ -269,7 +269,7 @@ export class App {
         this._scene.clearColor = new Color4(0.015, 0.015, 0.2);
         this._environment = new Environment(this._scene);
         await this._environment.load();
-        this._shadow = this._initLightAndBall(this._scene);
+        this._initLightAndBall(this._scene);
 
         this._callback.onAdd("players", (player, sessionId) => {
             console.log("Player joined:", sessionId);
@@ -281,36 +281,32 @@ export class App {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 this._setupEnemy(sessionId, enemyPos, player.sideNear);
             }
-            // this._callback.onChange(player, () => {
-            //     if (player.connected = false) {
-            //         this._ui.addPlayerDisconnectedUI();
-            //     }
-            //     if (player.connected = true && this._ui.getIsPlayerDisconnectedUIShown()) {
-            //         this._ui.disposePlayerDisconnectedUI();
-            //     }
-            // });
         });
     }
 
 
-    private _initLightAndBall(scene: Scene): ShadowGenerator {
-        let light = new PointLight('PointLight', new Vector3(0,5,10), scene);
-        light.diffuse = new Color3(1,1,1);
-        light.intensity = 1;
-
-        let shadow = new ShadowGenerator(1024, light);
-        shadow.darkness = 0.4;
-        this._shadow = shadow;
+    private _initLightAndBall(scene: Scene) {
+        let light1 = new PointLight('PointLight', new Vector3(-3,5,-5), scene);
+        light1.diffuse = new Color3(1,1,1);
+        light1.intensity = 0.7;
+        let shadow1 = new ShadowGenerator(2048, light1);
+        shadow1.darkness = 0.2;
+        this._shadows.push(shadow1);
+        let light2 = new PointLight('PointLight', new Vector3(3,5,25), scene);
+        light2.diffuse = new Color3(1,1,1);
+        light2.intensity = 0.7;
+        let shadow2 = new ShadowGenerator(2048, light2);
+        shadow2.darkness = 0.2;
+        this._shadows.push(shadow2);
 
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         let ballVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
-        this._ball = new Ball(ballPos, ballVel, 1, this.MAX_SPEED, shadow, this._scene, this._clock, this);
+        this._ball = new Ball(ballPos, ballVel, 1, this.MAX_SPEED, this._shadows, this._scene, this._clock, this);
         this._ball.addToBodies(this._environment.bodies);
         
         this._setupBallUpdates();
         this._ball.setupCorrections();
         this._ball.setupSmoothing();
-        return shadow;
     }
 
     private _setupBallUpdates() {
@@ -324,7 +320,7 @@ export class App {
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
         const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadow, this._room);
+        this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadows, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
         this._scene.onBeforePhysicsObservable.add(() => {
@@ -337,7 +333,7 @@ export class App {
 
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
         const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
-        this._enemy = new Enemy(this._scene, enemyAssets, this._shadow, isNearSide);
+        this._enemy = new Enemy(this._scene, enemyAssets, this._shadows, isNearSide);
         this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
             const newPos = this._room.state.players.get(sessionId).position;
             this._enemy.registerBody(new Vector3(newPos.x, newPos.y, newPos.z));
