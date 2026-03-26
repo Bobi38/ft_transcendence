@@ -1,6 +1,5 @@
 import { createContext, useContext, useState } from 'react';
 
-// L'enum des états d'auth
 export const AUTH = {
     NONE: 0,
     LOGIN: 1,
@@ -11,7 +10,7 @@ export const AUTH = {
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [showLog, setShowLog] = useState(AUTH.LOGIN);
+  const [showLog, setShowLog] = useState(AUTH.NONE);
 
   return (
     <AuthContext.Provider value={{ showLog, setShowLog }}>

@@ -92,8 +92,10 @@ export function initWebSChat(server) {
             }
           }
         }
-        if (data.type === "logout")
+        if (data.type === "logout"){
           socket.GoLogout = true;
+          // socket.close();
+        }
         if (data.type === "pong")
           socket.isAlive = true;
         if (data.type === 'updateName'){
@@ -126,16 +128,6 @@ export function initWebSChat(server) {
           console.log('Utilisateur déconnNNNNecté', socket.id);
           chat.removetokBySocketId(socket.id);
         }
-        else{
-          setTimeout(() => {
-            const id = socket.userId
-            const reco = chat.finduserId(id)
-            if (!reco){
-              console.log('Utilisateur ne s est pas reco', socket.id);
-              chat.removetokBySocketId(socket.id);
-            }
-          }, 2500)
-        }
       }catch(err){
         console.log("error close in ws back ", err);
       }
@@ -146,10 +138,10 @@ export function initWebSChat(server) {
     for (const session of chat.sessions.values()){
       const so = session.socket;
       console.log(session.socket.id);
-      if (!so.isAlive) {
+      if (!so || !so.isAlive || so.readyState !== ws.OPEN) {
         console.log('Socket morte', so.id);
         chat.removetokBySocketId(so.id);
-        // so.terminate();
+        so.terminate();
       } else {
         session.socket.isAlive = false;
         session.socket.send(JSON.stringify({ type: 'ping' }));

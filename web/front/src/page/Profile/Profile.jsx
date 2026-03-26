@@ -4,7 +4,7 @@ import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 
 /*back*/
 import { showAlert } from "TOOL/fonction_usefull.js";
-import {SocketM} from "TOOL/SocketManag.js";
+import SocketM from "TOOL/SocketManag.js";
 
 /* Css */
 import "./Profile.scss";

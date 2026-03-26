@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import checkCo from "TOOL/fonction_usefull.js"
 import {AUTH, useAuth} from "TOOL/AuthContext.jsx"
+import { FRIEND, useFriend } from "TOOL/FriendContext.jsx";
 
 /* back */
 import SocketM from "TOOL/SocketManag";
@@ -30,6 +31,8 @@ import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/Morpi
 export default function App() {
   const [notif, setNotif] = useState(null);
   const { showLog } = useAuth();
+  const { setShowFriend } = useFriend();
+
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
@@ -48,11 +51,14 @@ export default function App() {
 
             const handle_friend_co = (data) => {
               console.log("friend HANDLE:");
-              if (data.type == 'co')
+              if (data.type == 'co'){
                 setNotif(`${data.login} vient de se connecter`);
-              if (data.type == 'deco')
+                setShowFriend(FRIEND.GREEN);
+              }
+              if (data.type == 'deco'){
                 setNotif(`${data.login} vient de se DEconnecter`);
-
+                setShowFriend(FRIEND.RED);
+              } 
               setTimeout(() => {
               setNotif(null);
               }, 3000); // disparaît après 3s
@@ -62,7 +68,7 @@ export default function App() {
         init();
         return () => {
           SocketM.off("friend", "un");
-          SocketM.disconnect("friend");
+          // SocketM.disconnect("friend");
           // if (SocketM.socket)
           //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");

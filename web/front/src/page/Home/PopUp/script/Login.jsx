@@ -3,8 +3,7 @@ import { FaGithub } from "react-icons/fa";
 
 /* back */
 import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM from "TOOL/SocketManag.js";
-
+import SocketM from "TOOL/SocketManag";
 
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
@@ -13,6 +12,8 @@ import "FRONT/page/Home/PopUp/PopUp.scss";
 import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 
 import useFetch from "HOOKS/useFetch.jsx";
+import { use } from "react";
+import { web } from "webpack";
 
 export default function Login() {
 
@@ -28,7 +29,6 @@ export default function Login() {
             host: window.location.host
         };
 
-        alert(data.host);
         if (!data.email || !data.password) {
             showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
             return;
@@ -60,13 +60,11 @@ export default function Login() {
         // }
         
         // if (!repjson.MPFA) {
-            setShowLog(AUTH.NONE);
-        SocketM.sendd(SocketM.socket.friend, {type: 'co'});
+        setShowLog(AUTH.NONE);
+        SocketM.sendd('friend', {type: 'co_first'});
+
     // };
 }
-
-
-
 
     const register_mode = () => {
         console.log("register_mode(1) Passage en mode inscription:", AUTH.REGISTER);

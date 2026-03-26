@@ -1,6 +1,7 @@
 import User from './models/user.js';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import ws from 'ws';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 

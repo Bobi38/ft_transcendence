@@ -66,6 +66,7 @@ export default function Home() {
         if (!resCo) {
             setShowLog(AUTH.LOGIN);
         } else {
+			setShowLog(AUTH.NONE);
             if (event && event.target && event.target.id === "HomeChatsubmit"){
                 const form = event.target.form
                 if (form) {

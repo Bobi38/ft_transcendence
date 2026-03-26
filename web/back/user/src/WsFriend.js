@@ -71,12 +71,10 @@ export function initWebSFriend(server) {
       console.log('Headers socket:', socket.id);
       console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
-
       if (!token) {
-      // socket.close();
+        socket.close();
         return;
       }
-
       let user;
       try {
         user = chat.decoded(token);
@@ -84,7 +82,6 @@ export function initWebSFriend(server) {
         socket.close();
         return;
       }
-
       if (!user) {socket.close(); return; }
       const useid = user.id;
       socket.userId = useid;
@@ -113,7 +110,7 @@ export function initWebSFriend(server) {
         console.log('=== MESSAGE REÇU IN WSCHAT ===');
         console.log('Type:', data.type);
         console.log('===================');
-        if (data.type === 'co'){
+        if (data.type === "co_first"){
           const nono = socket.userId;
           const na = chat.finduserId(nono);
           const ni = na.username;
@@ -132,8 +129,11 @@ export function initWebSFriend(server) {
               session.username = data.new_name;
           }
         }
-        if (data.type === "logout")
+        if (data.type === "logout"){
+          socket.isAlive = false;
           socket.GoLogout = true;
+          // socket.close();
+        }
         if (data.type === "pong")
           socket.isAlive = true;
       }catch (err){
@@ -150,6 +150,7 @@ export function initWebSFriend(server) {
     });
     socket.on('close', async () => {
       try {
+        console.log('WebSocket fermé', socket.id);
         if (socket.cleanedUp) return;
         socket.cleanedUp = true;
         const id = socket.userId;
@@ -160,6 +161,7 @@ export function initWebSFriend(server) {
           const friendIds = new Set(friends.map(f => f.login));
           for (const session of chat.sessions.values()) {
             if (session.socket.readyState === ws.OPEN &&session.userId !== id &&friendIds.has(session.userId)) {
+              console.log(`Notifying friend ${session.username} (${session.userId}) of ${ni}'s disconnection`);
               session.socket.send(JSON.stringify({ type: 'deco', login: ni }));
             }
           }
@@ -183,7 +185,7 @@ export function initWebSFriend(server) {
       if (!so || !so.isAlive || so.readyState != ws.OPEN) {
         console.log('Socket morte', so.id);
         chat.removetokBySocketId(so.id);
-        // so.terminate();
+        so.terminate();
       } else {
         session.socket.isAlive = false;
         session.socket.send(JSON.stringify({ type: 'ping' }));

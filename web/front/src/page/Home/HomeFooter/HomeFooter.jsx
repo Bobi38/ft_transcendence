@@ -30,7 +30,8 @@ export default function HomeFooter({setShowLog}) {
         .then(data => {
 
             if (data.success) {
-                setShowLog(AUTH.LOGIN)
+                setShowLog(AUTH.LOGIN);
+                // SocketM.sendd('friend', {type: "logout"});
                 SocketM.disconnect('friend');
                 SocketM.disconnect('morp');
                 SocketM.disconnect('priv');

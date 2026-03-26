@@ -20,7 +20,7 @@ export function SocketProvider({ children }) {
     });
 
     return () => {
-      SocketM.disconnect("friend");
+      // SocketM.disconnect("friend");
     };
   }, [showLog]);
 
