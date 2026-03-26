@@ -59,13 +59,37 @@ class ManagerRoom {
         return this._rooms.get(id);
     }
 
-    removeRoom(room) {
+    removeRoom(room, message) {
         // console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return ;
 
-        room.remove();
+        room.remove(message);
+        room.clearOutTimer();
         this._rooms.delete(room.getId())
         this.refreshRoomList();
+    }
+
+    abortedRoom(player){
+        const game = player.getRoom();
+
+        if (!game || !game.setLock(false)) return ;
+
+        console.log(`time out     by  time out`);
+        this.refreshRoomList();
+        const loser = player;
+        let winner = game.getTurn();
+        if (winner === loser){
+            winner = game.getOther();
+        }
+
+        game.handleEndGame('abort', game.getTurn());
+        winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
+        loser.send({ message: msgs.l_abort, turn: false });
+
+
+        setTimeout(() => {manager_room.removeRoom(game, null);}, 10000);
+
+        console.log("      game     aborted    TIME OUT");          
     }
 
     isInRoom(playerId) {

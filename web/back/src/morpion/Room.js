@@ -124,12 +124,12 @@ class Room {
         this._players.forEach(player => {player.send(message);});
     }
 
-    remove() {
+    remove(message) {
         this.clearOutTimer();
 
         this._obs.forEach(o => {o.removeObs();});
 
-        this._players.forEach(p => p.disconnect(null, this._id));
+        this._players.forEach(p => p.disconnect(message, this._id));
 
         this._players.clear();
         
@@ -146,7 +146,7 @@ class Room {
     startOutTimer(Action, millisec) {
         this.clearOutTimer();
 
-        this.out_timer = setTimeout(Action, millisec);
+        this.out_timer = setTimeout(() => Action, millisec);
     }
 }
 

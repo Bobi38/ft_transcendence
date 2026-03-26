@@ -118,8 +118,8 @@ export function initWebSMopr(server) {
             break ;
 
           case "leave":
-            if(m.leave(socket.player));
-              socket.players.forEach(p => {p.sendList();});
+            m.leave(socket.player);
+            socket.sendList();
             break;
 
           case "second":
@@ -152,7 +152,7 @@ export function initWebSMopr(server) {
       });
 
     socket.on('pong', () =>{
-      // console.log("i m in PONG")
+      socket.player._time_last_active = Date.now();
       socket.isAlive = true;
     })
     socket.on('error', (err) => {

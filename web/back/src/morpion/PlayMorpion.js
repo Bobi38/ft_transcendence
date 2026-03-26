@@ -150,25 +150,8 @@ function leave(player){
         manager_room.removeRoom(game);
         return false;
     }
-    const loser = player;
-    let winner = game.getTurn();
-    if (winner === loser){
-        winner = game.getOther();
-    }
 
-    game.handleEndGame('abort', game.getTurn());
-    winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
-    loser.send({ message: msgs.l_abort, turn: false });
-    // winner.disconnect();
-    // loser.disconnect();
-
-    setTimeout(() => {manager_room.removeRoom(game);}, 10000);
-
-    console.log("avant unlock");
-    game.setLock(false);
-    manager_room.dltRoomInlist(game);
-
-    return true;
+    manager_room.abortedRoom(player);
 }
 
 function updateName(player, nickname) {

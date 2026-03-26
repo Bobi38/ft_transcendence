@@ -28,8 +28,6 @@ class MorpionRoom extends Room {
             [0, 4, 8],
             [2, 4, 6],
         ];
-        // this.player1 = null;
-        // this.player2 = null;
     }   
 
     setFirstPlayer(){
@@ -192,8 +190,32 @@ class MorpionRoom extends Room {
         return false;
     }
 
+    // aborted(player) {
+
+    //     console.log(`time out     by  time out`);
+    //     this.setLock(false);
+
+    //     const loser = player;
+    //     let winner = game.getTurn();
+    //     if (winner === loser){
+    //         winner = game.getOther();
+    //     }
+
+    //     this.handleEndGame('abort', game.getTurn());
+    //     winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
+    //     loser.send({ message: msgs.l_abort, turn: false });
+    //     // winner.disconnect();
+    //     // loser.disconnect();
+
+    //     setTimeout(() => {manager_room.removeRoom(game);}, 10000);
+
+    //     console.log("      game     aborted    TIME OUT");      
+    // }
+
     startTurnTimer() {
         const p = this._turn;
+
+        if (!p) return ;
         const action = () => {
             p.send({
             message: "Dépêche-toi de jouer !",
@@ -202,7 +224,7 @@ class MorpionRoom extends Room {
         };
         console.log(`mess16`);
 
-        p?.startTurnTimer(action, 3000);
+        p.startTurnTimer(action, 5000);
     }
 
     serializeBoard() {
