@@ -1,9 +1,9 @@
-import ws from 'ws';
+import {manager_room} from '.morpion/ManagRoom.js';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
-import {manager_room} from './morpion/ManagRoom.js';
 import m from './morpion/PlayMorpion.js';
+import { Bot } from './morpion/bot.js';
 import { Player } from './morpion/player.js';
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -23,21 +23,20 @@ export function initWebSMopr(server) {
   const wss = new WebSocketServer({ server, path: '/ws/morp' });
 
   let idd = 0;
-  console.log('WebSocket server initialized on path /ws');
+  // console.log('WebSocket server initialized on path /ws');
   wss.on('connection', async (socket, req) => {
     try{
-      //passe toujours par ici
-      console.log(`pour comprendre what is conenction ?`);
+
       const iid = idd++;
       socket.id = iid;
-      console.log(req.headers.cookie)
+      // console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
       if (!token) {
         return;
       }
-
+      
       let user = jwt.verify(token, secret);
-
+      
       if (!user) {socket.close(1008, 'Unauthorized'); return;}
       // // console.log("uuu-------", user);
       const useid = user.id;
@@ -45,18 +44,22 @@ export function initWebSMopr(server) {
       socket.GoLogout = false;
       socket.cleanedUp = false;
       socket.isAlive = true;
-
+      
       let player = players.get(useid);
       if (!player) {
-        console.log(`new clt`);
-        player = new Player(socket)
+        // console.log(`new clt`);
+        player = await Player.create(socket);
         players.set(useid, player);
+        player.list = manager_room.list;
+        setTimeout(() => player.send({message: m.msgs.welcome}), 100);
       }
+
       else{
-        console.log(`deja connu`);
+        // console.log(`deja connu`);
         player.addSocket(socket);
       }
       socket.player = player;
+
       socket.players = players;
 
       socket.send(JSON.stringify({type: "auth_good"}));
@@ -77,9 +80,6 @@ export function initWebSMopr(server) {
 
         console.log(`${data.type}`);
         switch (data.type) {
-          case "game": //move
-            m.morpion(data.message, socket, socket.userId);
-            break ;
 
           case "updatename":
             m.updateName(socket.player, data.new_name);
@@ -122,34 +122,60 @@ export function initWebSMopr(server) {
             break;
 
           case "second":
-            m.playSecond(socket.player); //ok a tster
+            console.log();
+            m.playSecond(socket.player);
             break ;
 
           case "reboot":
-            console.log(m.msgs.reboot);
+            // console.log(m.msgs.reboot);
             socket.players.forEach(p => {p.send(m.msgs.reboot);});
             m.reboot();
             socket.players.clear();
             break ;
 
-          case "obs":
-            socket.player.send({list: manager_room.getList()});
+          case "spec":
+            m.observator(socket.player, data.id)
+            // socket.player.send({list: manager_room.getList()});
             break ;
-
-          case "obs":
-
 
           default:
             console.log(`defaut de wsmorp`);
             socket.sendList();
             socket.player.send();
-            console.log(`defaut : ca c est etrange gere ca :${data.type}`);
+            // console.log(`defaut : ca c est etrange gere ca :${data.type}`);
           }
         }
         catch (err){
           console.log("err morp  ws= " + err);
         }
       });
+
+    socket.on('pong', () =>{
+      socket.player._time_last_active = Date.now();
+      socket.isAlive = true;
+    })
+    socket.on('error', (err) => {
+      // if (err.code === 'WS_ERR_INVALID_CLOSE_CODE' || err.code === 'WS_ERR_INVALID_UTF8') return;
+      console.warn('WebSocket Error:', err.message);
+    });
+    socket.on('close', () => {
+
+      try{
+        const player = socket.player;
+        console.log("morp deco :", player.getName());;
+        socket.isAlive = false;
+
+        if (!player.isInactived()) return;
+        
+        m.leave(player)
+        players.delete(player);
+        }
+        catch(err){
+          console.log("error close in wsMopr ", err);
+        }
+    });
+  });
+}
 
 
       //   if (data.type === "logout")

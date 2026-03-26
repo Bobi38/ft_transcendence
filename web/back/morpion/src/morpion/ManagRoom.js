@@ -10,6 +10,8 @@ class ManagerRoom {
     constructor(){
         this._roomId = (Date.now() % 50001) + 57;
         this._rooms = new Map();
+
+        this.list = {};
     }
 
     createRoom(type = "default") {
@@ -20,22 +22,76 @@ class ManagerRoom {
         return new_room;
     }
 
-    getRoomlist(){
-        return Object.fromEntries(
+    dltRoomInlist(room_id) {
+        delete this.list[room_id];
+    }
+
+    refreshList() {
+        const currentIds = new Set(Object.keys(this.list));
+
+        for (const [id, room] of this._rooms) {
+                        // if (room.getLock()){
+            if (room.isState("play")){
+                this.list[id] = room.getPlayers();
+                currentIds.delete(String(id));
+            }
+        }
+
+        for (const id of currentIds) {
+            delete this.list[id];
+        }
+        console.log(this.list);
+    }
+
+    refreshRoomList() {
+        const newList = Object.fromEntries(
             [...this._rooms].map(([id, room]) => [id, room.getPlayers()])
         );
+
+        for (const key in this.list) {
+            delete this.list[key];
+        }
+
+        Object.assign(this.list, newList);
+        console.log(this.list);
     }
 
     getRoom(id) {
         return this._rooms.get(id);
     }
 
-    removeRoom(room) {
+    removeRoom(room, message) {
         // console.log(`cherche ${id}  - quel  room ? ${room}`)
-        if (!room) return;
+        if (!room) return ;
 
-        room.remove();
-        this._rooms.delete(room.getId());
+        room.remove(message);
+        room.clearOutTimer();
+        this._rooms.delete(room.getId())
+        this.refreshRoomList();
+    }
+
+    abortedRoom(player){
+        const game = player.getRoom();
+
+        if (!game || !game.setEnd()) return ;
+        // if (!game || !game.setLock(false)) return ;
+
+        console.log(`time out     by  time out`);
+        this.refreshRoomList();
+        const loser = player;
+        let winner = game.getTurn();
+        if (winner === loser){
+            winner = game.getOther();
+        }
+
+        game.handleEndGame('abort', game.getTurn());
+        winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
+        loser.send({ message: msgs.l_abort, turn: false });
+
+
+        setTimeout(() => {manager_room.removeRoom(game, null);}, 10000);
+
+        console.log("      game     aborted    TIME OUT");          
     }
 
     isInRoom(playerId) {
@@ -52,10 +108,10 @@ class ManagerRoom {
 
     findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
-            console.log("Checking room ->", room.toString());
+            // console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
-                    && !room.getLock()) {
+                    && room.isState("init")) {
                 room.addPlayer(player);
                 player.setGame(room);
                 return room;
@@ -87,11 +143,6 @@ class ManagerRoom {
         this._rooms.clear();
     }
 
-    sendAll(mess) { //inutile
-        this._rooms.forEach(
-            room => room.sendAll(mess))
-    }
-
     startOutTimer(game) {
         game.clearOutTimer();
 
@@ -105,7 +156,7 @@ class ManagerRoom {
             this._roomId = (Date.now() % 50001) + 57;
 
         let increment = this._roomId;
-        increment = ((increment % 31) + 1) * ((increment % 7) + 1);
+        increment = ((increment % 31) + 1) * ((increment % 53) + 1);
 
         this._roomId += increment;
 

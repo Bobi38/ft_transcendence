@@ -1,3 +1,4 @@
+import User from '../models/user.js'; 
 import StatMorp from "../models/StatMorp.js";
 
 export class Player {
@@ -11,22 +12,102 @@ export class Player {
         this._sockets = new Map([[socket.id, socket]]);
         this._id = socket.userId;
         this._prev_data = {};
+        this._last_message = "";
         this._chrono = null;
         this.first_alert = 0;
         this._time_refresh_name = 0;
+        this._time_last_active = 0;
+        this.list = null;
     }
 
-    // isAlive() { // non utiliser
-    //     return this._socket && this._socket.readyState === 1;
-    // }
+    sendGame(data = {}) {
 
-    // refreshSocket(socket){ // a changer (probalbement remplacer par addSocket)
-    //     this._socket = socket;
-    //     this.send();
-    // }
+        if (data !== undefined) {
+            payload.message = this._last_message;
+        }
+        else if (typeof data === "string") {
+            this.message = data;
+            payload.message = data;
+        }
+        else {
+            payload.message = data.message;
+        }
+
+        if (this._game) {
+            payload.board = structuredClone(this._game._board);
+        }
+
+        if (this._obs_game) {
+            payload.other_board = structuredClone(this._obs_game._board);
+            payload.players = this._obs_game.getPlayers();
+        }
+
+        const json = JSON.stringify(payload);
+
+        for (const socket of this._sockets.values()) {
+            if (socket?.readyState === 1) {
+                socket.send(json);
+            }
+        }
+    }
+
+    sendMessage(msg) {
+        if (msg !== undefined) {
+            this._last_message = msg;
+        }
+
+        const payload = {
+            type: "message",
+            message: this._last_message
+        };
+
+        const json = JSON.stringify(payload);
+
+        for (const socket of this._sockets.values()) {
+            if (socket?.readyState === 1) {
+                socket.send(json);
+            }
+        }
+    }
+
+    buildPayload(data) {
+        let payload = {};
+
+        if (typeof data === "string") {
+            this.message = data;
+            payload.message = data;
+        }
+
+        else if (data) {
+            if (data.message) {
+                this.message = data.message;
+            }
+            payload = { ...data };
+        }
+
+        if (!payload.message && this._message) {
+            payload.message = this._message;
+        }
+
+        if (this.list) {
+            payload.list = structuredClone(this.list);
+        }
+
+        if (this._game) {
+            payload.board = structuredClone(this._game._board);
+        }
+
+        if (this._obs_game) {
+            payload.other_board = structuredClone(this._obs_game._board);
+            payload.players = this._obs_game.players;
+        }
+
+        return payload;
+    }
 
     addSocket(socket){
         this._sockets.set(socket.id, socket);
+        this._time_last_active = Date.now();
 
         console.log(`player are ${this._sockets.size} sockets`)
         for (const [id, s] of this._sockets) {
@@ -34,16 +115,23 @@ export class Player {
                 this._sockets.delete(id);
             }
         }
-        console.log(`player are ${this._sockets.size} sockets`)
+        console.log(`add socket player are ${this._sockets.size} sockets`)
         this.send();
+    }
+
+    isInactived(){
+        console.log(`pour verif timeOOOut player`);
+        if (this._time_last_active + 30000 < Date.now())
+            return false;
+        console.log("time out 30s for eval");
+
+        return true;
     }
 
     setGame(game){
         if (!game?.getId()) return;
 
-        this._nick_name = this._id === 5 ? "gros batard" : "toto";// attention dev devops devel
-
-        console.log(`player register in ${game.getId()}`);
+        console.log(`start ${game.getId()}`);
         this.clearTurnTimer();
         this._game = game;
         this._chrono = null;
@@ -55,47 +143,42 @@ export class Player {
     setObs(game){
         if (this._obs_game === game) return;
         
-        if (this._obs_game)
-            this._obs_game.removeObs(this);
+        this.removeObs();
 
         this._obs_game = game;
+
+        this.sendObs();
     }
 
-    removeObs(obs){
-        this._players.delete(obs);
+    removeObs(){
+        if (!this._obs_game) return ;
 
-        obs.setObs(null)
-        if (this._type === "Morpion")
-            obs.send({
-                players: "",
+        const obs_game = this._obs_game;
+        this._obs_game = null;
+
+        if (this._type === "Morpion"){
+            this.send({
+                players: null,
                 other_board: Array(9).fill(" ")
-            })
+            });
+        }
+        
+        obs_game?.removeObs(this);        
     }
 
-    getGame(){
-        return this._game;
-    }
-
-    send(data) {
-
-        if (data === undefined) {
-            data = this._prev_data;
-            if (!data) return;
-        } else {
-            this._prev_data = structuredClone(data);
+    sendObs() {
+        console.log("observation de ", this.getName());
+        if (!this._obs_game) {
+            return ;
         }
 
-        const payload =
-            typeof data === "string"
-                ? { message: data }
-                : data;
-
-        const all  = JSON.stringify({
-                type: "game",
-                ...payload
+        
+        const all = JSON.stringify({
+                players: this._obs_game.getPlayers(),
+                other_board: this._obs_game._board,
             });
 
-        // console.log("JSON envoyé au client:", all);
+        console.log(all)
 
         for (const socket of this._sockets.values()){
             try {
@@ -106,9 +189,78 @@ export class Player {
                 console.error("WebSocket player.send error:", err);
             }
         }
+        // console.log(all);
     }
 
-    disconnect(message) {
+    sendList() {
+        const all = JSON.stringify({
+            list: structuredClone(this.list),
+        });
+        console.log(`list recu`, all);
+
+        for (const socket of this._sockets.values()){
+            try {
+
+                if (socket?.readyState === 1)
+                    socket.send(all);
+            } catch (err) {
+                console.error("WebSocket player.send error:", err);
+            }
+        }
+    }
+
+    getGame(){
+        return this._game;
+    }
+
+    saveMessage(data) {
+        const payload =
+            typeof data === "string"
+                ? { message: data }
+                : data;
+        Object.assign(this._prev_data, payload);
+    }
+
+    send(data) {
+        console.log(`${this.getName()} doit recevoir data :${JSON.stringify(data)}`);
+        if (data === undefined){
+            console.log(`data indefini`);
+            this.sendObs();
+            return ; //plus tard je referais cette partie
+        }
+        
+        const new_message =
+            typeof data === "string"
+                ? data
+                : data?.message;
+
+        if (new_message !== undefined) {
+            this._last_message = new_message;
+        }
+        const all = JSON.stringify({
+                ...data,
+                message: this._last_message,
+        });
+
+        for (const socket of this._sockets.values()){
+            try {
+  
+                if (socket?.readyState === 1)
+                    socket.send(all);
+            } catch (err) {
+                console.error("WebSocket player.send error:", err);
+            }
+        }
+        // console.log(all);
+    }
+
+    disconnect(message, game_id = null) {
+        if (this._obs_game && game_id === this._obs_game.getId()) {
+            this.removeObs();
+            return ;
+        }
+        if (this._game && game_id !== this._game.getId()) return;
+
         if (message)
             this.send(message);
 
@@ -118,11 +270,11 @@ export class Player {
         this._play_time = 0;
         this._game = null;
         this.first_alert = 0;
+        this.removeObs();
     }
 
     toString(){
-        // console.log(`definition de player`);
-        return `${this._id} : ${this._nick_name} play ${this._game?.getId()}`;
+        return `${this._nick_name} play ${this._game?.getId()}`;
     }
 
     getId(){
@@ -183,21 +335,35 @@ export class Player {
          });
     }
 
+    static async create(socket){
+        const player = new Player(socket);
+        const time = Date.now()
+        
+        player.refreshName(time);
+        player._time_last_active = time;
+
+        return player;
+    }
+
+    async refreshName(time){
+        const ll = await User.findByPk(this._id);
+        this._time_refresh_name = time;
+        this._nick_name = ll.name        
+    }
+
     getName(){
         return this._nick_name;
-    }
-
-    oldgetName(){
         const time = Date.now();
 
-        if (time - 20000 < this._time_refresh_name)
+        if (this._nick_name && time - 5000 < this._time_refresh_name)
             return this._nick_name;
 
-        console.log(`faire le fecth ici`);
+        this.refreshName(time);
+
         return this._nick_name;
     }
 
-    async majdb(how_win, type_player , type_winner = null) {
+    async majdb(game_id, how_win, type_player , type_winner = null) {
         
         const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal"];
         const type_player_check = ["X", "O"];
@@ -219,6 +385,6 @@ export class Player {
 
         const userstat = await StatMorp.findOne({where: {idUser: this._id}});
         await userstat.increment(data);
-
+        this.disconnect(null, game_id);
     }
 }
