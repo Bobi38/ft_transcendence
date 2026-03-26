@@ -21,10 +21,17 @@ export class Player {
     }
 
     sendGame(data = {}) {
-        const payload = {
-            type: "game",
-            ...data
-        };
+
+        if (data !== undefined) {
+            payload.message = this._last_message;
+        }
+        else if (typeof data === "string") {
+            this.message = data;
+            payload.message = data;
+        }
+        else {
+            payload.message = data.message;
+        }
 
         if (this._game) {
             payload.board = structuredClone(this._game._board);
@@ -32,7 +39,7 @@ export class Player {
 
         if (this._obs_game) {
             payload.other_board = structuredClone(this._obs_game._board);
-            payload.players = this._obs_game.players;
+            payload.players = this._obs_game.getPlayers();
         }
 
         const json = JSON.stringify(payload);
@@ -164,7 +171,7 @@ export class Player {
         if (!this._obs_game) {
             return ;
         }
-        console.log("observation .....");
+
         
         const all = JSON.stringify({
                 players: this._obs_game.getPlayers(),

@@ -201,7 +201,8 @@ class MorpionRoom extends Room {
             })
         };
         console.log(`mess16`);
-        p.startTurnTimer(action, 3000);
+
+        p?.startTurnTimer(action, 3000);
     }
 
     serializeBoard() {

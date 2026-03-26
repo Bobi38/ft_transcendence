@@ -92,38 +92,33 @@ function searchGame(player, players){
         player.send(`you play ${game.getId()}`);
         return false;
     }
-    console.log("game existant ?", game);
+    // console.log("game existant ?", game);
 
     game = manager_room.findOnePlace("Morpion", player);
-    player.send(`new game :  you play ${game.getId()}`);
-    try{
-        game.setLock(true);
-        console.log(` step 111111 la partie a deux joueurs`);
-        game.startGame(player);
-        console.log(` step 222222 le jeu peut commencer`);
-
-        manager_room.refreshList();
-
-        console.log('combien de joueur enregistrer', players.size);
-        players.forEach(p => {p.sendList();});
-
-        game.notifyTurn(
-            {message: msgs.my_turn, turn: true},
-            {message: msgs.other_turn, turn: false}
-        )
-
-        console.log("step 33333333   liste rafraichi");
-        console.log("AVANT RETURN TRUE");
-        return true;
-
-    }
-    catch {
+    // player.send(`new game :  you play ${game.getId()}`);
+    if (!game.setLock(true)) {
         // console.log(ERREUR DANS searchGame :", e);
-        console.log("premier set _Turn");
+        // console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})
         return false;
     }
+    // console.log(` step 111111 la partie a deux joueurs`);
+    game.startGame(player);
+    // console.log(` step 222222 le jeu peut commencer`);
+
+    manager_room.refreshList();
+
+    console.log('combien de joueur enregistrer', players.size);
+    players.forEach(p => {p.sendList();});
+
+    game.notifyTurn(
+        {message: msgs.my_turn, turn: true},
+        {message: msgs.other_turn, turn: false}
+    )
+
+    // console.log("step 33333333   liste rafraichi");
+    // console.log("AVANT RETURN TRUE");
     return true;
 }
 

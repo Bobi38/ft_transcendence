@@ -22,7 +22,7 @@ class Room {
     getPlayers() {
         let time = Date.now()
 
-        if (time - 20000 < this._time_refresh)
+        if (time - 5000 < this._time_refresh)
             return this._players_names;
 
         this._time_refresh_name = time;
@@ -109,11 +109,13 @@ class Room {
 
     setLock(state) {
         if (state === true && this._players.size < this._min_players) {
-            throw new Error("need more player");
+            console.log(`need more player`);
+            return false;
         }
         console.log("etat lock = ", state);
         this._locked = state;
         this._start_time = Date.now();
+        return true;
     }
 
     sendAll(message) {

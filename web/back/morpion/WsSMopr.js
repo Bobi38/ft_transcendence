@@ -141,6 +141,7 @@ export function initWebSMopr(server) {
 
           default:
             console.log(`defaut de wsmorp`);
+            socket.sendList();
             socket.player.send();
             // console.log(`defaut : ca c est etrange gere ca :${data.type}`);
           }
