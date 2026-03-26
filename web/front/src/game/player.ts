@@ -46,11 +46,8 @@ export class Player extends TransformNode {
         shadows[1].useContactHardeningShadow = true;
         shadows[0].contactHardeningLightSizeUVRatio = 0.05;
         shadows[1].contactHardeningLightSizeUVRatio = 0.05;
-        // shadowGenerator.addShadowCaster(scene.getMeshByName("racket"), false);
-        // shadowGenerator.addShadowCaster(scene.getMeshByName("hand"), false);
-        // shadowGenerator.addShadowCaster(scene.getMeshByName("stick"), false);
     
-        const colRacketShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(),
+        const colRacketShape = new PhysicsShapeBox(new Vector3(0,1,0), Quaternion.Identity(),
             new Vector3(1.5, 2.5, 0.5), scene);
         const colRacketBody = new PhysicsBody(this.racket, PhysicsMotionType.ANIMATED, false, scene);
         colRacketBody.shape = colRacketShape;
