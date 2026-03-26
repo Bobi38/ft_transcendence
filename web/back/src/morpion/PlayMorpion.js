@@ -62,7 +62,7 @@ function move(player, move){
         if(game.checkVictory()){
             console.log("fini on unlocked la game");
             game.setLock(false);
-            manager_room.dltRoomInlist(game.getId());
+            manager_room.refreshList();
 
             setTimeout(() => {
                 //  console.log(`party register ${game}`);
@@ -130,6 +130,7 @@ function searchGame(player, players){
 function reboot(){
     console.log(msgs.reboot);
     manager_room.removeAll(msgs.reboot);
+    manager_room.refreshList();
     return;
 }
 
@@ -161,10 +162,10 @@ function leave(player){
     }
 
     game.handleEndGame('abort', game.getTurn());
-    winner.send({ message: "end", turn: false });
-    loser.send({ message: "end", turn: false });
-    winner.disconnect(msgs.w_abort);
-    loser.disconnect(msgs.l_abort);
+    winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
+    loser.send({ message: msgs.l_abort, turn: false });
+    // winner.disconnect();
+    // loser.disconnect();
 
     setTimeout(() => {manager_room.removeRoom(game);}, 10000);
 
@@ -178,7 +179,7 @@ function leave(player){
 function updateName(player, nickname) {
     player._nick_name = nickname;
 
-    manager_room.refreshlist();
+    manager_room.refreshList();
 }
 
 const cooldowns = new Map();

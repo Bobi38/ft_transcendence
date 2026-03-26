@@ -136,27 +136,32 @@ export class Player {
     setObs(game){
         if (this._obs_game === game) return;
         
-        if (this._obs_game)
-            this._obs_game.removeObs(this);
+        this.removeObs();
 
         this._obs_game = game;
+
+        this.sendObs();
     }
 
-    removeObs(obs){
-        this._players.delete(obs);
+    removeObs(){
+        if (!this._obs_game) return ;
 
-        obs.setObs(null)
-        if (this._type === "Morpion")
-            obs.send({
+        const obs_game = this._obs_game;
+        this._obs_game = null;
+
+        if (this._type === "Morpion"){
+            this.send({
                 players: null,
                 other_board: Array(9).fill(" ")
-            })
+            });
+        }
+        
+        obs_game?.removeObs(this);        
     }
 
     sendObs() {
         console.log("observation de ", this.getName());
         if (!this._obs_game) {
-            // this._obs_game = this._game;
             return ;
         }
         console.log("observation .....");
@@ -242,7 +247,13 @@ export class Player {
         // console.log(all);
     }
 
-    disconnect(message) {
+    disconnect(message, game_id = null) {
+        if (this._obs_game && game_id === this._obs_game.getId()) {
+            this.removeObs();
+            return ;
+        }
+        if (this._game && game_id !== this._game.getId()) return;
+
         if (message)
             this.send(message);
 
@@ -252,6 +263,7 @@ export class Player {
         this._play_time = 0;
         this._game = null;
         this.first_alert = 0;
+        this.removeObs();
     }
 
     toString(){
@@ -344,7 +356,7 @@ export class Player {
         return this._nick_name;
     }
 
-    async majdb(how_win, type_player , type_winner = null) {
+    async majdb(game_id, how_win, type_player , type_winner = null) {
         
         const how_win_check = ["draw", "abort", "horizontal", "vertical", "diagonal"];
         const type_player_check = ["X", "O"];
@@ -366,6 +378,6 @@ export class Player {
 
         const userstat = await StatMorp.findOne({where: {idUser: this._id}});
         await userstat.increment(data);
-        this.disconnect();
+        this.disconnect(null, game_id);
     }
 }

@@ -20,6 +20,7 @@ export class Bot {
         this._time_refresh_name = 0;
         this._time_last_active = 0;
         this.list = null;
+        this._play_human = 0;
     }
 
     static create(){
@@ -54,13 +55,13 @@ export class Bot {
     send(data) {
         if (data.message === undefined) return ;
         if (data.message != m.msgs.my_turn && data.message != m.msgs.badMove) return ;
-        if (this._play_time === 0) {
-            this._play_time++;
+        if (this._play_human === 0) {
+            this._play_human++;
             if(this._game.getOther(this) instanceof Player)
-                this._play_time++;
+                this._play_human++;
         }
 
-        if (this._play_time === 2)
+        if (this._play_human === 2)
             return m.move(this, checkBestMove(this._game.getboard()));
 
         this._nb_turn++;
@@ -91,9 +92,23 @@ export class Bot {
         return ;
     }
     
-    disconnect() {
+    disconnect(message , game = null) {
+        if (game === this._obs_game) {
+            this._obs_game
+        }
+        if (game && game !== this._game) return;
+
+        if (message)
+            this.send(message);
+
+        this.clearTurnTimer();
+        this._chrono = null;
+        this._nb_turn = 0;
+        this._play_time = 0;
         this._game = null;
+        this.first_alert = 0;
     }
+
 
     toString(){
         return `${this._nick_name} play ${this._game?.getId()}`;

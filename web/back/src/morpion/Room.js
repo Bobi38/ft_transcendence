@@ -1,5 +1,5 @@
-import sequelize from '../models/index.js';
-import { Player } from "./player.js";
+// import sequelize from '../models/index.js';
+// import { Player } from "./player.js";
 
 class Room {
     constructor (id) {
@@ -37,26 +37,22 @@ class Room {
     }
 
     addObs(obs){
-        if (!this._locked) return ;
+        if (!this._locked) {
+            obs.sendObs()
+            return ;
+        }
 
-        this._players.add(obs);
+        this._obs.add(obs);
+
         obs.setObs(this);
-        if (this._type === "Morpion")
-            obs.send({
-                players: this._players_names,
-                other_board: this._board,
-            })
     }
 
     removeObs(obs){
-        this._players.delete(obs);
+        if (! this._obs.has(obs)) return ;
 
-        obs.setObs(null)
-        if (this._type === "Morpion")
-            obs.send({
-                players: "",
-                other_board: Array(9).fill(" ")
-            })
+        this._obs.delete(obs);
+
+        obs.removeObs();
     }
 
     addPlayer(player) {
@@ -75,7 +71,7 @@ class Room {
         if (!this._players.has(player))
             return this._players.size;
 
-        player.disconnect();
+        player.disconnect(null, this._id);
         this._players.delete(player);
         return this._players.size
     }
@@ -128,9 +124,13 @@ class Room {
 
     remove() {
         this.clearOutTimer();
-        this._obs.forEach(o => o.send({other_board: Array(9).fill(" ")}))
-        // this._players.forEach(p => {p.disconnect()})
+
+        this._obs.forEach(o => {o.removeObs();});
+
+        this._players.forEach(p => p.disconnect(null, this._id));
+
         this._players.clear();
+        
         this._obs.clear();
     }
 

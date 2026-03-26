@@ -68,6 +68,10 @@ export function initWebSMopr(server) {
       console.log("err debut wsss ", err);
     }
 
+    socket.sendList = () => {
+      players.forEach(p => {p.sendList();});
+    }
+
     socket.on('message', (message) => {
       try{
         console.log(`"socket on dans morpion" ${message}`);
@@ -80,12 +84,14 @@ export function initWebSMopr(server) {
 
           case "updatename":
             m.updateName(socket.player, data.new_name);
-            socket.players.forEach(p => {p.sendList();});
+            // socket.players.forEach(p => {p.sendList();});
+            socket.sendList();
             break;
 
           case "move":
-            m.move(socket.player, data.message);
-            break ;
+            if (m.move(socket.player, data.message))
+              socket.sendList();
+            break;
 
           case "play":
             if (m.searchGame(socket.player, socket.players)){

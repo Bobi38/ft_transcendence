@@ -72,6 +72,10 @@ class MorpionRoom extends Room {
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
         // console.log(`tu me vois          ttttttt`);
+        for (const obs of this._obs) {
+            obs.sendObs()
+        }
+        
         const basePayload = { board: this._board };
 
         for (const player of this._players) {
@@ -214,7 +218,7 @@ class MorpionRoom extends Room {
             if (!(p instanceof Player)){
                 console.log(`don t save with Bot`);
                 for (const pl of this._players)
-                    pl._game = null;
+                    pl.disconnect(null, this._id);
                 return; 
             }
         }
@@ -256,14 +260,14 @@ class MorpionRoom extends Room {
         });
 
         if (!winner) {                  // draw
-            p1.majdb(this._how_win, 'X');
-            p2.majdb(this._how_win, 'O');
+            p1.majdb(this._id, this._how_win, 'X');
+            p2.majdb(this._id, this._how_win, 'O');
         } else if (winner === p1) {     // player1 winner /  winner abort
-            p1.majdb(this._how_win, 'X', 'winner');
-            p2.majdb(this._how_win, 'O', 'loser');
+            p1.majdb(this._id, this._how_win, 'X', 'winner');
+            p2.majdb(this._id, this._how_win, 'O', 'loser');
         } else {                        // player2 winner /  winner abort
-            p1.majdb(this._how_win, 'X', 'loser');
-            p2.majdb(this._how_win, 'O', 'winner');
+            p1.majdb(this._id, this._how_win, 'X', 'loser');
+            p2.majdb(this._id, this._how_win, 'O', 'winner');
         }
     }
 }
