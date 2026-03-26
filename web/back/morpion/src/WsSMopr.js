@@ -1,4 +1,4 @@
-import {manager_room} from '.morpion/ManagRoom.js';
+import {manager_room} from './morpion/ManagRoom.js';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
@@ -81,10 +81,12 @@ export function initWebSMopr(server) {
         console.log(`${data.type}`);
         switch (data.type) {
 
-          case "updatename":
+          case "updateName":
+            console.log("in update name");
             m.updateName(socket.player, data.new_name);
             // socket.players.forEach(p => {p.sendList();});
             socket.sendList();
+            console.log(`update name ${data.new_name}`);
             break;
 
           case "move":
@@ -175,116 +177,6 @@ export function initWebSMopr(server) {
         }
     });
   });
-}
-
-
-      //   if (data.type === "logout")
-      //     socket.GoLogout = true;
-
-      //   if (data.type === 'game') {
-      //     console.log(`game : recu ${data.message}`);
-      //     morpion(data.message, socket, socket.userId);
-      //     return ;
-      //   }
-
-      //   if (data.type === 'morpion'){
-      //     console.log("probleme num1 si tu me vois, personne ne doit connaitre ce type");
-      //     let message = "";
-      //     console.log("je suis dans un type waitRoom");
-      //     console.log("user id dans wait room " + socket.userId);
-      //     let room = manager_room.isInRoom(socket.userId);
-      //     if (!room)
-      //       room = manager_room.findOnePlace(socket, socket.userId);
-      //     if (room.isFull()){
-      //       message = "yes";
-      //     }
-      //     else
-      //       message = "wait";
-      //     console.log("popopopo");
-      //     console.log("room =", room);
-      //     console.log("playersid size =", room.playersid.size);
-      //     console.log("playersid =", Array.from(room.playersid.keys()));
-      //     for (const player of room.playersid.values()){
-      //       if (player.socket.readyState === ws.OPEN){
-      //         console.log("ca va SEND from server waitRoom " + message + " to " + player.socket.userId);
-      //         player.socket.send(JSON.stringify({type: 'waitRoom', mess: message}));
-      //       }
-      //     }
-      //   }
-      //   if (data.type === "in-game"){
-      //     console.log("probleme num2 si tu me vois, personne ne doit connaitre ce type");
-      //     if (data.act === "role"){
-      //       //objectif est de repartir les roles pour savoir qui commence et qui aura les O ou les X
-      //       //envoyer l'id de la room pour eviter de galerer a la rechercher a chaque fois
-      //     }
-      //     if (data.act === "move"){
-      //       //mettre a jour les move et les envoyer aux joueurs
-      //       //enregistre la partie/la map ici dans le back pour eviter les triches
-      //     }
-      //     if (data.act === "win"){
-      //       //mettre a jour la db gagant/nombre de parties jouee
-      //       //clean room et managerRoom
-      //     }
-      //   }
-      //   if (data.type === "pong")
-      //     socket.isAlive = true
-
-
-    socket.on('pong', () =>{
-      socket.player._time_last_active = Date.now();
-      socket.isAlive = true;
-    })
-    socket.on('error', (err) => {
-      // if (err.code === 'WS_ERR_INVALID_CLOSE_CODE' || err.code === 'WS_ERR_INVALID_UTF8') return;
-      console.warn('WebSocket Error:', err.message);
-    });
-    socket.on('close', () => {
-      console.log("user deco ");
-      // try{
-      //   if (socket.cleanedUp) return; // déjà traité
-      //   socket.cleanedUp = true;
-
-      //   const id = socket.userId;
-      //   if (!id) return;
-      // // console.log("CLOSE EVENT", code, reason);
-      // // console.log("bool deco ", socket.GoLogout)
-      //   if (socket.GoLogout == true){
-      //     console.log('Utilisateur déconnNNNNecté', socket.id);
-      //     // chat.removetokBySocketId(socket.id);
-      //     manager_room.removePlayer(socket.userId);
-      //   }
-      //   else{
-      //     setTimeout(() => {
-      //       const id = socket.userId
-      //       const reco = chat.finduserId(id)
-      //       if (!reco){
-      //         console.log('Utilisateur ne s est pas reco', socket.id);
-      //         // chat.removetokBySocketId(socket.id);
-      //         manager_room.removePlayer(socket.userId);
-      //       }
-      //     }, 2500)
-      //   }
-      // }catch(err){
-      //   console.log("error close in ws back ", err);
-      // }
-  });
-  });
-  // setInterval(() => {
-  //   console.log('Intervalle ping : je vérifie toutes les sockets');
-  //   for (const session of chat.sessions.values()){
-  //     const so = session.socket;
-  //     console.log(session.socket.id);
-  //     if (!so.isAlive) {
-  //       console.log('Socket morte', so.id);
-  //       chat.removetokBySocketId(so.id);
-  //       manager_room.removePlayer(so.userId);
-  //       // so.terminate();
-  //     } else {
-  //       session.socket.isAlive = false;
-  //       session.socket.send(JSON.stringify({ type: 'ping' }));
-  //     }
-  //   }
-  // }, 100000);
 }
 
 
