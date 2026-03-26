@@ -137,7 +137,6 @@ export class MyRoom extends Room {
         }
       }
       if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
-                        console.log(this._ball.transformNode.position);
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
         this.state.ball.velocity.x = 0;
@@ -145,21 +144,17 @@ export class MyRoom extends Room {
         this.state.ball.velocity.z = 0;
         this.state.ball.position.x = 0;
         this.state.ball.position.y = 3;
-        this.state.ball.position.z = 7;
-        this._ball.transformNode.position.set(0,3,7);
-
-
-        // if (this._served) {
-        //   this._ball.transformNode.position.set(0,3,7);
-        //   this.state.ball.position.z = 7;
-        // } else {
-        //   this._ball.transformNode.position.set(0,3,13);
-        //   this.state.ball.position.z = 13;
-        // }
+        if (!this._served) {
+          this._ball.transformNode.position.set(0,3,7);
+          this.state.ball.position.z = 7;
+          this._served = true;
+        } else {
+          this._ball.transformNode.position.set(0,3,13);
+          this.state.ball.position.z = 13;
+          this._served = false;
+        }
         
-        this.broadcast('Goal!', this._tick,{ afterNextPatch: true });
-        //this._ball.setTargetTransform(new Vector3(0,3,7), Quaternion.Identity());
-         //       console.log(this._ball.transformNode.position);
+        this.broadcast('Goal!', {tick: this._tick, position: this._ball.transformNode.position.asArray()},{ afterNextPatch: true });
       }
     });
 

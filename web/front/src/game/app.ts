@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody, SpotLight, DirectionalLight, HemisphericLight } from "@babylonjs/core";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
@@ -155,8 +155,10 @@ export class App {
     }
 
     private _setupPhysicsMessagesListener() {
-        this._room.onMessage('Goal!', (tick: number) => {
-            this._ball.setPhysicsBodyPosition(new Vector3(0,3,7));
+        this._room.onMessage('Goal!', (data: any) => {
+            const tick = data.tick;
+            const newPos = new Vector3(data.position[0], data.position[1], data.position[2]);
+            this._ball.setPhysicsBodyPosition(newPos);
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
             this._ball.ignoreServerUntil = tick;
@@ -286,17 +288,23 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        let light1 = new PointLight('PointLight', new Vector3(-3,5,-5), scene);
+        //let light1 = new SpotLight('Light1', new Vector3(0,7,-5), new Vector3(0,-0.2,1), Math.PI/3, 4, scene);
+        let light1 = new DirectionalLight('Light1', new Vector3(-0.3,-0.6,1), scene);
         light1.diffuse = new Color3(1,1,1);
-        light1.intensity = 0.7;
+        light1.intensity = 0.3;
         let shadow1 = new ShadowGenerator(2048, light1);
-        shadow1.darkness = 0.2;
+        shadow1.darkness = 0.1;
         this._shadows.push(shadow1);
-        let light2 = new PointLight('PointLight', new Vector3(3,5,25), scene);
+        let light2 = new DirectionalLight('Light2', new Vector3(0.4,-0.6,-1), scene);
+        // //let light2 = new SpotLight('Light2', new Vector3(0,7,25), new Vector3(0,-0.2,-1), Math.PI/3, 4, scene);
+        // //let light2 = new PointLight('PointLight', new Vector3(3,5,25), scene);
         light2.diffuse = new Color3(1,1,1);
-        light2.intensity = 0.7;
+        light2.intensity = 0.2;
+        let light3 = new HemisphericLight("Light3", new Vector3(0,1,0), scene);
+        light3.intensity = 0.6;
+        light3.groundColor = new Color3(0.5, 0.5, 0.5);
         let shadow2 = new ShadowGenerator(2048, light2);
-        shadow2.darkness = 0.2;
+        shadow2.darkness = 0.1;
         this._shadows.push(shadow2);
 
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
