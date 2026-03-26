@@ -10,7 +10,7 @@ export class PlayerCamera {
             this._camera = new UniversalCamera("cam", this._rootPos, scene);
         }
         else {
-            this._rootPos = new Vector3(0,3, 33);
+            this._rootPos = new Vector3(0,3, 23);
             this._camera = new UniversalCamera("cam", this._rootPos, scene);
             this._camera.rotation = new Vector3(0, Math.PI, 0);
         }
@@ -23,7 +23,7 @@ export class PlayerCamera {
         if (isNearSide)
             cameraOffset = new Vector3(0,3,-23);
         else
-            cameraOffset = new Vector3(0,3,33);
+            cameraOffset = new Vector3(0,3,23);
         let newPos = playerPos.add(this._rootPos);
         this._camera.position = Vector3.Lerp(this._camera.position, newPos, 0.4);
     }

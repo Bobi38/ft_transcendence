@@ -288,7 +288,6 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        //let light1 = new SpotLight('Light1', new Vector3(0,7,-5), new Vector3(0,-0.2,1), Math.PI/3, 4, scene);
         let light1 = new DirectionalLight('Light1', new Vector3(-0.3,-0.6,1), scene);
         light1.diffuse = new Color3(1,1,1);
         light1.intensity = 0.3;
@@ -296,8 +295,6 @@ export class App {
         shadow1.darkness = 0.1;
         this._shadows.push(shadow1);
         let light2 = new DirectionalLight('Light2', new Vector3(0.4,-0.6,-1), scene);
-        // //let light2 = new SpotLight('Light2', new Vector3(0,7,25), new Vector3(0,-0.2,-1), Math.PI/3, 4, scene);
-        // //let light2 = new PointLight('PointLight', new Vector3(3,5,25), scene);
         light2.diffuse = new Color3(1,1,1);
         light2.intensity = 0.2;
         let light3 = new HemisphericLight("Light3", new Vector3(0,1,0), scene);
