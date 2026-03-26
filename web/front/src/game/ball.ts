@@ -30,7 +30,8 @@ export class Ball {
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
         const ballMaterial = new StandardMaterial("ballTexture", scene);
         ballMaterial.diffuseTexture = new Texture("/media/ballTexture.jpg", this._scene);
-        ballMaterial.specularColor = new Color3(0, 0, 0);
+        ballMaterial.specularColor = new Color3(0.3, 0.3, 0.2);
+        ballMaterial.specularPower = 10;
         this._mesh.material = ballMaterial;
         this._mesh.position = Vector3.Zero();
         this._shadows = shadows;
@@ -169,6 +170,10 @@ export class Ball {
 
     public setVelocity(velocity : Vector3) {
         this._body.setLinearVelocity(velocity);
+    }
+
+    public setAngularVelocity(velocity : Vector3) {
+        this._body.setAngularVelocity(velocity);
     }
 
     public setPhysicsBodyPosition(position: Vector3) {

@@ -10,6 +10,7 @@ export class Enemy extends TransformNode {
     constructor(scene: Scene, assets, shadows: ShadowGenerator[], isNearSide: boolean) {
         super("enemy", scene);
         this._mesh = assets.mesh;
+        this._mesh.parent = this;
         this._racketNode = assets.racketNode;
         this._newPos = this._mesh.position;
         this._newRackPos = this._racketNode.position;

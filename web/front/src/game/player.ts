@@ -78,6 +78,7 @@ export class Player extends TransformNode {
             console.log(mouseAvgSpeed, power);
 
             const newVel = hitDirection.scale(power);
+            ballBody.setAngularVelocity(newVel.scale(0.2));
             ballBody.setLinearVelocity(newVel);
             //ballBody.applyImpulse(hitDirection.scale(power), event.point);
 

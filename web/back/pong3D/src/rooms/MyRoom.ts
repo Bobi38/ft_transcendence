@@ -116,7 +116,7 @@ export class MyRoom extends Room {
 
     this._scene.onAfterPhysicsObservable.add(() => {
       let ballPos = this._ball.transformNode.position;
-      if (this._ball.transformNode.position.z < -23) {
+      if (this._ball.transformNode.position.z < -33) {
         console.log("Team Far won a point");
         this.state.score.teamFar++;
         this._tokens.get(this._far).score++;
@@ -126,7 +126,7 @@ export class MyRoom extends Room {
           this._timeEnd = Date.now();
         }
       }
-      else if (this._ball.transformNode.position.z > 40) {
+      else if (this._ball.transformNode.position.z > 50) {
         console.log("Team Near won a point");
         this.state.score.teamNear++;
         this._tokens.get(this._near).score++;
@@ -136,7 +136,7 @@ export class MyRoom extends Room {
           this._timeEnd = Date.now();
         }
       }
-      if (this._ball.transformNode.position.z < -23 || this._ball.transformNode.position.z > 40) {
+      if (this._ball.transformNode.position.z < -33 || this._ball.transformNode.position.z > 50) {
         this._ball.setLinearVelocity(Vector3.Zero());
         this._ball.setAngularVelocity(Vector3.Zero());
         this.state.ball.velocity.x = 0;
@@ -145,11 +145,11 @@ export class MyRoom extends Room {
         this.state.ball.position.x = 0;
         this.state.ball.position.y = 3;
         if (!this._served) {
-          this._ball.transformNode.position.set(0,3,7);
+          this._ball.transformNode.position.set(0,3,-12);
           this.state.ball.position.z = 7;
           this._served = true;
         } else {
-          this._ball.transformNode.position.set(0,3,13);
+          this._ball.transformNode.position.set(0,3,34.5);
           this.state.ball.position.z = 13;
           this._served = false;
         }
@@ -245,11 +245,11 @@ export class MyRoom extends Room {
     player.position.x = 0;
     player.position.y = 1.5;
     if (this._nextPlayerIndex % 2 == 0) {
-      player.position.z = 0;
+      player.position.z = -20;
       this._near = client.sessionId;
     }
     else {
-      player.position.z = 20;
+      player.position.z = 40;
       player.sideNear = false;
       this._far = client.sessionId;
     }

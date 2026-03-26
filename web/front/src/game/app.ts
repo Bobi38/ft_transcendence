@@ -161,6 +161,7 @@ export class App {
             this._ball.setPhysicsBodyPosition(newPos);
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
+            this._ball.setAngularVelocity(Vector3.Zero());
             this._ball.ignoreServerUntil = tick;
             this._ball.snapshots.dispose();
             console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
@@ -288,15 +289,16 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        let light1 = new DirectionalLight('Light1', new Vector3(-0.3,-0.6,1), scene);
+        let light1 = new SpotLight('Light1', new Vector3(0,6,-10), new Vector3(0,-0.5,1), Math.PI/4, 40, scene);
         light1.diffuse = new Color3(1,1,1);
-        light1.intensity = 0.3;
+        light1.intensity = 0.4;
         let shadow1 = new ShadowGenerator(2048, light1);
         shadow1.darkness = 0.1;
         this._shadows.push(shadow1);
-        let light2 = new DirectionalLight('Light2', new Vector3(0.4,-0.6,-1), scene);
+        let light2 = new SpotLight('Light1', new Vector3(0,6,30), new Vector3(0,-0.5,-1), Math.PI/4, 40, scene);
+        //let light2 = new DirectionalLight('Light2', new Vector3(0.4,-0.6,-1), scene);
         light2.diffuse = new Color3(1,1,1);
-        light2.intensity = 0.2;
+        light2.intensity = 0.5;
         let light3 = new HemisphericLight("Light3", new Vector3(0,1,0), scene);
         light3.intensity = 0.6;
         light3.groundColor = new Color3(0.5, 0.5, 0.5);
