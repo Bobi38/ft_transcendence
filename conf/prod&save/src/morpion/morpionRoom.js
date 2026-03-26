@@ -28,12 +28,10 @@ class MorpionRoom extends Room {
             [0, 4, 8],
             [2, 4, 6],
         ];
-        this.player1 = null;
-        this.player2 = null;
     }   
 
     setFirstPlayer(){
-        if (this._locked) return null;
+        if (!this.isState("init")) return null;
 
         this._first_player = !this._first_player;
         return this._first_player;
@@ -71,7 +69,11 @@ class MorpionRoom extends Room {
 
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
-
+        // console.log(`tu me vois          ttttttt`);
+        for (const obs of this._obs) {
+            obs.sendObs()
+        }
+        
         const basePayload = { board: this._board };
 
         for (const player of this._players) {
@@ -190,14 +192,17 @@ class MorpionRoom extends Room {
 
     startTurnTimer() {
         const p = this._turn;
+
+        if (!p) return ;
         const action = () => {
             p.send({
             message: "Dépêche-toi de jouer !",
             board: this._board
             })
         };
+        console.log(`mess16`);
 
-        p.startTurnTimer(action, 3000);
+        p.startTurnTimer(action, 5000);
     }
 
     serializeBoard() {
@@ -210,8 +215,11 @@ class MorpionRoom extends Room {
 
         // console.log(`save DB`);
         for (const p of this._players){
+
             if (!(p instanceof Player)){
                 console.log(`don t save with Bot`);
+                for (const pl of this._players)
+                    pl.disconnect(null, this._id);
                 return; 
             }
         }
@@ -253,14 +261,14 @@ class MorpionRoom extends Room {
         });
 
         if (!winner) {                  // draw
-            p1.majdb(this._how_win, 'X');
-            p2.majdb(this._how_win, 'O');
+            p1.majdb(this._id, this._how_win, 'X');
+            p2.majdb(this._id, this._how_win, 'O');
         } else if (winner === p1) {     // player1 winner /  winner abort
-            p1.majdb(this._how_win, 'X', 'winner');
-            p2.majdb(this._how_win, 'O', 'loser');
+            p1.majdb(this._id, this._how_win, 'X', 'winner');
+            p2.majdb(this._id, this._how_win, 'O', 'loser');
         } else {                        // player2 winner /  winner abort
-            p1.majdb(this._how_win, 'X', 'loser');
-            p2.majdb(this._how_win, 'O', 'winner');
+            p1.majdb(this._id, this._how_win, 'X', 'loser');
+            p2.majdb(this._id, this._how_win, 'O', 'winner');
         }
     }
 }

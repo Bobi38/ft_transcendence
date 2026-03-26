@@ -1,4 +1,4 @@
-// @use "STYLE/variable" as *;
+@use "STYLE/variable" as *;
 //    var.$border_value;
 
 // @use "STYLE/_mixin" as mix;
@@ -30,31 +30,35 @@
     .v3{color :rgb(75, 75, 240); color: rgba(0, 0, 0, 0.3);}
     .v4{color :rgb(226, 43, 144); color: rgba(0, 0, 0, 0.3);}
 }
-@media (width <= 1150px) {
-    
+
+//@media (width <= 1150px) {
+
+//    .Graph-root {
+//        height: 150px;
+//        width: 150px;
+//        .label {
+//            //20/50px 45/150px 60/200px
+//            transform: translate(-50%, -50%) rotate(var(--a)) translateY(-45px) rotate(calc(var(--a) * -1));
+//        }
+//    }
+//}
+
+@media (width <= $tablet) {
+
     .Graph-root {
-        height: 150px; 
-        width: 150px;
-        .label {
-            //20/50px 45/150px 60/200px
-            transform: translate(-50%, -50%) rotate(var(--a)) translateY(-45px) rotate(calc(var(--a) * -1));
-        }
-    }
-}
-@media (width <= 800px) {
-    
-    .Graph-root {
-        height: 100px; 
+        height: 100px;
         width: 100px;
         .label {
             //20/50px 45/150px 60/200px
             transform: translate(-50%, -50%) rotate(var(--a)) translateY(-33px) rotate(calc(var(--a) * -1));
         }
     }
-}@media (width <= 560px) {
-    
+}
+
+@media (width <= $phone) {
+
     .Graph-root {
-        height: 50px; 
+        height: 50px;
         width: 50px;
         .label {
             //20/50px 45/150px 60/200px

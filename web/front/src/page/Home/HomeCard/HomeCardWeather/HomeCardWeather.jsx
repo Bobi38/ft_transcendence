@@ -61,7 +61,7 @@ export default function HomeCardWeather() {
 	}, [weather]);
 	
     return (
-		<div className={`HomeCardWeather-root card-effect`}
+		<button className={`HomeCardWeather-root card-effect`}
 			style={activeWeather}>
 
 			{/* {weather.icon && (
@@ -80,9 +80,7 @@ export default function HomeCardWeather() {
 					<span>{weather.title}</span><br/>
 					<span>{weather.temp}</span>
 				</p>
-				{/* </div> */}
-			{/* )} */}
-		</div>
+		</button>
 	)
 }
 

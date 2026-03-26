@@ -64,28 +64,62 @@ export function initWebSMopr(server) {
       console.log("err debut wsss ", err);
     }
 
+    socket.sendList = () => {
+      players.forEach(p => {p.sendList();});
+    }
+
     socket.on('message', (message) => {
       try{
         console.log(`"socket on dans morpion" ${message}`);
 
         const data = JSON.parse(message);
+
+
         console.log(`${data.type}`);
         switch (data.type) {
           case "game": //move
             m.morpion(data.message, socket, socket.userId);
             break ;
 
+          case "updatename":
+            m.updateName(socket.player, data.new_name);
+            // socket.players.forEach(p => {p.sendList();});
+            socket.sendList();
+            break;
+
           case "move":
-            m.move(socket.player, data.message);
-            break ;
+            if (m.move(socket.player, data.message))
+              socket.sendList();
+            break;
 
           case "play":
-            m.searchGame(socket.player);
+            if (m.searchGame(socket.player, socket.players)){
+              console.log('recu true');
+              // if (!socket.players)
+              //   console.log('probleme player');
+              // console.log('combien de joueur enregistrer', socket.players.size);
+              // socket.players.forEach(p => {p.sendList();});
+            }
+            break ;
+
+          case "bot":
+            const bot = Bot.create();
+            const players = socket.players;
+
+            players.set(bot.getId(), bot);
+            console.log("creation bot", players.size);
+            m.searchGame(bot, players);
+
+            setTimeout(() => {
+              console.log("clear ", bot);
+              players.delete(bot);
+            }, 120000);
             break ;
 
           case "leave":
             m.leave(socket.player);
-            break ;
+            socket.sendList();
+            break;
 
           case "second":
             m.playSecond(socket.player); //ok a tster
@@ -106,6 +140,8 @@ export function initWebSMopr(server) {
 
 
           default:
+            console.log(`defaut de wsmorp`);
+            socket.sendList();
             socket.player.send();
             console.log(`defaut : ca c est etrange gere ca :${data.type}`);
           }
@@ -169,7 +205,7 @@ export function initWebSMopr(server) {
 
 
     socket.on('pong', () =>{
-      console.log("i m in PONG")
+      socket.player._time_last_active = Date.now();
       socket.isAlive = true;
     })
     socket.on('error', (err) => {

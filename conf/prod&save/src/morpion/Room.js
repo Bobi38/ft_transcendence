@@ -1,5 +1,5 @@
-import sequelize from '../models/index.js';
-import { Player } from "./player.js";
+// import sequelize from '../models/index.js';
+// import { Player } from "./player.js";
 
 class Room {
     constructor (id) {
@@ -11,7 +11,8 @@ class Room {
         this._max_players = null;
         this._date_game = new Date(); // _date of first player
         this._start_time = null; // timestamp start game
-        this._locked = false;
+        this._locked = false; // soon unuse
+        this._state = "init"; // init, play, end
         this._winner = null;
         this.out_timer = null; //setTimeout fin
         this.limit_time = 60 * 1000;
@@ -22,7 +23,7 @@ class Room {
     getPlayers() {
         let time = Date.now()
 
-        if (time - 20000 < this._time_refresh)
+        if (time - 5000 < this._time_refresh)
             return this._players_names;
 
         this._time_refresh_name = time;
@@ -37,32 +38,28 @@ class Room {
     }
 
     addObs(obs){
-        if (!this._locked) return ;
+        if (!this.isState("play")) {
+            obs.sendObs()
+            return ;
+        }
 
-        this._players.add(obs);
+        this._obs.add(obs);
+
         obs.setObs(this);
-        if (this._type === "Morpion")
-            obs.send({
-                players: this._players_names,
-                other_board: this._board,
-            })
     }
 
     removeObs(obs){
-        this._players.delete(obs);
+        if (! this._obs.has(obs)) return ;
 
-        obs.setObs(null)
-        if (this._type === "Morpion")
-            obs.send({
-                players: "",
-                other_board: Array(9).fill(" ")
-            })
+        this._obs.delete(obs);
+
+        obs.removeObs();
     }
 
     addPlayer(player) {
 
         if (this._players.has(player)) return false;
-        if (this._locked) return false;
+        if (!this.isState("init")) return false;
         if (this.isFull()) return false;
 
         this._players.add(player);
@@ -75,13 +72,13 @@ class Room {
         if (!this._players.has(player))
             return this._players.size;
 
-        player.disconnect();
+        player.disconnect(null, this._id);
         this._players.delete(player);
         return this._players.size
     }
 
     toString(){
-        return `${this._type} :${this._id} | Locked: ${this._locked} | Players: ${Array.from(this._players.keys()).join(", ")}`;
+        return `${this._type} :${this._id} | State: ${this._state}}`;
     }
 
     length(){
@@ -107,17 +104,41 @@ class Room {
         return this._id;
     }
 
-    getLock(){
+    getLock(){ //soon unuse
         return this._locked;
     }
 
-    setLock(state) {
+    david(state) { //old version setLock
         if (state === true && this._players.size < this._min_players) {
-            throw new Error("need more player");
+            console.log(`need more player`);
+            return false;
         }
-
+        console.log("etat lock = ", state);
         this._locked = state;
         this._start_time = Date.now();
+        return true;
+    }
+
+    isState(state) {
+        return state === this._state;
+    }
+
+    setLock(){
+        if (this._state === "init" && this._players.size < this._min_players) {
+            console.log(`need more player`);
+            return false;
+        }
+        console.log("etat lock  = play");
+        this._state = "play";
+        this._start_time = Date.now();
+        return true;  
+    }
+
+    setEnd() {
+        const base = this._state === "play";
+        this._state = "end";
+        console.log(`set return : ${base}`);
+        return base;
     }
 
     sendAll(message) {
@@ -126,11 +147,15 @@ class Room {
         this._players.forEach(player => {player.send(message);});
     }
 
-    remove() {
+    remove(message) {
         this.clearOutTimer();
-        this._obs.forEach(o => o.send({other_board: Array(9).fill(" ")}))
-        this._players.forEach(p => {p.disconnect()})
+
+        this._obs.forEach(o => {o.removeObs();});
+
+        this._players.forEach(p => p.disconnect(message, this._id));
+
         this._players.clear();
+        
         this._obs.clear();
     }
 
@@ -144,7 +169,7 @@ class Room {
     startOutTimer(Action, millisec) {
         this.clearOutTimer();
 
-        this.out_timer = setTimeout(Action, millisec);
+        this.out_timer = setTimeout(() => Action, millisec);
     }
 }
 

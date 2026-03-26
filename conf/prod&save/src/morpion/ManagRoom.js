@@ -22,6 +22,27 @@ class ManagerRoom {
         return new_room;
     }
 
+    dltRoomInlist(room_id) {
+        delete this.list[room_id];
+    }
+
+    refreshList() {
+        const currentIds = new Set(Object.keys(this.list));
+
+        for (const [id, room] of this._rooms) {
+                        // if (room.getLock()){
+            if (room.isState("play")){
+                this.list[id] = room.getPlayers();
+                currentIds.delete(String(id));
+            }
+        }
+
+        for (const id of currentIds) {
+            delete this.list[id];
+        }
+        console.log(this.list);
+    }
+
     refreshRoomList() {
         const newList = Object.fromEntries(
             [...this._rooms].map(([id, room]) => [id, room.getPlayers()])
@@ -39,13 +60,38 @@ class ManagerRoom {
         return this._rooms.get(id);
     }
 
-    removeRoom(room) {
+    removeRoom(room, message) {
         // console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return ;
 
-        room.remove();
+        room.remove(message);
+        room.clearOutTimer();
         this._rooms.delete(room.getId())
         this.refreshRoomList();
+    }
+
+    abortedRoom(player){
+        const game = player.getRoom();
+
+        if (!game || !game.setEnd()) return ;
+        // if (!game || !game.setLock(false)) return ;
+
+        console.log(`time out     by  time out`);
+        this.refreshRoomList();
+        const loser = player;
+        let winner = game.getTurn();
+        if (winner === loser){
+            winner = game.getOther();
+        }
+
+        game.handleEndGame('abort', game.getTurn());
+        winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
+        loser.send({ message: msgs.l_abort, turn: false });
+
+
+        setTimeout(() => {manager_room.removeRoom(game, null);}, 10000);
+
+        console.log("      game     aborted    TIME OUT");          
     }
 
     isInRoom(playerId) {
@@ -65,7 +111,7 @@ class ManagerRoom {
             // console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
-                    && !room.getLock()) {
+                    && room.isState("init")) {
                 room.addPlayer(player);
                 player.setGame(room);
                 return room;
