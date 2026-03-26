@@ -1,4 +1,4 @@
-import { Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
+import { Color3, Material, Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
 import { BallSnapshot, SnapshotBuffer } from "./snapshots";
 import { SynchronizedClock } from "./SynchronizedClock";
 import { App } from "./app";
@@ -28,6 +28,10 @@ export class Ball {
         this._clock = clock;
 
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
+        const ballMaterial = new StandardMaterial("ballTexture", scene);
+        ballMaterial.diffuseTexture = new Texture("/media/ballTexture.jpg", this._scene);
+        ballMaterial.specularColor = new Color3(0, 0, 0);
+        this._mesh.material = ballMaterial;
         this._mesh.position = Vector3.Zero();
         this._shadows = shadows;
         this._shadows[0].addShadowCaster(this._mesh);
