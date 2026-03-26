@@ -99,6 +99,7 @@ export function initWebSChat(server) {
             if (session.userId == nono && session.username == data.old_name)
               session.username = data.new_name;
           }
+          socket.send(JSON.stringify({type: 'updateName_good'}));
         }       
       }catch (err){
         console.log("err serv ws= " + err);

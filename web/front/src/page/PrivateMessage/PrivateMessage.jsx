@@ -76,6 +76,11 @@ useEffect(() => {
 
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
+            if (data.type === "updateName_good"){
+                fetch_go_to_conv_private();
+                fetch_private_message(goToConv);
+                return;
+            }
             if (data.login === goToConv || data.monMsg == true)
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();
