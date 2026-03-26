@@ -11,7 +11,8 @@ class Room {
         this._max_players = null;
         this._date_game = new Date(); // _date of first player
         this._start_time = null; // timestamp start game
-        this._locked = false;
+        this._locked = false; // soon unuse
+        this._state = "init"; // init, play, end
         this._winner = null;
         this.out_timer = null; //setTimeout fin
         this.limit_time = 60 * 1000;
@@ -37,7 +38,7 @@ class Room {
     }
 
     addObs(obs){
-        if (!this._locked) {
+        if (!this.isState("play")) {
             obs.sendObs()
             return ;
         }
@@ -58,7 +59,7 @@ class Room {
     addPlayer(player) {
 
         if (this._players.has(player)) return false;
-        if (this._locked) return false;
+        if (!this.isState("init")) return false;
         if (this.isFull()) return false;
 
         this._players.add(player);
@@ -77,7 +78,7 @@ class Room {
     }
 
     toString(){
-        return `${this._type} :${this._id} | Locked: ${this._locked} | Players: ${Array.from(this._players.keys()).join(", ")}`;
+        return `${this._type} :${this._id} | State: ${this._state}}`;
     }
 
     length(){
@@ -103,11 +104,11 @@ class Room {
         return this._id;
     }
 
-    getLock(){
+    getLock(){ //soon unuse
         return this._locked;
     }
 
-    setLock(state) {
+    david(state) { //old version setLock
         if (state === true && this._players.size < this._min_players) {
             console.log(`need more player`);
             return false;
@@ -116,6 +117,28 @@ class Room {
         this._locked = state;
         this._start_time = Date.now();
         return true;
+    }
+
+    isState(state) {
+        return state === this._state;
+    }
+
+    setLock(){
+        if (this._state === "init" && this._players.size < this._min_players) {
+            console.log(`need more player`);
+            return false;
+        }
+        console.log("etat lock  = play");
+        this._state = "play";
+        this._start_time = Date.now();
+        return true;  
+    }
+
+    setEnd() {
+        const base = this._state === "play";
+        this._state = "end";
+        console.log(`set return : ${base}`);
+        return base;
     }
 
     sendAll(message) {

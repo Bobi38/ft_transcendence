@@ -31,7 +31,7 @@ class MorpionRoom extends Room {
     }   
 
     setFirstPlayer(){
-        if (this._locked) return null;
+        if (!this.isState("init")) return null;
 
         this._first_player = !this._first_player;
         return this._first_player;
@@ -189,28 +189,6 @@ class MorpionRoom extends Room {
 
         return false;
     }
-
-    // aborted(player) {
-
-    //     console.log(`time out     by  time out`);
-    //     this.setLock(false);
-
-    //     const loser = player;
-    //     let winner = game.getTurn();
-    //     if (winner === loser){
-    //         winner = game.getOther();
-    //     }
-
-    //     this.handleEndGame('abort', game.getTurn());
-    //     winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
-    //     loser.send({ message: msgs.l_abort, turn: false });
-    //     // winner.disconnect();
-    //     // loser.disconnect();
-
-    //     setTimeout(() => {manager_room.removeRoom(game);}, 10000);
-
-    //     console.log("      game     aborted    TIME OUT");      
-    // }
 
     startTurnTimer() {
         const p = this._turn;

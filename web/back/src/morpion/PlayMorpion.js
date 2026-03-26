@@ -47,11 +47,14 @@ function move(player, move){
 
     const game = player.getGame();
 
-    if (!game) {
+    if (!game) return false;
+
+    if (game.isState("end")){
+        player.disconnect("game over", game.getId())
         return false;
     }
     // console.log("mess1");
-    if (!game.isTurnPlayer(player)){
+    if (!game.isTurnPlayer(player) || game.isState("init")){
         player.send({message: msgs.wait, turn: false});
         return false;
     }
@@ -61,7 +64,7 @@ function move(player, move){
         console.log("mess3");
         if(game.checkVictory()){
             console.log("fini on unlocked la game");
-            game.setLock(false);
+            game.setEnd();
             manager_room.refreshList();
 
             setTimeout(() => {
@@ -96,14 +99,14 @@ function searchGame(player, players){
 
     game = manager_room.findOnePlace("Morpion", player);
     // player.send(`new game :  you play ${game.getId()}`);
-    if (!game.setLock(true)) {
+    if (!game.setLock()) {
         // console.log(ERREUR DANS searchGame :", e);
-        // console.log("premier set _Turn");
+        console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})
         return false;
     }
-    // console.log(` step 111111 la partie a deux joueurs`);
+    console.log(` step 111111 la partie a deux joueurs`);
     game.startGame(player);
     // console.log(` step 222222 le jeu peut commencer`);
 
@@ -146,7 +149,7 @@ function leave(player){
 
     if (!game) return false;
 
-    if (!game.getLock()) {
+    if (game.isState("init")) {
         manager_room.removeRoom(game);
         return false;
     }

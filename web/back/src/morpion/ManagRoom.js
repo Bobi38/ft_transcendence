@@ -30,7 +30,8 @@ class ManagerRoom {
         const currentIds = new Set(Object.keys(this.list));
 
         for (const [id, room] of this._rooms) {
-            if (room.getLock()){
+                        // if (room.getLock()){
+            if (room.isState("play")){
                 this.list[id] = room.getPlayers();
                 currentIds.delete(String(id));
             }
@@ -72,7 +73,8 @@ class ManagerRoom {
     abortedRoom(player){
         const game = player.getRoom();
 
-        if (!game || !game.setLock(false)) return ;
+        if (!game || !game.setEnd()) return ;
+        // if (!game || !game.setLock(false)) return ;
 
         console.log(`time out     by  time out`);
         this.refreshRoomList();
@@ -109,7 +111,7 @@ class ManagerRoom {
             // console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
-                    && !room.getLock()) {
+                    && room.isState("init")) {
                 room.addPlayer(player);
                 player.setGame(room);
                 return room;
