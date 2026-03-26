@@ -30,8 +30,10 @@ class ManagerRoom {
         const currentIds = new Set(Object.keys(this.list));
 
         for (const [id, room] of this._rooms) {
-            this.list[id] = room.getPlayers();
-            currentIds.delete(String(id));
+            if (room.getLock()){
+                this.list[id] = room.getPlayers();
+                currentIds.delete(String(id));
+            }
         }
 
         for (const id of currentIds) {
