@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 /* back */
 
 /* Css */
-import "./Amis.scss";
+import "./Friends.scss";
 
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";
 
 
     
-export default function Amis({setGoToAction, setGoToConv}) {
+export default function Friends({setGoToAction, setGoToConv}) {
 
 
-    console.log("Amis Components called")
+    console.log("Friends Components called")
 
     const [responseFriendArray, setResponseFriendArray] = useState([]);
 

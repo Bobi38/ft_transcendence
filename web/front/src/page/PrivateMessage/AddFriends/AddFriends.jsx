@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 /* back */
 
 /* Css */
-import "./AjouterAmis.scss";
+import "./AddFriends.scss";
 
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";
 import Hr from    "FRONT/Component/Hr/Hr.jsx";
 
-export default function AjouterAmis() {
+export default function AddFriends() {
     const fetch_type = {
         method: "GET",
         headers: {'Content-Type': 'application/json'},
@@ -92,7 +92,7 @@ export default function AjouterAmis() {
 
     return (
 
-        <div className={`AjouterAmis-root border-0`}>
+        <div className={`AddFriends-root border-0`}>
             <div className={`add border-1`}>
                 <form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
                     <input  type={`text`} id={`add-friend`}/>

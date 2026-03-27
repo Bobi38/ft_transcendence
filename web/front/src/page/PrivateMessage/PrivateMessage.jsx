@@ -10,23 +10,20 @@ import "./PrivateMessage.scss";
 /* Components */
 import useFetch from "HOOKS/useFetch";
 import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
-import AjouterAmis from "./AjouterAmis/AjouterAmis.jsx"
-import Amis from "./Amis/Amis.jsx"
+import AddFriends from "./AddFriends/AddFriends.jsx"
+import Friends from "./Friends/Friends.jsx"
 import Hr from    "FRONT/Component/Hr/Hr.jsx";
 
-
 export default function PrivateMessage() {
-    
-    const [goToAction, setGoToAction] = useState(2)                                                     // info  Amis / Ajouter un Amis
-    const [goToConv, setGoToConv] = useState(null)  
+
+    const [goToAction, setGoToAction] = useState(2)
+    const [goToConv, setGoToConv] = useState(null)
     const { showFriend, setShowFriend } = useFriend();
 
-    const [displayedInfoConv, setDisplayedInfoConv] = useState([]);                                     // la liste des conv private
+    const [displayedInfoConv, setDisplayedInfoConv] = useState([]);
     /* {UserId: 1, login: 'tata', isOnline: false, lastMessage: 'e', time: '09:05:07'} */
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
-    const [input, setInput] = useState("");
-    
 
     async function fetch_go_to_conv_private(){
 
@@ -65,12 +62,12 @@ export default function PrivateMessage() {
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        
+
         setDisplayedMessages(repjson.message);
     }
 
 
-useEffect(() => {
+	useEffect(() => {
 
         fetch_private_message(goToConv);
 
@@ -92,7 +89,7 @@ useEffect(() => {
         };
 
     }, [goToConv]);
-    
+
     return (
 		<div className={`PrivateMessage-root border-0`}>
 
@@ -122,14 +119,12 @@ useEffect(() => {
 
 				<div className={`display-screen border-2`}>
 
-					{goToAction === 1 && <AjouterAmis />}
-					{goToAction === 2 && <Amis setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
+					{goToAction === 1 && <AddFriends />}
+					{goToAction === 2 && <Friends setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
 					{goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
 
 				</div>
-
 			</Hr>
-
 		</div>
     )
 }

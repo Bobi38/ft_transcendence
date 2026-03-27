@@ -1,10 +1,6 @@
-// @use "STYLE/variable" as *;
-//    var.$border_value;
-
 @use "STYLE/_mixin" as mix;
-//    @include mix.full;
 
-.Amis-root{
+.Friends-root{
     @include mix.full;
     padding: 0.5rem;
 
@@ -17,13 +13,13 @@
         background-color: rgba(0, 0, 0, 0.1);
         border-radius: 1rem;
         padding: 0.7rem;
-        
+
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         text-align: center;
         align-items: center;
-        
+
         .div-btn{
             display: flex;
             flex-direction: row;

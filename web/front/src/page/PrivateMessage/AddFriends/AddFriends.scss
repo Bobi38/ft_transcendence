@@ -4,7 +4,7 @@
 @use "STYLE/_mixin" as mix;
 //    @include mix.full;
 
-.AjouterAmis-root{
+.AddFriends-root{
     @include mix.full;
     display: flex;
     flex-direction: column;
@@ -22,7 +22,7 @@
         padding: 0.5rem 0;
         .bloc1,.bloc2{
             @include mix.full;
-            overflow :hidden auto;
+            overflow: hidden auto;
         }
         .bloc1{padding-bottom: 0.5rem;}
         .bloc2{padding-top: 0.5rem;}
