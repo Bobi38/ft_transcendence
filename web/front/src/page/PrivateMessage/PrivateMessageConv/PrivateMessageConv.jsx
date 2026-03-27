@@ -63,44 +63,44 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 		<div className={`PrivateMessageConv-root border-0`}>
 
 			<h1>{login}</h1>
-
 			<hr />
 
-			<div className="message border-1">
-					{displayedMessages && displayedMessages.map((msg, index) => { return (
+			<div className="content">
+				<div className="message border-1">
+						{displayedMessages && displayedMessages.map((msg, index) => { return (
 
-						<div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
+							<div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
 
-							{/* {index != 0 && <hr/>} */}
-							{msg.monMsg ? (
-								<div>
-									<div><span>{msg.timer}</span></div>
-									<p>{msg.message}</p>
-								</div>
-							) : (
-								<div >
-									<div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
-									<p>{msg.message}</p>
-								</div>
-							)}
-							{/* <h3>{msg.login}</h3>
-							<p>{msg.message}</p> */}
+								{/* {index != 0 && <hr/>} */}
+								{msg.monMsg ? (
+									<div>
+										<div><span>{msg.timer}</span></div>
+										<p>{msg.message}</p>
+									</div>
+								) : (
+									<div >
+										<div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
+										<p>{msg.message}</p>
+									</div>
+								)}
+								{/* <h3>{msg.login}</h3>
+								<p>{msg.message}</p> */}
 
-						</div>
+							</div>
 
-					);})}
+						);})}
 
 
+				</div>
+
+				<form onSubmit={handler_submit}>
+					<input type="text"
+					value = {input}
+					onChange={(e) => setInput(e.target.value)}
+					/>
+					<button className="button" type="submit">Send</button>
+				</form>
 			</div>
-
-			<form onSubmit={handler_submit}>
-				<input type="text"
-				value = {input}
-				onChange={(e) => setInput(e.target.value)}
-				/>
-				<button className="button" type="submit">Send</button>
-			</form>
-
 		</div>
     )
 }

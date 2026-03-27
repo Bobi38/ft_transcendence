@@ -3,16 +3,6 @@
 
 .PrivateMessageConv-root {
 	@include mix.full;
-	padding-left: 0.5rem;
-	gap: 0.25rem;
-
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-
-	h1 {
-		font-size: 2rem;
-	}
 
 	hr {
 		width: 100%;

@@ -35,10 +35,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
         setResponseFriendArray(repjson.message)
     }
 
-
-
-    const [responseFriend, setResponseFriend] = useState();
-
     async function dlt_friend(name){
 
         if (!name)
@@ -77,17 +73,22 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
     return (
         <div className={`Friends-root border-0`}>
-            {responseFriendArray && responseFriendArray.map((msg, index) => (
-                <div key={index} className="one-friend border-1">
-                    <h5>{msg.login}</h5>
+			<h1>Friends</h1>
+			<hr />
+			<div className="content">
 
-                    <div className="div-btn">
-                        <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>mp</button>
-                        <button onClick={() => {handleDelete({login: msg.login })}}>supprimer</button>
-                    </div>
-                </div>
-            ))}
-            {!responseFriendArray && <p>HaHa ta pas de pote!</p> }
+	            {responseFriendArray && responseFriendArray.map((msg, index) => (
+	                <div key={index} className="one-friend border-1">
+	                    <h5>{msg.login}</h5>
+
+	                    <div className="div-btn">
+	                        <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>Message</button>
+	                        <button onClick={() => {handleDelete({login: msg.login })}}>Remove</button>
+	                    </div>
+	                </div>
+	            ))}
+	            {!responseFriendArray && <p>Nothing here...</p> }
+			</div>
         </div>
     )
 }

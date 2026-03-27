@@ -3,10 +3,7 @@
 
 .AddFriends-root{
     @include mix.full;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-	padding: 0.5rem;
+
     .add{
         @include mix.fullw;
         display: flex;

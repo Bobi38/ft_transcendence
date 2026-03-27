@@ -118,7 +118,6 @@ export default function PrivateMessage() {
 				</div>
 
 				<div className={`display-screen border-2`}>
-
 					{goToAction === 1 && <AddFriends />}
 					{goToAction === 2 && <Friends setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
 					{goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }

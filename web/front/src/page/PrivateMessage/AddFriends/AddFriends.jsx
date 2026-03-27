@@ -93,51 +93,55 @@ export default function AddFriends() {
     return (
 
         <div className={`AddFriends-root border-0`}>
-            <div className={`add border-1`}>
-                <form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
-                    <input  type={`text`} id={`add-friend`}/>
-                    <button type={`submit`}>add Friend</button>
-                </form>
-            </div>
+			<h1>Friends request</h1>
+			<hr />
+			<div className="content">
+				<div className={`add border-1`}>
+					<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
+						<input  type={`text`} id={`add-friend`} placeholder="Nickname"/>
+						<button type={`submit`}>Add friend</button>
+					</form>
+				</div>
 
-            <hr className={`big`}/>
+				<hr className={`big`}/>
 
-            <div className={`response border-1`}>
+				<div className={`response border-1`}>
 
-                <Hr mode={`column`} initial={120} min1={100} thickness={2}>
+					<Hr mode={`column`} initial={120} min1={100} thickness={2}>
 
-                    <div className={`bloc1`}>
-                        <h4>Sended request</h4>
-                        {responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
-                            <div key={`me-${index}`}>
-                                <div className={`one-response border-2`}>
-                                <h5>{msg.login}</h5>
-                                    <div className={`div-btn border-3`}>
-                                        <button onClick={() => {handel_response({login: msg.login, response: false })}}>Suprimer</button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+						<div className={`bloc1`}>
+							<h4>Sended request</h4>
+							{responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
+								<div key={`me-${index}`}>
+									<div className={`one-response border-2`}>
+									<h5>{msg.login}</h5>
+										<div className={`div-btn border-3`}>
+											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Remove</button>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
 
 
-                    <div className={`bloc2`}>
-                        <h4>Receve request</h4>
-                        {responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
-                            <div key={`other-${index}`}>
-                                <div className={`one-response border-2`}>
-                                <h5>{msg.login}</h5>
-                                    <div className={`div-btn border-3`}>
-                                        <button onClick={() => {handel_response({login: msg.login, response: true })}}>accepter</button>
-                                        <button onClick={() => {handel_response({login: msg.login, response: false })}}>refuser </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+						<div className={`bloc2`}>
+							<h4>Receve request</h4>
+							{responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
+								<div key={`other-${index}`}>
+									<div className={`one-response border-2`}>
+									<h5>{msg.login}</h5>
+										<div className={`div-btn border-3`}>
+											<button onClick={() => {handel_response({login: msg.login, response: true })}}>Accept</button>
+											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Refuse</button>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
 
-                </Hr>
-            </div>
+					</Hr>
+				</div>
+			</div>
         </div>
 
     )
