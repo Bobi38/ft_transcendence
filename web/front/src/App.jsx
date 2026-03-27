@@ -1,21 +1,19 @@
 /* extern */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
-import checkCo from "TOOL/fonction_usefull.js"
-import { useAuth } from "TOOL/AuthContext.jsx"
-import { FRIEND, useFriend } from "TOOL/FriendContext.jsx";
 
 /* back */
 import SocketM from "TOOL/SocketManag";
 import checkCo from "TOOL/fonction_usefull.js"
+import { useAuth } from "TOOL/AuthContext.jsx"
+import { FRIEND, useFriend } from "TOOL/FriendContext.jsx";
 
 /* Css */
 import './style/index.scss'
 
 /* Components */
 import Navigation       from    "FRONT/Component/Navigation/Navigation.jsx";
-import Hr               from    "FRONT/Component/Hr/Hr.jsx";
-  // ./src/page/
+// ./src/page/
 import Home             from    "FRONT/page/Home/Home.jsx";
 import ContactUs        from    "FRONT/page/ContactUs/ContactUs.jsx";
 import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
