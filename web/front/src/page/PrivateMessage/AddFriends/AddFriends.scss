@@ -1,8 +1,5 @@
 @use "STYLE/variable" as *;
-//    var.$border_value;
-
 @use "STYLE/_mixin" as mix;
-//    @include mix.full;
 
 .AddFriends-root{
     @include mix.full;
