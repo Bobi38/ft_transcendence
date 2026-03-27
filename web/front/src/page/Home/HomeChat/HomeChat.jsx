@@ -56,6 +56,10 @@ export default function HomeChat() {
 		
         const init = async () => {
             const handle_global_message = (data) => {
+                if (data.type === "updateName_good"){
+                    fetch_global_message();
+                    return;
+                }
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
                 setDisplayedMessages((prev) => [...prev, data]);
             };

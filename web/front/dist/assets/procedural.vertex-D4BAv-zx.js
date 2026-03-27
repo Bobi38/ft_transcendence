@@ -1,0 +1,1 @@
+import{ms as e,ps as t}from"./index-CHiGcwTe.js";t();export{e as proceduralVertexShaderWGSL};

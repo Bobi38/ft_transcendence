@@ -5,7 +5,7 @@ import  SocketM  from "TOOL/SocketManag.js"
 import "./HomeFooter.scss"
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH } from "TOOL/AuthContext.jsx";
 import Button from "FRONT/Component/Button/Button.jsx"
 import useClock from "FRONT/hooks/useClock.jsx";
 
@@ -23,7 +23,8 @@ export default function HomeFooter({setShowLog}) {
         .then(data => {
 
             if (data.success) {
-                setShowLog(AUTH.LOGIN)
+                setShowLog(AUTH.LOGIN);
+                // SocketM.sendd('friend', {type: "logout"});
                 SocketM.disconnect('friend');
                 SocketM.disconnect('morp');
                 SocketM.disconnect('priv');

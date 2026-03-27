@@ -1,0 +1,1 @@
+const e={name:`obj`,extensions:`.obj`};export{e as t};

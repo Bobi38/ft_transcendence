@@ -1,0 +1,1 @@
+import{Dl as e,El as t}from"./index-CHiGcwTe.js";t();export{e as shadowMapFragmentWGSL};

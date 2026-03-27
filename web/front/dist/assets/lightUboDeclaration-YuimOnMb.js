@@ -1,0 +1,1 @@
+import{Lc as e,Rc as t}from"./index-CHiGcwTe.js";e();export{t as lightUboDeclarationWGSL};

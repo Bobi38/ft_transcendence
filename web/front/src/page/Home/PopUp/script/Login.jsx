@@ -3,18 +3,21 @@ import { FaGithub } from "react-icons/fa";
 
 /* back */
 import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM from "TOOL/SocketManag.js";
-
+import SocketM from "TOOL/SocketManag";
 
 /* Css */
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 
 import useFetch from "HOOKS/useFetch.jsx";
+import { use } from "react";
+import { web } from "webpack";
 
-export default function Login({setShowLog}) {
+export default function Login() {
+
+    const {setShowLog, showLog} = useAuth();
 
     const login_submit = async (event) => {
 
@@ -26,7 +29,6 @@ export default function Login({setShowLog}) {
             host: window.location.host
         };
 
-        alert(data.host);
         if (!data.email || !data.password) {
             showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
             return;
@@ -53,17 +55,16 @@ export default function Login({setShowLog}) {
         sessionStorage.setItem('token', repjson.token);
         sessionStorage.setItem('username', repjson.username);
 
-        if (repjson.MPFA) {
-            setShowLog(AUTH.MAILA2F);
-        }
+        // if (repjson.MPFA) {
+        //     setShowLog(AUTH.MAILA2F);
+        // }
         
-        if (!repjson.MPFA) {
-            setShowLog(AUTH.NONE);
+        // if (!repjson.MPFA) {
+        setShowLog(AUTH.NONE);
+        SocketM.sendd('friend', {type: 'co_first'});
 
-        SocketM.sendd(SocketM.socket.friend, {type: 'co'});
-    	};
-	}
-
+    // };
+}
 
     const register_mode = () => {
         console.log("register_mode(1) Passage en mode inscription:", AUTH.REGISTER);

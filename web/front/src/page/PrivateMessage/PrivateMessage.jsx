@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 /* back */
 import  SocketM  from "TOOL/SocketManag.js";
-
+import { useFriend, FRIEND } from "TOOL/FriendContext.jsx";
 /* Css */
 import "./PrivateMessage.scss";
 
@@ -18,7 +18,8 @@ import Hr from    "FRONT/Component/Hr/Hr.jsx";
 export default function PrivateMessage() {
     
     const [goToAction, setGoToAction] = useState(2)                                                     // info  Amis / Ajouter un Amis
-    const [goToConv, setGoToConv] = useState(null)                                                      // changer de conv private
+    const [goToConv, setGoToConv] = useState(null)  
+    const { showFriend, setShowFriend } = useFriend();
 
     const [displayedInfoConv, setDisplayedInfoConv] = useState([]);                                     // la liste des conv private
     /* {UserId: 1, login: 'tata', isOnline: false, lastMessage: 'e', time: '09:05:07'} */
@@ -40,8 +41,11 @@ export default function PrivateMessage() {
     }
 
     useEffect(() => {
-        fetch_go_to_conv_private()
-    }, []);
+        if (showFriend == FRIEND.RED || showFriend == FRIEND.GREEN){
+            fetch_go_to_conv_private()
+        }
+        setShowFriend(FRIEND.START);
+    }, [showFriend]);
 
 
     async function fetch_private_message(goToConv){
@@ -72,6 +76,11 @@ useEffect(() => {
 
         const handle_private_message = (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
+            if (data.type === "updateName_good"){
+                fetch_go_to_conv_private();
+                fetch_private_message(goToConv);
+                return;
+            }
             if (data.login === goToConv || data.monMsg == true)
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();

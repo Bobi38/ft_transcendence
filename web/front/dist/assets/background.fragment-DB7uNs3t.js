@@ -1,0 +1,1 @@
+import{ac as e,oc as t}from"./index-CHiGcwTe.js";t();export{e as backgroundPixelShader};

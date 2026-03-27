@@ -1,0 +1,1 @@
+import{Co as e,wo as t}from"./index-CHiGcwTe.js";e();export{t as meshUVSpaceRendererVertexShader};

@@ -1,0 +1,1 @@
+import{wh as e}from"./index-CHiGcwTe.js";export{e as EXT_meshopt_compression};

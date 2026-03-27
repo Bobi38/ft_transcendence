@@ -1,23 +1,32 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import SocketM from "./SocketManag";
+import { createContext, useContext, useEffect } from 'react';
+import { useAuth, AUTH } from './AuthContext';
 
-const SocketContext = createContext();
+const SocketContext = createContext(null);
 
 export function SocketProvider({ children }) {
-  const [socket, setSocket] = useState(null);
+  const { showLog } = useAuth();
 
   useEffect(() => {
-    if (!SocketM.getState() || SocketM.getState() === "closed") {
-      SocketM.connect();
+    if (showLog !== AUTH.NONE) {
+      SocketM.disconnect("chat");
+      SocketM.disconnect("priv");
+      SocketM.disconnect("friend");
+      SocketM.disconnect("morp");
+      return;
     }
-    setSocket(SocketM);
-  }, []);
+    ["chat", "priv", "morp", "friend"].forEach(s => {
+      if (!SocketM.getState(s) || SocketM.getState(s) === "closed")
+        SocketM.connectsocket(s);
+    });
+
+    return () => {
+      // SocketM.disconnect("friend");
+    };
+  }, [showLog]);
 
   return (
-    <SocketContext.Provider value={socket}>
+    <SocketContext.Provider value={{}}>
       {children}
     </SocketContext.Provider>
   );
 }
-
-export const useSocket = () => useContext(SocketContext);

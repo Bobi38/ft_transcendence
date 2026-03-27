@@ -2,9 +2,9 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./ChatServ.js",
+  "main": "ChatServ.js",
 "scripts": {
-  "dev": "nodemon ChatServ.js",
+  "dev": "nodemon src/ChatServ.js",
   "start": "node ChatServ.js"
 },
   "dependencies": {
@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",
-    "concurrently": "^8.0.0",
     "nodemon": "^3.0.2"
   }
 }

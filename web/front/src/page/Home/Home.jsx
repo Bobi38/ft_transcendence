@@ -1,5 +1,6 @@
 /* extern */
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
@@ -13,12 +14,6 @@ import HomeChat from "./HomeChat/HomeChat.jsx";
 import HomeCard from "./HomeCard/HomeCard.jsx";
 import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 
-export const AUTH = {
-    NONE: 0,
-    LOGIN: 1,
-    MAILA2F: 2,
-    REGISTER: 3,
-};
 
 const cards_content = [
 	{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
@@ -33,7 +28,7 @@ const cards_content = [
 
 export default function Home() {
 
-    const [showLog, setShowLog] = useState(AUTH.NONE);
+    const { showLog, setShowLog } = useAuth();
 
     const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
 
@@ -47,6 +42,7 @@ export default function Home() {
         if (!resCo) {
             setShowLog(AUTH.LOGIN);
         } else {
+			setShowLog(AUTH.NONE);
             if (event && event.target && event.target.id === "HomeChatsubmit"){
                 const form = event.target.form
                 if (form) {
