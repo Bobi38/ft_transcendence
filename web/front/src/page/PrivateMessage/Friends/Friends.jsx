@@ -76,7 +76,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
 
     return (
-        <div className={`Amis-root border-0`}>
+        <div className={`Friends-root border-0`}>
             {responseFriendArray && responseFriendArray.map((msg, index) => (
                 <div key={index} className="one-friend border-1">
                     <h5>{msg.login}</h5>
