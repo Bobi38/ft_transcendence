@@ -66,8 +66,8 @@ export default function Hr({ children, mode = 'row', min1 = 100, min2 = 100, ini
                 {children[0]}
             </div>
 			<hr onPointerDown={() => { isDragging.current = true;}}
-                style={{ [isCol ? 'height' : 'width']: thickness,
-                margin: 0, cursor: 'url("/media/wii_grab.png") 5 5, grab',}}
+                style={{ [isCol ? 'height' : 'width']: thickness}}
+				className='hr-custom'
             />
 
             <div style={{ [isCol ? 'height' : 'width']: `${size2}px` }}>

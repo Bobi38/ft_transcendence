@@ -17,6 +17,7 @@
     .response{
         @include mix.full;
         padding: 0.5rem 0;
+
         .bloc1,.bloc2{
             @include mix.full;
             overflow: hidden auto;
