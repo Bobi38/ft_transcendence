@@ -7,7 +7,6 @@
 
 .Hr-root {
     @include mix.full;
-    overflow: hidden;
 
     hr {
         transition: opacity 0.2s;
