@@ -1,6 +1,5 @@
 /* extern */
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
@@ -13,7 +12,6 @@ import PopUp from "./PopUp/PopUp.jsx"
 import HomeChat from "./HomeChat/HomeChat.jsx";
 import HomeCard from "./HomeCard/HomeCard.jsx";
 import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
-import HomeFooter from "./HomeFooter/HomeFooter.jsx";
 
 export const AUTH = {
     NONE: 0,
@@ -23,7 +21,6 @@ export const AUTH = {
 };
 
 const cards_content = [
-	// { text:"Weather", path: "/Weather" },
 	{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
 	{ text:"Private Message", path: "/PrivateMessage" },
 	{ text:"Morpion", path: "/Morpion" },
@@ -91,9 +88,6 @@ export default function Home() {
 				</section>
                 <HomeChat/>
 			</main>
-
-			<HomeFooter setShowLog={setShowLog}/>
-
 		</div>
 	)
 }
