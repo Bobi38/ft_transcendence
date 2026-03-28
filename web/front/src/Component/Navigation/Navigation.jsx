@@ -9,6 +9,7 @@ import "./Navigation.scss";
 
 /* Components */
 import NavBar from "FRONT/Component/NavBar/NavBar.jsx";
+import { useEffect } from "react";
 
 export default function Navigation({ children }) {
 
@@ -21,8 +22,9 @@ export default function Navigation({ children }) {
         }
     };
 
-
-    connection_check();
+    useEffect(() => {
+        connection_check();
+    }, []);
 
 
     return (
