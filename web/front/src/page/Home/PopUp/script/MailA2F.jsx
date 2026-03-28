@@ -58,6 +58,10 @@ export default function MailA2F() {
             credentials: "include",
             body: JSON.stringify(data),
         })
+        if (repjson.status < 500 && repjson.status >= 400){
+            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            return ;
+        }
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;

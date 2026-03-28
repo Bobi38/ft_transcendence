@@ -40,6 +40,10 @@ export default function Register() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
+        if (repjson.status < 500 && repjson.status >= 400){
+            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            return ;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
         setShowLog(AUTH.LOGIN);

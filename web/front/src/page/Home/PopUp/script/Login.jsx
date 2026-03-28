@@ -48,6 +48,11 @@ export default function Login() {
             return;
         }
 
+        if (repjson.status < 500 && repjson.status >= 400){
+            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            return ;
+        }
+
 
 
         sessionStorage.setItem('type', "success");
