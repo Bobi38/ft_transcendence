@@ -193,7 +193,7 @@ export class App {
             console.log("Other player hit the ball");
         });
         this._room.onMessage("impactResponse", (tick) => {
-            this._ball.recentImpact = true;
+            this._ball.recentImpact = false;
         });
     }
 

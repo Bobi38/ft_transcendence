@@ -9,6 +9,7 @@ import User from "../models/user.js";
 import StatPong3D from "../models/StatPong3D.js"
 import GamePong3D from "../models/GamePong3D.js"
 import jwt from "jsonwebtoken"
+import { SnapshotBuffer } from "../snapshots.js";
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 
@@ -26,6 +27,7 @@ export class MyRoom extends Room {
   private _near : string;
   private _far: string;
   private _tick: number = 0;
+  private _impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
   private _posToSend: Vector3;
   private _velToSend: Vector3;
   private _timeStart: number;
@@ -55,19 +57,25 @@ export class MyRoom extends Room {
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._ball.setLinearVelocity(ballVel);
       const ticksToResimulate = this._tick - data.tick;
-      console.log("impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
-      this._ball.transformNode.position = ballPos;
-      this._ball.setLinearVelocity(ballVel);
-      this._ball.transformNode.computeWorldMatrix(true);
-      this._ball.disablePreStep = false;
-      const FIXED_TIME_STEP = 1 / 60;
-      for (let i = 0; i < ticksToResimulate; i++) {
-          this._ball.disablePreStep = false;
-          this._havokPlugin.executeStep(FIXED_TIME_STEP, this._bodies);
-          this._ball.transformNode.computeWorldMatrix(true);
+      console.log("tick:", this._tick, "impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
+      if (ticksToResimulate > 0) {
+        this._impactSnapshots.saveSnapshot(data.tick, ballPos, ballVel);
+      } else {
+        this._ball.transformNode.position = ballPos;
+        this._ball.setLinearVelocity(ballVel);
+        this._ball.transformNode.computeWorldMatrix(true);
+        this._ball.disablePreStep = false;
+        const FIXED_TIME_STEP = 1 / 60;
+        for (let i = 0; i < ticksToResimulate; i++) {
+            this._ball.disablePreStep = false;
+            this._havokPlugin.executeStep(FIXED_TIME_STEP, this._bodies);
+            this._ball.transformNode.computeWorldMatrix(true);
+        }
       }
       console.log(client.sessionId,  "hit the ball: ", data, "at server tick:", this._tick);
-      console.log("new pos:", this._ball.transformNode.position.clone(), "new vel:", this._ball.getLinearVelocity());
+      const newPos = this._ball.transformNode.position.clone();
+      const newVel = this._ball.getLinearVelocity();
+      console.log("new pos:", newPos, "new vel:", newVel);
       this.broadcast("racketImpact", data, { except: client });
       client.send("impactResponse", this._tick);
     },
@@ -105,6 +113,11 @@ export class MyRoom extends Room {
     scene.enablePhysics(new Vector3(0, 0, 0), havokPlugin); //no gravity (middle value at 0)
     scene.onAfterPhysicsObservable.add(() => {
       this._tick++;
+      const racketImpact = this._impactSnapshots.getSnapshotAtTick(this._tick) 
+      if (racketImpact && racketImpact.snapshot && racketImpact.snapshot.tick === this._tick) {
+        this._ball.transformNode.position = racketImpact.snapshot.position.clone();
+        this._ball.setLinearVelocity(racketImpact.snapshot.velocity.clone());
+      }
       this._posToSend = this._ball.transformNode.position.clone();
       this._velToSend = this._ball.getLinearVelocity();
     });

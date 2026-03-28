@@ -166,6 +166,7 @@ export class Ball {
             this.visualOffset.scaleInPlace(correctionFactor);
         });
     }
+
     
 
     public setVelocity(velocity : Vector3) {
