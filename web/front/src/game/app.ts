@@ -14,7 +14,7 @@ import { StateCallbackStrategy } from "@colyseus/schema";
 import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
-import { SnapshotBuffer } from "./snapshots";
+import { BallSnapshot, SnapshotBuffer } from "./snapshots";
 import { SynchronizedClock } from "./SynchronizedClock";
 import { RacketHistory } from "./RacketHistory";
 
@@ -194,6 +194,8 @@ export class App {
         });
         this._room.onMessage("impactResponse", (tick) => {
             this._ball.recentImpact = false;
+            this._ball.ignoreServerUntil = tick;
+            console.log("server acknowledges impact at tick:", tick);
         });
     }
 
@@ -434,5 +436,10 @@ export class App {
 
     public getEngine() : Engine {
         return this._engine;
+    }
+
+    public updateSnapshot(snapshot : BallSnapshot) {
+        this._ball.snapshots.clearAfterTickIncluded(this._clock.tick);
+        this._ball.snapshots.saveSnapshot(snapshot.tick, snapshot.position, snapshot.velocity);
     }
 }

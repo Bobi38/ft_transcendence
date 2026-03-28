@@ -80,10 +80,11 @@ export class Ball {
     public setupCorrections() {
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this.serverPatch) return ;
-            if (this.recentImpact || this._clock.tick < this.ignoreServerUntil) {
-                this.serverPatch = null;
-                return;
-            }
+            console.log(this.recentImpact, this.ignoreServerUntil);
+            // if (this.recentImpact || this._clock.tick < this.ignoreServerUntil) {
+            //     this.serverPatch = null;
+            //     return;
+            // }
 
             this._clock.updateAccumulatorSlew(this.serverPatch.tick);
             const pastSnapshot = this.snapshots.getSnapshotAtTick(this.serverPatch.tick);
@@ -94,7 +95,8 @@ export class Ball {
 
             const positionError = this.serverPatch.position.subtract(pastSnapshot.snapshot.position);
             const velocityError = this.serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
-            
+            console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
+            console.log("server vel:", this.serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
             if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
                 this._correctSmallErrors(positionError, velocityError, pastSnapshot);
                 return ;
@@ -145,7 +147,7 @@ export class Ball {
             }
             HavokPlugin.executeStep(FIXED_TIME_STEP, bodies);
             this._body.transformNode.computeWorldMatrix(true);
-            console.log(this.getPhysicsBodyPosition());
+            //console.log(this.getPhysicsBodyPosition());
             this.snapshots.saveSnapshot(simulatingTick + 1, this.getPhysicsBodyPosition(), this.getVelocity());
         }
         this.isResimming = false;
@@ -167,7 +169,7 @@ export class Ball {
         });
     }
 
-    
+
 
     public setVelocity(velocity : Vector3) {
         this._body.setLinearVelocity(velocity);

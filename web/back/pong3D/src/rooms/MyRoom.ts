@@ -55,10 +55,10 @@ export class MyRoom extends Room {
     "racketImpact": (client: Client, data: any) => {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
-      this._ball.setLinearVelocity(ballVel);
+      //this._ball.setLinearVelocity(ballVel);
       const ticksToResimulate = this._tick - data.tick;
       console.log("tick:", this._tick, "impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
-      if (ticksToResimulate > 0) {
+      if (ticksToResimulate < 0) {
         this._impactSnapshots.saveSnapshot(data.tick, ballPos, ballVel);
       } else {
         this._ball.transformNode.position = ballPos;
