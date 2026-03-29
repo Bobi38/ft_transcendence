@@ -82,7 +82,11 @@ export class Player extends TransformNode {
             ballBody.setLinearVelocity(newVel);
             //ballBody.applyImpulse(hitDirection.scale(power), event.point);
 
-            const ballPos = ballBody.transformNode.position.clone();
+            const offset = hitDirection.scale(1.01);
+            const ballPos = ballBody.transformNode.position.add(offset);
+            ballBody.transformNode.position = ballPos;
+
+            //const ballPos = ballBody.transformNode.position.clone();
             console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel, "ballPos:", ballPos, "tick:", this._app._clock.tick);
             this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._app.getTick()});
             this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);

@@ -80,11 +80,11 @@ export class Ball {
     public setupCorrections() {
         this._scene.onBeforePhysicsObservable.add(() => {
             if (!this.serverPatch) return ;
-            console.log(this.recentImpact, this.ignoreServerUntil);
-            // if (this.recentImpact || this._clock.tick < this.ignoreServerUntil) {
-            //     this.serverPatch = null;
-            //     return;
-            // }
+            //console.log(this.recentImpact, this.ignoreServerUntil);
+            if (this.recentImpact || this._clock.tick < this.ignoreServerUntil) {
+                this.serverPatch = null;
+                return;
+            }
 
             this._clock.updateAccumulatorSlew(this.serverPatch.tick);
             const pastSnapshot = this.snapshots.getSnapshotAtTick(this.serverPatch.tick);
@@ -97,6 +97,7 @@ export class Ball {
             const velocityError = this.serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
             console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
             console.log("server vel:", this.serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
+            console.log("server pos:", this.serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
             if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
                 this._correctSmallErrors(positionError, velocityError, pastSnapshot);
                 return ;
@@ -121,6 +122,7 @@ export class Ball {
         const preRollbackPos = this.getPhysicsBodyPosition();
         this.setPhysicsBodyPosition(this.serverPatch.position);
         this.setVelocity(this.serverPatch.velocity);
+        console.log("patch vel:", this.serverPatch.velocity, "setVel:", this.getVelocity());
         this._body.transformNode.computeWorldMatrix(true);
         this._body.disablePreStep = false;
         this.snapshots.clearAfterTickIncluded(patchTick);
@@ -143,11 +145,14 @@ export class Ball {
             this._body.disablePreStep = false;
             const impactSnapshot = impactSnapshots.getSnapshotAtTick(simulatingTick);
             if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
+                console.log("found impact snapshot at tick:", simulatingTick);
                 this.setVelocity(impactSnapshot.snapshot.velocity);
+                this.setPhysicsBodyPosition(impactSnapshot.snapshot.position);
             }
             HavokPlugin.executeStep(FIXED_TIME_STEP, bodies);
             this._body.transformNode.computeWorldMatrix(true);
             //console.log(this.getPhysicsBodyPosition());
+            console.log(this.getVelocity());
             this.snapshots.saveSnapshot(simulatingTick + 1, this.getPhysicsBodyPosition(), this.getVelocity());
         }
         this.isResimming = false;
@@ -181,6 +186,7 @@ export class Ball {
 
     public setPhysicsBodyPosition(position: Vector3) {
         this._body.transformNode.position = position;
+        // this._app.getEngine().setTra
     }
 
     public setMeshPosition(position: Vector3) {
@@ -192,6 +198,7 @@ export class Ball {
     }
 
     public getPhysicsBodyPosition() : Vector3 {
+        // this._app.getEngine().getPosi
         return this._body.transformNode.position.clone();
     }
 
@@ -214,5 +221,9 @@ export class Ball {
 
     public addToBodies(bodies: PhysicsBody[]) {
         bodies.push(this._body);
+    }
+
+    public forceBodyUpdateFromPhysicsEngine() {
+        this._body.transformNode.computeWorldMatrix(true);
     }
 }

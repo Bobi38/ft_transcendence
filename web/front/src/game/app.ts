@@ -131,23 +131,25 @@ export class App {
         this._havokPlugin.setTimeStep(1/60);
         this._clock.updateAccumulator(this._engine.getDeltaTime());
         const acc = this._clock.getAccumulator();
+        // console.log("tick;", this._clock.tick);
         if (acc >= 1000/60) {
             this._havokPlugin.executeStep(1/60, this._environment.bodies);
+            this._ball.forceBodyUpdateFromPhysicsEngine();
             this._clock.tick++;
             this._clock.setbackAccumulator();
             this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-            //console.log("Adding supplementary physics step");
+            console.log("Adding supplementary physics step, tick now:", this._clock.tick);
         } else if (acc <= -1000/60) {
-            this._havokPlugin.setTimeStep(0);
-            this._clock.tickSkipped = true;
-            this._clock.addbackAccumulator();
-            //console.log("Skipping a physics step");
+            // this._havokPlugin.setTimeStep(0);
+            // this._clock.tickSkipped = true;
+            // this._clock.addbackAccumulator();
+            // console.log("Skipping a physics step");
         }
 
         this._scene.render();
 
         if (this._clock.tickSkipped) {
-            this._clock.tickSkipped = false;
+            // this._clock.tickSkipped = false;
         } else {
             this._clock.tick++;
             this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
@@ -254,7 +256,7 @@ export class App {
         const havokInstance = await HavokPhysics({
             locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
         });
-        this._havokPlugin = new HavokPlugin(true, havokInstance);
+        this._havokPlugin = new HavokPlugin(false, havokInstance);
         this._havokPlugin.setTimeStep(1/60);
         this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
         this._room.onMessage("initialTick", (serverTick) => {
