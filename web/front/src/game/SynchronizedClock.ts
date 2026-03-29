@@ -19,7 +19,8 @@ export class SynchronizedClock {
 
     public updateAccumulator(dt: number) {
         // console.log("dt:", dt);
-        this._accumulator += (dt - 1000/60 + this._accumulatorSlew);
+        //this._accumulator += (dt - 1000/60 + this._accumulatorSlew);
+        this._accumulator += (dt + this._accumulatorSlew);
         this._accumulatorSlew = 0;
     }
 

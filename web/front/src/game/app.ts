@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody, SpotLight, DirectionalLight, HemisphericLight } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody, SpotLight, DirectionalLight, HemisphericLight, Matrix } from "@babylonjs/core";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
@@ -26,11 +26,13 @@ export enum RoomStatus {
   AWAITING_RECONNECTION = 4
 }
 
+const TIMESTEP : number = 1/60;
+
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
     private _scene: Scene;
-    private _havokPlugin: HavokPlugin;
+    //private _havokPlugin: HavokPlugin;
     private _environment: Environment;
     private _player: Player;
     private _enemy: Enemy;
@@ -127,33 +129,96 @@ export class App {
         this._callback = callback;
     }
 
+    public _executeStep() {
+        const oldPos = this._ball.getPhysicsBodyPosition();
+        const newPos = oldPos.add(this._ball.getVelocity().scale(TIMESTEP));
+        this._ball.setPhysicsBodyPosition(newPos);
+    }
+
+    public _checkRacketCollision() {
+        const ballPos = this._ball.getPhysicsBodyPosition();
+        const relativeBallPos = ballPos.subtract(this._player.getRacketPos());
+
+        const invRotation = this._player.getRacketRot().invert();
+        const localBallPos = Vector3.TransformNormal(relativeBallPos, Matrix.FromQuaternionToRef(invRotation, new Matrix()));
+
+        const halfWidth = this._player.dimensions.x / 2;
+        const halfHeight = this._player.dimensions.y / 2;
+        const halfDepth = this._player.dimensions.z / 2;
+
+        const closestX = Math.max(-halfWidth,  Math.min(localBallPos.x, halfWidth));
+        const closestY = Math.max(-halfHeight, Math.min(localBallPos.y, halfHeight));
+        const closestZ = Math.max(-halfDepth,  Math.min(localBallPos.z, halfDepth));
+
+        const distanceX = localBallPos.x - closestX;
+        const distanceY = localBallPos.y - closestY;
+        const distanceZ = localBallPos.z - closestZ;
+        const distanceSquared = (distanceX ** 2) + (distanceY ** 2) + (distanceZ ** 2);
+
+        if (distanceSquared < (this._ball.radius ** 2)) {
+            const newVel = this._player.getRacketHit();
+            this._ball.setVelocity(newVel);
+            if (!this._ball.isResimming) {
+                this._room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._clock.tick});
+            }
+            //this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);
+            //this.updateSnapshot({position: ballPos, velocity: newVel, tick: this._clock.tick});
+        }
+    }
+
+    public _checkWallCollision(){
+        const ballPos = this._ball.getPhysicsBodyPosition();
+        const radius = this._ball.radius;
+        const min = this._environment.wallMin;
+        const max = this._environment.wallMax;
+
+        const ballVel : Vector3 = this._ball.getVelocity();
+        if (ballPos.x - radius < min.x) {
+            ballPos.x = min.x + radius;
+            ballVel.x *= -1;
+        } else if (ballPos.x + radius > max.x) {
+            ballPos.x = max.x - radius;
+            ballVel.x *= -1;
+        }
+
+        if (ballPos.y - radius < min.y) {
+            ballPos.y = min.y + radius;
+            ballVel.y *= -1;
+        } else if (ballPos.y + radius > max.y) {
+            ballPos.y = max.y - radius;
+            ballVel.y *= -1;
+        }
+
+        if (ballPos.z - radius < min.z) {
+            ballPos.z = min.z + radius;
+            ballVel.z *= -1;
+        } else if (ballPos.z + radius > max.z) {
+            ballPos.z = max.z - radius;
+            ballVel.z *= -1;
+        }
+
+        this._ball.setPhysicsBodyPosition(ballPos);
+        this._ball.setVelocity(ballVel);
+    }
+
     private _updatePhysicsAndRender() {
-        this._havokPlugin.setTimeStep(1/60);
+        //this._havokPlugin.setTimeStep(1/60);
         this._clock.updateAccumulator(this._engine.getDeltaTime());
-        const acc = this._clock.getAccumulator();
+        //const acc = this._clock.getAccumulator();
         // console.log("tick;", this._clock.tick);
-        if (acc >= 1000/60) {
-            this._havokPlugin.executeStep(1/60, this._environment.bodies);
-            this._ball.forceBodyUpdateFromPhysicsEngine();
+        this._ball.correctPosAndVel();
+        while (this._clock.getAccumulator() >= 1000/60) {
+            this._updatePlayerAndEnemy();
+            this._executeStep();
+            this._checkRacketCollision();
+            this._checkWallCollision();
+            this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             this._clock.tick++;
             this._clock.setbackAccumulator();
-            this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-            console.log("Adding supplementary physics step, tick now:", this._clock.tick);
-        } else if (acc <= -1000/60) {
-            // this._havokPlugin.setTimeStep(0);
-            // this._clock.tickSkipped = true;
-            // this._clock.addbackAccumulator();
-            // console.log("Skipping a physics step");
+            //console.log("Adding supplementary physics step, tick now:", this._clock.tick);
         }
-
+        this._ball.smoothPosition();
         this._scene.render();
-
-        if (this._clock.tickSkipped) {
-            // this._clock.tickSkipped = false;
-        } else {
-            this._clock.tick++;
-            this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-        }
     }
 
     private _setupPhysicsMessagesListener() {
@@ -163,7 +228,7 @@ export class App {
             this._ball.setPhysicsBodyPosition(newPos);
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());
-            this._ball.setAngularVelocity(Vector3.Zero());
+            //this._ball.setAngularVelocity(Vector3.Zero());
             this._ball.ignoreServerUntil = tick;
             this._ball.snapshots.dispose();
             console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
@@ -176,17 +241,20 @@ export class App {
             console.log("impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
             this._ball.setPhysicsBodyPosition(ballPos);
             this._ball.setVelocity(ballVel);
-            this._ball._body.transformNode.computeWorldMatrix(true);
-            this._ball._body.disablePreStep = false;
+            //this._ball._body.transformNode.computeWorldMatrix(true);
+            //this._ball._body.disablePreStep = false;
             this._ball.snapshots.clearAfterTickIncluded(data.tick);
             this._ball.snapshots.saveSnapshot(data.tick, ballPos, ballVel);
             const FIXED_TIME_STEP = 1 / 60;
             const preRollbackPos = this._ball.getPhysicsBodyPosition();
             for (let i = 0; i < ticksToResimulate; i++) {
                 const simulatingTick = impactTick + i;
-                this._ball._body.disablePreStep = false;
-                this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
-                this._ball._body.transformNode.computeWorldMatrix(true);
+                //this._ball._body.disablePreStep = false;
+                this._executeStep();
+                this._checkRacketCollision();
+                this._checkWallCollision();
+                //this._havokPlugin.executeStep(FIXED_TIME_STEP, this._environment.bodies);
+                //this._ball._body.transformNode.computeWorldMatrix(true);
                 this._ball.snapshots.saveSnapshot(simulatingTick + 1, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
             }
             const postRollbackPos = this._ball.getPhysicsBodyPosition();
@@ -253,12 +321,12 @@ export class App {
     }
 
     private async _setupHavok() {
-        const havokInstance = await HavokPhysics({
-            locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
-        });
-        this._havokPlugin = new HavokPlugin(false, havokInstance);
-        this._havokPlugin.setTimeStep(1/60);
-        this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
+        // const havokInstance = await HavokPhysics({
+        //     locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
+        // });
+        // this._havokPlugin = new HavokPlugin(false, havokInstance);
+        // this._havokPlugin.setTimeStep(1/60);
+        // this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
         this._room.onMessage("initialTick", (serverTick) => {
             this._clock.setInitialClientClock(serverTick);
         });
@@ -313,11 +381,11 @@ export class App {
         let ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
         let ballVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
         this._ball = new Ball(ballPos, ballVel, 1, this.MAX_SPEED, this._shadows, this._scene, this._clock, this);
-        this._ball.addToBodies(this._environment.bodies);
+        //this._ball.addToBodies(this._environment.bodies);
         
         this._setupBallUpdates();
-        this._ball.setupCorrections();
-        this._ball.setupSmoothing();
+        // this._ball.setupCorrections();
+        // this._ball.setupSmoothing();
     }
 
     private _setupBallUpdates() {
@@ -334,12 +402,24 @@ export class App {
         this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadows, this._room);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
-        this._scene.onBeforePhysicsObservable.add(() => {
+        // this._scene.onBeforePhysicsObservable.add(() => {
+        //     this._player.updateBody();
+        //     this._player.updateRacket(this._clock.tick);
+        //     this._camera.updateCamera(isNearSide, this._player.getPlayerPosition());
+        // });
+        //this._environment.bodies.push(this._player.racketBody);
+    }
+
+    private _updatePlayerAndEnemy() {
+        if (this._player) {
             this._player.updateBody();
             this._player.updateRacket(this._clock.tick);
-            this._camera.updateCamera(isNearSide, this._player.getPlayerPosition());
-        });
-        this._environment.bodies.push(this._player.racketBody);
+            this._camera.updateCamera(this._isNear, this._player.getPlayerPosition());
+        }
+        if (this._enemy) {
+            this._enemy.updateBody();
+            this._enemy.updateRacket();
+        }
     }
 
     private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
@@ -355,10 +435,10 @@ export class App {
             this._enemy.registerRacket(new Vector3(newPos.x, newPos.y, newPos.z),
                 new Quaternion(newRot.x, newRot.y, newRot.z, newRot.w));
         });
-        this._scene.registerBeforeRender( () => {
-            this._enemy.updateBody();
-            this._enemy.updateRacket();
-        });
+        // this._scene.registerBeforeRender( () => {
+        //     this._enemy.updateBody();
+        //     this._enemy.updateRacket();
+        // });
     }
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
@@ -428,13 +508,13 @@ export class App {
         return this._ball.isResimming;
     }
 
-    public getHavokPlugin() : HavokPlugin {
-        return this._havokPlugin;
-    }
+    // public getHavokPlugin() : HavokPlugin {
+    //     return this._havokPlugin;
+    // }
 
-    public getBodies() : PhysicsBody[] {
-        return this._environment.bodies;
-    }
+    // public getBodies() : PhysicsBody[] {
+    //     return this._environment.bodies;
+    // }
 
     public getEngine() : Engine {
         return this._engine;
