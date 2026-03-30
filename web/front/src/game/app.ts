@@ -45,6 +45,7 @@ export class App {
     private _ui : GUI;
     public  _clock : SynchronizedClock = new SynchronizedClock();
     private _isNear : boolean = true;
+    private _pendingImpact : BallSnapshot = null;
 
 
     constructor(canvas: HTMLCanvasElement) {
@@ -140,7 +141,7 @@ export class App {
         this._ball.setPhysicsBodyPosition(newPos);
     }
 
-    public _checkRacketCollision() {
+    public _checkRacketCollision(impactSnapshot? : BallSnapshot) {
         const ballPos = this._ball.getPhysicsBodyPosition();
     
         const racketWorldMatrix = this._player.getRacketWorldMatrix();
@@ -160,10 +161,18 @@ export class App {
         //console.log("distanceSquared:", distanceSquared);
 
         if (distanceSquared < (this._ball.radius ** 2)) {
-            const newVel = this._player.getRacketHit();
+            let newVel : Vector3;
+            if (this._ball.isResimming) {
+                newVel = impactSnapshot.velocity;
+            } else {
+                newVel = this._player.getRacketHit();
+            }
             this._ball.setVelocity(newVel);
             if (!this._ball.isResimming) {
                 this._room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._clock.tick});
+                console.log("woah i hit the ball at tick:", this._clock.tick);
+                console.log("new vel:", newVel);
+                this._ball.ignoreServerAfter = this._clock.tick;
             }
         }
     }
@@ -198,6 +207,7 @@ export class App {
     private _updatePhysicsAndRender() {
         if (this._room.state.roomStatus == RoomStatus.STARTED) {
             this._clock.updateAccumulator(this._engine.getDeltaTime());
+            this._checkPendingImpact();
             this._ball.correctPosAndVel();
             while (this._clock.getAccumulator() >= 1000/60) {
                 this._updatePlayerAndEnemy();
@@ -212,6 +222,34 @@ export class App {
             this._ball.smoothPosition();
         }
         this._scene.render();
+    }
+
+    private _checkPendingImpact() {
+        if (!this._pendingImpact)
+            return ;
+        const ticksToResimulate = this._clock.tick - this._pendingImpact.tick;
+        console.log("impactTick:", this._pendingImpact.tick, "ticks to resim:", ticksToResimulate);
+        const preRollbackPos = this._ball.getPhysicsBodyPosition();
+        this._ball.setPhysicsBodyPosition(this._pendingImpact.position);
+        this._ball.setVelocity(this._pendingImpact.velocity);
+        this._ball.snapshots.clearAfterTickIncluded(this._pendingImpact.tick);
+        this._ball.snapshots.saveSnapshot(this._pendingImpact.tick, this._pendingImpact.position, this._pendingImpact.velocity);
+        this._ball.isResimming = true;
+        for (let i = 1; i < ticksToResimulate; i++) {
+            const simulatingTick = this._pendingImpact.tick + i;
+            this._executeStep();
+            const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
+            if (impactSnapshot)
+                this._checkRacketCollision(impactSnapshot.snapshot);
+            this._checkWallCollision();
+            this._ball.snapshots.saveSnapshot(simulatingTick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+        }
+        const postRollbackPos = this._ball.getPhysicsBodyPosition();
+        const teleportDelta = preRollbackPos.subtract(postRollbackPos);
+        this._ball.visualOffset.addInPlace(teleportDelta);
+        console.log("Other player hit the ball");
+        this._ball.isResimming = false;
+        this._pendingImpact = null;
     }
 
     private _setupPhysicsMessagesListener() {
@@ -230,28 +268,11 @@ export class App {
         this._room.onMessage("racketImpact", (data: any) => {
             const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
             const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
-            const impactTick = data.tick;
-            const ticksToResimulate = this._clock.tick - data.tick;
-            console.log("impactTick:", data.tick, "ticks to resim:", ticksToResimulate);
-            const preRollbackPos = this._ball.getPhysicsBodyPosition();
-            this._ball.setPhysicsBodyPosition(ballPos);
-            this._ball.setVelocity(ballVel);
-            this._ball.snapshots.clearAfterTickIncluded(data.tick);
-            this._ball.snapshots.saveSnapshot(data.tick, ballPos, ballVel);
-            for (let i = 1; i < ticksToResimulate; i++) {
-                const simulatingTick = impactTick + i;
-                this._executeStep();
-                //this._checkRacketCollision();
-                this._checkWallCollision();
-                this._ball.snapshots.saveSnapshot(simulatingTick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-            }
-            const postRollbackPos = this._ball.getPhysicsBodyPosition();
-            const teleportDelta = preRollbackPos.subtract(postRollbackPos);
-            this._ball.visualOffset.addInPlace(teleportDelta);
-            console.log("Other player hit the ball");
+            this._pendingImpact = {tick: data.tick, position: ballPos, velocity: ballVel};
         });
         this._room.onMessage("impactResponse", (tick) => {
             this._ball.recentImpact = false;
+            this._ball.ignoreServerAfter = null;
             this._ball.ignoreServerUntil = tick;
             console.log("server acknowledges impact at tick:", tick);
         });
