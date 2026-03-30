@@ -2,9 +2,6 @@
 @use "STYLE/_mixin" as mix;
 
 .PrivateMessageConv-root {
-	@include mix.full;
-	display: flex;
-	flex-direction: column;
 
 	hr {
 		width: 100%;
