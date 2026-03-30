@@ -93,17 +93,19 @@ export class MyRoom extends Room {
       Vector3.Zero(), 1, scene);
 
     engine.runRenderLoop(() => {
-      this._checkPendingImpacts();
-      this._executeStep();
-      const racketImpact = this._impactSnapshots.getSnapshotAtTick(this._tick)
-      if (racketImpact && racketImpact.snapshot && racketImpact.snapshot.tick === this._tick) {
-        this._ball.setPhysicsBodyPosition(racketImpact.snapshot.position.clone());
-        this._ball.setVelocity(racketImpact.snapshot.velocity.clone());
+      if (this.state.roomStatus == RoomStatus.STARTED) {
+        this._checkPendingImpacts();
+        this._executeStep();
+        const racketImpact = this._impactSnapshots.getSnapshotAtTick(this._tick)
+        if (racketImpact && racketImpact.snapshot && racketImpact.snapshot.tick === this._tick) {
+          this._ball.setPhysicsBodyPosition(racketImpact.snapshot.position.clone());
+          this._ball.setVelocity(racketImpact.snapshot.velocity.clone());
+        }
+        this._checkWallCollision();
+        this._checkIfPointWon();
+        this._snapshotToSend = {tick: this._tick,position: this._ball.getPhysicsBodyPosition(), velocity: this._ball.getVelocity()};
+        this._tick++;
       }
-      this._checkWallCollision();
-      this._checkIfPointWon();
-      this._snapshotToSend = {tick: this._tick,position: this._ball.getPhysicsBodyPosition(), velocity: this._ball.getVelocity()};
-      this._tick++;
       scene.render();
     });
   }

@@ -196,19 +196,21 @@ export class App {
     }
 
     private _updatePhysicsAndRender() {
-        this._clock.updateAccumulator(this._engine.getDeltaTime());
-        this._ball.correctPosAndVel();
-        while (this._clock.getAccumulator() >= 1000/60) {
-            this._updatePlayerAndEnemy();
-            this._executeStep();
-            this._checkRacketCollision();
-            this._checkWallCollision();
-            this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-            this._clock.tick++;
-            this._clock.setbackAccumulator();
-            //console.log("Adding supplementary physics step, tick now:", this._clock.tick);
+        if (this._room.state.roomStatus == RoomStatus.STARTED) {
+            this._clock.updateAccumulator(this._engine.getDeltaTime());
+            this._ball.correctPosAndVel();
+            while (this._clock.getAccumulator() >= 1000/60) {
+                this._updatePlayerAndEnemy();
+                this._executeStep();
+                this._checkRacketCollision();
+                this._checkWallCollision();
+                this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
+                this._clock.tick++;
+                this._clock.setbackAccumulator();
+                //console.log("Adding supplementary physics step, tick now:", this._clock.tick);
+            }
+            this._ball.smoothPosition();
         }
-        this._ball.smoothPosition();
         this._scene.render();
     }
 
