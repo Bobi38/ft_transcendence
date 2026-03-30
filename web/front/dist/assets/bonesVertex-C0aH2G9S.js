@@ -1,1 +1,0 @@
-import{Cy as e,Sy as t}from"./index-CHiGcwTe.js";e();export{t as bonesVertex};

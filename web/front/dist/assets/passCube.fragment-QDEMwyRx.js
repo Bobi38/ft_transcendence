@@ -1,1 +1,0 @@
-import{Mi as e,Ni as t}from"./index-CHiGcwTe.js";e();export{t as passCubePixelShaderWGSL};

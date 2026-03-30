@@ -9,7 +9,7 @@ import checkCo from "TOOL/fonction_usefull.js"
 import "./Home.scss";
 
 /* Components */
-import PopUp from "./PopUp/PopUp.jsx"
+// import PopUp from "./PopUp/PopUp.jsx"
 import HomeChat from "./HomeChat/HomeChat.jsx";
 import HomeCard from "./HomeCard/HomeCard.jsx";
 import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
@@ -69,21 +69,16 @@ export default function Home() {
 
 		<div id={`Home-root`}>
 
-            <div className={`${is_popup}`} >
-                <div className={`${is_popup} Home-PopUp`} >
-                    {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
-                </div>
-            </div>
-
-			<main className={`menu`}>
-				<section className={`card-container`}>
+			<div className={`menu`}>
+				<div className={`card-container`}>
 					<HomeCardWeather />
 					{cards_content.map((card, i) => (
 						 <HomeCard key={i} path={card.path}>{card.text}</HomeCard>
 					))}
-				</section>
+				</div>
                 <HomeChat/>
-			</main>
+			</div>
+            
 		</div>
 	)
 }

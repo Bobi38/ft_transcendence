@@ -1,1 +1,0 @@
-import{_b as e,vb as t}from"./index-CHiGcwTe.js";t();export{e as clipPlaneVertex};

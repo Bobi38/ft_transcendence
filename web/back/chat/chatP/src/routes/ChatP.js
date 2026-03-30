@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.post('/add_message_private', async (req, res) => {
   try{
-    console.log("in add 1");
     const data = req.body;
     if (!data.message || !data.time) {
       return res.status(400).json({ success: false, message: 'Missing fields' });
@@ -15,20 +14,17 @@ router.post('/add_message_private', async (req, res) => {
     const id1 = jwt.verify(tok1, secret);
     const res1 = await User.findOne({ where: {id: id1.id}});
     const id2 = await User.findOne({ where: { name: data.id}});
-    console.log("in add 2");
     if (!res1 || !id2)
       return res.status(404).json({success: false, message: 'ERROR USER NOT FOUND'});
     let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
     if (!findchat)
         findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-    console.log("in add 3");
     console.log("dATA ", data.message, id1.id, findchat.id, data.time);
     const crypt = encrypt(data.message);
     console.log(crypt)
     await PrivMess.create({SenderId: id1.id, contenu: crypt, ChatId: findchat.id, time: data.time});
     findchat.lastmess = new Date();
     await findchat.save()
-    console.log("GOOOOOD");
     res.status(201).json({success: true});
   }catch(err){
     res.status(500).json({success: false, message: err});
@@ -37,7 +33,8 @@ router.post('/add_message_private', async (req, res) => {
 
 router.post('/get_chat_private', async (req, res) => {
     try{
-        const {token} = req.body;
+        
+        const token = req.query.name;
         if (!token) {
           return res.status(400).json({ success: false, message: 'Missing fields' });
         }
@@ -56,7 +53,7 @@ router.post('/get_chat_private', async (req, res) => {
             ret = maj_conv(id1.id, conv, name);
         res.status(201).json({success: true, message: ret});
     }catch(err){
-        res.status(500).json({success: false, message: "caca"});
+        res.status(500).json({success: false, message: "error:" + err});
     }
 })
 

@@ -1,1 +1,0 @@
-import{X_ as e,Y_ as t,Z_ as n}from"./index-CHiGcwTe.js";n();export{t as OpenPBRMaterial};

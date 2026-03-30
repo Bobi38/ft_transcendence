@@ -1,1 +1,0 @@
-import{Cm as e,wm as t}from"./index-CHiGcwTe.js";e();export{t as pickingVertexShader};

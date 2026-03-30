@@ -1,1 +1,0 @@
-import{Bt as e,zt as t}from"./index-CHiGcwTe.js";t();export{e as outlinePixelShaderWGSL};

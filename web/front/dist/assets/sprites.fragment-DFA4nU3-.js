@@ -1,1 +1,0 @@
-import{l as e,u as t}from"./index-CHiGcwTe.js";e();export{t as spritesPixelShader};

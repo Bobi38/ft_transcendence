@@ -1,1 +1,0 @@
-import{an as e,on as t}from"./index-CHiGcwTe.js";t();export{e as boundingBoxRendererPixelShader};

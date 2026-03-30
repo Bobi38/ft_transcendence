@@ -1,1 +1,0 @@
-import{ov as e,sv as t}from"./index-CHiGcwTe.js";e();export{t as minmaxReduxPixelShader};

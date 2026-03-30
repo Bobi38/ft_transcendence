@@ -1,1 +1,0 @@
-import{bm as e,ym as t}from"./index-CHiGcwTe.js";e();export{t as bonesDeclarationWGSL};

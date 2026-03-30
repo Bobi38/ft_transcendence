@@ -1,1 +1,0 @@
-import{ni as e,ri as t}from"./index-CHiGcwTe.js";t();export{e as extractHighlightsPixelShader};

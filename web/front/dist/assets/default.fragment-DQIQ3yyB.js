@@ -1,1 +1,0 @@
-import{Jo as e,qo as t}from"./index-CHiGcwTe.js";e();export{t as defaultPixelShader};
