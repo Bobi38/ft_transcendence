@@ -92,10 +92,11 @@ export class Environment {
         wall_right.checkCollisions = true;
         wall_left.checkCollisions = true;
 
-        ground.scaling = ToVec3(env.groundDimensions);
-        ceiling.scaling = ToVec3(env.groundDimensions);
-        wall_left.scaling = ToVec3(env.wallDimensions);
-        wall_right.scaling = ToVec3(env.wallDimensions);
+        const z_scaling : Vector3 = new Vector3(1,1,1.5);
+        ground.scaling = ToVec3(env.groundDimensions).multiply(z_scaling);
+        ceiling.scaling = ToVec3(env.groundDimensions).multiply(z_scaling);
+        wall_left.scaling = ToVec3(env.wallDimensions).multiply(z_scaling);
+        wall_right.scaling = ToVec3(env.wallDimensions).multiply(z_scaling);
 
         ground.receiveShadows = true;
         ceiling.receiveShadows = true;
