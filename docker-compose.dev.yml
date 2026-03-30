@@ -8,11 +8,8 @@ services:
       - ./conf/db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
     networks:
       - home
-    environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
-      MYSQL_DATABASE: TRANS
-      MYSQL_USER: bobi
-      MYSQL_PASSWORD: 123
+    env_file: 
+      - .env
     secrets:
       - data_pswd
     healthcheck:
@@ -28,14 +25,25 @@ services:
       - mysql
     ports:
       - "8081:80"
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_USER: bobi
-      PMA_PASSWORD: 123
+    env_file: 
+      - .env
     networks:
       - home
     restart: always
+  
+init_service:
+  build:
+    context: ./web/back
+    dockerfile: init_db/Dockerfile
+  env_file: 
+      - .env
+  depends_on:
+    db:
+      condition: service_healthy
+  secrets:
+    - cle_pswd
+    - cle_chat
+  restart: "no" 
 
   front:
     container_name: front
@@ -61,12 +69,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: gateway
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
@@ -89,12 +93,8 @@ services:
       dockerfile: Dockerfile
       target : dev
     container_name: auth
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
@@ -117,12 +117,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: chatp_service
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
@@ -145,12 +141,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: chatg_service
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
@@ -173,12 +165,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: user_service
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
@@ -201,12 +189,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: pong3d
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
@@ -232,12 +216,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: morpion
-    environment:
-      DB_USER: "bobi"
-      DB_PASSWORD: 123
-      DB_NAME: "TRANS"
-      DB_HOST: "mysql"
-      DB_PORT:  3306
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy

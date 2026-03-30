@@ -53,6 +53,10 @@ export default function Login() {
             return ;
         }
 
+        if (repjson.success === false){
+            showAlert(`Erreur : ${repjson.message}`, "danger");
+            return ;
+        }
 
 
         sessionStorage.setItem('type', "success");
