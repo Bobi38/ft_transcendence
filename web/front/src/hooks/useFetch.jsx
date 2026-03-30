@@ -49,7 +49,6 @@ const serviceMap = {
 };
 
 /**
- * fetchApi : wrapper pour appeler le gateway d'abord, puis fallback direct si down
  * @param {string} path - chemin de l'API (ex: '/auth/login')
  * @param {object} options - fetch options (method, headers, body, etc.)
  */
