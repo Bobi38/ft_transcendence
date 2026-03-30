@@ -456,17 +456,17 @@ export class App {
         body.isPickable = false;
         const hand_node = new TransformNode("hand_node", this._scene)
         hand_node.position = new Vector3(0.4, 2, 1);
-        const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.5});
+        const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.8});
         hand.material = bodymtl;
 
         let racketmtl = new StandardMaterial("white", this._scene);
         racketmtl.diffuseColor = new Color3(0.4,0.2,0);
-        let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.2, height: 0.8});
-        stick.position._y = 0.4;
+        let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.4, height: 1.2});
+        stick.position._y = 0.8;
         stick.material = racketmtl;
-        const racket = MeshBuilder.CreateCylinder("racket", {diameter: 1, height: 0.2});
+        const racket = MeshBuilder.CreateCylinder("racket", {diameter: 2, height: 0.4});
         racket.material = racketmtl;
-        racket.position._y = 0.7;
+        racket.position._y = 1.2;
         racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
         
         let racketRoot = new TransformNode("racketRoot", this._scene);

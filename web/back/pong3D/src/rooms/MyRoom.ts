@@ -212,6 +212,8 @@ export class MyRoom extends Room {
         (Math.abs(oldVel.y) > 0.5 && Math.abs(newVel.y) < 0.001) ||
         (Math.abs(oldVel.z) > 0.5 && Math.abs(newVel.z) < 0.001)
     );
+    if (isSuspicious)
+      console.log("suspicious speed!");
     return isSuspicious;
   }
 
@@ -227,11 +229,11 @@ export class MyRoom extends Room {
 
     const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
     // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
-    if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
+    //if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
       state.ball.velocity.x = ballVel.x;
       state.ball.velocity.y = ballVel.y;
       state.ball.velocity.z = ballVel.z;
-    }
+    //}
 
     state.ball.tickStamp = this._snapshotToSend.tick;
   }
