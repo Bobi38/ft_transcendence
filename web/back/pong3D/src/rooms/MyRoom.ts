@@ -137,14 +137,6 @@ export class MyRoom extends Room {
             ballVel.y *= -1;
         }
 
-        if (ballPos.z - radius < min.z) {
-            ballPos.z = min.z + radius;
-            ballVel.z *= -1;
-        } else if (ballPos.z + radius > max.z) {
-            ballPos.z = max.z - radius;
-            ballVel.z *= -1;
-        }
-
         this._ball.setPhysicsBodyPosition(ballPos);
         this._ball.setVelocity(ballVel);
     }

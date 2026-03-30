@@ -100,16 +100,22 @@ export class Ball {
 
         const positionError = this.serverPatch.position.subtract(pastSnapshot.snapshot.position);
         const velocityError = this.serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
-        if (positionError.lengthSquared() < 1e-10 && velocityError.lengthSquared() < 1e-10) return;
+        console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
+        if (positionError.lengthSquared() < 1e-10 && velocityError.lengthSquared() < 1e-10) {
+            this.serverPatch = null;
+            return;
+        }
         console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
         console.log("server vel:", this.serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
         console.log("server pos:", this.serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
         if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
             this._correctSmallErrors(positionError, velocityError, pastSnapshot);
+            this.serverPatch = null; 
             return ;
         }
 
         this._correctLargeErrors();
+        this.serverPatch = null; 
     }
 
     // public setupCorrections() {
@@ -148,7 +154,6 @@ export class Ball {
         this.setVelocity(this.getVelocity().add(velocityError));
         this.snapshots.correctFollowingSnapshotsVel(velocityError, pastSnapshot.index);
         this.visualOffset.subtractInPlace(positionError);
-        this.serverPatch = null;
     }
 
     private _correctLargeErrors() {
@@ -158,17 +163,13 @@ export class Ball {
         this.setPhysicsBodyPosition(this.serverPatch.position);
         this.setVelocity(this.serverPatch.velocity);
         //console.log("patch vel:", this.serverPatch.velocity, "setVel:", this.getVelocity());
-        //this._body.transformNode.computeWorldMatrix(true);
-        //this._body.disablePreStep = false;
         this.snapshots.clearAfterTickIncluded(patchTick);
         this.snapshots.saveSnapshot(patchTick, this.serverPatch.position, this.serverPatch.velocity);
         this.isResimming = true;
 
         const racketHistory = this._app.getPlayerRacketHistory();
-        const impactSnapshots = this._app.getPlayerImpactSnapshots();
+        //const impactSnapshots = this._app.getPlayerImpactSnapshots();
         const player = this._app.getPlayer();
-        //const HavokPlugin = this._app.getHavokPlugin();
-        //const bodies = this._app.getBodies();
         for (let i = 1; i < ticksToResimulate; i++) {
             const simulatingTick = patchTick + i;
             const historicalRacket = racketHistory.get(simulatingTick);
@@ -176,28 +177,15 @@ export class Ball {
                 player.setRacketPos(historicalRacket.position);
                 player.setRacketRot(historicalRacket.rotation);
             }
-           //this._body.disablePreStep = false;
             this._app._executeStep();
-            // const impactSnapshot = impactSnapshots.getSnapshotAtTick(simulatingTick);
-            // if (impactSnapshot && impactSnapshot.snapshot && impactSnapshot.snapshot.tick === simulatingTick) {
-            //     console.log("found impact snapshot at tick:", simulatingTick);
-            //     this.setVelocity(impactSnapshot.snapshot.velocity);
-            //     this.setPhysicsBodyPosition(impactSnapshot.snapshot.position);
-            // }
             this._app._checkRacketCollision();
             this._app._checkWallCollision();
-            //HavokPlugin.executeStep(FIXED_TIME_STEP, bodies);
-            //this._body.transformNode.computeWorldMatrix(true);
-            //console.log(this.getPhysicsBodyPosition());
-            //console.log(this.getVelocity());
             this.snapshots.saveSnapshot(simulatingTick, this.getPhysicsBodyPosition(), this.getVelocity());
         }
         this.isResimming = false;
         const postRollbackPos = this.getPhysicsBodyPosition();
         const teleportDelta = preRollbackPos.subtract(postRollbackPos);
         this.visualOffset.addInPlace(teleportDelta);
-    
-        this.serverPatch = null;
     }
 
     public smoothPosition(){
@@ -205,7 +193,7 @@ export class Ball {
         const dt = this._app.getEngine().getDeltaTime() / 1000; 
         const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
         const correctionFactor = Math.exp(-smoothingSpeed * dt);
-        //this.setMeshPosition(this.visualOffset);
+        this.setMeshPosition(this.visualOffset);
         this.visualOffset.scaleInPlace(correctionFactor);
     }
 
