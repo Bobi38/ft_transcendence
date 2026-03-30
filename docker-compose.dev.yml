@@ -64,6 +64,7 @@ services:
     volumes:
       - ./web/front/:/app
       - /app/node_modules
+    restart: always
 
 
   gateway:

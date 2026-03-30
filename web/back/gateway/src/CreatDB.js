@@ -100,33 +100,33 @@ async function CreatHistory() {
 
     // const deux = await StatMorp.findOne({where: {idUser: 1}});
 
-    await GameMorp.create({
-        how_win:"abort",
-        date_game:0,
-        player_1:1,
-        player_2:2,
-        winner:null,
-        loser:null,
-        time_player_1:0,
-        time_player_2:0,
-        nb_turn_player_1:0,
-        nb_turn_player_2:0,
-        map:"0",
-    });
+    // await GameMorp.create({
+    //     how_win:"abort",
+    //     date_game:0,
+    //     player_1:1,
+    //     player_2:2,
+    //     winner:null,
+    //     loser:null,
+    //     time_player_1:0,
+    //     time_player_2:0,
+    //     nb_turn_player_1:0,
+    //     nb_turn_player_2:0,
+    //     map:"0",
+    // });
 
-      await GamePong3D.create({
-          id_player_1:1,
-          score_1:0,
-          id_player_2:2,
-          score_2:0,
-          abortwinner:0,
-          abortloser:0,
-          winner:null,
-          loser:null,
-          date_game_start:0,
-          date_game_end:0,
-          time:0,
-      });
+    //   await GamePong3D.create({
+    //       id_player_1:1,
+    //       score_1:0,
+    //       id_player_2:2,
+    //       score_2:0,
+    //       abortwinner:0,
+    //       abortloser:0,
+    //       winner:null,
+    //       loser:null,
+    //       date_game_start:0,
+    //       date_game_end:0,
+    //       time:0,
+    //   });
 
 }
 
@@ -159,13 +159,13 @@ async function majDb(retry = 5) {
 
 
 async function addDb(){
-  const count = await User.count();
+    const count = await User.count();
     if (count === 0){
-      await CreatUser();
-      await CreatPrivMess();
-      await CreatHistory();
-      await CreatFriend();
-      await CreatGameMorp();
+        await CreatUser();
+        await CreatPrivMess();
+        await CreatHistory();
+        await CreatFriend();
+        await CreatGameMorp();
     }
 }
 
