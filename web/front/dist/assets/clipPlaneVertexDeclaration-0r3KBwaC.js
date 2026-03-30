@@ -1,1 +1,0 @@
-import{Qv as e,Zv as t}from"./index-CHiGcwTe.js";e();export{t as clipPlaneVertexDeclarationWGSL};

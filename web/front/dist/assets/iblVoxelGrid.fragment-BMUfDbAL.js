@@ -1,1 +1,0 @@
-import{A as e,k as t}from"./index-CHiGcwTe.js";e();export{t as iblVoxelGridPixelShaderWGSL};

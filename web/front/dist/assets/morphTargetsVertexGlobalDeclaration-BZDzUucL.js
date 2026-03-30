@@ -1,1 +1,0 @@
-import{_m as e,gm as t}from"./index-CHiGcwTe.js";t();export{e as morphTargetsVertexGlobalDeclarationWGSL};

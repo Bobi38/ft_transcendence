@@ -1,1 +1,0 @@
-import{Uy as e,Wy as t}from"./index-CHiGcwTe.js";e();export{t as postprocessVertexShader};

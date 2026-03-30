@@ -1,1 +1,0 @@
-import{nl as e,tl as t}from"./index-CHiGcwTe.js";t();export{e as lightProxyPixelShader};

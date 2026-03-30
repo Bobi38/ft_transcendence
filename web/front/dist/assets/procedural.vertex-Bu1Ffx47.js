@@ -1,1 +1,0 @@
-import{ds as e,fs as t}from"./index-CHiGcwTe.js";e();export{t as proceduralVertexShader};

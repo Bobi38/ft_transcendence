@@ -1,1 +1,0 @@
-import{Ar as e,jr as t}from"./index-CHiGcwTe.js";t();export{e as colorCorrectionPixelShaderWGSL};

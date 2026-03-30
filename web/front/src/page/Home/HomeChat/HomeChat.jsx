@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
+import { showAlert } from "TOOL/fonction_usefull.js";
 import SocketM  from "TOOL/SocketManag.js";
 
 /* Css */
@@ -97,6 +98,9 @@ export default function HomeChat() {
 		<section className={`HomeChat-root`}>
 
 			<h3>Global Chat</h3>
+
+            <div id={`alert-container`}></div>
+
 			<div className={`message-container`}>
 
 				{displayedMessages && displayedMessages.map((msg, index) => (

@@ -127,9 +127,7 @@ export default function Profile() {
             </div>
 
 
-            <div id={`alert-container`}>
-                {/* ne pas creat une div faire un innertext */}
-            </div>
+            <div id={`alert-container`}></div>
 
 
             <div className={`form-container`}>

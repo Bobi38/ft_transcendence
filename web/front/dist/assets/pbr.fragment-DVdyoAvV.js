@@ -1,1 +1,0 @@
-import{Gs as e,Ks as t}from"./index-CHiGcwTe.js";e();export{t as pbrPixelShaderWGSL};

@@ -1,1 +1,0 @@
-import{Fs as e,Ps as t}from"./index-CHiGcwTe.js";t();export{e as openpbrVertexShader};

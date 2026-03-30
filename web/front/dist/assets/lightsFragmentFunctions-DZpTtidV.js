@@ -1,1 +1,0 @@
-import{Fc as e,Ic as t}from"./index-CHiGcwTe.js";e();export{t as lightsFragmentFunctionsWGSL};

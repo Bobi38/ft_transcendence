@@ -1,1 +1,0 @@
-import{Gr as e,Wr as t}from"./index-CHiGcwTe.js";e();export{t as blackAndWhitePixelShader};

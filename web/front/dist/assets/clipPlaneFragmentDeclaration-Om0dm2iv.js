@@ -1,1 +1,0 @@
-import{Fb as e,Ib as t}from"./index-CHiGcwTe.js";t();export{e as clipPlaneFragmentDeclaration};
