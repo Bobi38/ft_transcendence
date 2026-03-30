@@ -114,10 +114,7 @@ export class SnapshotBuffer {
     }
 
     public clearAfterTickIncluded(tick: number) {
-        const snapshot = this.getSnapshotAtTick(tick);
-        if (!snapshot)
-            return ;
-        const index = snapshot.index;
+        const index = this.getSnapshotAtTick(tick).index;
         this._snapshots.splice(index);
     }
 

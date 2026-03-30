@@ -24,6 +24,9 @@ router.get('/profile', async(req, res) =>{
 router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
+    if (!user.login || !user.email || !user.tel || !user.location || !user.login42){
+      return res.status(400).json({success: false, message: 'Missing fields'});
+    }
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });

@@ -18,7 +18,7 @@ export default function Navigation({ children }) {
 
     const connection_check = async () => {
         const res = await checkCo();
-        if (!res && pathname != '/'){
+        if (!res && pathname !== '/'){
             console.log('pathname:',pathname);
             navigate('/');
         }

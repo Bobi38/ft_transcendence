@@ -44,9 +44,12 @@ export default function StatsPong3D({ username, setUsername }) {
 
         const data = repjson.stat_user;
 
-        const data_formated = {
+        const win = data.win;
+        const lose = data.lose;
+        const total_game = data.total_game;
+        const time_played = data.time_played;
 
-        };
+        const winrate = total_game > 0 ? ((win / total_game) * 100).toFixed(2) : 0;
 
         setStatToDisplay(data_formated);
 
@@ -141,11 +144,3 @@ export default function StatsPong3D({ username, setUsername }) {
         </section>
     )
 }
-
-
-// total_game:
-// time_played:
-// win:
-// lose:
-// total_ballhit: tballhit / tgame = moy ballhit/game
-    

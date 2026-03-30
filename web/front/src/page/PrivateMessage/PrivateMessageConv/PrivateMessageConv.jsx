@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 /* back */
 import  SocketM  from "TOOL/SocketManag.js";
+import {showAlert} from "TOOL/fonction_usefull.js";
 
 /* Css */
 import "./PrivateMessageConv.scss";
@@ -44,6 +45,11 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
+        if (input.length > 511) {
+            setInput("");
+            showAlert("Message trop long (511 caractères max)", "danger");
+            return;
+        }
 
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
         const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: login}
