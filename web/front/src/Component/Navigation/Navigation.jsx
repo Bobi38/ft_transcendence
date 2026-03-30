@@ -1,6 +1,5 @@
 /* extern */
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation} from "react-router-dom";
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
 
@@ -14,10 +13,13 @@ import { useEffect } from "react";
 export default function Navigation({ children }) {
 
     const navigate = useNavigate();
+    const {pathname} = useLocation();
+    // const { showLog, setShowLog } = useAuth();
 
     const connection_check = async () => {
         const res = await checkCo();
-        if (!res){
+        if (!res && pathname != '/'){
+            console.log('pathname:',pathname);
             navigate('/');
         }
     };
