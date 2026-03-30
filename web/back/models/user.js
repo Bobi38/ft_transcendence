@@ -100,6 +100,9 @@ User.afterCreate(async (user, options) => {
     time_played: 0,
     win:0,
     lose:0,
+    abortwinner:0,
+    abortloser:0,
+    total_ballhit:0,
   });
 });
 
