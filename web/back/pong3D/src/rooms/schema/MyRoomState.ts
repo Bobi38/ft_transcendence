@@ -11,7 +11,7 @@ export enum RoomStatus {
 export class Vector3 extends Schema {
   @type("number") x: number = 0;
   @type("number") y: number = 3;
-  @type("number") z: number = 7;
+  @type("number") z: number = -12;
 }
 
 export class Quaternion extends Schema {
