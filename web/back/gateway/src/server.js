@@ -91,10 +91,10 @@ app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
 
 (async () => {
   try {
-    // console.log("Mise à jour de la DB...");
-    // await majDb();
-    // console.log("DB mise à jour avec succès");
-    // addDb();
+    console.log("Mise à jour de la DB...");
+    await majDb();
+    console.log("DB mise à jour avec succès");
+    addDb();
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
