@@ -1,1 +1,0 @@
-import{Uo as e,Wo as t}from"./index-CHiGcwTe.js";t();export{e as defaultPixelShaderWGSL};

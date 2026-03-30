@@ -1,1 +1,0 @@
-import{Ao as e,ko as t}from"./index-CHiGcwTe.js";e();export{t as OptimizeIndices};

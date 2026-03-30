@@ -1,1 +1,0 @@
-import{Eh as e}from"./index-CHiGcwTe.js";export{e as EXT_lights_image_based};

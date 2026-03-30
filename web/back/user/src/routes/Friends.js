@@ -79,7 +79,7 @@ router.get('/add_friend', async (req, res) => {
 
 router.get('/dlt_friend', async (req, res) => {
 	try{
-		const name = parseInt(req.query.name) || null;
+		const name = req.query.name;
 		if (!name)
 			return res.status(404).json({success: false, message: "no name"});
 		const token = req.cookies.token;

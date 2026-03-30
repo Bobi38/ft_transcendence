@@ -1,1 +1,0 @@
-import{Sh as e}from"./index-CHiGcwTe.js";export{e as EXT_texture_avif};

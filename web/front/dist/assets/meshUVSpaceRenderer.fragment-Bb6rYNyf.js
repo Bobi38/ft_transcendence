@@ -1,1 +1,0 @@
-import{So as e,xo as t}from"./index-CHiGcwTe.js";t();export{e as meshUVSpaceRendererPixelShader};

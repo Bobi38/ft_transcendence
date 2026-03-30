@@ -1,1 +1,0 @@
-import{bc as e,yc as t}from"./index-CHiGcwTe.js";e();export{t as backgroundVertexShader};

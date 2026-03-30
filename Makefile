@@ -58,7 +58,7 @@ logs-%:
 	docker compose  -f docker-compose.dev.yml logs -f $*
 	
 logs:
-	docker compose  -f docker-compose.dev.yml logs -f
+	docker compose  -f docker-compose.prod.yml logs -f
 	
 logst:
 	docker compose  -f docker-compose.dev.yml logs -f -t
@@ -79,7 +79,7 @@ secrets:
 fclean: clean
 	docker volume prune -f
 	docker network prune -f
-	rm -r ./conf/secrets
+# 	rm -r ./conf/secrets ./web/front/dist
 	$(MAKE) volumes
 # 	hosts_remove
 

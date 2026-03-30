@@ -5,23 +5,6 @@ $padding: 1.7rem;
 
 #Home-root {
 	@include mix.full;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-
-	.Home-PopUp {
-		position: absolute;
-		top:0;
-		left:0;
-		display: flex;
-		height: 100%;
-		width: 100%;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		z-index: 200;
-		background-color: rgba(17, 28, 69, 0.185);
-	}
 
 	.menu {
 		padding: $padding;

@@ -1,1 +1,0 @@
-import{bh as e}from"./index-CHiGcwTe.js";export{e as KHR_draco_mesh_compression};

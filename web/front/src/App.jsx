@@ -76,12 +76,12 @@ export default function App() {
 
     return (
         <>
-          {notif && (
-          <div className="global-notif">
-            {notif}
-          </div>
-          )}
-
+            {notif && (
+                <div className="global-notif">
+                    {notif}
+                </div>
+            )}
+            {/* <div id={`alert-container`}></div> */}
             <BrowserRouter>
                 <Routes>
 

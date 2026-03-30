@@ -1,1 +1,0 @@
-import{cn as e,sn as t}from"./index-CHiGcwTe.js";e();export{t as geometryVertexShaderWGSL};

@@ -11,6 +11,7 @@ export default async function useFetch(url, type_request, callbacksucces = null,
             return null;
         }
         
+        repjson.status = response.status
         if (repjson.success) {
 
             if (callbacksucces){

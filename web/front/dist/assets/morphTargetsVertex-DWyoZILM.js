@@ -1,1 +1,0 @@
-import{lm as e,um as t}from"./index-CHiGcwTe.js";e();export{t as morphTargetsVertexWGSL};
