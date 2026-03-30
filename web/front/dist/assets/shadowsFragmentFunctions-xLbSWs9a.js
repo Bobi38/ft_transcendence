@@ -1,0 +1,1 @@
+import{Nc as e,Pc as t}from"./index-CHiGcwTe.js";e();export{t as shadowsFragmentFunctionsWGSL};

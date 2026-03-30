@@ -1,0 +1,1 @@
+import{Fi as e,Pi as t}from"./index-CHiGcwTe.js";t();export{e as passPixelShaderWGSL};

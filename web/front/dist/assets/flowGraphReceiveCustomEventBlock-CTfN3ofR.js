@@ -1,0 +1,1 @@
+import{Mu as e,Nu as t}from"./index-CHiGcwTe.js";t();export{e as FlowGraphReceiveCustomEventBlock};

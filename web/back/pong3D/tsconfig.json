@@ -1,20 +1,16 @@
 {
   "compilerOptions": {
-    "outDir": "build",
-    "target": "ESNext",
+    "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "strict": true,
-    "allowJs": true,
-    "strictNullChecks": false,
     "esModuleInterop": true,
+    "allowJs": true,
+    "strict": false,
+    "strictNullChecks": false,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": false
+    "emitDecoratorMetadata": true,
+    "outDir": "build",
+    "skipLibCheck": true
   },
-  "include": [
-    "src",
-    "test"
-  ]
+  "include": ["src/**/*"]
 }

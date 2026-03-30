@@ -12,9 +12,8 @@ $active-light: #92e3f5;
 $accent:#b1d5f2;
 
 $grey:#d6d6d6;
+$grey-dark:#a3a3a3;
 
-//other
-$border_value: 0;
 $border_radius_value: 1rem;
 
 $shadow: 0 6px 15px rgba(0, 0, 0, 0.700);
@@ -22,4 +21,5 @@ $shadow: 0 6px 15px rgba(0, 0, 0, 0.700);
 $root_width: 100%;
 $root_height: 100%;
 
-$navbar_height: 12%;
+$phone: 600px;
+$tablet: 1100px;

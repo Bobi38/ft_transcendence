@@ -6,11 +6,22 @@
     justify-content: center;
     align-items: center;
 	overflow: hidden;
+	min-height: 100px;
 
-    @include mix.icone;
+    @include mix.default_card;
 
-	p {
+	p, span {
 		text-align: center;
 		overflow-wrap: anywhere;
+		@media (width <= $tablet) {
+			font-size: 1.5rem;
+		}
+		@media (width <= $phone) {
+			font-size: 2.5rem;
+		}
+	}
+	@media (width <= $phone) {
+		min-height: 200px;
 	}
 }
+

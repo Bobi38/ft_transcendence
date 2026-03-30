@@ -11,16 +11,25 @@ import './Morpion.scss';
 import Board from "./Board/Board.jsx";
 
 function RebootTruc() {
+    function sendType(s_type){
+        SocketM.sendd('morp',{
+                type: s_type,
+            })   
+    }
 
     return (
-        <button onClick={() => {
-            SocketM.sendd('morp',{
-                type: "reboot",
-                message: "reboot"
-            })
-        }}>
-            Reboot</button>
+        <button 
+            onClick={() =>{sendType("bot")}}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                sendType('reboot');               
+            }}
+            style={{ cursor: 'add bot' }}
+            >
+                add Bot
+        </button>
     );
+
 }
 
 function GoOut(){

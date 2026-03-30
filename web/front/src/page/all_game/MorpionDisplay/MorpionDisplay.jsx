@@ -10,7 +10,6 @@ import "./MorpionDisplay.scss";
 /* Components */
 import Morpion from "./Morpion/Morpion";
 import Board from "./Morpion/Board/Board.jsx";
-import { ColorGradient } from "@babylonjs/core";
 
 function SpecButton({ player_1, player_2, id }) {
     const handleClick = () => {
@@ -61,7 +60,7 @@ export default function MorpionDisplay() {
             console.log("Morpion component handleSpec data:", data)
                 // setSpecSelect({other_board: data.other_board, player: data.player})
             if (data?.other_board){
-
+                console.log("other board recu");
                 setSpecSelect(data.other_board)
 
             }

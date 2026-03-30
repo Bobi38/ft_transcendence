@@ -6,11 +6,12 @@
     margin: 0;
     padding: 0;
 	scrollbar-width: thin;
-	scrollbar-color: #888 transparent;
+	scrollbar-color: $second-dark transparent;
 }
 
 body {
 	@include mix.cursor("default");
+	background-color: white;
 }
 
 body, #root {
@@ -18,7 +19,7 @@ body, #root {
     width: 100vw;
 }
 
-p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label strong {
+p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label, strong {
 	font-size: 1.15rem;
 	font-family: inter, roboto;
 	font-weight: 700;
@@ -26,23 +27,19 @@ p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label strong {
 	color: $second-dark;
 }
 
+a {
+	color: inherit;
+	text-decoration: none;
+	@include mix.cursor("pointer");
+}
+
 input, textarea {
  	text-transform: none;
  	@include mix.cursor("text");
- }
-
- hr {
- 	@include mix.cursor("grab");
- }
-
- a {
-	color: inherit;
-	text-decoration: none;
- 	@include mix.cursor("pointer");
- }
+}
 
 button, label, select, option, li, input[type="submit"] {
-	 @include mix.cursor("pointer");
+	@include mix.cursor("pointer");
 }
 
 .scanlines {
@@ -58,18 +55,17 @@ button, label, select, option, li, input[type="submit"] {
     text-align: center;
 }
 
-@media (width <= 1000px) {
+:root{
+	font-size: 16px;
+}
+
+@media (width <= $tablet) {
 	:root{
 		font-size: 13px;
 	}
 }
-@media (width <= 750px) {
+@media (width <= $phone) {
 	:root{
 		font-size: 10px;
-	}
-}
-@media (width <= 500px) {
-	:root{
-		font-size: 7px;
 	}
 }

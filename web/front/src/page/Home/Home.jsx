@@ -1,6 +1,6 @@
 /* extern */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
 
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
@@ -13,55 +13,26 @@ import PopUp from "./PopUp/PopUp.jsx"
 import HomeChat from "./HomeChat/HomeChat.jsx";
 import HomeCard from "./HomeCard/HomeCard.jsx";
 import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
-import HomeFooter from "./HomeFooter/HomeFooter.jsx";
 
-export const AUTH = {
-    NONE: 0,
-    LOGIN: 1,
-    MAILA2F: 2,
-    REGISTER: 3,
-};
 
+const cards_content = [
+	{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
+	{ text:"Private Message", path: "/PrivateMessage" },
+	{ text:"Morpion", path: "/Morpion" },
+	{ text:"Pong3D", path: "/Pong3D" },
+	{ text:"Pond2D", path: "/Pond2D" },
+	{ text:"Contact Us", path: "/ContactUs" },
+	{ text:"Stats", path: "/Stats" },
+	{ text:"Nothing", path: "/Nothing" },
+]
 
 export default function Home() {
 
-    const [showLog, setShowLog] = useState(AUTH.NONE);
+    const { showLog, setShowLog } = useAuth();
 
     const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
 
-
     const home_handler = async (event) => {
-
-		//sorry idk where to put this, but here that worked
-		//const cards = document.querySelectorAll('.card-effect');
-		//cards.forEach(card => {
-		//	const tiltLimit = 20;
-
-		//	card.addEventListener('mousemove', (e) => {
-		//		const rect = card.getBoundingClientRect();
-		//		const x = e.clientX - rect.left;
-		//		const y = e.clientY - rect.top;
-		//		const xPercent = (x / rect.width) - 0.5;
-		//		const yPercent = (y / rect.height) - 0.5;
-
-		//		const rotateX = yPercent * -tiltLimit;
-		//		const rotateY = xPercent * tiltLimit;
-
-		//		card.style.transform = `
-		//		rotateX(${rotateX}deg)
-		//		rotateY(${rotateY}deg)
-		//		scale3d(1.05, 1.05, 1.05)
-		//		translateY(-3px)
-		//		`;
-		//	});
-
-		//	// Reset rotation when mouse leaves
-		//	card.addEventListener('mouseleave', () => {
-		//		card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-		//	});
-		//});
-
-
         if (event && event.target && event.target.closest('.PopUp-root')) {
             console.log("home_handler(1) need to connect")
             return;
@@ -71,6 +42,7 @@ export default function Home() {
         if (!resCo) {
             setShowLog(AUTH.LOGIN);
         } else {
+			setShowLog(AUTH.NONE);
             if (event && event.target && event.target.id === "HomeChatsubmit"){
                 const form = event.target.form
                 if (form) {
@@ -80,7 +52,6 @@ export default function Home() {
             }
         }
     };
-
 
     useEffect(() => {
 
@@ -94,27 +65,6 @@ export default function Home() {
 
     }, []);
 
-
-
-	const cards = [];
-	const cards_content = [
-		// { text:"Weather", path: "/Weather" },
-		{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
-		{ text:"Private Message", path: "/PrivateMessage" },
-		{ text:"Morpion", path: "/Morpion" },
-		{ text:"Pong3D", path: "/Pong3D" },
-		{ text:"Pond2D", path: "/Pond2D" },
-		{ text:"Nothing", path: "/Nothing" },
-		{ text:"Stats", path: "/Stats" },
-		{ text:"Nothing", path: "/Nothing" },
-	]
-
-	cards.push( <HomeCardWeather key={0}/> )
-	cards_content.forEach((el, index) => {
-			cards.push( <HomeCard key={index + 1} path={el.path}>{el.text}</HomeCard> )
-	})
-
-
 	return (
 
 		<div id={`Home-root`}>
@@ -127,13 +77,13 @@ export default function Home() {
 
 			<main className={`menu`}>
 				<section className={`card-container`}>
-					{cards}
+					<HomeCardWeather />
+					{cards_content.map((card, i) => (
+						 <HomeCard key={i} path={card.path}>{card.text}</HomeCard>
+					))}
 				</section>
                 <HomeChat/>
 			</main>
-
-			<HomeFooter setShowLog={setShowLog}/>
-
 		</div>
 	)
 }

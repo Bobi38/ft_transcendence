@@ -10,11 +10,12 @@ import "./Pong3D.scss";
 
 /* Components */
 import { App as GameApp } from "FRONT/game/app.ts";
+import Button from "FRONT/Component/Button/Button.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Pong3D() {
 
-    
+
     const navigate = useNavigate();
 
     const canvasRef = useRef(null);
@@ -24,7 +25,6 @@ export default function Pong3D() {
 
         const init = async () => {
             const isConnected = await checkCo();
-            
             if (!isConnected) {
                 navigate('/');
                 return;
@@ -62,6 +62,7 @@ export default function Pong3D() {
 
     return (
         <main className={`Pong3D-root`}>
+			<a href="/" className="button">Home</a>
             <canvas ref={canvasRef} />
         </main>
     )

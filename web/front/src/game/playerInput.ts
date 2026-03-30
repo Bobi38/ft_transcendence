@@ -40,25 +40,20 @@ export class PlayerInput {
     }
 
     private _inputBody() {
-        let vertical = 0;
-        let horizontal = 0;
-
-        if (this._inputMap["ArrowUp"]) {
-            vertical = Scalar.Lerp(vertical, 1, 0.2);
-        } else if (this._inputMap["ArrowDown"]) {
-            vertical = Scalar.Lerp(vertical, -1, 0.2);
-        } else {
-            vertical = 0;
-        }
+        let horizontal = Vector3.Zero();
 
         if (this._inputMap["ArrowLeft"]) {
-            horizontal = Scalar.Lerp(horizontal, -1, 0.2);
+            horizontal = Vector3.Lerp(horizontal, new Vector3(1,0,0), 0.2);
         } else if (this._inputMap["ArrowRight"]) {
-            horizontal = Scalar.Lerp(horizontal, 1, 0.2);
+            horizontal = Vector3.Lerp(horizontal, new Vector3(-1,0,0), 0.2);
         } else {
-            horizontal = 0;
+            horizontal = Vector3.Zero();
         }
-        this._moveDirection = new Vector3(horizontal, 0, vertical).normalize();
+
+        if (this._camera.getUniversalCamera().getForwardRay().direction._z > 0) {
+            horizontal.scaleInPlace(-1);
+        }
+        this._moveDirection = horizontal.normalize();
     }
 
     private _inputRacket() {
@@ -75,7 +70,8 @@ export class PlayerInput {
         }
         this.prevMousePos = mousePos;
 
-        const normal = this._handNode.forward;
+        const normal = this._camera.getUniversalCamera().getForwardRay().direction;
+        // const normal = this._handNode.forward;
         const position = this._handNode.getAbsolutePosition().add(normal.scale(3));
         //console.log(this._handNode.getAbsolutePosition(), position, normal);
         const plane = Plane.FromPositionAndNormal(position, normal);
@@ -84,7 +80,10 @@ export class PlayerInput {
         const distance = ray.intersectsPlane(plane);
         if (distance) {
             const worldPointerPos : Vector3 = ray.origin.add(ray.direction.scale(distance));
-            const relativePos : Vector3 = worldPointerPos.subtract(this._handNode.absolutePosition);
+            const invertedWorldMatrix = this._handNode.computeWorldMatrix(true).clone().invert();
+            const localPointerPos = Vector3.TransformCoordinates(worldPointerPos, invertedWorldMatrix);
+            const localHandPos = Vector3.TransformCoordinates(this._handNode.absolutePosition, invertedWorldMatrix);
+            const relativePos : Vector3 = localPointerPos.subtract(localHandPos);
 
             const maxRadius = 5;
             if (relativePos.length() > maxRadius) {
@@ -100,14 +99,21 @@ export class PlayerInput {
             const localAxisY = relativePos.clone().normalize(); 
             let movementDir = relativePos.subtract(oldPos);
             let localAxisX : Vector3;
-            if (movementDir.length() < 0.01)
+            if (movementDir.lengthSquared() < 0.001)
             {
-                const oldZ = this._racket.getDirection(Axis.Z);
-                localAxisX = Vector3.Cross(localAxisY, oldZ).normalize();
+                const oldZ = Vector3.Forward;
+                localAxisX = Vector3.Cross(localAxisY, Vector3.RightHandedForwardReadOnly);
             }
             else {
-                localAxisX = Vector3.Cross(localAxisY, movementDir).normalize();
+                localAxisX = Vector3.Cross(localAxisY, movementDir);
             }
+            if (localAxisX.lengthSquared() < 0.001) {
+                localAxisX = Vector3.Cross(localAxisY, new Vector3(0,1,0));
+                if (localAxisX.lengthSquared() < 0.001) {
+                    localAxisX = Vector3.Cross(localAxisY, new Vector3(1,0,0));
+                }
+            }
+            localAxisX.normalize();
             const localAxisZ = Vector3.Cross(localAxisX, localAxisY).normalize();
             const targetRotation = Quaternion.RotationQuaternionFromAxis(localAxisX, localAxisY, localAxisZ);
 

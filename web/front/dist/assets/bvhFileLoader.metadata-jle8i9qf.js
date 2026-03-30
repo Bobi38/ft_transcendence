@@ -1,0 +1,1 @@
+const e={name:`bvh`,extensions:{".bvh":{isBinary:!1}}};export{e as t};

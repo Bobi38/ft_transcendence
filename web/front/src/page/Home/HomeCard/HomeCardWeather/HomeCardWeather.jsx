@@ -50,39 +50,17 @@ export default function HomeCardWeather() {
 
 		setActiveWeather({
 			backgroundImage: `url(${weather.icon})`,
-			//backgroundSize: 'cover',
-			// width: '100%',
-			// height: '100%',
-			// opacity: '100%',
-			// display: "flex",
-			// justifyContent: "center",
-			// alignItems: "center",
 		})
 	}, [weather]);
 	
     return (
-		<div className={`HomeCardWeather-root card-effect`}
-			style={activeWeather}>
-
-			{/* {weather.icon && (
-				<div style={{
-					backgroundImage: `url(${weather.icon})`,
-					backgroundSize: 'cover',
-					width: '100%',
-					height: '100%',
-					opacity: '100%',
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-				}}> */}
+		<button className={`HomeCard-root HomeCardWeather`} style={activeWeather}>
 				<p>
 					<span>{weather.descript}</span><br/><br/>
 					<span>{weather.title}</span><br/>
 					<span>{weather.temp}</span>
 				</p>
-				{/* </div> */}
-			{/* )} */}
-		</div>
+		</button>
 	)
 }
 

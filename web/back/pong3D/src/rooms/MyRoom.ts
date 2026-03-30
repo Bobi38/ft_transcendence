@@ -175,6 +175,8 @@ export class MyRoom extends Room {
   }
 
   onBeforePatch(state: MyRoomState) {
+    if (!this._posToSend)
+      return ;
     const ballPos = this._posToSend;
     const ballVel = this._velToSend;
     // console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
@@ -217,6 +219,10 @@ export class MyRoom extends Room {
       let decoded;
       try {
         decoded = jwt.verify(ourToken, secret);
+        if (typeof decoded === "string" || !("id" in decoded)) {
+          console.log("Invalid token");
+          return false;
+        }
       } catch (e) {
         console.log("Verification failed:", e);
       }
@@ -255,6 +261,9 @@ export class MyRoom extends Room {
     this.state.players.set(client.sessionId, player);
     this._nextPlayerIndex++;
     if (this.state.players.size == 2) {
+      if (this._tokens.get(this._near).auth === this._tokens.get(this._far).auth) {
+        throw new Error("Same player joined twice!");
+      }
       console.log("Game starting");
       this.state.roomStatus = RoomStatus.STARTED;
       this._timeStart = Date.now();
@@ -268,8 +277,10 @@ export class MyRoom extends Room {
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = true;
     }
+    if (this.state.roomStatus === RoomStatus.STARTED)
+      this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
     this.allowReconnection(client, 5).catch(() => {
-      if (this.state.roomStatus === RoomStatus.STARTED) {
+      if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
         this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
         this._timeEnd = Date.now();
       }
@@ -280,7 +291,8 @@ export class MyRoom extends Room {
     console.log(`Client ${client.sessionId} reconnected!`);
  
     const player = this.state.players.get(client.sessionId);
-    if (player && this.state.roomStatus === RoomStatus.STARTED) {
+    if (player && this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+      this.state.roomStatus = RoomStatus.STARTED;
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = false;
     }

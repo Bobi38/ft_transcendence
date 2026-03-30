@@ -1,5 +1,7 @@
 @use "STYLE/variable" as *;
 
+$border_value: 0;
+
 %border-base {
   border: $border_value solid black;
 }

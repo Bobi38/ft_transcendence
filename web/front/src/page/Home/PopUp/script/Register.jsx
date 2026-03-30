@@ -8,12 +8,14 @@ import { showAlert } from "TOOL/fonction_usefull.js";
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 
 import useFetch from "HOOKS/useFetch.jsx";
 
 
-export default function Register({setShowLog}) {
+export default function Register() {
+
+    const {setShowLog, showLog} = useAuth();
 
     async function register_submit(e){
 
@@ -38,6 +40,10 @@ export default function Register({setShowLog}) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
+        if (repjson.status < 500 && repjson.status >= 400){
+            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            return ;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
         setShowLog(AUTH.LOGIN);

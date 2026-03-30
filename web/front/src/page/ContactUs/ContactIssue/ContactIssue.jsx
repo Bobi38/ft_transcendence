@@ -13,11 +13,11 @@ export default function ContactIssue() {
         <section className={`ContactIssue-root`}>
 
             <h4>Issue</h4>
-            
+
             <form className={`ContactIssue-form`}>
 
                 <div>
-                    <label htmlFor={`name`}>Noms</label>
+                    <label htmlFor={`name`}>Name</label>
                     <input type={`text`} id={`name`}/>
                 </div>
 
@@ -44,7 +44,7 @@ export default function ContactIssue() {
                     <textarea id={`story`} name={`story`} rows={`10`} cols={`33`}/>
                 </div>
 
-                    <input type={`submit`}/>
+				<input type={`submit`} value={`Send`}/>
             </form>
         </section>
     );

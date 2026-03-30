@@ -1,0 +1,1 @@
+import{_n as e,vn as t}from"./index-CHiGcwTe.js";e();export{t as rsmGlobalIlluminationPixelShaderWGSL};

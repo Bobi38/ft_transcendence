@@ -1,0 +1,1 @@
+import{Ri as e,zi as t}from"./index-CHiGcwTe.js";e();export{t as passPixelShader};

@@ -1,12 +1,8 @@
-// @use "STYLE/variable" as *;
-//    var.$border_value;
-
 @use "STYLE/_mixin" as mix;
 
 .MorpionDisplay-root{
-
 	@include mix.page;
-    
+
     display: flex;
     padding: 0.5rem;
     .MorpionDisplay-actual-game{
@@ -57,7 +53,7 @@
     }
 
     button{
-        @include mix.icone;
+        @include mix.default_card;
         padding: 0.3rem;
         box-shadow: 0px 0px 7px 5px #8da8c6;
     }

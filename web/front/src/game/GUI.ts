@@ -77,12 +77,12 @@ export class GUI {
         panel.addControl(menuBtn);
     }
 
-    public showWaitingUI() {
+    private _waitingUI(text: string) {
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         this._setAndDispose(ui);
 
         const banner = new Rectangle();
-        banner.width = "500px";
+        banner.width = "600px";
         banner.height = "100px";
         banner.cornerRadius = 25;
         banner.thickness = 2;
@@ -97,7 +97,7 @@ export class GUI {
         banner.addControl(panel);
 
         const waitingText = new TextBlock();
-        waitingText.text = "Waiting for a second player";
+        waitingText.text = text;
         waitingText.color = "white";
         waitingText.fontSize = 36;
         waitingText.fontFamily = "Inter";
@@ -109,14 +109,17 @@ export class GUI {
         let dots = 0;
         setInterval(() => {
             dots = (dots + 1) % 4;
-            waitingText.text = "Waiting for a second player" + ".".repeat(dots);
+            waitingText.text = text + ".".repeat(dots);
         }, 500);
     }
 
-    // public disposeWaitingUI() {
-    //     this._waiting4Player.dispose();
-    //     this._waiting4Player = null;
-    // }
+    public showWaitingUI() {
+        this._waitingUI("Waiting for a second player");
+    }
+
+    public showAwaitingReconnectionUI() {
+        this._waitingUI("Waiting for player reconnection");
+    }
 
     public addScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
         this._score = AdvancedDynamicTexture.CreateFullscreenUI("ui");
@@ -213,17 +216,16 @@ export class GUI {
         }, 500);
     }
 
-    // public disposePlayerDisconnectedUI() {
-    //     this._playerDisconnected.dispose();
-    //     this._playerDisconnected = null;
-    // }
-
     public getIsPlayerDisconnectedUIShown() : boolean {
         return (this._playerDisconnected != null)
     }
 
     public showOtherPlayerDisconnectUI() {
         this._gameOverUI("Other player disconnected");
+    }
+
+    public showFailedReconnectionUI() {
+        this._gameOverUI("Failed to reconnect to room");
     }
 
     public showNoUI() {

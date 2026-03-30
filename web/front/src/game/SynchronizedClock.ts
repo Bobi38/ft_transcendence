@@ -12,20 +12,6 @@ export class SynchronizedClock {
 
     constructor() {}
 
-    // public synchronizeClientWithServerClock(serverTick: number, t0: number) {
-    //     const t1 = Date.now();
-    //     //const latency = (t1 - t0) / 2;
-    //     const latency = (t1 - t0);
-    //     const serverTickNow = serverTick + Math.round(latency * 60 / 1000);
-    //     const offset = serverTickNow - this.tick;
-    //     this._offsets.push(offset);
-    //     if (this._offsets.length > this._MAX_OFFSETS) {
-    //         this._offsets.shift();
-    //     }
-    //     this.tickOffset = this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length;
-    //     // this.tickOffset = Math.round(this._offsets.reduce((acc, curr) => acc + curr, 0) / this._offsets.length);
-    //     //console.log("latency:", latency.toString(), "offset:", offset.toString(), "average offset:", this.tickOffset.toString());
-    // }
     public setInitialClientClock(serverTick: number) {
         this.tick = serverTick + this._TARGET_TICK_OFFSET + 10;
         console.log("server tick:", serverTick, "client tick:", this.tick);
