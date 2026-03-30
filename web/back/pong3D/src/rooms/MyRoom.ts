@@ -136,7 +136,6 @@ export class MyRoom extends Room {
             ballPos.y = max.y - radius;
             ballVel.y *= -1;
         }
-
         this._ball.setPhysicsBodyPosition(ballPos);
         this._ball.setVelocity(ballVel);
     }
