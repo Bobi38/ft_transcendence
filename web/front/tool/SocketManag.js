@@ -50,6 +50,8 @@ class SocketManag{
     connectsocket(name){
         if (this.socket[name] && this.socket[name].readyState === WebSocket.OPEN) {return;}
         if (this.socket[name] && this.socket[name].readyState === WebSocket.CONNECTING){return ;}
+        this.reco[name] = true;      // ← reset le flag de reco
+        this.attempt[name] = 0;
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host;
         console.log(`${protocol}//${host}${paths[name]}`);
@@ -57,8 +59,8 @@ class SocketManag{
         console.log("Tentative de connexion au WebSocket...");
         this.socket[name].onopen = () => {
             this.sendd(name,{type: "auth",  mess: null});
-            console.log("WebSocket connecté avec succès.");
-            this.flushQueue(name);
+            console.log("WebSocket " + name + " connecté avec succès.");
+            // this.flushQueue(name);
         }
 
         this.socket[name].onmessage = (event) => {
@@ -79,13 +81,15 @@ class SocketManag{
             if (dataa.type === 'auth_good')
                 this.attempt[name] = 0;
             if (dataa.type === 'co_good' && name === "friend"){
+                console.log("co_good recu pour friend, flushQueue called");
                 this.flushQueue(name);
             }
         }
         this.socket[name].onerror = (error) => {
             console.log("errr socket" + error);
         }
-        this.socket[name].onclose = (event) => {    
+        this.socket[name].onclose = (event) => {
+            if (this.reco[name] === false) return;   
             if (event.code == 1008){
                 document.cookie = "token=; Max-Age=0; path=/;";
                 return ;
@@ -112,6 +116,11 @@ class SocketManag{
         console.log("sendd called with data:", data);
         const socket = this.socket[name];
         if (!socket){
+            if (name === "friend" && data.type === "co_first"){
+                this.queue[name].push(data);
+                console.log("Socket non connecté pour " + name + ", message mis en file d'attente:", data);
+                return ;
+            }
             console.log("pas de socket pour " + name);
             return ;
         }
@@ -128,10 +137,12 @@ class SocketManag{
     
     disconnect(name){
         this.reco[name] = false;
-        this.sendd(this.socket[name], {type: "logout"});
+        this.sendd(name, {type: "logout"});
+
         if (this.socket[name]){
             this.socket[name].close();
             this.socket[name] = null;
+            console.log("WebSocket déconnecté pour " + name);
         }
     }
 
@@ -141,6 +152,7 @@ class SocketManag{
 
         while(q.length > 0){
             const msg = q.shift();
+            console.log("flushQueue: envoi du message en attente via WebSocket:", msg, " to socket:", name);
             this.sendd(name, msg);
         }
     }
@@ -155,3 +167,59 @@ class SocketManag{
 const SocketM = new SocketManag();
 
 export default SocketM;
+
+
+/*
+connectSocket(name) {
+  if (this.socket[name] && (this.socket[name].readyState === WebSocket.OPEN || this.socket[name].readyState === WebSocket.CONNECTING)) {
+    return;
+  }
+
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  const pathsGateway = {
+    chatG: '/ws/chatG',
+    chatP: '/ws/chatP',
+    friend: '/ws/friend',
+    morp: '/ws/morp',
+    goat: '/ws/goat',
+  };
+
+  const serviceFallback = {
+    chatG: 'ws://chatg_service:9001',
+    chatP: 'ws://chatp_service:9002',
+    friend: 'ws://user_service:9003',
+    morp: 'ws://morpion:9004',
+    goat: 'ws://pong3d:2567',
+  };
+
+  const urlGateway = `${protocol}//${host}${pathsGateway[name]}`;
+
+  const tryDirect = () => {
+    console.warn(`Fallback direct WebSocket pour ${name}`);
+    this.socket[name] = new WebSocket(`${serviceFallback[name]}${pathsGateway[name]}`);
+    this.attachSocketEvents(name);
+  };
+
+  try {
+    this.socket[name] = new WebSocket(urlGateway);
+    this.attachSocketEvents(name);
+
+    this.socket[name].onclose = (event) => {
+      console.warn(`Gateway WebSocket fermé pour ${name}: ${event.reason}, tentative fallback`);
+      tryDirect();
+    };
+
+    this.socket[name].onerror = (err) => {
+      console.warn(`Erreur WebSocket gateway pour ${name}:`, err);
+      this.socket[name].close();
+      tryDirect();
+    };
+
+  } catch (err) {
+    console.warn(`Impossible de se connecter au gateway WS ${name}:`, err);
+    tryDirect();
+  }
+
+  console.log(`Tentative de connexion au WebSocket ${name}...`);
+}*/

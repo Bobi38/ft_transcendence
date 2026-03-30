@@ -1,0 +1,33 @@
+@use "STYLE/_mixin" as mix;
+
+.Friends-root{
+    @include mix.full;
+
+	.content {
+		gap: 0.5rem
+	}
+
+    .one-friend{
+        @include mix.fullw;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+        padding: 0.7rem;
+        text-align: center;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .div-btn{
+            display: flex;
+            flex-direction: row;
+
+            gap: 0.4rem;
+            button{
+                @include mix.fullw;
+                @include mix.default_card;
+            }
+        }
+    }
+}

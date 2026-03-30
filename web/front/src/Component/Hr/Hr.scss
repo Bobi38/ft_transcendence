@@ -1,16 +1,13 @@
-// @use "STYLE/variable" as *;
-//    var.$border_value;
-
 @use "STYLE/_mixin" as mix;
-//    @include mix.full;
-
 
 .Hr-root {
     @include mix.full;
-    overflow: hidden;
 
-    hr {
-        transition: opacity 0.2s;
+	.hr-custom{
+		margin: 0;
+		@include mix.cursor("grab");
+
+		transition: opacity 0.2s;
         &:hover { opacity: 0.5; }
-    }
+	}
 }

@@ -10,19 +10,6 @@ import './Morpion.scss';
 /* Components */
 import Board from "./Board/Board.jsx";
 
-// function RebootTruc() {
-
-//     return (
-//         <button onClick={() => {
-//             SocketM.sendd('morp',{
-//                 type: "reboot",
-//                 message: "reboot"
-//             })
-//         }}>
-//             Reboot</button>
-//     );
-// }
-
 function RebootTruc() {
     function sendType(s_type){
         SocketM.sendd('morp',{

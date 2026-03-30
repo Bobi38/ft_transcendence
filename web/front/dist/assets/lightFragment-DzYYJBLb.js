@@ -1,0 +1,1 @@
+import{Ac as e,kc as t}from"./index-CHiGcwTe.js";t();export{e as lightFragmentWGSL};

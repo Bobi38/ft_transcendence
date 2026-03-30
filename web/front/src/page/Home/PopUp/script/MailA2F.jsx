@@ -9,15 +9,17 @@ import SocketM from "TOOL/SocketManag";
 import "FRONT/page/Home/PopUp/PopUp.scss";
 
 /* Components */
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 import useFetch from "HOOKS/useFetch.jsx";
 
-export default function MailA2F({setShowLog}) {
+export default function MailA2F() {
+
+    const {setShowLog, showLog} = useAuth();
 
     const [showCodeInput, setShowCodeInput] = useState(false);
 
 
-    async function maila2f_send_mail() {
+    async function maila2f_send_code() {
         const url = `/api/secu/send_mail`;
 
         console.log(`${url}`)
@@ -27,9 +29,11 @@ export default function MailA2F({setShowLog}) {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         });
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-        SocketM.sendd('friend', {type: 'co'});
+        if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
+            return ;
+        }
+        
         setShowCodeInput(true);
     }
 
@@ -39,36 +43,42 @@ export default function MailA2F({setShowLog}) {
         e.preventDefault();
 
         const formData = new FormData(e.target);
+        const data = {
+            code: formData.get("code"),
+            host:  window.location.host
+        }
         const code = formData.get("code");
 
         const url = `/api/secu/maila2f_check_code`;
-        const data ={
-            code: code,
-            host: window.location.host
-        }
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({data}),
+            body: JSON.stringify(data),
         })
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-
+        if (repjson.status < 500 && repjson.status >= 400){
+            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            return ;
+        }
+        if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
+            return ;
+        }
+        SocketM.sendd('friend', {type: 'co'});
         setShowLog(AUTH.NONE);
     }
 
     return (
         <>
             <div className={`script-in-root`}>
-              
+
                 <h4>MailA2F</h4>
-                
+
                 {!showCodeInput && (
-                    <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_mail(e);}}>
-                      Envoyer mail de verification
+					<button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
+						Send mail verification
                     </button>
                 )}
 
@@ -80,7 +90,7 @@ export default function MailA2F({setShowLog}) {
 
                       <div className={`button-container`}>
                           <button type={`submit`} className={``}>Valider</button>
-                          <button type={`button`} className={``} onClick={maila2f_send_mail}>Renvoyer un mail de verification</button>
+                          <button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
                       </div>
                   </form>
 

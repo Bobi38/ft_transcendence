@@ -1,0 +1,1 @@
+import{Ah as e,Mh as t,Nh as n,Ph as r,jh as i,kh as a}from"./index-CHiGcwTe.js";export{a as AnimationPropertyInfo,e as TransformNodeAnimationPropertyInfo,i as WeightAnimationPropertyInfo,t as getQuaternion,n as getVector3,r as getWeights};

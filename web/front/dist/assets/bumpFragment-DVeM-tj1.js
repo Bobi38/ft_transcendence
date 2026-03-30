@@ -1,0 +1,1 @@
+import{Js as e,qs as t}from"./index-CHiGcwTe.js";e();export{t as bumpFragmentWGSL};

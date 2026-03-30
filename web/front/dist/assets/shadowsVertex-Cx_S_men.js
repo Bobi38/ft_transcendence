@@ -1,0 +1,1 @@
+import{Gc as e,Kc as t}from"./index-CHiGcwTe.js";e();export{t as shadowsVertexWGSL};

@@ -1,0 +1,1 @@
+import{Xm as e}from"./index-CHiGcwTe.js";export{e as KHR_animation_pointer};

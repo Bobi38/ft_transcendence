@@ -1,0 +1,1 @@
+import{lh as e}from"./index-CHiGcwTe.js";export{e as KHR_materials_sheen};

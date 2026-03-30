@@ -1,6 +1,5 @@
 /* extern */
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation} from "react-router-dom";
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
 
@@ -9,34 +8,36 @@ import "./Navigation.scss";
 
 /* Components */
 import NavBar from "FRONT/Component/NavBar/NavBar.jsx";
+import { useEffect } from "react";
 
-    
 export default function Navigation({ children }) {
-    
+
     const navigate = useNavigate();
+    const {pathname} = useLocation();
+    // const { showLog, setShowLog } = useAuth();
 
     const connection_check = async () => {
         const res = await checkCo();
-        if (!res){
+        if (!res && pathname != '/'){
+            console.log('pathname:',pathname);
             navigate('/');
         }
     };
 
-
-    connection_check();
+    useEffect(() => {
+        connection_check();
+    }, []);
 
 
     return (
-        <>
-            <main className={`Navigation-root`}>
+		<main className={`Navigation-root`}>
 
-                <div className={`children-container`}>
-                    {children}
-                </div>
-                
-                <NavBar/>
+			<div className={`children-container`}>
+				{children}
+			</div>
 
-            </main>
-        </>
+			<NavBar/>
+
+		</main>
     );
 }

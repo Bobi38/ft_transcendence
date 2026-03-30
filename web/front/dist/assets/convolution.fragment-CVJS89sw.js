@@ -1,0 +1,1 @@
+import{Fr as e,Pr as t}from"./index-CHiGcwTe.js";e();export{t as convolutionPixelShaderWGSL};

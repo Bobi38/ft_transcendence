@@ -1,0 +1,1 @@
+import{vh as e}from"./index-CHiGcwTe.js";export{e as EXT_lights_area};

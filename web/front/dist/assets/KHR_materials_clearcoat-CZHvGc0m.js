@@ -1,0 +1,1 @@
+import{ph as e}from"./index-CHiGcwTe.js";export{e as KHR_materials_clearcoat};

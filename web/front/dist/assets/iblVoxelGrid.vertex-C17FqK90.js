@@ -1,0 +1,1 @@
+import{D as e,O as t}from"./index-CHiGcwTe.js";t();export{e as iblVoxelGridVertexShaderWGSL};

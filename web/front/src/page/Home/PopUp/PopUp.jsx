@@ -7,7 +7,7 @@ import Register from "./script/Register.jsx"    // pas de compte cree nous en cr
 import MailA2F from "./script/MailA2F.jsx"      // on envoye un mail a titou donc faut pas clicker
 
 
-import { AUTH } from "FRONT/page/Home/Home.jsx"
+import { AUTH } from "TOOL/AuthContext.jsx";
 
 export default function PopUp({ setShowLog, showLog }) {
 

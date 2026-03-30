@@ -1,0 +1,1 @@
+import{ay as e,oy as t}from"./index-CHiGcwTe.js";t();export{e as clipPlaneFragmentWGSL};

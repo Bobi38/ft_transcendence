@@ -2,9 +2,9 @@
   "name": "ft_transcendence-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./UserServ.js",
+  "main": "UserServ.js",
 "scripts": {
-  "dev": "nodemon UserServ.js",
+  "dev": "nodemon src/UserServ.js",
   "start": "node UserServ.js"
 },
   "dependencies": {
@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",
-    "concurrently": "^8.0.0",
     "nodemon": "^3.0.2"
   }
 }

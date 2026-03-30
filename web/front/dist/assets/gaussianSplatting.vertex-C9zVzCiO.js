@@ -1,0 +1,1 @@
+import{Jv as e,qv as t}from"./index-CHiGcwTe.js";e();export{t as gaussianSplattingVertexShaderWGSL};
