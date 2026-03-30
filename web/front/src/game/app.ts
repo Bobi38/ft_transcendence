@@ -158,7 +158,7 @@ export class App {
         const closestZ = Math.max(-halfDepth,  Math.min(localBallPos.z, halfDepth));
         const closest = new Vector3(closestX, closestY, closestZ);
         const distanceSquared = localBallPos.subtract(closest).lengthSquared();
-        console.log("distanceSquared:", distanceSquared);
+        //console.log("distanceSquared:", distanceSquared);
 
         if (distanceSquared < (this._ball.radius ** 2)) {
             const newVel = this._player.getRacketHit();
@@ -230,6 +230,7 @@ export class App {
         this._room.onMessage('Goal!', (data: any) => {
             const tick = data.tick;
             const newPos = new Vector3(data.position[0], data.position[1], data.position[2]);
+            console.log("server sent pos:", newPos);
             this._ball.setPhysicsBodyPosition(newPos);
             this._ball.setMeshPosition(Vector3.Zero());
             this._ball.setVelocity(Vector3.Zero());

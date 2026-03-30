@@ -198,12 +198,14 @@ export class MyRoom extends Room {
         this.state.ball.position.x = 0;
         this.state.ball.position.y = 3;
         if (!this._served) {
-          this._ball.setPhysicsBodyPosition(new Vector3(0,3,-12));
-          this.state.ball.position.z = 7;
+          ballPos = new Vector3(0,3,-12);
+          this._ball.setPhysicsBodyPosition(ballPos);
+          this.state.ball.position.z = -12;
           this._served = true;
         } else {
-          this._ball.setPhysicsBodyPosition(new Vector3(0,3,34.5));
-          this.state.ball.position.z = 13;
+          ballPos = new Vector3(0,3,34.5);
+          this._ball.setPhysicsBodyPosition(ballPos);
+          this.state.ball.position.z = 34.5;
           this._served = false;
         }
         
