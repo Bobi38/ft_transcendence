@@ -56,7 +56,7 @@ export default function NavBar() {
 				
 			</div>
 
-			<Button path={`/ContactUs`}>Contact Us</Button>
+			<Button path={`/Profile`}>Profile</Button>
 		</nav>
     );
 }

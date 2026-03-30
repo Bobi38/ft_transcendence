@@ -48,26 +48,23 @@ clean:	down
 	$(MAKE) rmi
 
 creat:
-	mkdir -p vol/db/data
- 	chown root:root vol/db/data
-	chmod 755 vol/db/data
 	chmod +x ./conf/myadmin/conf.sh
 	chmod +x ./conf/db/conf.sh
 
 logs%:
-	docker compose logs -f $(word $*, $(SERVICES))
+	docker compose  -f docker-compose.dev.yml logs -f $(word $*, $(SERVICES))
 
 logs-%:
-	docker compose logs -f $*
+	docker compose  -f docker-compose.dev.yml logs -f $*
 	
 logs:
-	docker compose logs -f
+	docker compose  -f docker-compose.dev.yml logs -f
 	
 logst:
-	docker compose logs -f -t
+	docker compose  -f docker-compose.dev.yml logs -f -t
 	
 logs_alert_flo:
-	docker compose logs -f -t --tail 0
+	docker compose  -f docker-compose.dev.yml logs -f -t --tail 0
 
 secrets:
 	@mkdir -p ./conf/secrets

@@ -121,9 +121,26 @@ export default function StatsPong3D({ username, setUsername }) {
 
                 <div className={`game-winrate border-2`}>
 
+                    <div>
+                        win:1
+                        lose:1
+                    </div>
+                
+                    <div>
+                        abort win:0
+                        abort lose:0
+                    </div>
+                    <div>
+                        total time player: 8:00
+                        total ball hit: 80
+                    </div>
+                    <div>
+                        Moy time/game: 4:00
+                        Moy ballhit/game: 40
+                    </div>
+
                 </div>
             </aside>
         </section>
     )
 }
-
