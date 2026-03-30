@@ -17,11 +17,20 @@
 	h1 + hr {
 		margin-bottom: 1rem
 	}
-	.content {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-	}
+
+	.display-screen{
+	    @include mix.full;
+		padding-top: 0.5rem;
+		padding-left: 0.5rem;
+
+		.content {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-bottom: 1rem;
+		}
+    }
 
     hr {
 		@include mix.fullw;
@@ -76,9 +85,5 @@
 
             }
         }
-    }
-    .display-screen{
-	    @include mix.full;
-		padding: 0.5rem 0 0 0.5rem;
     }
 }
