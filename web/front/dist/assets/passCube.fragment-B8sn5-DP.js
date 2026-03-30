@@ -1,1 +1,0 @@
-import{Ii as e,Li as t}from"./index-CHiGcwTe.js";e();export{t as passCubePixelShader};

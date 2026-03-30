@@ -1,1 +1,0 @@
-import{Ja as e,qa as t}from"./index-CHiGcwTe.js";t();export{e as lodPixelShaderWGSL};

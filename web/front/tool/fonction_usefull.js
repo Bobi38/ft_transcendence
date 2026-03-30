@@ -1,14 +1,14 @@
 export function showAlert(message, type = "danger") {
     const container = document.getElementById("alert-container");
-    console.log(container); 
-    const alertDiv = document.createElement("div");
-    alertDiv.className = type === "danger" ? "alert-n-danger" : "alert-n-success";
-    alertDiv.textContent = message;
-    container.appendChild(alertDiv);
+    if (!container) return
+    
+    container.className = type === "danger" ? "danger" : "success";
+    container.textContent = message;
+
     setTimeout(() => {
-        // container.innerText = "";
-        container.removeChild(alertDiv);
-    }, 1000);
+        container.textContent = "";
+        container.className = "";
+    }, 3000);
 }
 
 

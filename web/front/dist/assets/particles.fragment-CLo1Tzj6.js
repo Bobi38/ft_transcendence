@@ -1,1 +1,0 @@
-import{ba as e,xa as t}from"./index-CHiGcwTe.js";e();export{t as particlesPixelShaderWGSL};

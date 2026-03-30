@@ -1,1 +1,0 @@
-import{Ms as e,js as t}from"./index-CHiGcwTe.js";t();export{e as openpbrPixelShader};

@@ -1,1 +1,0 @@
-import{cy as e,sy as t}from"./index-CHiGcwTe.js";e();export{t as fogFragmentDeclarationWGSL};

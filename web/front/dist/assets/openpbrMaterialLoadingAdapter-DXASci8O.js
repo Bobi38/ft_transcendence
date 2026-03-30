@@ -1,1 +1,0 @@
-import{Oh as e}from"./index-CHiGcwTe.js";export{e as OpenPBRMaterialLoadingAdapter};

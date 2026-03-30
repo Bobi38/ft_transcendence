@@ -1,1 +1,0 @@
-import{_h as e,gh as t}from"./index-CHiGcwTe.js";e();export{t as PBRMaterial};

@@ -14,7 +14,9 @@ function ToQuat(input) : Quaternion {
 
 export class Environment {
     private _scene: Scene;
-    public bodies: PhysicsBody[] = [];
+    //public bodies: PhysicsBody[] = [];
+    public wallMin: Vector3;
+    public wallMax: Vector3;
 
     constructor(scene: Scene) {
         this._scene = scene;
@@ -22,60 +24,66 @@ export class Environment {
 
     public async load() {
         const env = JSON.parse(Env);
-        let wallRightShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
-        let wallLeftShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
-        let groundShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
-        // let elevanShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
-        let ceilingShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
-        let wallRightNode = new TransformNode("wallRightNode", this._scene);
-        let wallLeftNode = new TransformNode("wallLeftNode", this._scene);
-        let groundNode = new TransformNode("groundNode", this._scene);
-        let ceilingNode = new TransformNode("ceilingNode", this._scene);
-        // let elevanNode = new TransformNode("elevanNode", this._scene);
-        wallRightNode.position = ToVec3(env.wallRightPos);
-        wallLeftNode.position = ToVec3(env.wallLeftPos);
-        ceilingNode.position = ToVec3(env.ceilingPos);
-        // elevanNode.position = ToVec3(env.elevanPos);
-        wallRightNode.rotationQuaternion = ToQuat(env.wallQuaternion);
-        wallLeftNode.rotationQuaternion = ToQuat(env.wallQuaternion);
-        // elevanNode.rotationQuaternion = ToQuat(env.elevanQuaternion);
-        let wallRightBody = new PhysicsBody(wallRightNode, PhysicsMotionType.STATIC, false, this._scene);
-        let wallLeftBody = new PhysicsBody(wallLeftNode, PhysicsMotionType.STATIC, false, this._scene);
-        let groundBody = new PhysicsBody(groundNode, PhysicsMotionType.STATIC, false, this._scene);
-        let ceilingBody = new PhysicsBody(ceilingNode, PhysicsMotionType.STATIC, false, this._scene);
-        // let elevan = new PhysicsBody(elevanNode, PhysicsMotionType.STATIC, false, this._scene);
-        wallRightBody.shape = wallRightShape;
-        wallLeftBody.shape = wallLeftShape;
-        groundBody.shape = groundShape;
-        ceilingBody.shape = ceilingShape;
-        // // elevan.shape = elevanShape;
-        const wallmaterial = {friction: 0, restitution: 1};
-        wallRightShape.material = wallmaterial;
-        wallLeftShape.material = wallmaterial;
-        groundShape.material = wallmaterial;
-        ceilingShape.material = wallmaterial;
-        // elevanShape.material = wallmaterial;
-        wallRightBody.setMassProperties({mass: 1});
-        wallLeftBody.setMassProperties({mass: 1});
-        groundBody.setMassProperties({mass: 1});
-        ceilingBody.setMassProperties({mass: 1});
-        // elevan.setMassProperties({mass: 1});
-        wallRightBody.setLinearDamping(0);
-        wallLeftBody.setLinearDamping(0);
-        groundBody.setLinearDamping(0);
-        ceilingBody.setLinearDamping(0);
-        // elevan.setLinearDamping(0);
-        wallRightBody.setAngularDamping(0);
-        wallLeftBody.setAngularDamping(0);
-        groundBody.setAngularDamping(0);
-        ceilingBody.setAngularDamping(0);
-        // elevan.setAngularDamping(0);
-        this.bodies.push(wallLeftBody);
-        this.bodies.push(wallRightBody);
-        this.bodies.push(groundBody);
-        this.bodies.push(ceilingBody);
-        // this.bodies.push(elevan);
-        
+        // let wallRightShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
+        // let wallLeftShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
+        // let groundShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
+        // // let elevanShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
+        // let ceilingShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
+        // let wallRightNode = new TransformNode("wallRightNode", this._scene);
+        // let wallLeftNode = new TransformNode("wallLeftNode", this._scene);
+        // let groundNode = new TransformNode("groundNode", this._scene);
+        // let ceilingNode = new TransformNode("ceilingNode", this._scene);
+        // // let elevanNode = new TransformNode("elevanNode", this._scene);
+        // wallRightNode.position = ToVec3(env.wallRightPos);
+        // wallLeftNode.position = ToVec3(env.wallLeftPos);
+        // ceilingNode.position = ToVec3(env.ceilingPos);
+        // // elevanNode.position = ToVec3(env.elevanPos);
+        // wallRightNode.rotationQuaternion = ToQuat(env.wallQuaternion);
+        // wallLeftNode.rotationQuaternion = ToQuat(env.wallQuaternion);
+        // // elevanNode.rotationQuaternion = ToQuat(env.elevanQuaternion);
+        // let wallRightBody = new PhysicsBody(wallRightNode, PhysicsMotionType.STATIC, false, this._scene);
+        // let wallLeftBody = new PhysicsBody(wallLeftNode, PhysicsMotionType.STATIC, false, this._scene);
+        // let groundBody = new PhysicsBody(groundNode, PhysicsMotionType.STATIC, false, this._scene);
+        // let ceilingBody = new PhysicsBody(ceilingNode, PhysicsMotionType.STATIC, false, this._scene);
+        // // let elevan = new PhysicsBody(elevanNode, PhysicsMotionType.STATIC, false, this._scene);
+        // wallRightBody.shape = wallRightShape;
+        // wallLeftBody.shape = wallLeftShape;
+        // groundBody.shape = groundShape;
+        // ceilingBody.shape = ceilingShape;
+        // // // elevan.shape = elevanShape;
+        // const wallmaterial = {friction: 0, restitution: 1};
+        // wallRightShape.material = wallmaterial;
+        // wallLeftShape.material = wallmaterial;
+        // groundShape.material = wallmaterial;
+        // ceilingShape.material = wallmaterial;
+        // // elevanShape.material = wallmaterial;
+        // wallRightBody.setMassProperties({mass: 1});
+        // wallLeftBody.setMassProperties({mass: 1});
+        // groundBody.setMassProperties({mass: 1});
+        // ceilingBody.setMassProperties({mass: 1});
+        // // elevan.setMassProperties({mass: 1});
+        // wallRightBody.setLinearDamping(0);
+        // wallLeftBody.setLinearDamping(0);
+        // groundBody.setLinearDamping(0);
+        // ceilingBody.setLinearDamping(0);
+        // // elevan.setLinearDamping(0);
+        // wallRightBody.setAngularDamping(0);
+        // wallLeftBody.setAngularDamping(0);
+        // groundBody.setAngularDamping(0);
+        // ceilingBody.setAngularDamping(0);
+        // // elevan.setAngularDamping(0);
+        // this.bodies.push(wallLeftBody);
+        // this.bodies.push(wallRightBody);
+        // this.bodies.push(groundBody);
+        // this.bodies.push(ceilingBody);
+        // // this.bodies.push(elevan);
+        const groundDim = ToVec3(env.groundDimensions);
+        const wallDim = ToVec3(env.wallDimensions);
+        const wallRightPos = ToVec3(env.wallRightPos);
+        const wallLeftPos = ToVec3(env.wallLeftPos);
+        const ceilingPos = ToVec3(env.ceilingPos);
+        this._calculateArenaBoundaries(groundDim, wallDim, wallLeftPos, wallRightPos, ceilingPos);
+
         let ground = MeshBuilder.CreateBox("ground", {size: 1}, this._scene);
         let ceiling = MeshBuilder.CreateBox("ceiling", {size: 1}, this._scene);
         let wall_left = MeshBuilder.CreateBox("wall_left", {size: 1}, this._scene);
@@ -84,10 +92,11 @@ export class Environment {
         wall_right.checkCollisions = true;
         wall_left.checkCollisions = true;
 
-        ground.scaling = ToVec3(env.groundDimensions);
-        ceiling.scaling = ToVec3(env.groundDimensions);
-        wall_left.scaling = ToVec3(env.wallDimensions);
-        wall_right.scaling = ToVec3(env.wallDimensions);
+        const z_scaling : Vector3 = new Vector3(1,1,1.5);
+        ground.scaling = ToVec3(env.groundDimensions).multiply(z_scaling);
+        ceiling.scaling = ToVec3(env.groundDimensions).multiply(z_scaling);
+        wall_left.scaling = ToVec3(env.wallDimensions).multiply(z_scaling);
+        wall_right.scaling = ToVec3(env.wallDimensions).multiply(z_scaling);
 
         ground.receiveShadows = true;
         ceiling.receiveShadows = true;
@@ -129,5 +138,13 @@ export class Environment {
         // const elevanWallAggregate = new PhysicsAggregate(elevanWall, PhysicsShapeType.BOX, {mass:0, restitution:1, friction:0}, this._scene);
         // elevanWallAggregate.body.setMotionType(PhysicsMotionType.STATIC);
         
+    }
+
+    private _calculateArenaBoundaries(groundDim: Vector3, wallDim: Vector3, wallLeftPos: Vector3, wallRightPos: Vector3, ceilingPos: Vector3) {
+        const verticalThickness = groundDim.y / 2; 
+        const horizontalThickness = wallDim.y / 2;
+
+        this.wallMin = new Vector3(wallLeftPos.x + horizontalThickness, verticalThickness, -(groundDim.z / 2));
+        this.wallMax = new Vector3(wallRightPos.x - horizontalThickness, ceilingPos.y - verticalThickness, (groundDim.z / 2));
     }
 }

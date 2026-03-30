@@ -1,0 +1,30 @@
+@use "STYLE/_variable" as *;
+
+.PopUp-root {
+
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    padding: 1.5rem;
+	border: $second-dark 5px solid;
+	border-radius: 40px;
+	box-shadow: 0px 0px 30px 30px #d5e4efbc;
+
+
+    .script-in-root {
+        display: flex;
+        flex-direction: column;
+
+        form{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            .button-container{
+                gap: 0.5rem;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}

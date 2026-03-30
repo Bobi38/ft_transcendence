@@ -1,1 +1,0 @@
-import{Aa as e,ka as t}from"./index-CHiGcwTe.js";e();export{t as areaLightTextureProcessingPixelShaderWGSL};

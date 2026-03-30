@@ -10,6 +10,19 @@ $children_height: 100% - $navbar_height;
     display: flex;
     flex-direction: column;
 
+	.Navigation-PopUp {
+		position: absolute;
+		top:0;
+		left:0;
+		display: flex;
+		height: 100%;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	    z-index: 1000;
+		background-color: rgba(17, 28, 69, 0.185);
+	}
     .children-container {
         height: $children_height;
     }

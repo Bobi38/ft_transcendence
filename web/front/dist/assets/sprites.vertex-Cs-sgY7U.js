@@ -1,1 +1,0 @@
-import{i as e,r as t}from"./index-CHiGcwTe.js";t();export{e as spritesVertexShaderWGSL};

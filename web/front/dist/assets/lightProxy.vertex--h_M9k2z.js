@@ -1,1 +1,0 @@
-import{Xc as e,Yc as t}from"./index-CHiGcwTe.js";t();export{e as lightProxyVertexShaderWGSL};

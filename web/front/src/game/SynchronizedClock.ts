@@ -19,7 +19,8 @@ export class SynchronizedClock {
 
     public updateAccumulator(dt: number) {
         // console.log("dt:", dt);
-        this._accumulator += (dt - 1000/60 + this._accumulatorSlew);
+        //this._accumulator += (dt - 1000/60 + this._accumulatorSlew);
+        this._accumulator += (dt + this._accumulatorSlew);
         this._accumulatorSlew = 0;
     }
 
@@ -38,6 +39,6 @@ export class SynchronizedClock {
     public updateAccumulatorSlew(patchTick : number) {
         const tickError = this.tick - patchTick - this._TARGET_TICK_OFFSET;
         this._accumulatorSlew -= tickError * this._ADAPTIVE_RATE;
-        console.log("tick:", this.tick, "patch tick:", patchTick, "tickError:", tickError, "slew:", this._accumulatorSlew);
+        // console.log("tick:", this.tick, "patch tick:", patchTick, "tickError:", tickError, "slew:", this._accumulatorSlew);
     }
 }

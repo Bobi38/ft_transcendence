@@ -5,23 +5,11 @@ import
   jwt,
   secret,
   express,
-  Op
+  Op,
+  GamePong3D
 }from './index.js';
 
 const router = express.Router();
-
-
-// router.get('/serv', async (req, res) => {
-
-//         console.log("API/pong3d gameservetest(1) called");
-//         return res.status(201).json({success: true});
-
-//         // const page1 = parseInt(req.params.page) || 1;
-//         // console.log("API/pong3d get_morpion_stat(1) params ", page1);
-//         // const page2 = parseInt(req.query.page) || 1;
-//         // console.log("API/pong3d get_morpion_stat(1) query ", page2);
-
-// })
 
 
 router.get('/get_stat', async (req, res) => {
@@ -56,7 +44,7 @@ router.get('/get_stat', async (req, res) => {
         }
 
         console.log("API/pong3d get_stat(3)");
-        const result_stats = await StatMorp.findOne({where: {idUser: to_search.id}});
+        const result_stats = await StatPong3D.findOne({where: {idUser: to_search.id}});
         
         return res.status(201).json({success: true, stat_user: result_stats});
 
@@ -101,7 +89,7 @@ router.get('/get_history/:page', async (req, res) => {
         console.log("API/pong3d get_history(3)");
         const limit = 5
         const offsetpage = limit * page 
-        const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
+        const result_history = await GamePong3D.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
     { model: User, as: 'player1', attributes: ['name'] },
     { model: User, as: 'player2', attributes: ['name'] },
     { model: User, as: 'winnerUser', attributes: ['name'] },

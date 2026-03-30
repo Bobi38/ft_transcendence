@@ -1,1 +1,0 @@
-import{hu as e,mu as t}from"./index-CHiGcwTe.js";e();export{t as _KTXTextureLoader};

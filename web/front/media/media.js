@@ -1,6 +1,6 @@
 export const Env = JSON.stringify({
-  groundDimensions: { x: 24, y: 0.48, z: 72 },
-  wallDimensions: { x: 13.7, y: 0.48, z: 72 },
+  groundDimensions: { x: 24, y: 0.48, z: 96 },
+  wallDimensions: { x: 13.7, y: 0.48, z: 96 },
   ceilingPos: { x: 0, y: 10, z: 0 },
   wallLeftPos: { x: -10, y: 5, z: 0 },
   wallRightPos: { x: 10, y: 5, z: 0 },
