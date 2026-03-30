@@ -119,7 +119,12 @@ export class App {
             }
         } catch (e) {
             console.log("Reconnect failed or no previous session, joining new room:", e);
+            try {
             room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
+            } catch (newRoomError) {
+                window.location.href = "/";
+                console.log("Failed to join new room, error:", newRoomError, "sending back to home");
+            }
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
 
