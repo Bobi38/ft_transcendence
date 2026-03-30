@@ -144,6 +144,6 @@ export class Environment {
         const horizontalThickness = wallDim.y / 2;
 
         this.wallMin = new Vector3(wallLeftPos.x + horizontalThickness, verticalThickness, -(groundDim.z / 2));
-        this.wallMax = new Vector3(wallLeftPos.x + horizontalThickness, ceilingPos.y - verticalThickness, (groundDim.z / 2));
+        this.wallMax = new Vector3(wallRightPos.x - horizontalThickness, ceilingPos.y - verticalThickness, (groundDim.z / 2));
     }
 }

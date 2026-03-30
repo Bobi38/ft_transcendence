@@ -1,4 +1,4 @@
-import { Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { Matrix, Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./playerInput";
 import { Room } from "@colyseus/sdk";
 import { App } from "./app";
@@ -18,7 +18,8 @@ export class Player extends TransformNode {
     public sessionId: string;
     private _app : App;
     private _controlsEnabled : boolean = false;
-    public dimensions: Vector3;
+    public racketDimensions: Vector3;
+    public racketOffset: Vector3;
 
     public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
     public racketHistory : RacketHistory = new RacketHistory();
@@ -51,7 +52,8 @@ export class Player extends TransformNode {
     
         // const colRacketShape = new PhysicsShapeBox(new Vector3(0,1,0), Quaternion.Identity(),
         //     new Vector3(1.5, 2.5, 0.5), scene);
-        this.dimensions = new Vector3(1.5, 2.5, 0.5);
+        this.racketDimensions = new Vector3(1.5, 2.5, 0.5);
+        this.racketOffset = new Vector3(0,1,0);
         // const colRacketBody = new PhysicsBody(this.racket, PhysicsMotionType.ANIMATED, false, scene);
         // colRacketBody.shape = colRacketShape;
         // colRacketBody.setMassProperties({mass: 1});
@@ -178,5 +180,10 @@ export class Player extends TransformNode {
 
     public getRacketRot() : Quaternion {
         return this.racket.rotationQuaternion.clone();
+    }
+
+    public getRacketWorldMatrix(): Matrix {
+        this.racket.computeWorldMatrix(true);
+        return this.racket.getWorldMatrix().clone();
     }
 }

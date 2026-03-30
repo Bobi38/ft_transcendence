@@ -137,23 +137,28 @@ export class App {
 
     public _checkRacketCollision() {
         const ballPos = this._ball.getPhysicsBodyPosition();
-        const relativeBallPos = ballPos.subtract(this._player.getRacketPos());
+    
+        const racketWorldMatrix = this._player.getRacketWorldMatrix();
+        const invRacketMatrix = racketWorldMatrix.clone().invert();
+        const localBallPos = Vector3.TransformCoordinates(ballPos, invRacketMatrix);
+        localBallPos.subtractInPlace(this._player.racketOffset);
 
-        const invRotation = this._player.getRacketRot().invert();
-        const localBallPos = Vector3.TransformNormal(relativeBallPos, Matrix.FromQuaternionToRef(invRotation, new Matrix()));
+        // const ballPos = this._ball.getPhysicsBodyPosition();
+        // const relativeBallPos = ballPos.subtract(this._player.getRacketPos());
+        // //console.log(ballPos, relativeBallPos);
+        // const invRotation = this._player.getRacketRot().invert();
+        // const localBallPos = Vector3.TransformNormal(relativeBallPos, Matrix.FromQuaternionToRef(invRotation, new Matrix()));
 
-        const halfWidth = this._player.dimensions.x / 2;
-        const halfHeight = this._player.dimensions.y / 2;
-        const halfDepth = this._player.dimensions.z / 2;
+        const halfWidth = this._player.racketDimensions.x / 2;
+        const halfHeight = this._player.racketDimensions.y / 2;
+        const halfDepth = this._player.racketDimensions.z / 2;
 
         const closestX = Math.max(-halfWidth,  Math.min(localBallPos.x, halfWidth));
         const closestY = Math.max(-halfHeight, Math.min(localBallPos.y, halfHeight));
         const closestZ = Math.max(-halfDepth,  Math.min(localBallPos.z, halfDepth));
-
-        const distanceX = localBallPos.x - closestX;
-        const distanceY = localBallPos.y - closestY;
-        const distanceZ = localBallPos.z - closestZ;
-        const distanceSquared = (distanceX ** 2) + (distanceY ** 2) + (distanceZ ** 2);
+        const closest = new Vector3(closestX, closestY, closestZ);
+        const distanceSquared = localBallPos.subtract(closest).lengthSquared();
+        console.log("distanceSquared:", distanceSquared);
 
         if (distanceSquared < (this._ball.radius ** 2)) {
             const newVel = this._player.getRacketHit();
