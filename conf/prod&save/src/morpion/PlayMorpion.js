@@ -63,10 +63,10 @@ function move(player, move){
         // game.notifyObs();
         console.log("mess3");
         if(game.checkVictory()){
-            console.log("fini on unlocked la game");
+            console.log("RECU true - fini on unlocked la game");
             game.setEnd();
             manager_room.refreshList();
-
+            
             setTimeout(() => {
                 //  console.log(`party register ${game}`);
                  manager_room.removeRoom(game);
