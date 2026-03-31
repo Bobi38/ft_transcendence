@@ -68,7 +68,7 @@ export default function StatsMorpion({ username, setUsername }) {
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
         const data_formated = {
-            win_horizontal: win_horizontal + 1,
+            win_horizontal: win_horizontal,
             win_vertical: win_vertical,
             win_diagonal: win_diagonal,
             lose_horizontal: lose_horizontal,
@@ -127,7 +127,6 @@ export default function StatsMorpion({ username, setUsername }) {
 
 
     return (
-        
         <section className={`StatsMorpion-root border-base`}>
             <div className={`history-container border-1`}>
 
@@ -148,7 +147,7 @@ export default function StatsMorpion({ username, setUsername }) {
                     <div className={`search border-2`}>
                         <form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1);setInputValue("")}}>
                             <input type={`text`} value={inputValue}
-                                onChange={(e) => {setInputValue(e.target.value);}} 
+                                onChange={(e) => {setInputValue(e.target.value);}}
                                 />
                             <input type={`submit`} value={`search`}/>
                         </form>
