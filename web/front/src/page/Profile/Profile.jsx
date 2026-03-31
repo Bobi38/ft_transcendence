@@ -85,6 +85,7 @@ export default function Profile() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         sessionStorage.setItem('username', repjson.username);
+        console.log("oldname: ", repjson.oldname, " newname: ", repjson.username);
         if (repjson.oldname !== repjson.username) {
             SocketM.sendd('friend', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
             SocketM.sendd('chat', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});

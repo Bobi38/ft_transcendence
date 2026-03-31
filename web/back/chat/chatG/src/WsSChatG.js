@@ -98,8 +98,11 @@ export function initWebSChat(server) {
           for (const session of chat.sessions.values()){
             if (session.userId == nono && session.username == data.old_name)
               session.username = data.new_name;
+            if (session.socket.readyState === ws.OPEN && session.userId != nono){
+              session.socket.send(JSON.stringify({type: 'updateName_good'}));
+            }
           }
-          socket.send(JSON.stringify({type: 'updateName_good'}));
+          
         }       
       }catch (err){
         console.log("err serv ws= " + err);
