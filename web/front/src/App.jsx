@@ -34,7 +34,7 @@ export default function App() {
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
-            if (!repco){
+            if (!repco.success){
                 return;
             }
             if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")

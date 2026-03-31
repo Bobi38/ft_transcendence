@@ -22,13 +22,14 @@ export default function NavBar() {
 	   .then(data => {
 
 	       if (data.success) {
-	           setShowLog(AUTH.LOGIN);
+				sessionStorage.clear();
+	        	setShowLog(AUTH.LOGIN);
 	           // SocketM.sendd('friend', {type: "logout"});
-	           SocketM.disconnect('friend');
-	           SocketM.disconnect('morp');
-	           SocketM.disconnect('priv');
-	           SocketM.disconnect('chat');
-			   window.location.href = '/'
+	        	SocketM.disconnect('friend');
+	        	SocketM.disconnect('morp');
+	        	SocketM.disconnect('priv');
+	        	SocketM.disconnect('chat');
+				window.location.href = '/'
 	       } else {
 	           console.error("logout(2) failed");
 	       }
