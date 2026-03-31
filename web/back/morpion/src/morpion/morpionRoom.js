@@ -109,7 +109,7 @@ class MorpionRoom extends Room {
     }
 
     play(currentPlayer, index) {
-        console.log(String(currentPlayer));
+        // console.log(String(currentPlayer));
         if (this._turn !== currentPlayer) {
             // console.log("moi pas voir de probleme")
             return false;

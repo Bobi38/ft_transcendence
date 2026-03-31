@@ -84,6 +84,17 @@ function myFilter(board, type) {
         .map((index, value) => value === type ? index : null)
         .filter((index) => index !== null);
 }
+//lignes a checker dans un morpion
+const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
 
 function myft(board){
 
@@ -99,46 +110,25 @@ function myft(board){
     const idX = myFilter(board, "X");
     const idO = myFilter(board, "O");
 
-    const actif = idX.length === idO.length ? "X" : "0";
+    const actif = idX.length === idO.length ? "X" : "O";
 
     let back = null;
     
-    for (let id in ids){
-        const filtered_lines = lines
-            .filter((line) => {
-                if (!line.includes(id)) return false; //on enleve les lignes ou la case n est pas presente
-
-                line
-                    .filter(i => {
-                        if (i === id) return false; //on retire la 
-
-                        if (ids.includes(i)) return false; // on retire les case vide
-
-                        return true;
-                    })
-                })
-            .filter(line => line.length === 2)
-
-        filtered_lines.forEach()
-
-
-
-    }
-
-    for (let id in ids){
+    for (let id of ids){
         const filtered_lines = lines
             .filter((line) => !line.includes(id))
-            .forEach(line => line.splice(line.indexof(id), 1))
-            .filter()
-            .filter(line => line.length === 2)
+            .map((line) => {
+                const other = line.filter(i =>  i !== ids)
+                if (board[other[0]] === board[other[1]])
+                    return board[other[0]];
+                    return null;
+                })
+        
+        if (filtered_lines.length === 0) continue;
 
-        filtered_lines.forEach()
-
-
-
+        for (value of filtered_lines)
+            if (value === actif) return id;
+        
+        back = id;
     }
-
-
-
-
-}
+    return
