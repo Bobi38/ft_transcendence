@@ -32,7 +32,6 @@ export function initWebSChat(server) {
       // socket.close();
         return;
       }
-
       let user;
       try {
         user = chat.decoded(token);
@@ -40,26 +39,14 @@ export function initWebSChat(server) {
         socket.close(1008, 'Unauthorized');
         return;
       }
-
       if (!user) { return; }
       const useid = user.id;
       socket.userId = useid;
       socket.GoLogout = false;
       socket.cleanedUp = false;
       socket.isAlive = true;
-
-      // const exist = chat.finduser(socket.id);
-      // const id = chat.finduserId(socket.userId);
-      // if (exist){
-      //   exist.socket = socket;
-      // }
-      // else if (id){
-      //   id.socket = socket
-      // }
-      // else{
-        await chat.addtok(useid, socket, useid);
-        socket.send(JSON.stringify({type: "auth_good"}));
-      // }
+      await chat.addtok(useid, socket, useid);
+      socket.send(JSON.stringify({type: "auth_good"}));
     }catch(err){
       console.log("err debut wsss ", err);
     }

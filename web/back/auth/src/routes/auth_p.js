@@ -5,7 +5,7 @@ import
   Co,
 }from './index_p.js'
 
-import { bcrypt, jwt, express, validator, secret} from './index_p.js';
+import { bcrypt, jwt, express, validator, secret, tcheck_MPFA} from './index_p.js';
 
 const router = express.Router();
 
@@ -53,7 +53,10 @@ router.post('/login', async (req, res) => {
     //   MPFA = true;
     // console.log(MPFA);
     // if (MPFA == false)
-      await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
+    // MPFA = tcheck_MPFA(result[0], host);
+    MPFA = false;
+    await result[0].update({MPFA: MPFA});
+    await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     // req.session.username = result[0].name;
     // req.session.nameNeedUpdate = false;
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });

@@ -25,7 +25,7 @@ export default function Pong3D() {
 
         const init = async () => {
             const isConnected = await checkCo();
-            if (!isConnected) {
+            if (!isConnected.success) {
                 navigate('/');
                 return;
             }
