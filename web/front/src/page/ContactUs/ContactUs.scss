@@ -1,3 +1,4 @@
+@use "STYLE/_variable" as *;
 @use "STYLE/_mixin" as mix;
 
 .ContactUs-root{
@@ -18,6 +19,7 @@
 
 	.cardContainer{
 		width: 100%;
+		height: 100%;
 
 		display: flex;
 		flex-direction: row;

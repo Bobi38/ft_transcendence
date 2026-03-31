@@ -6,7 +6,6 @@
 import "./ContactUs.scss";
 
 /* Components */
-import ContactIssue from "./ContactIssue/ContactIssue";
 import ContactCard from "./ContactCard/ContactCard";
 
 const teamMembers = [
@@ -34,8 +33,6 @@ export default function ContactUs() {
 					<ContactCard key={index} {...member} />
 				))}
 			</section>
-            <ContactIssue/>
-
         </section>
     );
 
