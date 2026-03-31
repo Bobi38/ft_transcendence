@@ -20,6 +20,7 @@ export class Ball {
     public visualOffset: Vector3 = Vector3.Zero();
     public serverPatch : BallSnapshot = null;
     public recentImpact : boolean = false;
+    public ignoreServerAfter : number = null;
     public ignoreServerUntil : number = 0;
     public  isResimming : boolean = false;
     
@@ -86,7 +87,7 @@ export class Ball {
     public correctPosAndVel() {
         if (!this.serverPatch) return ;
         //console.log(this.recentImpact, this.ignoreServerUntil);
-        if (this.recentImpact || this._clock.tick < this.ignoreServerUntil) {
+        if (this.recentImpact || this._clock.tick < this.ignoreServerUntil || (this.ignoreServerAfter != null && this._clock.tick >= this.ignoreServerAfter)) {
             this.serverPatch = null;
             return;
         }
@@ -118,36 +119,6 @@ export class Ball {
         this.serverPatch = null; 
     }
 
-    // public setupCorrections() {
-    //     this._scene.onBeforePhysicsObservable.add(() => {
-    //         if (!this.serverPatch) return ;
-    //         //console.log(this.recentImpact, this.ignoreServerUntil);
-    //         if (this.recentImpact || this._clock.tick < this.ignoreServerUntil) {
-    //             this.serverPatch = null;
-    //             return;
-    //         }
-
-    //         this._clock.updateAccumulatorSlew(this.serverPatch.tick);
-    //         const pastSnapshot = this.snapshots.getSnapshotAtTick(this.serverPatch.tick);
-    //         if (!pastSnapshot) {
-    //             this.serverPatch = null; 
-    //             return ;
-    //         }
-
-    //         const positionError = this.serverPatch.position.subtract(pastSnapshot.snapshot.position);
-    //         const velocityError = this.serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
-    //         console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
-    //         console.log("server vel:", this.serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
-    //         console.log("server pos:", this.serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
-    //         if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
-    //             this._correctSmallErrors(positionError, velocityError, pastSnapshot);
-    //             return ;
-    //         }
-
-    //         this._correctLargeErrors();
-    //     });            
-    // }
-
     private _correctSmallErrors(positionError: Vector3, velocityError: Vector3, pastSnapshot: {snapshot: BallSnapshot, index: number}) {
         this.setPhysicsBodyPosition(this.getPhysicsBodyPosition().add(positionError));
         this.snapshots.correctFollowingSnapshotsPos(positionError, pastSnapshot.index);
@@ -168,7 +139,7 @@ export class Ball {
         this.isResimming = true;
 
         const racketHistory = this._app.getPlayerRacketHistory();
-        //const impactSnapshots = this._app.getPlayerImpactSnapshots();
+        const impactSnapshots = this._app.getPlayerImpactSnapshots();
         const player = this._app.getPlayer();
         for (let i = 1; i < ticksToResimulate; i++) {
             const simulatingTick = patchTick + i;
@@ -178,7 +149,9 @@ export class Ball {
                 player.setRacketRot(historicalRacket.rotation);
             }
             this._app._executeStep();
-            this._app._checkRacketCollision();
+            const impactSnapshot = impactSnapshots.getSnapshotAtTick(simulatingTick);
+            if (impactSnapshot)
+                this._app._checkRacketCollision(impactSnapshot.snapshot);
             this._app._checkWallCollision();
             this.snapshots.saveSnapshot(simulatingTick, this.getPhysicsBodyPosition(), this.getVelocity());
         }

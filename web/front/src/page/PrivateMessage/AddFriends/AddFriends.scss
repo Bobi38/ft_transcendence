@@ -2,7 +2,6 @@
 @use "STYLE/_mixin" as mix;
 
 .AddFriends-root{
-    @include mix.full;
 
     .add{
         @include mix.fullw;
@@ -14,6 +13,7 @@
     .response{
         @include mix.full;
         padding: 0.5rem 0;
+		flex-grow: 1;
 
         .bloc1,.bloc2{
             @include mix.full;

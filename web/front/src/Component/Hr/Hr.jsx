@@ -11,45 +11,23 @@ export default function Hr({ children, mode = 'row', min1 = 100, min2 = 100, ini
     const rootRef = useRef(null);
     const isDragging = useRef(false);
     const isCol = mode === 'column';
-    
+
     const [size1, setSize1] = useState(initial);
-    const [totalSize, setTotalSize] = useState(0);
-
-    useEffect(() => {
-        if (!rootRef.current) return;
-
-        const resizeObserver = new ResizeObserver((entries) => {
-            for (let entry of entries) {
-                const { width, height } = entry.contentRect;
-                const currentTotal = isCol ? height : width;
-
-                setTotalSize(currentTotal);
-                
-                setSize1(prev => Math.min(prev, currentTotal - thickness - min2));
-            }
-        });
-
-        resizeObserver.observe(rootRef.current);
-        return () => resizeObserver.disconnect();
-    }, [isCol, min2, thickness]);
 
     const onPointerMove = useCallback((e) => {
         if (!isDragging.current || !rootRef.current) return;
 
         const rect = rootRef.current.getBoundingClientRect();
+        const totalSize = isCol ? rect.height : rect.width;
         const currentPos = isCol ? (e.clientY - rect.top) : (e.clientX - rect.left);
-        
+
         const clampedPos = Math.max(min1, Math.min(currentPos, totalSize - thickness - min2));
 
         setSize1(clampedPos);
-
-    }, [min1, min2, totalSize, isCol, thickness]);
-
+    }, [min1, min2, isCol, thickness]);
 
     useEffect(() => {
-        const stop = () => {
-            isDragging.current = false;
-        };
+        const stop = () => { isDragging.current = false; };
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', stop);
         return () => {
@@ -58,19 +36,29 @@ export default function Hr({ children, mode = 'row', min1 = 100, min2 = 100, ini
         };
     }, [onPointerMove]);
 
-    const size2 = totalSize - size1 - thickness;
-
     return (
-        <div ref={rootRef} className="Hr-root" style={{ display: 'flex', flexDirection: mode, width: '100%', height: '100%' }}>
-            <div style={{ [isCol ? 'height' : 'width']: `${size1}px` }}>
+        <div ref={rootRef} className="Hr-root"
+            style={{
+                display: 'flex',
+                flexDirection: mode,
+                width: '100%',
+                height: '100%',
+            }}
+        >
+            <div style={{[isCol ? 'height' : 'width']: `${size1}px`, }}>
                 {children[0]}
             </div>
-			<hr onPointerDown={() => { isDragging.current = true;}}
-                style={{ [isCol ? 'height' : 'width']: thickness}}
-				className='hr-custom'
+
+            <hr className='hr-custom' onPointerDown={(e) => {
+                    //e.preventDefault();
+                    isDragging.current = true;
+                }}
+                style={{
+                    [isCol ? 'height' : 'width']: thickness,
+                }}
             />
 
-            <div style={{ [isCol ? 'height' : 'width']: `${size2}px` }}>
+            <div style={{ flex: 1, overflow: 'auto' }}>
                 {children[1]}
             </div>
         </div>

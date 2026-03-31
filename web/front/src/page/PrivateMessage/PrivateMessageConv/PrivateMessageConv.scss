@@ -2,16 +2,36 @@
 @use "STYLE/_mixin" as mix;
 
 .PrivateMessageConv-root {
-	@include mix.full;
 
 	hr {
 		width: 100%;
 	}
 
+	form
+	{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 2rem;
+
+		.button {
+			color: white;
+		}
+		input {
+			height: fit-content;
+		}
+	}
+
+	.content {
+		overflow: auto;
+		hr {
+		margin-bottom: 1rem;
+	} 
+	}
 	.message {
 		gap: 0.5rem;
 		flex: 1;
-		width: 90%;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 
@@ -23,6 +43,9 @@
 			border: 4px solid $second;
 			border-radius: 25px;
 
+			padding: 0.5rem;
+			background-color: rgba(0, 0, 0, 0.1);
+			transition: scale 0.1s;
 			&:hover {
 				outline: none;
 
@@ -31,17 +54,15 @@
 
 				scale: 1.02;
 			}
-			padding: 0.5rem;
-			background-color: rgba(0, 0, 0, 0.1);
+			p {
+				overflow-wrap: anywhere;
+			}
 		}
 		.me {
 			text-align: right;
 		}
 		.other {
 			text-align: left;
-		}
-		.other p, .me p {
-			overflow-wrap: anywhere;
 		}
 	}
 }

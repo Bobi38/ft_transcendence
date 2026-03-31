@@ -84,7 +84,7 @@ secrets:
 fclean: clean
 	docker volume prune -f
 	docker network prune -f
-	rm -r ./conf/secrets ./web/front/dist
+# 	rm -r ./conf/secrets ./web/front/dist
 	$(MAKE) volumes
 # 	hosts_remove
 

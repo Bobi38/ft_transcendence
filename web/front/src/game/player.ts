@@ -37,8 +37,6 @@ export class Player extends TransformNode {
         this.hand_node = assets.handNode;
         this.racket = assets.racketNode;
         this.racket.rotationQuaternion = Quaternion.Identity();
-        // this.racket = (scene.getNodeByName("racketRoot") as TransformNode);
-        // this.hand_node = (scene.getNodeByName("hand_node") as TransformNode);
         shadows[0].addShadowCaster(this.mesh, true);
         shadows[1].addShadowCaster(this.mesh, true);
         shadows[0].usePercentageCloserFiltering = true;
@@ -50,56 +48,8 @@ export class Player extends TransformNode {
         shadows[0].contactHardeningLightSizeUVRatio = 0.05;
         shadows[1].contactHardeningLightSizeUVRatio = 0.05;
     
-        // const colRacketShape = new PhysicsShapeBox(new Vector3(0,1,0), Quaternion.Identity(),
-        //     new Vector3(1.5, 2.5, 0.5), scene);
-        this.racketDimensions = new Vector3(1.5, 2.5, 0.5);
-        this.racketOffset = new Vector3(0,1,0);
-        // const colRacketBody = new PhysicsBody(this.racket, PhysicsMotionType.ANIMATED, false, scene);
-        // colRacketBody.shape = colRacketShape;
-        // colRacketBody.setMassProperties({mass: 1});
-        // colRacketBody.disablePreStep = false;
-        // colRacketBody.setCollisionCallbackEnabled(true);
-        // this.racketBody = colRacketBody;
-
-        // colRacketBody.getCollisionObservable().add((event) => {
-        //     if (event.type != PhysicsEventType.COLLISION_STARTED)
-        //         return ;
-        //     if (app.getIsResimming())
-        //         return ;
-        //     console.log("impulse added");
-        //     const ballBody = event.collidedAgainst;
-        //     const hitForward = this.camera.getForwardRay().direction.scale(2);
-        //     const mouseDirAvg = (this._input.mouseDirBuffer.reduce((acc: Vector2, curr: Vector2) => curr.add(acc), Vector2.Zero()) as Vector2);
-        //     mouseDirAvg.scaleInPlace(1/this._input.mouseBufferSize).normalize();
-        //     if (mouseDirAvg.lengthSquared() > 0.001) {
-        //         mouseDirAvg.normalize();
-        //     } else {
-        //         mouseDirAvg.set(0,0);
-        //     }
-        //     const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, 0).add(hitForward).normalize();
-        //     console.log(hitDirection);
-        //     const mouseAvgSpeed = this._input.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this._input.mouseBufferSize;
-        //     const power = Scalar.SmoothStep(50, 200, mouseAvgSpeed) / 10;
-        //     console.log(mouseAvgSpeed, power);
-
-        //     const newVel = hitDirection.scale(power);
-        //     ballBody.setAngularVelocity(newVel.scale(0.2));
-        //     ballBody.setLinearVelocity(newVel);
-        //     //ballBody.applyImpulse(hitDirection.scale(power), event.point);
-
-        //     const offset = hitDirection.scale(1.01);
-        //     const ballPos = ballBody.transformNode.position.add(offset);
-        //     ballBody.transformNode.position = ballPos;
-
-        //     //const ballPos = ballBody.transformNode.position.clone();
-        //     console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHnewVel:", newVel, "ballPos:", ballPos, "tick:", this._app._clock.tick);
-        //     this.room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._app.getTick()});
-        //     this.impactSnapshots.saveSnapshot(this._app.getTick(), ballPos, newVel);
-        //     this._app.updateSnapshot({position: ballPos, velocity: newVel, tick: this._app.getTick()});
-        //     //this._app.setRecentImpact();
-        // });
-        // const physicsViewer = new PhysicsViewer(this.scene);
-        // physicsViewer.showBody(colRacketBody);
+        this.racketDimensions = new Vector3(2, 3.5, 0.5);
+        this.racketOffset = new Vector3(0,1.5,0);
     }
 
     public getRacketHit() : Vector3 {
@@ -122,7 +72,6 @@ export class Player extends TransformNode {
     }
 
     public updateBody() {
-        //this._moveDirection = new Vector3(this._input.horizontal, 0, this._input.vertical).normalize();
         if (!this._controlsEnabled)
             return ;
         this.mesh.moveWithCollisions(this._input.getMoveDirection());

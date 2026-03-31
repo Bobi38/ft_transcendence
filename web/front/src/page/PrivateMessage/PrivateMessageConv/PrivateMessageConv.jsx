@@ -128,7 +128,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 
 
 				</div>
-
+				<hr />
 				<form onSubmit={handler_submit}>
 					<input type="text"
 					value = {input}
