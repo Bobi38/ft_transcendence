@@ -51,6 +51,14 @@ export default function StatsPong3D({ username, setUsername }) {
 
         const winrate = total_game > 0 ? ((win / total_game) * 100).toFixed(2) : 0;
 
+        const data_formated = {
+            win: win,
+            lose: lose,
+            totalG: total_game,
+            time_pld : time_played,
+            WR: winrate,
+        }
+
         setStatToDisplay(data_formated);
 
         if (totalGames < data.total_game){
