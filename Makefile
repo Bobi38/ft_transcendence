@@ -25,6 +25,11 @@ compose_dev:
 compose_prod:
 	docker compose -f docker-compose.prod.yml up -d
 
+add_dev:
+	docker compose -f docker-compose.dev.yml --profile add up -d add_service
+
+add_prod:
+	docker compose -f docker-compose.prod.yml --profile add up -d add_service
 
 compose:
 	docker compose up -d
@@ -103,4 +108,4 @@ re_prod: fclean prod
 # 	@echo "Suppression de ft_tr_dreamteam.fr du fichier hosts"
 # 	sed -i.bak '/127.0.0.1 ft_tr_dreamteam\.fr/d' /etc/hosts || true
 
-.PHONY: all compose down prune creat rmi volumes logs clean secrets fclean re re_dev re_prod dev prod
+.PHONY: all compose down prune creat rmi volumes logs clean secrets fclean re re_dev re_prod dev prod add_dev add_prod
