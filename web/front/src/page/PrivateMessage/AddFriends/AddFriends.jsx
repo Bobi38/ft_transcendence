@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-
+import  SocketM  from "TOOL/SocketManag.js";
 /* Css */
 import "./AddFriends.scss";
 
@@ -41,6 +41,8 @@ export default function AddFriends() {
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        fetch_all_request_friend();
+        SocketM.send("friend", {type: "req_frd", login: name});
         console.log("add_friend(info) good");
     }
 
@@ -59,7 +61,20 @@ export default function AddFriends() {
 
 
 
-    useEffect(() => {fetch_all_request_friend()}, []);
+    useEffect(() => {
+        fetch_all_request_friend();
+
+        const handle_friend_add = (data) => {
+                if (data.type == 'req_frd')
+                    setResponseFriendArray(repjson.message);
+        }
+
+        SocketM.on("friend", handle_friend_add, "trois");
+        return () =>{
+            SocketM.off("friend", "trois");
+        }
+
+    }, []);
 
 
     const handel_form = (e) =>{
@@ -87,6 +102,10 @@ export default function AddFriends() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         await fetch_all_request_friend()
+        if (repjson.accept === true)
+            SocketM.send("friend", {type: "maj_frd", login: repjson.name});
+        else
+            SocketM.send("friend", {type: "req_frd", login: repjson.name});
     }
 
 

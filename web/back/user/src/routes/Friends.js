@@ -150,6 +150,7 @@ router.get('/all_request_friend', async (req,res) => {
 
 router.post('/response_friend', async (req, res) => {
 	try {
+		let acceptt;
 		console.log("i m in response friend")
 		const {login, response} = req.body
 		console.log("req.body", req.body)
@@ -162,11 +163,15 @@ router.post('/response_friend', async (req, res) => {
 		const relat = await Friend.findOne({where: { [Op.or]: [{Friend1: result.id, Friend2: friend.id}, {Friend1:friend.id , Friend2: result.id}]}})
 		if (relat.length === 0)
 			return res.status(409).json({success: false, message: "relation doesn't exist"})
-		if (response)
+		if (response){
 			await relat.update({State: true})
-		else
+			acceptt = true;
+		}
+		else{
 			await relat.destroy();
-		return res.status(201).json({success: true, message: "good"})
+			acceptt = false;
+		}
+		return res.status(201).json({success: true, message: "good", accept: acceptt, login: login})
 	}catch(err){
 		return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
 	}

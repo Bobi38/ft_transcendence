@@ -134,6 +134,20 @@ export function initWebSFriend(server) {
             }
           }
         }
+        if (data.type === 'req_frd'){
+          const send = chat.findname(data.login)
+          for (const session of chat.sessions.values()){
+            if (session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'add_frd'}));
+          }
+        }
+        if (data.type === 'maj_frd'){
+          const send = chat.findname(data.login)
+          for (const session of chat.sessions.values()){
+            if (session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'maj_frd'}));
+          }
+        }
         if (data.type === "logout"){
           socket.isAlive = false;
           socket.GoLogout = true;
