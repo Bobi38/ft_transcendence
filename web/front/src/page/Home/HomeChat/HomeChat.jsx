@@ -57,11 +57,13 @@ export default function HomeChat() {
 		
         const init = async () => {
             const handle_global_message = (data) => {
+                if (data.type === "auth_good") return
                 if (data.type === "updateName_good"){
                     fetch_global_message();
                     return;
                 }
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
+
                 setDisplayedMessages((prev) => [...prev, data]);
             };
             SocketM.on("chat", handle_global_message, "ChatG");
@@ -93,7 +95,7 @@ export default function HomeChat() {
         SocketM.sendd('chat', data);
         setInput("");
     };
-
+    
     return (
 		<section className={`HomeChat-root`}>
 
@@ -106,7 +108,7 @@ export default function HomeChat() {
 				{displayedMessages && displayedMessages.map((msg, index) => (
 
 					<div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
-						{/* {() => {console.log("in html:", index)}} */}
+						{/* {() => {console.log("displayedMessages", displayedMessages)}} */}
 						{msg.monMsg ? (
 							<div className={`message`}>
 								<div>{msg.timer}</div>

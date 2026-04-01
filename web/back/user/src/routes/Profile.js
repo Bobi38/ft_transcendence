@@ -33,9 +33,9 @@ router.post('/updateProfil', async(req, res) => {
     const oldname = result.name;
     console.log("API /updateProfil dans update profil", user);
     const name = await User.findAll({where :{name: user.login}})
-    if ((name.length != 0) && (name.id != result.id))
+    if ((name.length != 0) && (name[0].id != result.id))
       return res.status(409).json({success: false, message: 'Name already used'})
-    console.log(user.email)
+      console.log(user.email)
     if (validator.isEmail(user.email)){
       console.log("email valid");
       await result.update({mail: user.email})
@@ -122,7 +122,7 @@ router.get('/Homeweather', cacheWeather(), async (req, res) => {
     console.log("API /Homeweather dans Homeweather");
     const key = "b26266decd6341248ef151027261902";
     const loc = req.loc;
-
+    console.log("loc:",loc)
     const response = await fetch(
       `http://api.weatherapi.com/v1/current.json?key=${key}&q=${loc}`
     );
@@ -148,33 +148,5 @@ router.get('/Homeweather', cacheWeather(), async (req, res) => {
     });
   }
 });
-
-
-// router.get('/Homeweather', async (req, res) => {
-//   try{
-//     console.log("API /Homeweather dans Homeweather");
-//     const key = "b26266decd6341248ef151027261902";
-//     const token = req.cookies.token;
-//     const decoded = jwt.verify(token, secret);
-//     const result = await User.findOne({ where: { id: decoded.id } });
-//     let loc;
-//     if (result && result.adress)
-//       loc = result.adress
-//     else
-//       loc = "Charbonnieres-les-Bains"
-//     console.log("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc)
-//     const response = await fetch("http://api.weatherapi.com/v1/current.json?key=" + key + "&q=" + loc, {
-//       method: "GET",
-//       headers: { "Accept": "application/json" }
-//     });
-//     const data = await response.json()
-//     if (data)
-//         return res.status(201).json({success: true, message: data})
-//     else
-//         return res.status(201).json({success: false})
-//   }catch(err){
-//     return res.status(501).json({success: false, message: "error back /Homeweather " + err})
-//   }
-// })
 
 export default router;

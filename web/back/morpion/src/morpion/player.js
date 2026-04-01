@@ -21,6 +21,7 @@ export class Player {
     }
 
     sendGame(data = {}) {
+        let payload = {}
 
         if (data !== undefined) {
             payload.message = this._last_message;
