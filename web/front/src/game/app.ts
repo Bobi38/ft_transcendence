@@ -71,11 +71,7 @@ export class App {
     private async _main(): Promise<void> {
         this._engine.displayLoadingUI();
         
-        const connected = await this._connectOrReconnectToRoom();
-        if (connected == 1) {
-            this._engine.hideLoadingUI();
-            return ;
-        }
+        await this._connectOrReconnectToRoom();
 
         await Promise.all([
             this._setupClock(),
@@ -139,7 +135,6 @@ export class App {
         this._room = room;
         const callback = Callbacks.get(room);
         this._callback = callback;
-        return 0;
     }
 
     private _updatePhysicsAndRender() {

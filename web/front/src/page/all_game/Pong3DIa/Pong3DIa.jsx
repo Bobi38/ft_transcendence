@@ -6,14 +6,14 @@ import { useNavigate } from "react-router-dom";
 import checkCo from "TOOL/fonction_usefull.js"
 
 /* Css */
-import "./Pong3D.scss";
+import "./Pong3DIa.scss";
 
 /* Components */
-import { App as GameApp } from "FRONT/game/app.ts";
+import { App as GameApp } from "FRONT/gameVsIa/app.ts";
 import Button from "FRONT/Component/Button/Button.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
-export default function Pong3D() {
+export default function Pong3DIa() {
 
 
     const navigate = useNavigate();
@@ -43,8 +43,8 @@ export default function Pong3D() {
     }, []);
 
     return (
-        <main className={`Pong3D-root`}>
-			<a href="/" className="button">Home</a>
+        <main className={`Pong3DIa-root`}>
+			<a href="/" className="button">Huome</a>
             <canvas ref={canvasRef} />
         </main>
     )

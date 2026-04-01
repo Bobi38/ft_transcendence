@@ -23,6 +23,7 @@ import Stats            from    "FRONT/page/Stats/Stats.jsx";
 
 // ./src/page/all_game
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
+import Pong3DIa         from    "FRONT/page/all_game/Pong3DIa/Pong3DIa.jsx";
 import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
 
 
@@ -117,6 +118,8 @@ export default function App() {
                     <Route path={`/Stats`}          element={<Navigation> <Stats/>          </Navigation>}/>
                     <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay/> </Navigation>}/>
                     <Route path={`/Pong3D`}         element={<Pong3D/>}/>
+                    <Route path={`/Pong3DIa`}       element={<Pong3DIa/>}/>
+                    
 
                     {/* bad path */}
                     <Route path={`/*`}              element={<Navigation> <ErrorRedir/>     </Navigation>} />
