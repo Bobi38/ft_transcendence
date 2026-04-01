@@ -2,12 +2,11 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody, SpotLight, DirectionalLight, HemisphericLight, Matrix, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
+import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
-import HavokPhysics from "@babylonjs/havok";
 import { Ball } from "./ball";
 import { MyRoomState } from "./schema/MyRoomState";
 import { StateCallbackStrategy } from "@colyseus/schema";
@@ -32,7 +31,6 @@ export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
     private _scene: Scene;
-    //private _havokPlugin: HavokPlugin;
     private _environment: Environment;
     private _player: Player;
     private _enemy: Enemy;
@@ -73,10 +71,14 @@ export class App {
     private async _main(): Promise<void> {
         this._engine.displayLoadingUI();
         
-        await this._connectOrReconnectToRoom();
+        const connected = await this._connectOrReconnectToRoom();
+        if (connected == 1) {
+            this._engine.hideLoadingUI();
+            return ;
+        }
 
         await Promise.all([
-            this._setupHavok(),
+            this._setupClock(),
             this._waitForStateOnce(this._room)
         ]);
         await this._setupGameAssets()
@@ -123,6 +125,10 @@ export class App {
             try {
                 room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
             } catch (newRoomError) {
+                console.log(newRoomError);
+                if (newRoomError.code == 401) {
+                    //showJoinedTwiceUI();
+                }
                 window.location.href = "/";
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
             }
@@ -133,75 +139,7 @@ export class App {
         this._room = room;
         const callback = Callbacks.get(room);
         this._callback = callback;
-    }
-
-    public _executeStep() {
-        const oldPos = this._ball.getPhysicsBodyPosition();
-        const newPos = oldPos.add(this._ball.getVelocity().scale(TIMESTEP));
-        this._ball.setPhysicsBodyPosition(newPos);
-    }
-
-    public _checkRacketCollision(impactSnapshot? : BallSnapshot) {
-        const ballPos = this._ball.getPhysicsBodyPosition();
-    
-        const racketWorldMatrix = this._player.getRacketWorldMatrix();
-        const invRacketMatrix = racketWorldMatrix.clone().invert();
-        const localBallPos = Vector3.TransformCoordinates(ballPos, invRacketMatrix);
-        localBallPos.subtractInPlace(this._player.racketOffset);
-
-        const halfWidth = this._player.racketDimensions.x / 2;
-        const halfHeight = this._player.racketDimensions.y / 2;
-        const halfDepth = this._player.racketDimensions.z / 2;
-
-        const closestX = Math.max(-halfWidth,  Math.min(localBallPos.x, halfWidth));
-        const closestY = Math.max(-halfHeight, Math.min(localBallPos.y, halfHeight));
-        const closestZ = Math.max(-halfDepth,  Math.min(localBallPos.z, halfDepth));
-        const closest = new Vector3(closestX, closestY, closestZ);
-        const distanceSquared = localBallPos.subtract(closest).lengthSquared();
-        //console.log("distanceSquared:", distanceSquared);
-
-        if (distanceSquared < (this._ball.radius ** 2)) {
-            let newVel : Vector3;
-            if (this._ball.isResimming) {
-                newVel = impactSnapshot.velocity;
-            } else {
-                newVel = this._player.getRacketHit();
-            }
-            this._ball.setVelocity(newVel);
-            if (!this._ball.isResimming) {
-                this._room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._clock.tick});
-                console.log("woah i hit the ball at tick:", this._clock.tick);
-                console.log("new vel:", newVel);
-                this._ball.ignoreServerAfter = this._clock.tick;
-            }
-        }
-    }
-
-    public _checkWallCollision(){
-        const ballPos = this._ball.getPhysicsBodyPosition();
-        const radius = this._ball.radius;
-        const min = this._environment.wallMin;
-        const max = this._environment.wallMax;
-
-        const ballVel : Vector3 = this._ball.getVelocity();
-        if (ballPos.x - radius < min.x) {
-            ballPos.x = min.x + radius;
-            ballVel.x *= -1;
-        } else if (ballPos.x + radius > max.x) {
-            ballPos.x = max.x - radius;
-            ballVel.x *= -1;
-        }
-
-        if (ballPos.y - radius < min.y) {
-            ballPos.y = min.y + radius;
-            ballVel.y *= -1;
-        } else if (ballPos.y + radius > max.y) {
-            ballPos.y = max.y - radius;
-            ballVel.y *= -1;
-        }
-
-        this._ball.setPhysicsBodyPosition(ballPos);
-        this._ball.setVelocity(ballVel);
+        return 0;
     }
 
     private _updatePhysicsAndRender() {
@@ -250,6 +188,74 @@ export class App {
         console.log("Other player hit the ball");
         this._ball.isResimming = false;
         this._pendingImpact = null;
+    }
+
+    public _executeStep() {
+        const oldPos = this._ball.getPhysicsBodyPosition();
+        const newPos = oldPos.add(this._ball.getVelocity().scale(TIMESTEP));
+        this._ball.setPhysicsBodyPosition(newPos);
+    }
+
+    public _checkRacketCollision(impactSnapshot? : BallSnapshot) {
+        const ballPos = this._ball.getPhysicsBodyPosition();
+    
+        const racketWorldMatrix = this._player.getRacketWorldMatrix();
+        const invRacketMatrix = racketWorldMatrix.clone().invert();
+        const localBallPos = Vector3.TransformCoordinates(ballPos, invRacketMatrix);
+        localBallPos.subtractInPlace(this._player.racketOffset);
+
+        const halfWidth = this._player.racketDimensions.x / 2;
+        const halfHeight = this._player.racketDimensions.y / 2;
+        const halfDepth = this._player.racketDimensions.z / 2;
+
+        const closestX = Math.max(-halfWidth,  Math.min(localBallPos.x, halfWidth));
+        const closestY = Math.max(-halfHeight, Math.min(localBallPos.y, halfHeight));
+        const closestZ = Math.max(-halfDepth,  Math.min(localBallPos.z, halfDepth));
+        const closest = new Vector3(closestX, closestY, closestZ);
+        const distanceSquared = localBallPos.subtract(closest).lengthSquared();
+
+        if (distanceSquared < (this._ball.radius ** 2)) {
+            let newVel : Vector3;
+            if (this._ball.isResimming) {
+                newVel = impactSnapshot.velocity;
+            } else {
+                newVel = this._player.getRacketHit();
+            }
+            this._ball.setVelocity(newVel);
+            if (!this._ball.isResimming) {
+                this._room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._clock.tick});
+                console.log("woah i hit the ball at tick:", this._clock.tick);
+                console.log("new vel:", newVel);
+                this._ball.ignoreServerAfter = this._clock.tick;
+            }
+        }
+    }
+
+    public _checkWallCollision(){
+        const ballPos = this._ball.getPhysicsBodyPosition();
+        const radius = this._ball.radius;
+        const min = this._environment.wallMin;
+        const max = this._environment.wallMax;
+
+        const ballVel : Vector3 = this._ball.getVelocity();
+        if (ballPos.x - radius < min.x) {
+            ballPos.x = min.x + radius;
+            ballVel.x *= -1;
+        } else if (ballPos.x + radius > max.x) {
+            ballPos.x = max.x - radius;
+            ballVel.x *= -1;
+        }
+
+        if (ballPos.y - radius < min.y) {
+            ballPos.y = min.y + radius;
+            ballVel.y *= -1;
+        } else if (ballPos.y + radius > max.y) {
+            ballPos.y = max.y - radius;
+            ballVel.y *= -1;
+        }
+
+        this._ball.setPhysicsBodyPosition(ballPos);
+        this._ball.setVelocity(ballVel);
     }
 
     private _setupPhysicsMessagesListener() {
@@ -329,13 +335,7 @@ export class App {
         });
     }
 
-    private async _setupHavok() {
-        // const havokInstance = await HavokPhysics({
-        //     locateFile: (file) => `/node_modules/@babylonjs/havok/lib/esm/${file}`
-        // });
-        // this._havokPlugin = new HavokPlugin(false, havokInstance);
-        // this._havokPlugin.setTimeStep(1/60);
-        // this._scene.enablePhysics(new Vector3(0, 0, 0), this._havokPlugin); //no gravity (middle value at 0)
+    private async _setupClock() {
         this._room.onMessage("initialTick", (serverTick) => {
             this._clock.setInitialClientClock(serverTick);
         });
@@ -370,13 +370,15 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        let light1 = new SpotLight('Light1', new Vector3(0,6,-10), new Vector3(0,-0.5,1), Math.PI/4, 40, scene);
+        //let light1 = new SpotLight('Light1', new Vector3(0,6,-10), new Vector3(0,-0.5,1), Math.PI/4, 40, scene);
+        let light1 = new PointLight('light1', new Vector3(0,6,-10), this._scene);
         light1.diffuse = new Color3(1,1,1);
         light1.intensity = 0.4;
         let shadow1 = new ShadowGenerator(2048, light1);
         shadow1.darkness = 0.1;
         this._shadows.push(shadow1);
-        let light2 = new SpotLight('Light1', new Vector3(0,6,30), new Vector3(0,-0.5,-1), Math.PI/4, 40, scene);
+        let light2 = new PointLight('light2', new Vector3(0,6,30), this._scene);
+        //let light2 = new SpotLight('Light1', new Vector3(0,6,30), new Vector3(0,-0.5,-1), Math.PI/4, 40, scene);
         //let light2 = new DirectionalLight('Light2', new Vector3(0.4,-0.6,-1), scene);
         light2.diffuse = new Color3(1,1,1);
         light2.intensity = 0.5;
@@ -437,24 +439,20 @@ export class App {
     }
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
-        //let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
         let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
         const body = assets.meshes[0];        
 
         if (isPlayer) {
             assets.meshes.forEach((m) => {
                 m.isVisible = false;
-        });
-            // body.isVisible = false;
+            });
         }
         if (isPlayer && !isNearSide) {
-            body.rotate(new Vector3(0,1,0), Math.PI);// = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+            body.rotate(new Vector3(0,1,0), Math.PI);
         }
         if (!isPlayer && !isNearSide) {
-            body.rotate(new Vector3(0,1,0), Math.PI);// = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
-            //body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+            body.rotate(new Vector3(0,1,0), Math.PI);
         }
-        //body.rotationQuaternion = Quaternion.FromEulerAngles(0,Math.PI,0);
 
         body.position = position;
         let bodymtl = new StandardMaterial("red", this._scene);
@@ -462,12 +460,6 @@ export class App {
         body.material = bodymtl;
         body.isPickable = false;
         const hand_node = new TransformNode("hand_node", this._scene)
-        // if (isPlayer && !isNearSide) {
-        //     hand_node.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
-        // }
-        // if (!isPlayer && !isNearSide) {
-        //     hand_node.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
-        // }
         hand_node.position = new Vector3(0.4, 2, 0);
         const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.8});
         hand.material = bodymtl;
