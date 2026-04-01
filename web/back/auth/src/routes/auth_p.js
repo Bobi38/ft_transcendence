@@ -77,9 +77,9 @@ router.post('/register', async (req, res) => {
       if (!name || !password || !email) {
         return res.status(400).json({ success: false, message: 'Missing fields' });
       }
-      if (!validator.isEmail(email)){
-        return res.status(400).json({ success: false, message: 'Invalid email format' });
-      }
+      // if (!validator.isEmail(email)){
+      //   return res.status(400).json({ success: false, message: 'Invalid email format' });
+      // }
         const find = await User.findAll({ where: { mail: email } });
         if (find.length != 0) {
           if (find[0].OAuth == true)
