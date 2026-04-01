@@ -71,6 +71,19 @@ export function initWebSMopr(server) {
       players.forEach(p => {p.sendList();});
     }
 
+    socket.addbot = () => {
+      const bot = Bot.create();
+
+      socket.players.set(bot.getId(), bot);
+      m.searchGame(bot, socket.players);
+
+      setTimeout(() => {
+        console.log("clear ", bot);
+        players.delete(bot.getId());
+        socket.sendList();
+      }, 90000);
+    }
+
     manager_room.sendList = () => {
        players.forEach(p => {p.sendList();});
     }
@@ -100,27 +113,12 @@ export function initWebSMopr(server) {
 
           case "play":
             if (m.searchGame(socket.player, socket.players)){
-              console.log('recu true');
-              // if (!socket.players)
-              //   console.log('probleme player');
-              // console.log('combien de joueur enregistrer', socket.players.size);
-              // socket.players.forEach(p => {p.sendList();});
+              if (data.message === "bot") socket.addbot();
             }
             break ;
 
           case "bot":
-            const bot = Bot.create();
-            const players = socket.players;
-
-            players.set(bot.getId(), bot);
-            console.log("creation bot", players.size);
-            m.searchGame(bot, players);
-
-            setTimeout(() => {
-              console.log("clear ", bot);
-              players.delete(bot);
-              socket.sendList();
-            }, 90000);
+            socket.addbot()
             break ;
 
           case "leave":

@@ -98,7 +98,7 @@ function searchGame(player, players){
     console.log("ENTRY searchGame");
 
     let game = player.getGame();
-    if (game){
+    if (game?.isState("play")){
         player.send(`you play ${game.getId()}`);
         return false;
     }
@@ -111,7 +111,7 @@ function searchGame(player, players){
         console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})
-        return false;
+        return true;
     }
     console.log(` step 111111 la partie a deux joueurs`);
     game.startGame(player);
@@ -129,7 +129,7 @@ function searchGame(player, players){
 
     // console.log("step 33333333   liste rafraichi");
     // console.log("AVANT RETURN TRUE");
-    return true;
+    return false;
 }
 
 function reboot(){
