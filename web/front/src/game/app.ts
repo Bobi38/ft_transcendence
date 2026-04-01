@@ -27,6 +27,8 @@ export enum RoomStatus {
 
 const TIMESTEP : number = 1/60;
 
+
+
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
@@ -44,6 +46,7 @@ export class App {
     public  _clock : SynchronizedClock = new SynchronizedClock();
     private _isNear : boolean = true;
     private _pendingImpact : BallSnapshot = null;
+    public onUnauthorized?: () => void;
 
 
     constructor(canvas: HTMLCanvasElement) {
@@ -127,7 +130,7 @@ export class App {
             } catch (newRoomError) {
                 console.log(newRoomError);
                 if (newRoomError.code == 401) {
-                    //showJoinedTwiceUI();
+                    this.onUnauthorized?.();
                 }
                 window.location.href = "/";
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");

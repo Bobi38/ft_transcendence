@@ -75,7 +75,7 @@ export default function Home() {
         home_root.addEventListener("click", home_handler);
         return () => home_root.removeEventListener("click", home_handler);
 
-    }, []);
+    }, [showLog]);
 
 	return (
 

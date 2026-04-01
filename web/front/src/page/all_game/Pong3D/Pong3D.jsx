@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
+import {showAlert} from "TOOL/fonction_usefull.js"
 
 /* Css */
 import "./Pong3D.scss";
@@ -32,6 +33,7 @@ export default function Pong3D() {
 
             if (canvasRef.current) {
                 gameApp = new GameApp(canvasRef.current);
+                gameApp.onUnauthorized = () => showAlert("Tu as deja une page ouverte sur Pong3D", "danger");
             }
         };
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 /* back */
 import { showAlert } from "TOOL/fonction_usefull.js";
 import SocketM  from "TOOL/SocketManag.js";
-import {useAuth} from "TOOL/AuthContext.jsx"
+import {useAuth, AUTH} from "TOOL/AuthContext.jsx"
 
 /* Css */
 import "./HomeChat.scss";
@@ -53,9 +53,20 @@ export default function HomeChat() {
             return;
     }
 
-    useEffect(() =>{fetch_global_message()}, [showLog])
+    useEffect(() =>{
+        const currect = showLog;
+        if (currect != AUTH.NONE)
+            return ;
+        fetch_global_message()
+
+    }, [showLog])
 
     useEffect( () => {
+
+
+        const currect = showLog;
+        if (currect !== AUTH.NONE)
+            return ;
         fetch_global_message()
 		
         const init = async () => {

@@ -1,7 +1,7 @@
 /* extern */
 import { useEffect, useState } from "react";
 
-import { useAuth } from "TOOL/AuthContext.jsx"
+import { useAuth, AUTH } from "TOOL/AuthContext.jsx"
 
 /* back */
 
@@ -24,6 +24,9 @@ export default function HomeCardWeather() {
 		
 		async function fetchWeather() {
 			try {
+				const current = showLog;
+				if (current != AUTH.NONE)
+					return ;
 				console.log("fetchWeather(1) called");
 				const response = await fetch("/api/profile/Homeweather", {
 					method: "GET",
