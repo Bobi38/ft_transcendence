@@ -28,9 +28,8 @@ export default function HomeCardWeather() {
 				});
 				const data = await response.json();
 
-				// adapte selon ton backend
 				setWeather({
-					icon: data.message.current.condition.icon, // ex: "https://..."
+					icon: data.message.current.condition.icon,
 					descript: `${data.message.current.condition.text}`,
 					title: `${data.message.location.name}`,
 					temp: `${data.message.current.temp_c}°C`,
