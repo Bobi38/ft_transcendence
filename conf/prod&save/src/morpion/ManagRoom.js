@@ -1,5 +1,6 @@
 import MorpionRoom from "./morpionRoom.js";
 import Room from "./Room.js";
+import m from "./PlayMorpion.js"
 
 const roomTypes = {
     Morpion: MorpionRoom,
@@ -85,8 +86,8 @@ class ManagerRoom {
         }
 
         game.handleEndGame('abort', game.getTurn());
-        winner.send({ message: msgs.w_abort, turn: false }); // message: "end"
-        loser.send({ message: msgs.l_abort, turn: false });
+        winner.send({ message: m.msgs.w_abort, turn: false }); // message: "end"
+        loser.send({ message: m.msgs.l_abort, turn: false });
 
 
         setTimeout(() => {manager_room.removeRoom(game, null);}, 10000);
