@@ -131,6 +131,7 @@ export function initWebSFriend(server) {
             if (session.userId == nono && session.username == data.old_name){
               session.socket.username = data.new_name;
               session.username = data.new_name;
+            }
           }
         }
         if (data.type === "logout"){
