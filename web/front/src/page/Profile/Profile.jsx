@@ -173,13 +173,13 @@ export default function Profile() {
                             /> 
 
                     <button type={`submit`}>Modifier mes informations</button>
-                    
                 </form>
 
+				<hr />
 
-                <div className={`change-password`} onClick={() => setShowFormPassword(!showFormPassword)}>
+                <button className={`change-password`} onClick={() => setShowFormPassword(!showFormPassword)}>
                     Changer de mot de passe
-                </div>
+                </button>
 
                 <div className={showFormPassword ? "visible" : "hidden"}>
 

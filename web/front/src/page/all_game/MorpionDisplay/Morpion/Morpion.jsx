@@ -66,13 +66,23 @@ function SelectSecondPlayer(){
 }
 
 function NouvellePartie({ setBoard }){
-    return (
-        <button onClick={() => {
-            setBoard(Array(9).fill(""));
-            SocketM.sendd('morp',{
+    function sendMessage(s_message){
+        SocketM.sendd('morp',{
                 type: "play",
-            })
-        }}>
+                message: s_message,
+            })   
+    }
+    return (
+        <button
+            onClick={() => {
+            setBoard(Array(9).fill(""));
+            sendMessage("player");            
+        }}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                sendMessage('bot');               
+            }}
+            style={{ cursor: 'add bot' }}>
             Search Game
         </button>
     );
@@ -121,11 +131,11 @@ export default function Morpion() {
 
             <div className={`info`}>
 
-                <RebootTruc/>
+                {/* <RebootTruc/>
 
                 <GoOut/>
 
-                <SelectSecondPlayer/>
+                <SelectSecondPlayer/> */}
 
                 <div className="status">
                     {msg === "search" ?
