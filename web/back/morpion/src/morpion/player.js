@@ -85,8 +85,8 @@ export class Player {
             payload = { ...data };
         }
 
-        if (!payload.message && this._message) {
-            payload.message = this._message;
+        if (!payload.message && this._last_message) {
+            payload.message = this._last_message;
         }
 
         if (this.list) {
@@ -151,10 +151,13 @@ export class Player {
     }
 
     removeObs(){
-        this.send({
-            players: null,
-            other_board: Array(9).fill(" ")
-        });
+        setTimeout(() => {
+                if (this._obs_game) return ;
+                this.send({
+                    players: null,
+                    other_board: Array(9).fill(" ")
+                });
+            }, 5000)
 
         if (!this._obs_game) return ;
 

@@ -19,7 +19,7 @@ const msgs = {
 
 function observator(player, gameId){
     
-    console.log(`obs ${gameId}`);
+    // console.log(`obs ${gameId}`);
     if (gameId === 1){
         const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
         const players = {player_1: "martin", player_2:"jackiechan"};
