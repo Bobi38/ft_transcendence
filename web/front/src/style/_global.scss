@@ -48,6 +48,11 @@ input[type="text"], input[type="email"], input[type="password"], input[type="tel
 		outline: none;
 		border-color: $active;
 	}
+
+	&:disabled {
+		background-color: $grey-light;
+		@include mix.cursor;
+	}
 }
 
 hr {
