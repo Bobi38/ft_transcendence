@@ -61,22 +61,41 @@ services:
     restart: always
 
 
-  # init_service:
-  #   container_name: init_service
-  #   build:
-  #     context: ./web/back
-  #     dockerfile: init_db/Dockerfile
-  #   env_file: 
-  #     - .env
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #   secrets:
-  #     - cle_pswd
-  #     - cle_chat
-  #   networks:
-  #     - home
-  #   restart: "no" 
+  init_service:
+    container_name: init_service
+    build:
+      context: ./web/back
+      dockerfile: init_db/Dockerfile
+    env_file: 
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    secrets:
+      - cle_pswd
+      - cle_chat
+    restart: "no"
+    networks:
+      - home
+
+  add_service:
+    container_name: add_service
+    build:
+      context: ./web/back
+      dockerfile: add_db/Dockerfile
+    env_file: 
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    secrets:
+      - cle_pswd
+      - cle_chat
+    restart: "no"
+    networks:
+      - home
+    profiles:
+      - add
 
   gateway:
     build:

@@ -1,6 +1,8 @@
 /* extern */
 import { useEffect, useState } from "react";
 
+import { useAuth } from "TOOL/AuthContext.jsx"
+
 /* back */
 
 /* Css */
@@ -9,6 +11,8 @@ import "./HomeCardWeather.scss";
 /* Components */
 
 export default function HomeCardWeather() {
+
+	  const { showLog } = useAuth();
 
 	const [weather, setWeather] = useState({
 		icon: null,
@@ -41,7 +45,7 @@ export default function HomeCardWeather() {
 		}
 
 		fetchWeather();
-	}, []);
+	}, [showLog]);
 	
 	const [activeWeather, setActiveWeather] = useState({"": ""})
 	

@@ -39,7 +39,6 @@ export default function Home() {
         }
 
         const resCo = await checkCo();
-        console.log(resCo);
         if (!resCo.success) {
             setShowLog(AUTH.LOGIN);
             sessionStorage.clear();
