@@ -1,4 +1,4 @@
-import { Axis, Mesh, Quaternion, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
+import { Mesh, Quaternion, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
 
 export class Enemy extends TransformNode {
     private _mesh : Mesh;
@@ -28,17 +28,8 @@ export class Enemy extends TransformNode {
         shadows[1].contactHardeningLightSizeUVRatio = 0.05;
     }
 
-    public registerBody(newPos: Vector3) {
-        this._newPos = newPos;
-    }
-
     public updateBody() {
         this._mesh.position = Vector3.Lerp(this._mesh.position, this._newPos, 0.4);
-    }
-
-    public registerRacket(newPos: Vector3, newRot: Quaternion) {
-        this._newRackPos = newPos;
-        this._newRackRot = newRot;
     }
 
     public updateRacket() {

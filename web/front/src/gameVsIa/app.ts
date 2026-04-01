@@ -3,19 +3,13 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
-import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
 import { Ball } from "./ball";
-import { MyRoomState } from "./schema/MyRoomState";
-import { StateCallbackStrategy } from "@colyseus/schema";
 import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
-import { BallSnapshot, SnapshotBuffer } from "./snapshots";
-import { SynchronizedClock } from "./SynchronizedClock";
-import { RacketHistory } from "./RacketHistory";
 
 export enum RoomStatus {
   WAITING = 0,
@@ -36,15 +30,10 @@ export class App {
     private _player: Player;
     private _enemy: Enemy;
     private _camera: PlayerCamera;
-    private MAX_SPEED: number = 40;
     private _ball: Ball;
-    private _room : Room<MyRoomState>;
-    private _callback : StateCallbackStrategy<MyRoomState>;
     private _shadows : ShadowGenerator[] = [];
     private _ui : GUI;
-    public  _clock : SynchronizedClock = new SynchronizedClock();
-    private _isNear : boolean = true;
-    private _pendingImpact : BallSnapshot = null;
+    private _served : boolean = true;
     private _score : number[] = [0,0];
 
 
@@ -74,121 +63,24 @@ export class App {
         this._engine.displayLoadingUI();
         this._ui = new GUI();
         
-        //await this._connectOrReconnectToRoom();
-        
-        // await Promise.all([
-        //     this._setupClock(),
-        //     this._waitForStateOnce(this._room)
-        // ]);
         await this._setupGameAssets()
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
-
-        //this._setupUI();
-        //this._setupPhysicsMessagesListener();
         
         this._engine.runRenderLoop(() => {
-            this._updatePhysicsAndRender();
+            if (this._roomStatus == RoomStatus.STARTED) {
+                this._updatePlayerAndEnemy();
+                this._executeStep();
+                this._checkRacketCollision();
+                this._checkWallCollision();
+                this._checkIfPointWon();
+            }
+            this._scene.render();
         });
         window.addEventListener('resize', () => {
             this._engine.resize();
         });
     }
-
-    // private _waitForStateOnce(room: Room<MyRoomState>): Promise<void> {
-    //     return new Promise((resolve) => {
-    //         room.onStateChange.once(() => {
-    //             resolve();
-    //         });
-    //     });
-    // }
-
-    // private async _connectOrReconnectToRoom() {
-    //     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    //     const hostname = window.location.hostname;
-    //     console.log("iciiiiiiii====   " , `${protocol}//${hostname}:2567`);
-    //     let colyseusSDK = new Client(`${protocol}//${hostname}:2567`);
-    //     const token = sessionStorage.getItem("token");
-    //     const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
-
-    //     let room: Room<MyRoomState>;
-    //     try {
-    //         if (reconnectionGameToken) {
-    //             console.log("Trying to reconnect...");
-    //             room = await colyseusSDK.reconnect<MyRoomState>(reconnectionGameToken);
-    //         } else {
-    //             throw new Error("No room/session stored");
-    //         }
-    //     } catch (e) {
-    //         console.log("Reconnect failed or no previous session, joining new room:", e);
-    //         try {
-    //             room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
-    //         } catch (newRoomError) {
-    //             console.log(newRoomError);
-    //             if (newRoomError.code == 401) {
-    //                 //showJoinedTwiceUI();
-    //             }
-    //             window.location.href = "/";
-    //             console.log("Failed to join new room, error:", newRoomError, "sending back to home");
-    //         }
-    //     }
-    //     localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
-
-    //     console.log("Joined room " + room.roomId);
-    //     this._room = room;
-    //     const callback = Callbacks.get(room);
-    //     this._callback = callback;
-    //     return 0;
-    // }
-
-    private _updatePhysicsAndRender() {
-        if (this._roomStatus == RoomStatus.STARTED) {
-            //this._clock.updateAccumulator(this._engine.getDeltaTime());
-            //this._checkPendingImpact();
-            //this._ball.correctPosAndVel();
-            while (this._clock.getAccumulator() >= 1000/60) {
-                this._updatePlayerAndEnemy();
-                this._executeStep();
-                this._checkRacketCollision();
-                this._checkWallCollision();
-                //this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-                //this._clock.tick++;
-                //this._clock.setbackAccumulator();
-                //console.log("Adding supplementary physics step, tick now:", this._clock.tick);
-            }
-            this._ball.smoothPosition();
-            this._displayUI();
-        }
-        this._scene.render();
-    }
-
-    // private _checkPendingImpact() {
-    //     if (!this._pendingImpact)
-    //         return ;
-    //     const ticksToResimulate = this._clock.tick - this._pendingImpact.tick;
-    //     console.log("impactTick:", this._pendingImpact.tick, "ticks to resim:", ticksToResimulate);
-    //     const preRollbackPos = this._ball.getPhysicsBodyPosition();
-    //     this._ball.setPhysicsBodyPosition(this._pendingImpact.position);
-    //     this._ball.setVelocity(this._pendingImpact.velocity);
-    //     this._ball.snapshots.clearAfterTickIncluded(this._pendingImpact.tick);
-    //     this._ball.snapshots.saveSnapshot(this._pendingImpact.tick, this._pendingImpact.position, this._pendingImpact.velocity);
-    //     this._ball.isResimming = true;
-    //     for (let i = 1; i < ticksToResimulate; i++) {
-    //         const simulatingTick = this._pendingImpact.tick + i;
-    //         this._executeStep();
-    //         const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-    //         if (impactSnapshot)
-    //             this._checkRacketCollision(impactSnapshot.snapshot);
-    //         this._checkWallCollision();
-    //         this._ball.snapshots.saveSnapshot(simulatingTick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-    //     }
-    //     const postRollbackPos = this._ball.getPhysicsBodyPosition();
-    //     const teleportDelta = preRollbackPos.subtract(postRollbackPos);
-    //     this._ball.visualOffset.addInPlace(teleportDelta);
-    //     console.log("Other player hit the ball");
-    //     this._ball.isResimming = false;
-    //     this._pendingImpact = null;
-    // }
 
     public _executeStep() {
         const oldPos = this._ball.getPhysicsBodyPosition();
@@ -196,7 +88,7 @@ export class App {
         this._ball.setPhysicsBodyPosition(newPos);
     }
 
-    public _checkRacketCollision(impactSnapshot? : BallSnapshot) {
+    public _checkRacketCollision() {
         const ballPos = this._ball.getPhysicsBodyPosition();
     
         const racketWorldMatrix = this._player.getRacketWorldMatrix();
@@ -247,95 +139,6 @@ export class App {
         this._ball.setVelocity(ballVel);
     }
 
-    // private _setupPhysicsMessagesListener() {
-    //     this._room.onMessage('Goal!', (data: any) => {
-    //         const tick = data.tick;
-    //         const newPos = new Vector3(data.position[0], data.position[1], data.position[2]);
-    //         console.log("server sent pos:", newPos);
-    //         this._ball.setPhysicsBodyPosition(newPos);
-    //         this._ball.setMeshPosition(Vector3.Zero());
-    //         this._ball.setVelocity(Vector3.Zero());
-    //         //this._ball.setAngularVelocity(Vector3.Zero());
-    //         this._ball.ignoreServerUntil = tick;
-    //         this._ball.snapshots.dispose();
-    //         console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
-    //     });
-    //     this._room.onMessage("racketImpact", (data: any) => {
-    //         const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
-    //         const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
-    //         this._pendingImpact = {tick: data.tick, position: ballPos, velocity: ballVel};
-    //     });
-    //     this._room.onMessage("impactResponse", (tick) => {
-    //         this._ball.recentImpact = false;
-    //         this._ball.ignoreServerAfter = null;
-    //         this._ball.ignoreServerUntil = tick;
-    //         console.log("server acknowledges impact at tick:", tick);
-    //     });
-    // }
-
-    private _displayUI() {
-        const status = this._roomStatus;
-            switch (status) {
-                case RoomStatus.STARTED:
-                    console.log("Game has started");
-                    this._player.unlockControls();
-                    this._ui.showNoUI();
-                    this._ui.addScoreUI(this._score[0], this._score[1]);
-                    break;
-                case RoomStatus.WON:
-                    this._player.lockControls();
-                    this._ui.showEndUI(this._score[0], this._score[1]);
-                    break;
-            }
-
-        // this._callback.listen("roomStatus", () => {
-        //     const status = this._roomStatus;
-        //     switch (status) {
-        //         case RoomStatus.STARTED:
-        //             console.log("Game has started");
-        //             this._player.unlockControls();
-        //             this._ui.showNoUI();
-        //             this._ui.addScoreUI(this._score[0], this._score[1]);
-        //             break;
-        //         case RoomStatus.WON:
-        //             this._player.lockControls();
-        //             this._ui.showEndUI(this._score[0], this._score[1]);
-        //             break;
-        //     }
-        // });
-        // this._callback.onChange(this._room.state.score, () => {
-        //     this._ui.updateScoreUI(this._isNear, this._room.state.score.teamNear, this._room.state.score.teamFar);
-        // });
-        // this._room.onDrop((code, reason) => {
-        //     console.log("Connection dropped attempting to reconnect...");
-        //     console.log("code:", code, "reason:", reason);
-        //     this._player.lockControls();
-        //     this._ui.showAwaitingReconnectionUI();
-        // });
-        // this._room.onReconnect(() => {
-        //     console.log("successfully reconnected to the room!");
-        //     this._player.unlockControls();
-        //     this._ui.showNoUI();
-        // });
-        // this._room.onLeave(() => {
-        //     console.log("Failed to reconnect on time");
-        //     this._ui.showFailedReconnectionUI();
-        // });
-    }
-
-    // private async _setupClock() {
-    //     this._room.onMessage("initialTick", (serverTick) => {
-    //         this._clock.setInitialClientClock(serverTick);
-    //     });
-    //     this._room.onMessage("synchronizeTick", (serverTick) => {
-    //         this._clock.updateAccumulatorSlew(serverTick)
-    //     });
-    //     this._room.send("initialTick");
-    //     setInterval(() => {
-    //             const t0 = Date.now();
-    //             this._room.send("synchronizeTick", t0);
-    //         }, 250);
-    // }
 
     private async _setupGameAssets() {
         this._scene.clearColor = new Color4(0.015, 0.015, 0.2);
@@ -350,22 +153,11 @@ export class App {
             await this._environment.load()
         ]);
         this._camera = new PlayerCamera(this._scene);
-        this._player = new Player(this, this._camera.getUniversalCamera(), playerAssets, this._scene, this._shadows, this._room);
+        this._player = new Player(this._camera.getUniversalCamera(), playerAssets, this._scene, this._shadows);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
 
         this._enemy = new Enemy(this._scene, enemyAssets, this._shadows);
-        // this._callback.onAdd("players", (player, sessionId) => {
-        //     console.log("Player joined:", sessionId);
-        //     if (sessionId === this._room.sessionId) {
-        //         const playerPos = new Vector3(player.position.x, player.position.y, player.position.z);
-        //         this._setupPlayer(sessionId, playerPos, player.sideNear);
-        //     }
-        //     else {
-        //         const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
-        //         this._setupEnemy(sessionId, enemyPos, player.sideNear);
-        //     }
-        // });
     }
 
 
@@ -388,30 +180,13 @@ export class App {
 
         let ballPos = new Vector3(0,3,-12);
         let ballVel = Vector3.Zero();
-        this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this._clock, this);        
-        // this._setupBallUpdates();
+        this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this);        
     }
-
-    // private _setupBallUpdates() {
-    //     this._callback.onChange(this._room.state.ball.position, () => {
-    //         const serverPos = new Vector3(this._room.state.ball.position.x,this._room.state.ball.position.y,this._room.state.ball.position.z);
-    //         const serverVel = new Vector3(this._room.state.ball.velocity.x,this._room.state.ball.velocity.y,this._room.state.ball.velocity.z);
-    //         this._ball.serverPatch = {tick: this._room.state.ball.tickStamp, position: serverPos, velocity: serverVel};
-    //     });
-    // }
-
-    // private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
-    //     const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
-    //     this._camera = new PlayerCamera(isNearSide, this._scene);
-    //     this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadows, this._room);
-    //     this._player.setPlayerInput(
-    //         new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
-    // }
 
     private _updatePlayerAndEnemy() {
         if (this._player) {
             this._player.updateBody();
-            this._player.updateRacket(this._clock.tick);
+            this._player.updateRacket();
             this._camera.updateCamera(this._player.getPlayerPosition());
         }
         if (this._enemy) {
@@ -419,21 +194,6 @@ export class App {
             this._enemy.updateRacket();
         }
     }
-
-    // private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
-    //     const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
-    //     this._enemy = new Enemy(this._scene, enemyAssets, this._shadows, isNearSide);
-    //     this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
-    //         const newPos = this._room.state.players.get(sessionId).position;
-    //         this._enemy.registerBody(new Vector3(newPos.x, newPos.y, newPos.z));
-    //     });
-    //     this._callback.onChange(this._room.state.players.get(sessionId).rackPos, () => {
-    //         const newPos = this._room.state.players.get(sessionId).rackPos;
-    //         const newRot = this._room.state.players.get(sessionId).rackRot;
-    //         this._enemy.registerRacket(new Vector3(newPos.x, newPos.y, newPos.z),
-    //             new Quaternion(newRot.x, newRot.y, newRot.z, newRot.w));
-    //     });
-    // }
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
         let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
@@ -482,36 +242,48 @@ export class App {
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
     }
 
-    public getTick() : number {
-        return this._clock.tick;
-    }
-
-    public getPlayerRacketHistory() : RacketHistory {
-        return this._player.racketHistory;
-    }
-
-    public getPlayerImpactSnapshots() : SnapshotBuffer {
-        return this._player.impactSnapshots;
+    private _checkIfPointWon() {
+        let ballPos = this._ball.getPhysicsBodyPosition();
+        if (ballPos.z < -33) {
+            console.log("Team Far won a point");
+            this._score[1]++;
+            this._ui.updateScoreUI(this._score[0], this._score[1]);
+            if (this._score[1] >= 3) {
+                this._roomStatus = RoomStatus.WON;
+                this._player.lockControls();
+                this._ui.showEndUI(this._score[0], this._score[1]);
+            }
+        }
+        else if (ballPos.z > 50) {
+            console.log("Team Near won a point");
+            this._score[0]++;
+            this._ui.updateScoreUI(this._score[0], this._score[1]);
+            if (this._score[0] >= 3) {
+                this._roomStatus = RoomStatus.WON;
+                this._player.lockControls();
+                this._ui.showEndUI(this._score[0], this._score[1]);
+            }
+        }
+        if (ballPos.z < -33 || ballPos.z > 50) {
+            this._ball.setVelocity(Vector3.Zero());
+            //this._ball.setAngularVelocity(Vector3.Zero());
+            if (!this._served) {
+                ballPos = new Vector3(0,3,-12);
+                this._ball.setPhysicsBodyPosition(ballPos);
+                this._served = true;
+            } else {
+                ballPos = new Vector3(0,3,34.5);
+                this._ball.setPhysicsBodyPosition(ballPos);
+                this._served = false;
+            }
+        }
     }
 
     public getPlayer() : Player {
         return this._player;
     }
 
-    // public setRecentImpact() {
-    //     this._ball.recentImpact = true;
-    // }
-
-    // public getIsResimming() : boolean {
-    //     return this._ball.isResimming;
-    // }
-
     public getEngine() : Engine {
         return this._engine;
-    }
-
-    public updateSnapshot(snapshot : BallSnapshot) {
-        this._ball.snapshots.clearAfterTickIncluded(this._clock.tick);
-        this._ball.snapshots.saveSnapshot(snapshot.tick, snapshot.position, snapshot.velocity);
     }
 }

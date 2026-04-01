@@ -1,15 +1,12 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
-import { Room } from "@colyseus/sdk";
 
 export class GUI {
-    // private _room : Room;
     private _ui: AdvancedDynamicTexture = null;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
-    // private _playerDisconnected : AdvancedDynamicTexture = null;
 
     constructor () {
-        // this._room = room;
+        this.addScoreUI(0,0);
     }
 
     private _setAndDispose(newUi : AdvancedDynamicTexture) {
@@ -111,14 +108,6 @@ export class GUI {
         }, 500);
     }
 
-    // public showWaitingUI() {
-    //     this._waitingUI("Waiting for a second player");
-    // }
-
-    // public showAwaitingReconnectionUI() {
-    //     this._waitingUI("Waiting for player reconnection");
-    // }
-
     public addScoreUI(scoreNear: number, scoreFar: number) {
         this._score = AdvancedDynamicTexture.CreateFullscreenUI("ui");
 
@@ -164,10 +153,6 @@ export class GUI {
 
     public updateScoreUI(scoreNear: number, scoreFar: number) {
         this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
-        // if (isNear)
-        //     this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
-        // else
-        //     this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
     }
 
     public showEndUI(scoreNear: number, scoreFar: number) {
@@ -176,54 +161,6 @@ export class GUI {
         else
             this._gameOverUI("Loser lol");
     }
-
-    // public showPlayerDisconnectedUI() {
-    //     const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    //     this._setAndDispose(ui);
-
-    //     const banner = new Rectangle();
-    //     banner.width = "500px";
-    //     banner.height = "100px";
-    //     banner.cornerRadius = 25;
-    //     banner.thickness = 2;
-    //     banner.color = "white";
-    //     banner.background = "rgba(0,0,0,0.45)";
-    //     banner.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    //     banner.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-
-    //     ui.addControl(banner);
-
-    //     const panel = new StackPanel();
-    //     banner.addControl(panel);
-
-    //     const waitingText = new TextBlock();
-    //     waitingText.text = "Player has disconnected. Standby";
-    //     waitingText.color = "white";
-    //     waitingText.fontSize = 36;
-    //     waitingText.fontFamily = "Inter";
-    //     waitingText.height = "50px";
-    //     waitingText.fontWeight = "bold";
-
-    //     panel.addControl(waitingText);
-
-    //     let dots = 0;
-    //     setInterval(() => {
-    //         dots = (dots + 1) % 4;
-    //         waitingText.text = "Player has disconnected. Standby" + ".".repeat(dots);
-    //     }, 500);
-    // }
-
-    // public getIsPlayerDisconnectedUIShown() : boolean {
-    //     return (this._playerDisconnected != null)
-    // }
-
-    // public showOtherPlayerDisconnectUI() {
-    //     this._gameOverUI("Other player disconnected");
-    // }
-
-    // public showFailedReconnectionUI() {
-    //     this._gameOverUI("Failed to reconnect to room");
-    // }
 
     public showNoUI() {
         if (this._ui) {

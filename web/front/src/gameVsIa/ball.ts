@@ -1,6 +1,4 @@
-import { Color3, Material, Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
-import { BallSnapshot, SnapshotBuffer } from "./snapshots";
-import { SynchronizedClock } from "./SynchronizedClock";
+import { Color3, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
 import { App } from "./app";
 
 export class Ball {
@@ -11,17 +9,16 @@ export class Ball {
     private _scene: Scene;
     private _shadows: ShadowGenerator[];
     private _physicsObserver;
-    private _clock: SynchronizedClock;
     private _app: App;
-    public snapshots : SnapshotBuffer = new SnapshotBuffer();
-    public positionError: Vector3 = Vector3.Zero();
-    public visualOffset: Vector3 = Vector3.Zero();
+    //public snapshots : SnapshotBuffer = new SnapshotBuffer();
+    //public positionError: Vector3 = Vector3.Zero();
+    //public visualOffset: Vector3 = Vector3.Zero();
     
 
-    constructor(position: Vector3, velocity: Vector3, diameter: number, shadows: ShadowGenerator[], scene: Scene, clock: SynchronizedClock, app: App) {
+    constructor(position: Vector3, velocity: Vector3, diameter: number, shadows: ShadowGenerator[], scene: Scene, app: App) {
         this._app = app;
         this._scene = scene;
-        this._clock = clock;
+        //this._clock = clock;
 
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
         this.radius = diameter / 2;
@@ -126,14 +123,14 @@ export class Ball {
     //     this.visualOffset.addInPlace(teleportDelta);
     // }
 
-    public smoothPosition(){
-        if (this.visualOffset.lengthSquared() < 0.0001) return;
-        const dt = this._app.getEngine().getDeltaTime() / 1000; 
-        const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
-        const correctionFactor = Math.exp(-smoothingSpeed * dt);
-        this.setMeshPosition(this.visualOffset);
-        this.visualOffset.scaleInPlace(correctionFactor);
-    }
+    // public smoothPosition(){
+    //     if (this.visualOffset.lengthSquared() < 0.0001) return;
+    //     const dt = this._app.getEngine().getDeltaTime() / 1000; 
+    //     const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
+    //     const correctionFactor = Math.exp(-smoothingSpeed * dt);
+    //     this.setMeshPosition(this.visualOffset);
+    //     this.visualOffset.scaleInPlace(correctionFactor);
+    // }
 
     public setVelocity(velocity : Vector3) {
         this._velocity = velocity.clone();
