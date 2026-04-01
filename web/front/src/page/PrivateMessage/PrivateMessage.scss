@@ -37,12 +37,6 @@
 		}
     }
 
-    hr {
-		@include mix.fullw;
-        border: 4px solid $grey-dark;
-		border-radius: 50px;
-    }
-
     .big {
         border: 4px solid $grey-dark;
 		margin: 1rem 0;

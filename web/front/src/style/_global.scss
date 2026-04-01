@@ -38,6 +38,12 @@ input, textarea {
  	@include mix.cursor("text");
 }
 
+hr {
+	@include mix.fullw;
+	border: 4px solid $grey-dark;
+	border-radius: 50px;
+}
+
 button, label, select, option, li, input[type="submit"] {
 	@include mix.cursor("pointer");
 }

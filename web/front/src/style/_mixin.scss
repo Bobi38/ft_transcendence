@@ -66,10 +66,10 @@
     z-index: 3;
     @if $how_win == "draw" {
         background: blue;
-    } 
+    }
     @else if $how_win == "abort" {
         background: rgb(231, 31, 115);
-    } 
+    }
     @else if $how_win == "win"{
         background: green;
     }
@@ -78,26 +78,43 @@
     }
 }
 
-@mixin scanlines($direction: "horizontal") {
-
+@mixin scanlines($flicker: true) {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    opacity: 0.5;
-    z-index: 3;
+    z-index: 1001;
+    overflow: hidden;
 
-    @if $direction == "horizontal" {
-        background: linear-gradient(rgba(104, 97, 97, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+    &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            transparent 60%,
+            rgba(0, 0, 0, 0.06) 40%
+        );
         background-size: 100% 4px;
-    } 
-    @else if $direction == "vertical" {
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
-        background-size: 4px 100%;
-    } 
-    @else if $direction == "diagonal-right-left" {
-        background: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(0, 0, 0, 0.05) 1px, rgba(0, 0, 0, 0.05) 4px);
+        opacity: 0.6;
     }
-    @else if $direction == "diagonal-left-right" {
-        background: repeating-linear-gradient(135deg, transparent, transparent 1px, rgba(0, 0, 0, 0.05) 1px, rgba(0, 0, 0, 0.05) 4px);
-    }
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0; left: 0; bottom: 0; right: 0;
+		background: rgba(18, 16, 16, 0.03);
+		opacity: 0;
+		z-index: 1002;
+		pointer-events: none;
+		animation: wii-flicker 0.15s infinite;
+	}
+}
+
+@keyframes wii-flicker {
+    0% { opacity: 0.1; }
+    50% { opacity: 0.2; }
+    100% { opacity: 0.1; }
 }

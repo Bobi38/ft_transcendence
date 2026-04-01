@@ -3,10 +3,6 @@
 
 .PrivateMessageConv-root {
 
-	hr {
-		width: 100%;
-	}
-
 	form
 	{
 		display: flex;
@@ -24,9 +20,7 @@
 
 	.content {
 		overflow: auto;
-		hr {
-		margin-bottom: 1rem;
-	} 
+		hr { margin-bottom: 1rem; }
 	}
 	.message {
 		gap: 0.5rem;
