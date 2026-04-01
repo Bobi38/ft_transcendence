@@ -10,7 +10,7 @@ import { Player } from "./player";
 import { Ball } from "./ball";
 import { MyRoomState } from "./schema/MyRoomState";
 import { StateCallbackStrategy } from "@colyseus/schema";
-import { GUI, showJoinedTwiceUI } from "./GUI";
+import { GUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
 import { BallSnapshot, SnapshotBuffer } from "./snapshots";
@@ -127,7 +127,7 @@ export class App {
             } catch (newRoomError) {
                 console.log(newRoomError);
                 if (newRoomError.code == 401) {
-                    showJoinedTwiceUI();
+                    //showJoinedTwiceUI();
                 }
                 window.location.href = "/";
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
