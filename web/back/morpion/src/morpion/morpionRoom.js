@@ -177,8 +177,8 @@ class MorpionRoom extends Room {
                 if (i === 7)
                     this._how_win = "diagonal_rl";
                 this.handleEndGame("win", this._turn);
-                this._turn = null;
-                console.log(`avant envoie TRUE`);
+                // this._turn = null;
+                // console.log(`avant envoie TRUE`);
                 return true;
             }
             i++

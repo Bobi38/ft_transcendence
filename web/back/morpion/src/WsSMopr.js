@@ -115,7 +115,8 @@ export function initWebSMopr(server) {
             setTimeout(() => {
               console.log("clear ", bot);
               players.delete(bot);
-            }, 120000);
+              socket.sendList();
+            }, 90000);
             break ;
 
           case "leave":
@@ -143,7 +144,7 @@ export function initWebSMopr(server) {
           default:
             console.log(`defaut de wsmorp`);
             socket.sendList();
-            socket.player.send();
+            socket.player.sendGame();
             // console.log(`defaut : ca c est etrange gere ca :${data.type}`);
           }
         }
