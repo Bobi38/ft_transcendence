@@ -1,4 +1,4 @@
-import { Scene, NullEngine, PhysicsBody, TransformNode, ArcRotateCamera, Vector3, Engine } from "@babylonjs/core";
+import { Scene, NullEngine, ArcRotateCamera, Vector3, Engine } from "@babylonjs/core";
 import { Ball } from "./ball.js";
 import { Environment } from "./environment.js";
 import { MyRoomState, RoomStatus } from "./rooms/schema/MyRoomState.js";

@@ -136,7 +136,7 @@ export class Environment {
 
         let wall_mat = new StandardMaterial("wallmat", this._scene);
         let ground_mat = new StandardMaterial("groundmat", this._scene);
-        wall_mat.diffuseColor = new Color3(1,1,1);
+        ground_mat.specularColor = new Color3(0.1, 0.1, 0.1);
         const ground_texture = new Texture("/media/court.png");
         ground_texture.wAng = Math.PI / 2;
         ground_texture.wrapU = Texture.WRAP_ADDRESSMODE;
@@ -166,27 +166,7 @@ export class Environment {
         wall_right.material = wall_mat;
         ground_mat.diffuseTexture = ground_texture;
         ground.material = ground_mat;
-        ceiling.material = ceiling_mat;
-
-        // let elevanWall = MeshBuilder.CreateBox("wall_elevan", {size: 1}, this._scene);
-        // elevanWall.scaling = ToVec3(env.groundDimensions);
-        // elevanWall.receiveShadows = true;
-        // elevanWall.material = wall_mat;
-        // elevanWall.position = ToVec3(env.elevanPos);
-        // elevanWall.rotationQuaternion = ToQuat(env.elevanQuaternion);
-
-        // const wall_leftAggregate = new PhysicsAggregate(wall_left, PhysicsShapeType.BOX, {mass:0, restitution:1, friction: 0}, this._scene);
-        // const wall_rightAggregate = new PhysicsAggregate(wall_right, PhysicsShapeType.BOX, {mass:0, restitution:1, friction: 0}, this._scene);
-        // const groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, {mass:0, restitution:1, friction: 0}, this._scene);
-        // const ceilingAggregate = new PhysicsAggregate(ceiling, PhysicsShapeType.BOX, {mass:0, restitution:1, friction: 0}, this._scene);
-        // wall_leftAggregate.body.setMotionType(PhysicsMotionType.STATIC);
-        // wall_rightAggregate.body.setMotionType(PhysicsMotionType.STATIC);
-        // groundAggregate.body.setMotionType(PhysicsMotionType.STATIC);
-        // ceilingAggregate.body.setMotionType(PhysicsMotionType.STATIC);
-
-        // const elevanWallAggregate = new PhysicsAggregate(elevanWall, PhysicsShapeType.BOX, {mass:0, restitution:1, friction:0}, this._scene);
-        // elevanWallAggregate.body.setMotionType(PhysicsMotionType.STATIC);
-        
+        ceiling.material = ceiling_mat; 
     }
 
     private _calculateArenaBoundaries(groundDim: Vector3, wallDim: Vector3, wallLeftPos: Vector3, wallRightPos: Vector3, ceilingPos: Vector3) {
