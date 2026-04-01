@@ -90,7 +90,6 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         SocketM.sendd('priv', data2);
         setInput("");
     }
-    console.log("displayedMessages:",displayedMessages);
     return (
 		<div className={`PrivateMessageConv-root border-0`}>
 
