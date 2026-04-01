@@ -86,7 +86,8 @@ export default function Login() {
     
     const handle_git = () => {
         const frontendUrl = window.location.origin;
-        window.location.href = `/api/oauth2/github?frontendUrl=${encodeURIComponent(frontendUrl)}`;
+        const backUrl = window.location.hostname;
+        window.location.href = `/api/oauth2/github?frontendUrl=${encodeURIComponent(frontendUrl)}&backUrl=${encodeURIComponent(backUrl)}`;
     };
 
 

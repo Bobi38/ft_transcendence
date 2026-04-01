@@ -10,8 +10,10 @@ const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 router.get('/github', async (req, res) => {
   // On stocke le frontend en session avant de partir chez GitHub
   req.session.frontendUrl = req.query.frontendUrl;
-
-  const redirectUri = 'http://localhost:9000/api/oauth2/github/callback';
+  const back = req.query.backUrl;
+  console.log("backkkkkk " + back);
+  console.log("in AUTHHHH" + req.session.frontendUrl)
+  const redirectUri = `http://${back}:9000/api/oauth2/github/callback`;
   const githubAuthUrl = `https://github.com/login/oauth/authorize` + `?client_id=${clientiD}` +`&redirect_uri=${redirectUri}` +`&scope=user:email`;
   console.log("github auth url ", githubAuthUrl);
   res.redirect(githubAuthUrl);
