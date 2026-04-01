@@ -71,6 +71,10 @@ export function initWebSMopr(server) {
       players.forEach(p => {p.sendList();});
     }
 
+    manager_room.sendList = () => {
+       players.forEach(p => {p.sendList();});
+    }
+
     socket.on('message', (message) => {
       try{
         console.log(`"socket on dans morpion" ${message}`);

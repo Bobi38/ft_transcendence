@@ -68,6 +68,7 @@ class ManagerRoom {
         room.clearOutTimer();
         this._rooms.delete(room.getId())
         this.refreshRoomList();
+        this.sendList();
     }
 
     abortedRoom(player){
