@@ -38,6 +38,18 @@ input, textarea {
  	@include mix.cursor("text");
 }
 
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+	color: red;
+	border-radius: 50px;
+	border: solid 2px $grey-dark;
+	padding: 3px 7px;
+	transition: all 0.3s;
+	&:focus {
+		outline: none;
+		border-color: $active;
+	}
+}
+
 hr {
 	@include mix.fullw;
 	border: 4px solid $grey-dark;
