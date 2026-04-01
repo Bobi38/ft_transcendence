@@ -39,6 +39,10 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,  
   },
+  MPFA: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,  
+  },
   co:{
     type: DataTypes.BOOLEAN,
     defaultValue: false,

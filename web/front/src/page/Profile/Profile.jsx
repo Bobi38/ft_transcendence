@@ -10,7 +10,6 @@ import SocketM from "TOOL/SocketManag.js";
 import "./Profile.scss";
 
 /* Components */
-import AddressAutocomplete from "./AddressAutocomplete/AddressAutocomplete.jsx";
 import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Profile() {
@@ -62,7 +61,7 @@ export default function Profile() {
     const handle_submit = async (e) => {
         e.preventDefault();
 
-        if (!user.login || !user.login42 || !user.tel || !user.location || !user.email || !user.tel) {
+        if (!user.login || !user.login42 || !user.tel || !user.email || !user.tel) {
             showAlert("Veuillez remplir tous les champs", "danger");
             return;
         }
@@ -85,6 +84,7 @@ export default function Profile() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         sessionStorage.setItem('username', repjson.username);
+        console.log("oldname: ", repjson.oldname, " newname: ", repjson.username);
         if (repjson.oldname !== repjson.username) {
             SocketM.sendd('friend', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
             SocketM.sendd('chat', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
@@ -160,7 +160,7 @@ export default function Profile() {
                             value={user.email}
                             readOnly={true}
                             onChange={(e) => setUser({ ...user, email: e.target.value }) }
-                            /> 
+                            disabled/> 
 
 
                     <label htmlFor={`tel`}>Téléphone</label> 
@@ -171,9 +171,6 @@ export default function Profile() {
                             readOnly={isReadOnly}
                             onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                             /> 
-
-                    <label htmlFor={`location`}>Location</label>
-                    <AddressAutocomplete user={user} setUser={setUser} isReadOnly={isReadOnly}/>
 
                     <button type={`submit`}>Modifier mes informations</button>
                 </form>

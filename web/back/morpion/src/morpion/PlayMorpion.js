@@ -19,7 +19,7 @@ const msgs = {
 
 function observator(player, gameId){
     
-    console.log(`obs ${gameId}`);
+    // console.log(`obs ${gameId}`);
     if (gameId === 1){
         const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
         const players = {player_1: "martin", player_2:"jackiechan"};
@@ -50,6 +50,7 @@ function move(player, move){
     if (!game) return false;
 
     if (game.isState("end")){
+        p.sendList();
         player.disconnect("game over", game.getId())
         return false;
     }
@@ -61,9 +62,9 @@ function move(player, move){
     // console.log("mess2");
     if (game.play(player, move)) {
         // game.notifyObs();
-        console.log("mess3");
+        // console.log("mess3");
         if(game.checkVictory()){
-            console.log("fini on unlocked la game");
+            // console.log("mess 3.5");
             game.setEnd();
             manager_room.refreshList();
 
@@ -73,13 +74,19 @@ function move(player, move){
             }, 10000);
             return true;
         }
+
         game.switchTurn();
         console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
         console.log("mess4");
-        game.notifyTurn(
-            {message: msgs.my_turn, turn: true},
-            {message: msgs.other_turn, turn: false}
-        )
+        if (game.isState("play"))
+            game.notifyTurn(
+                {message: msgs.my_turn, turn: true},
+                {message: msgs.other_turn, turn: false}
+            )
+        if (game.isState("end")) {
+            console.log(`le jeu est terminer`);
+            return true;
+        }
         console.log("mess5");
         game.startTurnTimer();
         console.log("mess6");
@@ -91,7 +98,7 @@ function searchGame(player, players){
     console.log("ENTRY searchGame");
 
     let game = player.getGame();
-    if (game){
+    if (game?.isState("play")){
         player.send(`you play ${game.getId()}`);
         return false;
     }
@@ -104,7 +111,7 @@ function searchGame(player, players){
         console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})
-        return false;
+        return true;
     }
     console.log(` step 111111 la partie a deux joueurs`);
     game.startGame(player);
@@ -122,7 +129,7 @@ function searchGame(player, players){
 
     // console.log("step 33333333   liste rafraichi");
     // console.log("AVANT RETURN TRUE");
-    return true;
+    return false;
 }
 
 function reboot(){

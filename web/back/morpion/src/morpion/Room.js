@@ -108,17 +108,6 @@ class Room {
         return this._locked;
     }
 
-    david(state) { //old version setLock
-        if (state === true && this._players.size < this._min_players) {
-            console.log(`need more player`);
-            return false;
-        }
-        console.log("etat lock = ", state);
-        this._locked = state;
-        this._start_time = Date.now();
-        return true;
-    }
-
     isState(state) {
         return state === this._state;
     }
@@ -137,7 +126,7 @@ class Room {
     setEnd() {
         const base = this._state === "play";
         this._state = "end";
-        console.log(`set return : ${base}`);
+        console.log(`set return : ${base} et _state = ${this._state}`);
         return base;
     }
 

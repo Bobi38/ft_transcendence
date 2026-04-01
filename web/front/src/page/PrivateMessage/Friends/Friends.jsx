@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /* back */
-
+import SocketM from "TOOL/SocketManag";
 /* Css */
 import "./Friends.scss";
 
@@ -63,11 +63,26 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
     useEffect(() => {
         all_friend();
+
+        const handle_friend_maj = (data) => {
+            if (data.type == 'maj_frd'){
+                all_friend();
+                return ;
+            }
+            return ;
+        }
+
+        SocketM.on("friend", handle_friend_maj, "quatre");
+        return () => {
+            SocketM.off("friend", "quatre");
+        }
     }, []);
 
     const handleDelete = async (friend) => {
         await dlt_friend(friend.login);
         await all_friend();
+        SocketM.send("friend", {type: "maj_frd", login: friend});
+
     }
 
 

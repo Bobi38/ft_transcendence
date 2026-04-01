@@ -1,4 +1,4 @@
-import { Color3, MeshBuilder, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, Quaternion, Scene, StandardMaterial, TransformNode, Vector3 } from "@babylonjs/core";
+import { Color3, MeshBuilder, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, Quaternion, Scene, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
 import { Env } from "/app/media/media.js";
 
 
@@ -111,13 +111,62 @@ export class Environment {
         wall_left.rotationQuaternion = rotationQuaternion;
         wall_right.rotationQuaternion = rotationQuaternion;
 
+        let ceiling_mat = new StandardMaterial("ceilingmat", this._scene);
+        const ceiling_texture = new Texture("/media/ceiling.png");
+        ceiling_texture.wAng = - Math.PI / 2;
+        ceiling_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        ceiling_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        ceiling_texture.uScale = 6;
+        ceiling_texture.vScale = 2;
+        const ceiling_n_texture = new Texture("/media/ceiling_n.png");
+        ceiling_n_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        ceiling_n_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        ceiling_n_texture.uScale = 6.0;
+        ceiling_n_texture.vScale = 2.0;
+        ceiling_n_texture.wAng = - Math.PI / 2;
+        const ceiling_ao_texture = new Texture("/media/ceiling_ao.png");
+        ceiling_ao_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        ceiling_ao_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        ceiling_ao_texture.uScale = 6.0;
+        ceiling_ao_texture.vScale = 2.0;
+        ceiling_ao_texture.wAng = - Math.PI / 2;
+        ceiling_mat.diffuseTexture = ceiling_texture;
+        ceiling_mat.bumpTexture = ceiling_n_texture;
+        ceiling_mat.ambientTexture = ceiling_ao_texture;
+
         let wall_mat = new StandardMaterial("wallmat", this._scene);
+        let ground_mat = new StandardMaterial("groundmat", this._scene);
         wall_mat.diffuseColor = new Color3(1,1,1);
+        const ground_texture = new Texture("/media/court.png");
+        ground_texture.wAng = Math.PI / 2;
+        ground_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        ground_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        ground_texture.uScale = 15.0;
+        ground_texture.vScale = 15.0;
+        const wall_texture = new Texture("/media/wall.png");
+        wall_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        wall_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        wall_texture.uScale = 9.0;
+        wall_texture.vScale = 3.0;
+        const wall_n_texture = new Texture("/media/wall_normal.png");
+        wall_n_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        wall_n_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        wall_n_texture.uScale = 9.0;
+        wall_n_texture.vScale = 3.0;
+        const wall_ao_texture = new Texture("/media/wall_ambient.png");
+        wall_ao_texture.wrapU = Texture.WRAP_ADDRESSMODE;
+        wall_ao_texture.wrapV = Texture.WRAP_ADDRESSMODE;
+        wall_ao_texture.uScale = 9.0;
+        wall_ao_texture.vScale = 3.0;
+        wall_mat.diffuseTexture = wall_texture;
+        wall_mat.bumpTexture = wall_n_texture;
+        wall_mat.ambientTexture = wall_ao_texture;
         wall_mat.roughness = 0.1;
         wall_left.material = wall_mat;
         wall_right.material = wall_mat;
-        ground.material = wall_mat;
-        ceiling.material = wall_mat;
+        ground_mat.diffuseTexture = ground_texture;
+        ground.material = ground_mat;
+        ceiling.material = ceiling_mat;
 
         // let elevanWall = MeshBuilder.CreateBox("wall_elevan", {size: 1}, this._scene);
         // elevanWall.scaling = ToVec3(env.groundDimensions);

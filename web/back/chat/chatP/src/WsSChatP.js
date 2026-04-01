@@ -84,6 +84,7 @@ export function initWebSChat(server) {
             if (send && session.socket.readyState === ws.OPEN && session.userId === send.userId){
               console.log("le message " , data.message, " va etre envoye a ", session.username, " ", session.userId, " ", session.socket.id);
               session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+              session.socket.send(JSON.stringify({type: 'notif', login: ni}));
               console.log("message envoye a ", session.username, " ", session.userId, " ", session.socket.id);
             }
             if (session.socket.readyState === ws.OPEN && session.userId === nono){
@@ -99,12 +100,15 @@ export function initWebSChat(server) {
         if (data.type === "pong")
           socket.isAlive = true;
         if (data.type === 'updateName'){
+          console.log("je suis dans un type updateName de ", socket.userId, " ", data.old_name, " ", data.new_name);
           const nono = socket.userId;
           for (const session of chat.sessions.values()){
             if (session.userId == nono && session.username == data.old_name)
               session.username = data.new_name;
+            if (session.socket.readyState === ws.OPEN && session.userId !== nono)
+              session.socket.send(JSON.stringify({type: 'updateName_good', old_name: data.old_name, new_name: data.new_name}));
           }
-          socket.send(JSON.stringify({type: 'updateName_good'}));
+          
         }
       }catch (err){
         console.log("err serv ws= " + err);

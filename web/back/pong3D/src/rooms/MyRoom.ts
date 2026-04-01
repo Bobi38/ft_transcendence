@@ -206,17 +206,6 @@ export class MyRoom extends Room {
       }
   }
 
-  private _isSuspiciousSpeed(oldVel: Vector3, newVel: Vector3) : boolean {
-    const isSuspicious = (
-        (Math.abs(oldVel.x) > 0.5 && Math.abs(newVel.x) < 0.001) ||
-        (Math.abs(oldVel.y) > 0.5 && Math.abs(newVel.y) < 0.001) ||
-        (Math.abs(oldVel.z) > 0.5 && Math.abs(newVel.z) < 0.001)
-    );
-    if (isSuspicious)
-      console.log("suspicious speed!");
-    return isSuspicious;
-  }
-
   onBeforePatch(state: MyRoomState) {
     if (!this._snapshotToSend)
       return ;
@@ -228,12 +217,9 @@ export class MyRoom extends Room {
     state.ball.position.z = ballPos.z;
 
     const stateVel = new Vector3(state.ball.velocity.x,state.ball.velocity.y,state.ball.velocity.z);
-    // if (stateVel.subtract(ballVel).lengthSquared() > 0.0001 && !this._isSuspiciousSpeed(stateVel, ballVel)) {
-    //if (!this._isSuspiciousSpeed(stateVel, ballVel)) {
-      state.ball.velocity.x = ballVel.x;
-      state.ball.velocity.y = ballVel.y;
-      state.ball.velocity.z = ballVel.z;
-    //}
+    state.ball.velocity.x = ballVel.x;
+    state.ball.velocity.y = ballVel.y;
+    state.ball.velocity.z = ballVel.z;
 
     state.ball.tickStamp = this._snapshotToSend.tick;
   }
@@ -291,7 +277,7 @@ export class MyRoom extends Room {
     this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
     const player = new Player();
     player.position.x = 0;
-    player.position.y = 1.5;
+    player.position.y = 0.5;
     if (this._nextPlayerIndex % 2 == 0) {
       player.position.z = -20;
       this._near = client.sessionId;

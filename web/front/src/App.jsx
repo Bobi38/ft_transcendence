@@ -34,7 +34,7 @@ export default function App() {
     useEffect(() => {
         const init = async () => {
             const repco = await checkCo();
-            if (!repco){
+            if (!repco.success){
                 return;
             }
             if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")
@@ -50,35 +50,59 @@ export default function App() {
             const handle_friend_co = (data) => {
               console.log("friend HANDLE:");
               if (data.type == 'co'){
-                setNotif(`${data.login} vient de se connecter`);
+                setNotif({
+                    message:`${data.login} vient de se connecter`,
+                    type: "co",
+                });
                 setShowFriend(FRIEND.GREEN);
               }
               if (data.type == 'deco'){
-                setNotif(`${data.login} vient de se DEconnecter`);
+                setNotif({
+                    message:`${data.login} vient de se deconnecter`,
+                    type: "deco",
+                });
                 setShowFriend(FRIEND.RED);
               }
-              setTimeout(() => {
-              setNotif(null);
-              }, 3000);
+            }
+
+            const handle_msg_notif = (data) => {
+                if (data.type == 'notif' && window.location.pathname !== "/PrivateMessage"){
+                    setNotif({
+                        message: `${data.login} vient de vous envoyer un message`,
+                        type: "msg",
+                    });
+                }
             }
             SocketM.on("friend", handle_friend_co, "un");
+            SocketM.on("priv", handle_msg_notif, "deux")
         }
         init();
         return () => {
           SocketM.off("friend", "un");
+          SocketM.off("priv", "deux");
           // SocketM.disconnect("friend");
           // if (SocketM.socket)
           //   SocketM.disco();
           // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
         };
     }, [showLog]);
+
+    useEffect(() => {
+        if (notif) {
+            const timer = setTimeout(() => {
+            setNotif(null);
+        }, 1000); // 2 secondes
+
+        return () => clearTimeout(timer); // cleanup si notif change vite
+        }
+    }, [notif]);
     //fait le check co a la place de home et envoyer le result
 
     return (
         <>
             {notif && (
-                <div className="global-notif">
-                    {notif}
+                <div className={`global-notif ${notif.type}`}>
+                    {notif.message}
                 </div>
             )}
             {/* <div id={`alert-container`}></div> */}

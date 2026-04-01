@@ -99,6 +99,8 @@ export function initWebSFriend(server) {
       // }
       // else{
         await chat.addtok(useid, socket, useid);
+        const sess = chat.finduserId(useid);
+        socket.username = sess.username;
       // }
       socket.send(JSON.stringify({type: 'co_good'}));
     }catch(err){
@@ -124,9 +126,26 @@ export function initWebSFriend(server) {
         }
         if (data.type === 'updateName'){
           const nono = socket.userId;
+          socket.username = data.new_name;
           for (const session of chat.sessions.values()){
-            if (session.userId == nono && session.username == data.old_name)
+            if (session.userId == nono && session.username == data.old_name){
+              session.socket.username = data.new_name;
               session.username = data.new_name;
+            }
+          }
+        }
+        if (data.type === 'req_frd'){
+          const send = chat.findname(data.login)
+          for (const session of chat.sessions.values()){
+            if (session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'add_frd'}));
+          }
+        }
+        if (data.type === 'maj_frd'){
+          const send = chat.findname(data.login)
+          for (const session of chat.sessions.values()){
+            if (session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'maj_frd'}));
           }
         }
         if (data.type === "logout"){

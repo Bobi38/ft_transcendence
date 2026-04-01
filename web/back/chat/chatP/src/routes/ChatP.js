@@ -31,12 +31,12 @@ router.post('/add_message_private', async (req, res) => {
   }
 });
 
-router.post('/get_chat_private', async (req, res) => {
+router.get('/get_chat_private', async (req, res) => {
     try{
         
         const token = req.query.name;
         if (!token) {
-          return res.status(400).json({ success: false, message: 'Missing fields' });
+          return res.status(201).json({ success: false});
         }
         const my_token = req.cookies.token;
         const id1 = jwt.verify(my_token, secret);
@@ -114,7 +114,6 @@ router.get('/fetch_conv', async (req, res) => {
         const isUser1 = chat.user1.id === result.id;
         const interlocuteur = isUser1 ? chat.user2 : chat.user1;
         const lastMsg = chat.PrivMesses[0] || null;
-
         return {
           UserId: chat.id,
           login: interlocuteur.name,
@@ -122,6 +121,7 @@ router.get('/fetch_conv', async (req, res) => {
           lastMessage: lastMsg ? lastMsg.contenu : '',
           time: lastMsg ? lastMsg.time : null
         };
+        console.log("API fetch_conv test join(5)");
       });
         // console.log("API fetch_conv test join ", chats[0].user1.name);
         // console.log("API fetch_conv test join ", chats[0].user2.name);

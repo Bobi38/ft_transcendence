@@ -21,6 +21,7 @@ export class Player {
     }
 
     sendGame(data = {}) {
+        let payload = {}
 
         if (data !== undefined) {
             payload.message = this._last_message;
@@ -85,8 +86,8 @@ export class Player {
             payload = { ...data };
         }
 
-        if (!payload.message && this._message) {
-            payload.message = this._message;
+        if (!payload.message && this._last_message) {
+            payload.message = this._last_message;
         }
 
         if (this.list) {
@@ -151,18 +152,19 @@ export class Player {
     }
 
     removeObs(){
+        setTimeout(() => {
+                if (this._obs_game) return ;
+                this.send({
+                    players: null,
+                    other_board: Array(9).fill(" ")
+                });
+            }, 5000)
+
         if (!this._obs_game) return ;
 
         const obs_game = this._obs_game;
         this._obs_game = null;
 
-        if (this._type === "Morpion"){
-            this.send({
-                players: null,
-                other_board: Array(9).fill(" ")
-            });
-        }
-        
         obs_game?.removeObs(this);        
     }
 

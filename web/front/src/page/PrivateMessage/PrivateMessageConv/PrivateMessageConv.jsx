@@ -51,15 +51,15 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-            body: JSON.stringify({ message: input, time: time, id: login }),
         }, null , function(repjson) {
             if (repjson.status >= 400 && repjson.status < 500) {
                 return false;
             }
         });
         if (!repjson || (repjson &&  !repjson.success))
-            return;
+            return false;
         console.log("good");
+        return true;
     }
 
     const handler_submit = async (e) => {
@@ -90,7 +90,6 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         SocketM.sendd('priv', data2);
         setInput("");
     }
-    console.log("displayedMessages:",displayedMessages);
     return (
 		<div className={`PrivateMessageConv-root border-0`}>
 

@@ -53,6 +53,8 @@ export class Bot {
     }
     
     send(data) {
+        if (this._game._turn !== this) return;
+        // console.log(`bot pense a jouer`);
         if (data.message === undefined) return ;
         if (data.message != m.msgs.my_turn && data.message != m.msgs.badMove) return ;
         if (this._play_human === 0) {
@@ -64,6 +66,7 @@ export class Bot {
         if (this._play_human === 2)
             return m.move(this, checkBestMove(this._game.getboard()));
 
+        // console.log(`bot joue autre chose`);
         this._nb_turn++;
         
         const nb = this._nb_turn > 15
@@ -71,8 +74,7 @@ export class Bot {
             : Math.floor(Math.random() * this._game.getboard().length);
         
         setTimeout(() => {
-            if (this._game._turn !== this) return;
-            m.move(this, nb)}, 2000);
+            m.move(this, nb)}, 1000);
     }
     
     sendList() {
@@ -80,10 +82,10 @@ export class Bot {
     }
 
     isInactived(){
-        console.log(`pour verif timeOOOut player`);
+        // console.log(`pour verif timeOOOut player`);
         if (this._time_last_active + 120000 < Date.now())
             return false;
-        console.log("time out 30s for eval");
+        // console.log("time out 30s for eval");
         
         return true;
     }
@@ -139,7 +141,10 @@ export class Bot {
     }
 
     clearTurnTimer() {
-        return ;
+        if (this._turn_timer) {
+            clearTimeout(this._turn_timer);
+            this._turn_timer = null;
+        }
     }
 
     stopChrono(){

@@ -18,6 +18,24 @@ const router = express.Router();
 export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 router.use(cookieParser());
 
+export function tcheck_MPFA(user, host){
+    const now = new Date();
+    const limit = new Date(now.getTime() - 10 * 60 * 1000);
+    let MPFA;
+    console.log(limit);
+    if (user.Hostlastco === null && user.Datelastco === null)
+      MPFA = true;
+    else if (user.Hostlastco != host)
+      MPFA = true;
+    else if (user.Hostlastco == host && user.Datelastco != null && (user.Datelastco < limit))
+      MPFA = true;
+    else if (user.Hostlastco == host && user.Datelastco != null && (user.Datelastco > limit))
+      MPFA = false;
+    else
+      MPFA = true;
+    return MPFA;
+}
+
 export {
     User,
     Co,

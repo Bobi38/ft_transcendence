@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody, SpotLight, DirectionalLight, HemisphericLight, Matrix } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Mesh, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, HavokPlugin, Quaternion, PhysicsBody, SpotLight, DirectionalLight, HemisphericLight, Matrix, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
@@ -121,7 +121,7 @@ export class App {
         } catch (e) {
             console.log("Reconnect failed or no previous session, joining new room:", e);
             try {
-            room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
+                room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
             } catch (newRoomError) {
                 window.location.href = "/";
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
@@ -436,18 +436,25 @@ export class App {
         });
     }
 
-    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: Mesh, handNode: TransformNode, racketNode: TransformNode}> {
-        let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
+    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
+        //let body = MeshBuilder.CreateCylinder("body", {height: 3, diameter: 1.5}, this._scene);
+        let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
+        const body = assets.meshes[0];        
 
         if (isPlayer) {
-            body.isVisible = false;
+            assets.meshes.forEach((m) => {
+                m.isVisible = false;
+        });
+            // body.isVisible = false;
         }
         if (isPlayer && !isNearSide) {
-            body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+            body.rotate(new Vector3(0,1,0), Math.PI);// = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
         }
         if (!isPlayer && !isNearSide) {
-            body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+            body.rotate(new Vector3(0,1,0), Math.PI);// = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+            //body.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
         }
+        //body.rotationQuaternion = Quaternion.FromEulerAngles(0,Math.PI,0);
 
         body.position = position;
         let bodymtl = new StandardMaterial("red", this._scene);
@@ -455,7 +462,13 @@ export class App {
         body.material = bodymtl;
         body.isPickable = false;
         const hand_node = new TransformNode("hand_node", this._scene)
-        hand_node.position = new Vector3(0.4, 2, 1);
+        // if (isPlayer && !isNearSide) {
+        //     hand_node.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+        // }
+        // if (!isPlayer && !isNearSide) {
+        //     hand_node.rotation = new Vector3(0,Math.PI,0);//i dont pretend to understand why this line is required
+        // }
+        hand_node.position = new Vector3(0.4, 2, 0);
         const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.8});
         hand.material = bodymtl;
 

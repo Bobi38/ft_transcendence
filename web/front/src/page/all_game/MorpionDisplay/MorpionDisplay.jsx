@@ -62,7 +62,6 @@ export default function MorpionDisplay() {
             if (data?.other_board){
                 console.log("other board recu");
                 setSpecSelect(data.other_board)
-
             }
             if (data?.list){
                 console.log("taille list:", Object.keys(data.list).length);
@@ -104,16 +103,21 @@ export default function MorpionDisplay() {
                 }
 
                 <div className={`MorpionDisplay-spec-info`} style={{height: data ? "65%" : "100%"}}>
-                    {
-                        Object.entries(list).map(([id, game]) => (
+                {Object.keys(list).length === 0 ? (
+                    <p>No games running</p>
+                    ) : (
+                    <>
+                        <h3 className="MorpionDisplay-title">Game in progress</h3>
+                        {Object.entries(list).map(([id, game]) => (
                             <SpecButton
                                 key={id}
                                 id={id}
                                 player_1={game.player_1}
                                 player_2={game.player_2}
                             />
-                        ))
-                    }
+                        ))}
+                    </>
+                )}
                 </div>
 
             </div>

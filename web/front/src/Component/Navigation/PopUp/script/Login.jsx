@@ -1,5 +1,6 @@
 /* extern */
 import { FaGithub } from "react-icons/fa";
+import { useEffect } from "react";
 
 /* back */
 import { showAlert } from "TOOL/fonction_usefull.js";
@@ -59,10 +60,10 @@ export default function Login() {
         }
 
 
-        sessionStorage.setItem('type', "success");
-        sessionStorage.setItem('message', "Connexion réussie");
-        sessionStorage.setItem('token', repjson.token);
-        sessionStorage.setItem('username', repjson.username);
+        // sessionStorage.setItem('type', "success");
+        // sessionStorage.setItem('message', "Connexion réussie");
+        // sessionStorage.setItem('token', repjson.token);
+        // sessionStorage.setItem('username', repjson.username);
 
         // if (repjson.MPFA) {
         //     setShowLog(AUTH.MAILA2F);
@@ -77,13 +78,18 @@ export default function Login() {
 
     const register_mode = () => {
         console.log("register_mode(1) Passage en mode inscription:", AUTH.REGISTER);
+
         setShowLog(AUTH.REGISTER);
     }
 
+    use
     
     const handle_git = () => {
-        window.location.href = "/api/oauth2/github";
+        const frontendUrl = window.location.origin;
+        window.location.href = `/api/oauth2/github?frontendUrl=${encodeURIComponent(frontendUrl)}`;
     };
+
+
     return (
         <>
             <div className={`script-in-root`}>

@@ -14,7 +14,7 @@ router.get('/get_chat_global', async (req, res) => {
     const name = await User.findAll({attributes: ['id', 'name']});
     let ret = "";
     console.log("conv ", conv.length);
-    if (conv.length - 1 != 0)
+    if (conv.length > 0)
       ret = maj_conv(result[0].id, conv, name);
     res.status(201).json({ success: true, message: ret});
   }
