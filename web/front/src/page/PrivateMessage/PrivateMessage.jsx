@@ -57,7 +57,6 @@ export default function PrivateMessage() {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-            body: JSON.stringify({token: goToConv}),
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
@@ -67,12 +66,15 @@ export default function PrivateMessage() {
 
 
 	useEffect(() => {
-
-        fetch_private_message(goToConv);
-
-        const handle_private_message = (data) => {
+        const handle_private_message = async (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.type === "updateName_good"){
+            if (data.type === "updateName_good"){             
+                if (data.old_name === goToConv){
+                    setGoToConv(data.new_name);
+                    fetch_go_to_conv_private();
+                    fetch_private_message(data.new_name);
+                    return;
+                }
                 fetch_go_to_conv_private();
                 fetch_private_message(goToConv);
                 return;
@@ -82,7 +84,8 @@ export default function PrivateMessage() {
             fetch_go_to_conv_private();
         }
         SocketM.on("priv", handle_private_message, "un");
-
+        fetch_private_message(goToConv);
+        fetch_go_to_conv_private();
         return () => {
             SocketM.off("priv", "un");
         };

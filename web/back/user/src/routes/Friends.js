@@ -172,4 +172,28 @@ router.post('/response_friend', async (req, res) => {
 	}
 })
 
+
+
+router.get('/is_friend', async (req, res) => {
+	try{
+		const name = req.query.name;
+		if (!name)
+			return res.status(400).json({success: false, message: "no name"});
+		const friend = await User.findOne({ where: { name: name } });
+		if (!friend)
+			return res.status(404).json({success: false, message: "invalid name"});
+		const token = req.cookies.token;
+		const decoded = jwt.verify(token, secret);
+		const result = await User.findOne({ where: { id: decoded.id } });
+		const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: friend.id}, {Friend1: friend.id, Friend2: result.id}]}})
+		if (relation.length === 0)
+			return res.status(404).json({success: false, message: "no relation"});
+		if (relation[0].State === false)
+			return res.status(400).json({success: false, message: "wait"});
+		return res.status(201).json({success: true, message: "is friend"});
+	}catch(err){
+		return res.status(500).json({success: false, message: "err back is_friend ", err});
+	}
+})
+
 export default router;

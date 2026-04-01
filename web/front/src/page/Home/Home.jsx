@@ -39,10 +39,23 @@ export default function Home() {
         }
 
         const resCo = await checkCo();
-        if (!resCo) {
+        console.log(resCo);
+        if (!resCo.success) {
             setShowLog(AUTH.LOGIN);
+            sessionStorage.clear();
+        } else if (resCo.success && resCo.MPFA === true) {
+            setShowLog(AUTH.MPFA);
+            sessionStorage.clear();
         } else {
-			setShowLog(AUTH.NONE);
+            if (sessionStorage.getItem("type") === null)
+                sessionStorage.setItem('type', "success");
+            if (sessionStorage.getItem("message") === null)
+                sessionStorage.setItem('message', "Connexion réussie");
+            if (sessionStorage.getItem("token") === null)
+                sessionStorage.setItem('token', resCo.token);
+            if (sessionStorage.getItem("username") === null)
+                sessionStorage.setItem('username', resCo.username);
+            setShowLog(AUTH.NONE);
             if (event && event.target && event.target.id === "HomeChatsubmit"){
                 const form = event.target.form
                 if (form) {

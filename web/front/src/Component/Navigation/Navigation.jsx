@@ -20,7 +20,7 @@ export default function Navigation({ children }) {
 
     const connection_check = async () => {
         const res = await checkCo();
-        if (!res && pathname !== '/'){
+        if (!res.success && pathname !== '/'){
             navigate('/');
             // setShowLog(AUTH.LOGIN)
         }

@@ -41,6 +41,27 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         console.log("good");
     }
 
+    async function is_friend(login){
+        if (!login)
+            return;
+
+        const url = `/api/friend/is_friend?name=${login}`;
+        console.log(`${url}`)
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        }, null , function(repjson) {
+            if (repjson.status >= 400 && repjson.status < 500) {
+                return false;
+            }
+        });
+        if (!repjson || (repjson &&  !repjson.success))
+            return false;
+        console.log("good");
+        return true;
+    }
+
     const handler_submit = async (e) => {
         e.preventDefault();
         console.log("handler_submit(1) called: ", e.target[0].value);
@@ -58,6 +79,11 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 
         const data2 = {...data, monMsg: false};
 
+        const isFriend = await is_friend(login);
+        if (!isFriend) {
+            showAlert("Vous n'êtes pas ou plus amis avec cet utilisateur", "danger");
+            return;
+        }
         await add_private_message(time, login);
 
         console.log("handle_submit(3) send via WebSocket data2:", data2);
