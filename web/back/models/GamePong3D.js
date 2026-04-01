@@ -18,10 +18,10 @@ const GamePong3D = sequelize.define('GamePong3D', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    ballhit_1:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+    // ballhit_1:{
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    // },
     id_player_2: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -30,10 +30,10 @@ const GamePong3D = sequelize.define('GamePong3D', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    ballhit_2:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+    // ballhit_2:{
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    // },
     //info de la partie
     abortwinner: {
         type: DataTypes.INTEGER,

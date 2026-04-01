@@ -32,10 +32,6 @@ const StatPong3D = sequelize.define('StatPong3D', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    total_ballhit:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
 }, {
   tableName: 'StatPong3D',
   timestamps: false,
