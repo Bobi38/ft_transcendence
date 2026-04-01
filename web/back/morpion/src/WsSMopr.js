@@ -91,7 +91,7 @@ export function initWebSMopr(server) {
 
           case "move":
             if (m.move(socket.player, data.message))
-              socket.sendList();
+              setTimeout(() => socket.sendList(), 2000);
             break;
 
           case "play":

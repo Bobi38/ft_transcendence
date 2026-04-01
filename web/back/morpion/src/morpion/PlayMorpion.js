@@ -50,6 +50,7 @@ function move(player, move){
     if (!game) return false;
 
     if (game.isState("end")){
+        p.sendList();
         player.disconnect("game over", game.getId())
         return false;
     }
@@ -61,9 +62,9 @@ function move(player, move){
     // console.log("mess2");
     if (game.play(player, move)) {
         // game.notifyObs();
-        console.log("mess3");
+        // console.log("mess3");
         if(game.checkVictory()){
-            console.log("fini on unlocked la game");
+            // console.log("mess 3.5");
             game.setEnd();
             manager_room.refreshList();
 
@@ -73,13 +74,19 @@ function move(player, move){
             }, 10000);
             return true;
         }
+
         game.switchTurn();
         console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
         console.log("mess4");
-        game.notifyTurn(
-            {message: msgs.my_turn, turn: true},
-            {message: msgs.other_turn, turn: false}
-        )
+        if (game.isState("play"))
+            game.notifyTurn(
+                {message: msgs.my_turn, turn: true},
+                {message: msgs.other_turn, turn: false}
+            )
+        if (game.isState("end")) {
+            console.log(`le jeu est terminer`);
+            return true;
+        }
         console.log("mess5");
         game.startTurnTimer();
         console.log("mess6");

@@ -109,7 +109,7 @@ class MorpionRoom extends Room {
     }
 
     play(currentPlayer, index) {
-        console.log(String(currentPlayer));
+        // console.log(String(currentPlayer));
         if (this._turn !== currentPlayer) {
             // console.log("moi pas voir de probleme")
             return false;
@@ -158,6 +158,7 @@ class MorpionRoom extends Room {
     }
 
     checkVictory() {
+        console.log(`start chekc victory`);
         let i = 0;
         for (let [a, b, c] of this._lines) {
             let char = this._board[a];
@@ -166,15 +167,18 @@ class MorpionRoom extends Room {
                 char === this._board[b] &&
                 char === this._board[c]
             ) {
-                this.notifyTurn(
-                    { message: "gagne", turn: false },
-                    { message: "perdu", turn: false });
 
+                this.notifyTurn(
+                    { message: "gagne", board: this._board, turn: false },
+                    { message: "perdu", board: this._board, turn: false });
+                    
                 console.log(`victoire avec ligne ${i}`);
                 this._how_win = ["horizontal","vertical","diagonal_lr"][Math.floor (i / 3)];
                 if (i === 7)
                     this._how_win = "diagonal_rl";
                 this.handleEndGame("win", this._turn);
+                this._turn = null;
+                console.log(`avant envoie TRUE`);
                 return true;
             }
             i++

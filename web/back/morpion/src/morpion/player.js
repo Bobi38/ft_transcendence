@@ -151,18 +151,16 @@ export class Player {
     }
 
     removeObs(){
+        this.send({
+            players: null,
+            other_board: Array(9).fill(" ")
+        });
+
         if (!this._obs_game) return ;
 
         const obs_game = this._obs_game;
         this._obs_game = null;
 
-        if (this._type === "Morpion"){
-            this.send({
-                players: null,
-                other_board: Array(9).fill(" ")
-            });
-        }
-        
         obs_game?.removeObs(this);        
     }
 
