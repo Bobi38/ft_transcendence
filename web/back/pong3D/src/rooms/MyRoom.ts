@@ -1,4 +1,4 @@
-import { Room, Client, CloseCode, AuthContext } from "colyseus";
+import { Room, Client, CloseCode, AuthContext, ServerError } from "colyseus";
 import { MyRoomState, Player, RoomStatus } from "./schema/MyRoomState.js";
 import { Vector3 } from "@babylonjs/core"
 import fs from "fs";
@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken"
 import { Simulation } from "../simulation.js";
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
+const activePlayers = new Set<string>();
 
 export class MyRoom extends Room {
   private _simulation: Simulation;
@@ -128,6 +129,13 @@ export class MyRoom extends Room {
         console.log("Failed to find token in database");
         return false;
       }
+
+      console.log("result.id:", result.id);
+      if (activePlayers.has(result.id)) {
+            console.log(`Blocked duplicate login for: ${result.id}`);
+            throw new ServerError(401, "Account is already logged in elsewhere!");
+        }
+
       return result;
   }
 
@@ -135,6 +143,8 @@ export class MyRoom extends Room {
     /**
      * Called when a client joins the room.
      */
+    activePlayers.add(auth.id);
+    console.log("auth.id:", auth.id);
     console.log(client.sessionId, "joined room", this.roomId);
     this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
     const player = new Player();
@@ -152,9 +162,11 @@ export class MyRoom extends Room {
     this.state.players.set(client.sessionId, player);
     this._nextPlayerIndex++;
     if (this.state.players.size == 2) {
-      if (this._tokens.get(this._near).auth === this._tokens.get(this._far).auth) {
-        throw new Error("Same player joined twice!");
-      }
+      // if (this._tokens.get(this._near).auth === this._tokens.get(this._far).auth) {
+      //   this._tokens.delete(client.sessionId);
+      //   console.log("Same player tried to join twice");
+      //   throw new ServerError(4001, "Same player joined twice!");
+      // }
       console.log("Game starting");
       this.state.roomStatus = RoomStatus.STARTED;
       this._timeStart = Date.now();
@@ -186,6 +198,11 @@ export class MyRoom extends Room {
       this.state.roomStatus = RoomStatus.STARTED;
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = false;
+    }
+
+    const token = this._tokens.get(client.sessionId); 
+    if (token) {
+        activePlayers.delete(token.auth);
     }
   }
 
@@ -251,6 +268,10 @@ export class MyRoom extends Room {
     console.log(this.state.roomStatus);
     if (this.state.roomStatus != RoomStatus.WAITING)
       this._sendGameDataToDatabase();
+
+    for (let token of this._tokens.values()) {
+      activePlayers.delete(token.auth);
+    }
 
     this._tokens = null;
     this._simulation.dispose();

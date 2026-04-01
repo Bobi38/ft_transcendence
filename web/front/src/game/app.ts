@@ -10,7 +10,7 @@ import { Player } from "./player";
 import { Ball } from "./ball";
 import { MyRoomState } from "./schema/MyRoomState";
 import { StateCallbackStrategy } from "@colyseus/schema";
-import { GUI } from "./GUI";
+import { GUI, showJoinedTwiceUI } from "./GUI";
 import { PlayerCamera } from "./PlayerCamera";
 import { Enemy } from "./enemy";
 import { BallSnapshot, SnapshotBuffer } from "./snapshots";
@@ -71,7 +71,11 @@ export class App {
     private async _main(): Promise<void> {
         this._engine.displayLoadingUI();
         
-        await this._connectOrReconnectToRoom();
+        const connected = await this._connectOrReconnectToRoom();
+        if (connected == 1) {
+            this._engine.hideLoadingUI();
+            return ;
+        }
 
         await Promise.all([
             this._setupClock(),
@@ -121,6 +125,10 @@ export class App {
             try {
                 room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
             } catch (newRoomError) {
+                console.log(newRoomError);
+                if (newRoomError.code == 401) {
+                    showJoinedTwiceUI();
+                }
                 window.location.href = "/";
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
             }
@@ -131,6 +139,7 @@ export class App {
         this._room = room;
         const callback = Callbacks.get(room);
         this._callback = callback;
+        return 0;
     }
 
     private _updatePhysicsAndRender() {
