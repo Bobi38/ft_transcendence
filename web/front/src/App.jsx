@@ -20,6 +20,8 @@ import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
 import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
+import PrivacyPolicy    from "./Component/PP&ToS/Privacy_Policy.jsx";
+import TermsOfService   from "./Component/PP&ToS/Terme_Security.jsx";
 
 // ./src/page/all_game
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
@@ -119,6 +121,8 @@ export default function App() {
                     <Route path={`/Stats`}          element={<Navigation> <Stats/>          </Navigation>}/>
                     <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay/> </Navigation>}/>
                     <Route path={`/Pong3D`}         element={<Pong3D/>}/>
+                    <Route path={`/terms`}          element={<TermsOfService/>}/>
+                    <Route path={`/privacy`}        element={<PrivacyPolicy/>}/>
 
                     {/* bad path */}
                     <Route path={`/*`}              element={<Navigation> <ErrorRedir/>     </Navigation>} />

@@ -33,7 +33,7 @@ async function checktok(tokenn) {
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path WHAT:", req.path);
-  if ( req.path === '/api/auth/login' || req.path === '/api/auth/register' || req.path === '/api/oauth2/github' || req.path === '/api/oauth2/github/callback' || req.path == '/api/oauth2/google') {
+  if ( req.path === '/' || req.path === '/api/auth/login' || req.path === '/api/auth/register' || req.path === '/api/oauth2/github' || req.path === '/api/oauth2/github/callback' || req.path == '/api/oauth2/google') {
     console.log("Public route, no auth required");
     return next() ;
   }

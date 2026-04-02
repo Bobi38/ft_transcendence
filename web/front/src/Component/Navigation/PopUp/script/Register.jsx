@@ -74,6 +74,20 @@ export default function Register() {
                     <label htmlFor={`password`}>Password</label>
                     <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
+                    <div style={{ marginTop: "10px" }}>
+                        <input type="checkbox" id="legal" name="legal" required />
+                        <label htmlFor="legal" style={{ marginLeft: "5px" }}>
+                        J'accepte les{" "}
+                        <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
+                        Conditions d'utilisation
+                        </a>{" "}
+                        et la{" "}
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
+                        Politique de confidentialité
+                        </a>
+                        </label>
+                    </div>
+
                     <div className={`button-container`}>
 
                         <button type={`submit`} className={``}>Register</button>
