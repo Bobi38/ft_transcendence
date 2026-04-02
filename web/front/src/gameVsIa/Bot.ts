@@ -61,8 +61,6 @@ export class Bot {
             this._swingTimer += this._engine.getDeltaTime() / 1000;
         const ballPos = this._ball.getPhysicsBodyPosition();
 
-        console.log(this._swingState);
-        //console.log(this._swingDirection);
         switch (this._swingState) {
             case SwingState.IDLE:
                 const handPos = this._handNode.absolutePosition;
@@ -126,10 +124,8 @@ export class Bot {
     }
 
     private _movementRacket() {
-        console.log(this._movingTarget);
         const invertedWorldMatrix = this._handNode.computeWorldMatrix(true).clone().invert();
         const localTargetPos = Vector3.TransformCoordinates(this._movingTarget, invertedWorldMatrix);
-        //console.log(localTargetPos);
         const relativePos = localTargetPos.subtract(this._handNode.position);
 
         const maxRadius : number = 5; 
@@ -176,5 +172,9 @@ export class Bot {
 
     public getNewRacketRot() : Quaternion {
         return this._newRacketRot.clone();
-    } 
+    }
+
+    public getSwingDirection() : Vector3 {
+        return this._swingDirection.clone();
+    }
 }

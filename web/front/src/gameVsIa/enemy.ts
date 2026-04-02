@@ -9,6 +9,9 @@ export class Enemy extends TransformNode {
     private _newPos : Vector3;
     private _newRackPos : Vector3;
     private _newRackRot : Quaternion;
+
+    public  racketDimensions : Vector3;
+    public  racketOffset : Vector3;
     
     constructor(scene: Scene, assets, shadows: ShadowGenerator[], ball: Ball) {
         super("enemy", scene);
@@ -30,6 +33,9 @@ export class Enemy extends TransformNode {
         shadows[1].useContactHardeningShadow = true;
         shadows[0].contactHardeningLightSizeUVRatio = 0.05;
         shadows[1].contactHardeningLightSizeUVRatio = 0.05;
+
+        this.racketDimensions = new Vector3(2, 3.5, 0.5);
+        this.racketOffset = new Vector3(0,1.5,0);
     }
 
     public updateBody() {
@@ -40,5 +46,16 @@ export class Enemy extends TransformNode {
     public updateRacket() {
         this._racketNode.position = this._input.getNewRacketPos();
         this._racketNode.rotationQuaternion = this._input.getNewRacketRot();
+    }
+
+    public getRacketWorldMatrix() {
+        this._racketNode.computeWorldMatrix(true);
+        return this._racketNode.getWorldMatrix().clone();
+    }
+
+    public getRacketHit() {
+        const hitForward = new Vector3(0,0,-1).scale(2);
+        const hitDirection = this._input.getSwingDirection();
+        return new Vector3(hitDirection.x, hitDirection.y, 0).add(hitForward).normalize().scale(20);
     }
 }

@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
+import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh, Matrix } from "@babylonjs/core";
 import { Environment } from "./environment";
 import { PlayerInput } from "./playerInput";
 import { Player } from "./player";
@@ -71,7 +71,8 @@ export class App {
             if (this._roomStatus == RoomStatus.STARTED) {
                 this._updatePlayerAndEnemy();
                 this._executeStep();
-                this._checkRacketCollision();
+                this._checkRacketCollision(this._player.getRacketWorldMatrix(), this._player.racketDimensions, this._player.racketOffset, true);
+                this._checkRacketCollision(this._enemy.getRacketWorldMatrix(), this._enemy.racketDimensions, this._enemy.racketOffset, false);
                 this._checkWallCollision();
                 this._checkIfPointWon();
             }
@@ -88,17 +89,17 @@ export class App {
         this._ball.setPhysicsBodyPosition(newPos);
     }
 
-    public _checkRacketCollision() {
+    public _checkRacketCollision(racketWorldMatrix: Matrix, racketDimensions: Vector3, racketOffset: Vector3, isPlayer: boolean) {
         const ballPos = this._ball.getPhysicsBodyPosition();
     
-        const racketWorldMatrix = this._player.getRacketWorldMatrix();
+        //const racketWorldMatrix = this._player.getRacketWorldMatrix();
         const invRacketMatrix = racketWorldMatrix.clone().invert();
         const localBallPos = Vector3.TransformCoordinates(ballPos, invRacketMatrix);
-        localBallPos.subtractInPlace(this._player.racketOffset);
+        localBallPos.subtractInPlace(racketOffset);
 
-        const halfWidth = this._player.racketDimensions.x / 2;
-        const halfHeight = this._player.racketDimensions.y / 2;
-        const halfDepth = this._player.racketDimensions.z / 2;
+        const halfWidth = racketDimensions.x / 2;
+        const halfHeight = racketDimensions.y / 2;
+        const halfDepth = racketDimensions.z / 2;
 
         const closestX = Math.max(-halfWidth,  Math.min(localBallPos.x, halfWidth));
         const closestY = Math.max(-halfHeight, Math.min(localBallPos.y, halfHeight));
@@ -107,7 +108,11 @@ export class App {
         const distanceSquared = localBallPos.subtract(closest).lengthSquared();
 
         if (distanceSquared < (this._ball.radius ** 2)) {
-            const newVel = this._player.getRacketHit();
+            let newVel : Vector3;
+            if (isPlayer)
+                newVel = this._player.getRacketHit();
+            else
+                newVel = this._enemy.getRacketHit();
             this._ball.setVelocity(newVel);
         }
     }

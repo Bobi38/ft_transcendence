@@ -21,6 +21,8 @@ export default function Pong3D() {
     const canvasRef = useRef(null);
 
     useEffect(() => {
+        if (canvasRef.current == null)
+            return ;
         let gameApp = null;
 
         const init = async () => {
@@ -40,7 +42,7 @@ export default function Pong3D() {
         return () => {
             gameApp?.dispose?.();
         };
-    }, []);
+    }, [canvasRef]);
 
     return (
         <main className={`Pong3D-root`}>
