@@ -62,15 +62,16 @@ router.get('/github/callback', async (req, res) => {
   }
   let token = "";
   if (result.length === 0) {
-    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
+    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
     console.log("New user created:", newUser);
     token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: newUser.id});
   }
   else {
-    await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
-    //const MPFA = tcheck_MPFA(result[0], frontendUrl);
-    // await result[0].update({MPFA: MPFA});
+    const MPFA = tcheck_MPFA(result[0], frontendUrl);
+    await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
+    
+    await result[0].update({MPFA: MPFA});
     console.log("Existing user logged in:", result[0].name);
     token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: result[0].id});

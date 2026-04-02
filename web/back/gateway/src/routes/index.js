@@ -33,11 +33,11 @@ async function checktok(tokenn) {
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path WHAT:", req.path);
-  if ( req.path === '/' || req.path === '/api/auth/login' || req.path === '/api/auth/register' || req.path === '/api/oauth2/github' || req.path === '/api/oauth2/github/callback' || req.path == '/api/oauth2/google') {
+  if ( req.path === '/' || req.path === '/api/auth/login' || req.path === '/api/auth/register' || req.path === '/api/oauth2/github' || req.path === '/api/oauth2/github/callback' || req.path == '/api/oauth2/google' || req.path == '/api/secu/recupPswd' || req.path == '/api/secu/recupPswd_check_code' || req.path == '/api/secu/majPswd') {
     console.log("Public route, no auth required");
     return next() ;
   }
-  if (!token && req.path !== '/' && req.path !== '/api/auth/login' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' && req.path !== '/api/oauth2/github/callback' && req.path !== '/api/oauth2/google') {
+  if (!token && req.path !== '/' && req.path !== '/api/auth/login' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' && req.path !== '/api/oauth2/github/callback' && req.path !== '/api/oauth2/google' && req.path !== '/api/secu/recupPswd' && req.path !== '/api/secu/recupPswd_check_code') {
     return res.status(401).json({ success: false, redirect: true});
   }
   const valid = await checktok(token);
