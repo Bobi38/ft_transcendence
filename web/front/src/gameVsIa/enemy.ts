@@ -1,13 +1,16 @@
 import { Mesh, Quaternion, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
+import { Bot } from "./Bot";
+import { Ball } from "./ball";
 
 export class Enemy extends TransformNode {
     private _mesh : Mesh;
+    private _input : Bot;
     private _racketNode : TransformNode;
     private _newPos : Vector3;
     private _newRackPos : Vector3;
     private _newRackRot : Quaternion;
     
-    constructor(scene: Scene, assets, shadows: ShadowGenerator[]) {
+    constructor(scene: Scene, assets, shadows: ShadowGenerator[], ball: Ball) {
         super("enemy", scene);
         this._mesh = assets.mesh;
         this._mesh.parent = this;
@@ -16,6 +19,7 @@ export class Enemy extends TransformNode {
         this._newRackPos = this._racketNode.position;
         this._racketNode.rotationQuaternion = Quaternion.FromEulerAngles(this._racketNode.rotation.x, this._racketNode.rotation.y, this._racketNode.rotation.z);
         this._newRackRot = this._racketNode.rotationQuaternion;
+        this._input = new Bot(scene, ball, assets.handNode, this._racketNode);
         shadows[0].addShadowCaster(this._mesh, true);
         shadows[1].addShadowCaster(this._mesh, true);
         shadows[0].usePercentageCloserFiltering = true;
@@ -29,11 +33,12 @@ export class Enemy extends TransformNode {
     }
 
     public updateBody() {
-        this._mesh.position = Vector3.Lerp(this._mesh.position, this._newPos, 0.4);
+        this._mesh.moveWithCollisions(this._input.getMoveDirection());
+        //this._mesh.position = ;
     }
 
     public updateRacket() {
-        this._racketNode.position = Vector3.Lerp(this._racketNode.position, this._newRackPos, 0.4);
-        this._racketNode.rotationQuaternion = Quaternion.Slerp(this._racketNode.rotationQuaternion, this._newRackRot, 0.4);
+        this._racketNode.position = this._input.getNewRacketPos();
+        this._racketNode.rotationQuaternion = this._input.getNewRacketRot();
     }
 }

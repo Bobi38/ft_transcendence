@@ -157,7 +157,7 @@ export class App {
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
 
-        this._enemy = new Enemy(this._scene, enemyAssets, this._shadows);
+        this._enemy = new Enemy(this._scene, enemyAssets, this._shadows, this._ball);
     }
 
 
@@ -180,7 +180,7 @@ export class App {
 
         let ballPos = new Vector3(0,3,-12);
         let ballVel = Vector3.Zero();
-        this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this);        
+        this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene);        
     }
 
     private _updatePlayerAndEnemy() {
