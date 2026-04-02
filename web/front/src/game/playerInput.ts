@@ -53,7 +53,7 @@ export class PlayerInput {
         if (this._camera.getUniversalCamera().getForwardRay().direction._z > 0) {
             horizontal.scaleInPlace(-1);
         }
-        this._moveDirection = horizontal.normalize();
+        this._moveDirection = horizontal;//.normalize();
     }
 
     private _inputRacket() {

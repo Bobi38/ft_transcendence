@@ -27,8 +27,6 @@ export enum RoomStatus {
 
 const TIMESTEP : number = 1/60;
 
-
-
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
@@ -88,6 +86,7 @@ export class App {
         this._setupPhysicsMessagesListener();
         
         this._engine.runRenderLoop(() => {
+            console.log("still here");
             this._updatePhysicsAndRender();
         });
         window.addEventListener('resize', () => {
@@ -480,6 +479,11 @@ export class App {
         racketRoot.parent = hand_node;
         hand_node.parent = body;
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
+    }
+
+    public dispose() {
+        this._scene.dispose();
+        this._engine.dispose();
     }
 
     public getTick() : number {

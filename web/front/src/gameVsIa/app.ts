@@ -68,6 +68,7 @@ export class App {
         this._engine.hideLoadingUI();
         
         this._engine.runRenderLoop(() => {
+            console.log("still here");
             if (this._roomStatus == RoomStatus.STARTED) {
                 this._updatePlayerAndEnemy();
                 this._executeStep();
@@ -282,6 +283,11 @@ export class App {
                 this._served = false;
             }
         }
+    }
+
+    public dispose() {
+        this._scene.dispose();
+        this._engine.dispose();
     }
 
     public getPlayer() : Player {

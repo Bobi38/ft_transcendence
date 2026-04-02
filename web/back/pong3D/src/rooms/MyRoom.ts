@@ -219,6 +219,7 @@ export class MyRoom extends Room {
       this._timeEnd = this._simulation.getTimeEnd();
     this._simulation.getEngine().stopRenderLoop();
     this.lock();
+    activePlayers.delete(this._tokens.get(client.sessionId).auth);
     this.state.players.delete(client.sessionId);
   }
 
