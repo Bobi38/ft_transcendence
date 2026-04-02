@@ -1,5 +1,7 @@
 /* extern */
 import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+
 import { useEffect } from "react";
 
 /* back */
@@ -75,6 +77,12 @@ export default function Login() {
 
     // };
 }
+    const password_forget_mode = () => {
+        console.log("password_forget_mode(1) Passage en mode inscription:", AUTH.PASSFORGET);
+
+        setShowLog(AUTH.PASSFORGET);
+        
+    };
 
     const register_mode = () => {
         console.log("register_mode(1) Passage en mode inscription:", AUTH.REGISTER);
@@ -90,10 +98,7 @@ export default function Login() {
         window.location.href = `/api/oauth2/github?frontendUrl=${encodeURIComponent(frontendUrl)}&backUrl=${encodeURIComponent(backUrl)}`;
     };
 
-    const miss_pass_mode = () => {
 
-    };
-    
     const handle_google = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try{
@@ -123,7 +128,7 @@ export default function Login() {
         <>
             <div className={`script-in-root`}>
 
-                <h4>Connexion</h4>
+                <h1>Connexion</h1>
                 <form id={`login`} onSubmit={login_submit}>
 
 
@@ -149,26 +154,25 @@ export default function Login() {
                                 Connexion
                         </button>
 
-                        <button type={`button`} className={``}
-                                onClick={register_mode}>
-                                Password lost
+                        <button type={`button`} className={``} target="_blank"
+                                onClick={handle_git}>
+                                <FaGithub/> GitHub
                         </button>
-                        
+
+                        <button onClick={handle_google}>
+                            <FcGoogle/> Google
+                            </button>
+
                         <button type={`button`} className={``}
                                 onClick={register_mode}>
                                 Register
                         </button>
 
                         <button type={`button`} className={``} target="_blank"
-                                onClick={handle_git}>
-                                <FaGithub/> GitHub
-                        </button>
-                        <button onClick={() => handle_google()}>Se connecter avec Google</button>
-
-                        <button type={`button`} className={``} target="_blank"
-                                onClick={miss_pass_mode}>
+                                onClick={password_forget_mode}>
                                 Password forgot ?
                         </button>
+
                     </div>
                 </form>
             </div>

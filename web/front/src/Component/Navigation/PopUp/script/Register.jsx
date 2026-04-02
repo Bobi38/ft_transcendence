@@ -60,7 +60,7 @@ export default function Register() {
         <>
             <div className={`script-in-root`}>
 
-                <h4>Register</h4>
+                <h1>Register</h1>
                 
                 <form id={`register`} className={``} onSubmit={register_submit}>
 

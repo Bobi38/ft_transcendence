@@ -5,6 +5,7 @@ export const AUTH = {
     LOGIN: 1,
     MAILA2F: 2,
     REGISTER: 3,
+    PASSFORGET: 4,
 };
 
 const AuthContext = createContext(null);

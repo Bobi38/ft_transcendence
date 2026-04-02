@@ -1,4 +1,5 @@
 /* extern */
+import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
 import SocketM from "TOOL/SocketManag";
@@ -16,10 +17,14 @@ export default function PasswordForget() {
 
     const {setShowLog, showLog} = useAuth();
 
+    const [showPassword, setShowPassword] = useState(false);
     const [showCodeInput, setShowCodeInput] = useState(false);
-
+    const [changePassword, setChangePassword] = useState(false);
 
     async function send_code() {
+
+        // setShowCodeInput(true);
+        // return
         const url = `/api/secu/recupPswd`;
 
         console.log(`${url}`)
@@ -49,7 +54,7 @@ export default function PasswordForget() {
         }
         const code = formData.get("code");
 
-        const url = `/api/secu/maila2f_check_code`;
+        const url = `/api/secu/check_code`;
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
@@ -67,33 +72,83 @@ export default function PasswordForget() {
             return ;
         }
         SocketM.sendd('friend', {type: 'co'});
-        setShowLog(AUTH.NONE);
+        setChangePassword(true)
+        setShowLog(AUTH.LOGIN);
+    }
+
+    function login_mode() {
+        setShowLog(AUTH.LOGIN)
     }
 
     return (
         <>
             <div className={`script-in-root`}>
 
-                <h4>Password Forget</h4>
+                <h1>Password Forget</h1>
 
                 {!showCodeInput && (
-					<button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
-						Send mail verification
-                    </button>
+                    <div className={`button-container`}>
+
+                        <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
+                            Send mail verification
+                        </button>
+                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                    </div>
                 )}
 
                 {showCodeInput && (
 
-                  <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
+                    <form id={`forgetPassword`} className={``} onSubmit={check_code}>
 
-                    <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
+                        <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
 
-                      <div className={`button-container`}>
-                          <button type={`submit`} className={``}>Valider</button>
-                          <button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
-                      </div>
-                  </form>
+                        <div className={`button-container`}>
+                            <button type={`submit`} className={``}>Valider</button>
+                            <button type={`button`} className={``} onClick={send_code}>Send a new mail verification</button>
+                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                        </div>
+                    </form>
 
+                )}
+                {changePassword && (
+
+                    <form id={`changePassword`} className={``} 
+                    // onSubmit={send_new_password}
+                    >
+
+                        <label htmlFor="password">Nouveau Mot de passe</label>
+                        <div className="input-wrapper">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                name="password"
+                                className="password-field"
+                                placeholder="Votre nouveau mot de passe"
+                            />
+                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            </span>
+                        </div>
+
+                        <label htmlFor="confirmepassword">Confirmer Mot de passe</label>
+                        <div className="input-wrapper">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="confirmepassword"
+                                name="confirmepassword"
+                                className="password-field"
+                                placeholder="Confirmation du nouveau mot de passe"
+                            />
+                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            </span>
+                        </div>
+
+                        <div className={`button-container`}>
+                            <button type={`submit`} className={``}>Modifier mon mot de passe</button>
+                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                        </div>
+                    </form>
                 )}
 
             </div>
