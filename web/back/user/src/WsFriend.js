@@ -72,7 +72,7 @@ export function initWebSFriend(server) {
       console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
       if (!token) {
-        socket.close();
+        // socket.close();
         return;
       }
       let user;

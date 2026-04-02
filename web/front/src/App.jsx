@@ -20,22 +20,31 @@ import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
 import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile          from    "FRONT/page/Profile/Profile.jsx";
 import Stats            from    "FRONT/page/Stats/Stats.jsx";
+import PrivacyPolicy    from "./Component/PP&ToS/Privacy_Policy.jsx";
+import TermsOfService   from "./Component/PP&ToS/Terme_Security.jsx";
 
 // ./src/page/all_game
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import Pong3DIa         from    "FRONT/page/all_game/Pong3DIa/Pong3DIa.jsx";
 import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
+import { AUTH } from "../tool/AuthContext";
 
 
 export default function App() {
-  const [notif, setNotif] = useState(null);
-  const { showLog } = useAuth();
-  const { setShowFriend } = useFriend();
+
+    const { showLog, setShowLog } = useAuth();
+    const [notif, setNotif] = useState(null);
+    const { setShowFriend } = useFriend();
 
     useEffect(() => {
         const init = async () => {
+
             const repco = await checkCo();
+
             if (!repco.success){
+                if (showLog === AUTH.NONE){
+                    setShowLog(AUTH.LOGIN)
+                }
                 return;
             }
             if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")
@@ -119,7 +128,8 @@ export default function App() {
                     <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay/> </Navigation>}/>
                     <Route path={`/Pong3D`}         element={<Pong3D/>}/>
                     <Route path={`/Pong3DIa`}       element={<Pong3DIa/>}/>
-                    
+                    <Route path={`/terms`}          element={<TermsOfService/>}/>
+                    <Route path={`/privacy`}        element={<PrivacyPolicy/>}/>
 
                     {/* bad path */}
                     <Route path={`/*`}              element={<Navigation> <ErrorRedir/>     </Navigation>} />

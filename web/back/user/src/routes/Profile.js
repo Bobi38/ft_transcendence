@@ -3,6 +3,8 @@ import {User} from './index.js'
 
 const router = express.Router();
 
+const key = process.env.API_KEY_WEATHER
+
 router.get('/profile', async(req, res) =>{
   try{
     const token = req.cookies.token;
@@ -24,9 +26,15 @@ router.get('/profile', async(req, res) =>{
 router.post('/updateProfil', async(req, res) => {
   try{
     const user = req.body
-    if (!user.login || !user.email || !user.tel || !user.location || !user.login42){
-      return res.status(400).json({success: false, message: 'Missing fields'});
+    if (!user.login || !user.email || !user.tel){
+      return res.status(400).json({success: false, message: 'Tous les '});
     }
+    // if (!validator.isEmail(user.email))
+    //   return res.status(404).json({success: false, message: "Formal de l'email est invalid"})
+    if (!isValidPhoneNumber(user.tel))
+      return res.status(404).json({success: false, message: "Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)"})
+    if (user.login.length > 128)
+      return res.status(404).json({success: false, message: "Veuillez entrez un login d'une taille inferieur a 128 caractere"})     
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
@@ -34,30 +42,8 @@ router.post('/updateProfil', async(req, res) => {
     console.log("API /updateProfil dans update profil", user);
     const name = await User.findAll({where :{name: user.login}})
     if ((name.length != 0) && (name[0].id != result.id))
-      return res.status(409).json({success: false, message: 'Name already used'})
-      console.log(user.email)
-    if (validator.isEmail(user.email)){
-      console.log("email valid");
-      await result.update({mail: user.email})
-    }
-    if (isValidPhoneNumber(user.tel)){
-        console.log("phone number valid");
-      await result.update({phoneNumber: user.tel})
-    }
-    console.log()
-    if (user.login && user.login.length < 128){
-      console.log("login good");
-      await result.update({name: user.login})
-
-    }
-    if (user.login42 && user.login42.length < 128){
-      console.log("login42 valid");
-      await result.update({Log42: user.login42});
-    }
-    if (user.location && user.location.length < 256){
-      console.log("adress good");
-      await result.update({adress: user.location});
-    }
+      return res.status(409).json({success: false, message: 'Le login ' + user.login + " est deja utilise"})
+    await result.update({ name: user.login, mail: user.email, phoneNumber: user.tel })
     res.status(201).json({success: true, message: "data in username", username: user.login, oldname: oldname});
   }catch(err){
     res.status(500).json({success: false, message: "error updateProfil " , err});
@@ -76,7 +62,7 @@ router.post('/majPass', async(req,res) => {
       await result.update({password: CrypPass});
       return res.status(201).json({success: true, message: "goog"});
     }
-    return res.status(404).json({success: false, message: "password empty"});
+    return res.status(400).json({success: false, message: "Veuillez remplir la case (nouveau mot de passe)"});
   }catch(err){
     res.status(500).json({success: false, message: "error majpass ", err});
   }
@@ -120,7 +106,6 @@ function cacheWeather(duration = 3600000) {
 router.get('/Homeweather', cacheWeather(), async (req, res) => {
   try {
     console.log("API /Homeweather dans Homeweather");
-    const key = "b26266decd6341248ef151027261902";
     const loc = req.loc;
     console.log("loc:",loc)
     const response = await fetch(

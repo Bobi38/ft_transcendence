@@ -39,14 +39,13 @@ export default function Home() {
         }
 
         const resCo = await checkCo();
-        console.log(resCo);
         if (!resCo.success) {
-            setShowLog(AUTH.LOGIN);
+            // setShowLog(AUTH.LOGIN);
             sessionStorage.clear();
         } else if (resCo.success && resCo.MPFA === true) {
             setShowLog(AUTH.MPFA);
             sessionStorage.clear();
-        } else {
+        } else{
             if (sessionStorage.getItem("type") === null)
                 sessionStorage.setItem('type', "success");
             if (sessionStorage.getItem("message") === null)
@@ -76,7 +75,7 @@ export default function Home() {
         home_root.addEventListener("click", home_handler);
         return () => home_root.removeEventListener("click", home_handler);
 
-    }, []);
+    }, [showLog]);
 
 	return (
 

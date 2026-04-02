@@ -81,8 +81,14 @@ export default function Profile() {
             credentials: "include",
             body: JSON.stringify(user)
         });
+        console.log(repjson.status + " " + repjson.success)        
+        if (repjson && !repjson.success && repjson.status < 500 && repjson.status >= 400){
+            showAlert(repjson.message, "danger");
+            return;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
+
         sessionStorage.setItem('username', repjson.username);
         console.log("oldname: ", repjson.oldname, " newname: ", repjson.username);
         if (repjson.oldname !== repjson.username) {
