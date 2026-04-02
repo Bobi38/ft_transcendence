@@ -23,7 +23,9 @@ export function tcheck_MPFA(user, host){
     const limit = new Date(now.getTime() - 10 * 60 * 1000);
     let MPFA;
     console.log(limit);
-    if (user.Hostlastco === null && user.Datelastco === null)
+    if (user.MPFA == false)
+      MPFA = false
+    else if (user.Hostlastco === null && user.Datelastco === null)
       MPFA = true;
     else if (user.Hostlastco != host)
       MPFA = true;
