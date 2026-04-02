@@ -176,6 +176,7 @@ export default function PasswordForget() {
                                 className="password-field"
                                 placeholder="Votre nouveau mot de passe"
                                 value={showPassword}
+                                onChange={(e) => setShowPassword(e.target.value)}
                             />
                             <span className="toggle-icon" onClick={() => setShowPassword(showPassword)}>
                             </span>
@@ -190,6 +191,7 @@ export default function PasswordForget() {
                                 className="password-field"
                                 placeholder="Confirmation du nouveau mot de passe"
                                 value={showPasswordConfirm}
+                                onChange={(e) => setShowPasswordConfirm(e.target.value)}
                             />
                             <span className="toggle-icon" onClick={() => setShowPasswordConfirm(showPasswordConfirm)}>
                             </span>

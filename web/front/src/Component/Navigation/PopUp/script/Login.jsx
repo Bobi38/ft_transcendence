@@ -67,15 +67,14 @@ export default function Login() {
         // sessionStorage.setItem('token', repjson.token);
         // sessionStorage.setItem('username', repjson.username);
 
-        // if (repjson.MPFA) {
-        //     setShowLog(AUTH.MAILA2F);
-        // }
+        if (repjson.MPFA) {
+            setShowLog(AUTH.MAILA2F);
+        }
         
-        // if (!repjson.MPFA) {
-        setShowLog(AUTH.NONE);
-        SocketM.sendd('friend', {type: 'co_first'});
-
-    // };
+        if (!repjson.MPFA) {
+            setShowLog(AUTH.NONE);
+            SocketM.sendd('friend', {type: 'co_first'});
+        };
 }
     const password_forget_mode = () => {
         console.log("password_forget_mode(1) Passage en mode inscription:", AUTH.PASSFORGET);

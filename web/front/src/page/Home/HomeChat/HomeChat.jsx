@@ -55,7 +55,7 @@ export default function HomeChat() {
 
     useEffect(() =>{
         const currect = showLog;
-        if (currect != AUTH.NONE)
+        if (currect !== AUTH.NONE)
             return ;
         fetch_global_message()
 

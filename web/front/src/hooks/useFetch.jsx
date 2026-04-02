@@ -6,9 +6,10 @@ export default async function useFetch(url, type_request, callbacksucces = null,
         console.log("useFetch(2) after fetch response:", response);
 
         const repjson = await response.json();
+        repjson.status = response.status
         if (response.status >= 500){
             console.log("useFetch(3) response.status >= 500", repjson.message)
-            return null;
+            return repjson;
         }
         
         repjson.status = response.status

@@ -12,7 +12,8 @@ router.get('/checkco', async(req, res) =>{
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
     MPFA = result.MPFA;
-    if (result.co == true)
+    console.log("in checko " + MPFA + " co " + result.co);
+    if (result.co == true && MPFA == false)
       return res.status(200).json({success:true, message: "good token and good co", MPFA: MPFA, token: token});
     else
       return res.status(403).json({success: false, message: "not co completed", MPFA: MPFA});
@@ -112,7 +113,7 @@ router.post('/maila2f_check_code' , async (req, res) => {
     if (code && isValid == true && (new Date() < limit)){
       const co = result.code[0];
       await co.destroy();
-      await result.update({co: true,Hostlastco: host, Datelastco: new Date()});
+      await result.update({co: true,MPFA: false,Hostlastco: host, Datelastco: new Date()});
       return res.status(201).json({success: true, message:"good"});
     }
     else
@@ -153,7 +154,7 @@ router.post('/recupPswd_check_code' , async (req, res) => {
 
 router.post('/majPswd', async(req,res) => {
   try{
-    const {new_pswd} = req.body;
+    const new_psd = req.body.new_psd;
     const token = req.cookies.ChgPSWD;
     if (!token)
       return res.status(400).json({success: false, message: "token invalid"});
@@ -163,16 +164,17 @@ router.post('/majPswd', async(req,res) => {
       res.clearCookie('ChgPSWD');
       return res.status(400).json({success: false, message: "token invalid"});
     }
-    console.log("data pass= ", data.Pass);
-    if (data.Pass){
-      const CrypPass = await bcrypt.hash(new_pswd, 10);
+    console.log("data pass= ", new_psd);
+    if (new_psd){
+      const CrypPass = await bcrypt.hash(new_psd, 10);
       await result.update({password: CrypPass});
+      console.log(result);
       res.clearCookie('ChgPSWD');
       return res.status(201).json({success: true, message: "good"});
     }
     return res.status(400).json({success: false, message: "Veuillez remplir la case (nouveau mot de passe)"});
   }catch(err){
-    res.status(500).json({success: false, message: "error majpass ", err});
+    res.status(500).json({success: false, message: "error majpass " + err});
   }
 })
 

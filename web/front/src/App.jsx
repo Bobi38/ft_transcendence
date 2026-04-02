@@ -42,9 +42,6 @@ export default function App() {
             const repco = await checkCo();
 
             if (!repco.success){
-                if (showLog === AUTH.NONE){
-                    setShowLog(AUTH.LOGIN)
-                }
                 return;
             }
             if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")

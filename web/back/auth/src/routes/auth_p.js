@@ -37,7 +37,7 @@ router.post('/login', async (req, res) => {
     console.log(result[0].Datelastco)
     let MPFA;
     MPFA = tcheck_MPFA(result[0], host);
-    MPFA = false;
+    console.log("MPFA " + MPFA);
     await result[0].update({MPFA: MPFA});
     await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
