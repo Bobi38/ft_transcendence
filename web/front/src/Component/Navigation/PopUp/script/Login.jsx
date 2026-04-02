@@ -90,6 +90,9 @@ export default function Login() {
         window.location.href = `/api/oauth2/github?frontendUrl=${encodeURIComponent(frontendUrl)}&backUrl=${encodeURIComponent(backUrl)}`;
     };
 
+    const miss_pass_mode = () => {
+
+    };
 
     return (
         <>
@@ -105,8 +108,7 @@ export default function Login() {
                             name={`email`}
                             placeholder={`you@exemple.com`}
                             required
-                            // value={`toto@test.c`}//--
-                            />
+                    />
 
                     <label  htmlFor="password">Password</label>
                     <input  type={`password`}
@@ -114,8 +116,7 @@ export default function Login() {
                             name={`password`}
                             placeholder={`1234btw`}
                             required
-                            // value={`tt`}//--
-                            />
+                    />
 
                     <div className={`button-container`}>
 
@@ -138,10 +139,10 @@ export default function Login() {
                                 <FaGithub/> GitHub
                         </button>
 
-                        {/* <button type={`button`} className={``} target="_blank"
+                        <button type={`button`} className={``} target="_blank"
                                 onClick={miss_pass_mode}>
                                 Password forgot ?
-                                </button> */}
+                        </button>
                     </div>
                 </form>
             </div>
