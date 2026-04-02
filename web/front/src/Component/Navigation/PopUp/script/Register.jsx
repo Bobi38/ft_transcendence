@@ -1,4 +1,5 @@
 /* extern */
+import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
 /* back */
@@ -16,6 +17,9 @@ import useFetch from "HOOKS/useFetch.jsx";
 export default function Register() {
 
     const {setShowLog, showLog} = useAuth();
+    const [showPrivacy, setShowPrivacy] = useState(false);
+
+
 
     async function register_submit(e){
 
@@ -74,6 +78,11 @@ export default function Register() {
                     <label htmlFor={`password`}>Password</label>
                     <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
+
+                    <div style={{display: "flex", gap: "5px"}}>
+                        <input id="checkboxInput" type="checkbox" />
+                        <label for="checkboxInput" defaultChecked={showPrivacy} ><span onClick={() => setShowPrivacy(!showPrivacy)}>Accept Privacy Policy and Terms of Service</span></label>
+                    </div>
                     <div className={`button-container`}>
 
                         <button type={`submit`} className={``}>Register</button>
@@ -83,6 +92,27 @@ export default function Register() {
 
                 </form>
 
+                {showPrivacy && (
+                    <div className="policy">
+                        <h1>Privacy Policy and Terms of Service</h1>
+                        <p>Privacy Policy (Core Clauses)
+                            Information Collection: "We collect personal identifiers (name, email), usage data via cookies, and device information (IP address)."<br/>
+                            Use of Data: "Data is used to provide services, process transactions, and improve user experience."<br/>
+                            Legal Basis: "Processing is based on contractual necessity, legitimate interest, or explicit user consent."<br/>
+                            Data Retention: "Personal data is kept only as long as necessary for the purposes outlined or to comply with legal obligations."<br/>
+                            User Rights: "Users may request access, correction, or deletion of their data by contacting [Email Address]."<br/>
+                            Third-Party Sharing: "We do not sell data. We only share information with essential service providers (e.g., hosting, payment processors)."<br/>
+                            Terms of Service (Core Clauses)
+                            Acceptance of Terms: "By accessing this service, you agree to be bound by these terms and all applicable laws."<br/>
+                            Intellectual Property: "All content, features, and functionality are the exclusive property of [Company Name] and are protected by copyright laws."<br/>
+                            User Conduct: "Users are prohibited from using the service for any unlawful purpose or to transmit malicious code."<br/>
+                            Limitation of Liability: "The service is provided 'as is'. In no event shall [Company Name] be liable for any indirect or consequential damages."<br/>
+                            Termination: "We reserve the right to terminate or suspend access to our service immediately, without prior notice, for any breach of these Terms."<br/>
+                            Governing Law: "These Terms shall be governed by and construed in accordance with the laws of [Jurisdiction/Country]."<br/>
+                            chaussure.
+                        </p>
+                    </div>
+                )}
             </div>
         </>
     )
