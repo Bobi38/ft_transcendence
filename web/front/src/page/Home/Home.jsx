@@ -45,7 +45,7 @@ export default function Home() {
         } else if (resCo.success && resCo.MPFA === true) {
             setShowLog(AUTH.MPFA);
             sessionStorage.clear();
-        } else {
+        } else if (resCo.success && resCo.MPFA === false){
             if (sessionStorage.getItem("type") === null)
                 sessionStorage.setItem('type', "success");
             if (sessionStorage.getItem("message") === null)
@@ -62,6 +62,8 @@ export default function Home() {
                 }
                 return
             }
+        }else{
+            setShowLog(AUTH.LOGIN)
         }
     };
 
