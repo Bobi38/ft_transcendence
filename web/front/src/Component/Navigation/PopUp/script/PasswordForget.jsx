@@ -1,7 +1,7 @@
 /* extern */
 import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { FaGithub } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SocketM from "TOOL/SocketManag";
 import {showAlert} from "TOOL/fonction_usefull"
 
@@ -24,6 +24,16 @@ export default function PasswordForget() {
     const [changePassword, setChangePassword] = useState(false);
     const [mail, setmail] = useState("");
 
+    useEffect(() =>{
+        if (sessionStorage.getItem("CodeInput") == "true")
+            setShowCodeInput(true);
+        else if (sessionStorage.getItem("chgPsswrd") == "true")
+            setChangePassword(true);
+        else
+            sessionStorage.setItem("CodeInput", "false");
+        console.log("in use " + sessionStorage.getItem("CodeInput"));
+    }, [])
+
     async function send_code() {
 
         // setShowCodeInput(true);
@@ -44,6 +54,7 @@ export default function PasswordForget() {
             return ;
         }
         setShowCodeInput(true);
+        sessionStorage.setItem("CodeInput", "true");
     }
 
 
@@ -79,12 +90,17 @@ export default function PasswordForget() {
         }
         setShowCodeInput(false)
         setChangePassword(true)
+        sessionStorage.setItem("CodeInput", "false");
+        sessionStorage.setItem("chgPsswrd", "true");
+    }
+
+    function ret_mode() {
+        sessionStorage.clear();
+        setShowLog(AUTH.LOGIN);
     }
 
     async function login_mode() {
         if (showPassword != showPasswordConfirm){
-            setShowPassword("");
-            setShowPasswordConfirm("")
             return ;
         }
         const url = `/api/secu/majPswd`;
@@ -103,6 +119,9 @@ export default function PasswordForget() {
             console.log(repjson.message)
             return ;
         }
+        setShowPassword("");
+        setShowPasswordConfirm("")
+        sessionStorage.clear()
         setShowLog(AUTH.LOGIN)
     }
 
@@ -121,7 +140,7 @@ export default function PasswordForget() {
                         <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
                             Send mail verification
                         </button>
-                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                        <button type={`button`} className={``} onClick={ret_mode}>Connexion</button>
                     </div>
                     </div>
                 )}

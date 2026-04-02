@@ -37,7 +37,10 @@ export default function Home() {
             console.log("home_handler(1) need to connect")
             return;
         }
-
+        if (sessionStorage.getItem("CodeInput") == "true" || sessionStorage.getItem("CodeInput") == "false"){
+            setShowLog(AUTH.PASSFORGET);
+            return;
+        }
         const resCo = await checkCo();
         if (!resCo.success) {
             // setShowLog(AUTH.LOGIN);

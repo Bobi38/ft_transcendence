@@ -84,6 +84,8 @@ router.post('/recupPswd', async (req, res) => {
       await check.destroy();
 
     await result.createCode({type: 2, Code : CrypPass, DateCreate: new Date()});
+    const token = jwt.sign({id: result.id}, secret, {expiresIn: '12h'});
+    res.cookie('ChgPSWD', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
     console.log("enddd")  
     return res.status(201).json({success: true, message: "message send"});
   }catch(err){
@@ -123,13 +125,15 @@ router.post('/maila2f_check_code' , async (req, res) => {
 router.post('/recupPswd_check_code' , async (req, res) => {
   try{
     console.log("API /maila2f_check_code called")
-    const {code, host, mail} = req.body;
+    const {code, host} = req.body;
     if (!code || !host) {
       return res.status(400).json({ success: false, message: 'Missing fields' });
     }
     console.log("API /maila2f_check_code je suis dans verif")
     console.log(code);
-    const result = await User.findOne({ where: { mail: mail }, include: {model: PswEmail, as: 'code' , where :{type: 2}} });
+    const token = req.cookies.ChgPSWD;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id }, include: {model: PswEmail, as: 'code' , where :{type: 2}} });
     console.log(result.code[0].Code)
     const limit = new Date(result.code[0].DateCreate.getTime() + 60 * 1000);
     const isValid = await bcrypt.compare(code, result.code[0].Code);
@@ -150,20 +154,21 @@ router.post('/recupPswd_check_code' , async (req, res) => {
 router.post('/majPswd', async(req,res) => {
   try{
     const {new_pswd} = req.body;
-    const token = req.cookies.token;
+    const token = req.cookies.ChgPSWD;
     if (!token)
       return res.status(400).json({success: false, message: "token invalid"});
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
     if (!result){
-      res.clearCookie('token');
+      res.clearCookie('ChgPSWD');
       return res.status(400).json({success: false, message: "token invalid"});
     }
     console.log("data pass= ", data.Pass);
     if (data.Pass){
       const CrypPass = await bcrypt.hash(new_pswd, 10);
       await result.update({password: CrypPass});
-      return res.status(201).json({success: true, message: "goog"});
+      res.clearCookie('ChgPSWD');
+      return res.status(201).json({success: true, message: "good"});
     }
     return res.status(400).json({success: false, message: "Veuillez remplir la case (nouveau mot de passe)"});
   }catch(err){
