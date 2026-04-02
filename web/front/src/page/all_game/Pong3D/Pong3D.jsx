@@ -42,6 +42,7 @@ export default function Pong3D() {
         init();
 
         return () => {
+            console.log("testsaasdawd");
             gameApp?.dispose?.();
         };
     }, [canvasRef]);

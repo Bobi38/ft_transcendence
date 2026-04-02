@@ -44,6 +44,7 @@ export class App {
     public  _clock : SynchronizedClock = new SynchronizedClock();
     private _isNear : boolean = true;
     private _pendingImpact : BallSnapshot = null;
+    private _client : Client;
     public onUnauthorized?: () => void;
 
 
@@ -482,6 +483,7 @@ export class App {
     }
 
     public dispose() {
+        this._room.leave(false);
         this._scene.dispose();
         this._engine.dispose();
     }
