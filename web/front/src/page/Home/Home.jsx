@@ -40,9 +40,7 @@ export default function Home() {
 
         const resCo = await checkCo();
         if (!resCo.success) {
-            const log = showLog
-            if (log == AUTH.NONE)
-                setShowLog(AUTH.LOGIN);
+            // setShowLog(AUTH.LOGIN);
             sessionStorage.clear();
         } else if (resCo.success && resCo.MPFA === true) {
             setShowLog(AUTH.MPFA);

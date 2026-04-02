@@ -26,19 +26,24 @@ import TermsOfService   from "./Component/PP&ToS/Terme_Security.jsx";
 // ./src/page/all_game
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
+import { AUTH } from "../tool/AuthContext";
 
 
 export default function App() {
-  const [notif, setNotif] = useState(null);
-  const { showLog } = useAuth();
-  const { setShowFriend } = useFriend();
+
+    const { showLog, setShowLog } = useAuth();
+    const [notif, setNotif] = useState(null);
+    const { setShowFriend } = useFriend();
 
     useEffect(() => {
         const init = async () => {
-            console.log("ID" + import.meta.env.VITE_GOOGLE_ID_CLIENT)
+
             const repco = await checkCo();
-            console.log("checko APPPPPPPP " + repco.success);
+
             if (!repco.success){
+                if (showLog === AUTH.NONE){
+                    setShowLog(AUTH.LOGIN)
+                }
                 return;
             }
             if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")
