@@ -11,7 +11,7 @@ import "../PopUp.scss";
 
 /* Components */
 import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-
+import { useGoogleLogin } from '@react-oauth/google';
 import useFetch from "HOOKS/useFetch.jsx";
 import { use } from "react";
 import { web } from "webpack";
@@ -93,6 +93,31 @@ export default function Login() {
     const miss_pass_mode = () => {
 
     };
+    
+    const handle_google = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try{
+                const api_url = "/api/oauth2/google";
+                console.log(`${api_url}`)
+
+                const repjson = await useFetch(`${api_url}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_token: tokenResponse.access_token, frontendUrl: window.location.origin })
+                });
+                if (!repjson){
+                    showAlert("Impossible de se connecter pour le moment", "danger");
+                    return;
+                }
+                setShowLog(AUTH.NONE);
+                SocketM.sendd('friend', {type: 'co_first'});
+            }catch(err){
+                console.log("error front handle_google " + err);
+            }
+
+        },
+        onError: () => console.log('Erreur'),
+    });
 
     return (
         <>
@@ -138,6 +163,7 @@ export default function Login() {
                                 onClick={handle_git}>
                                 <FaGithub/> GitHub
                         </button>
+                        <button onClick={() => handle_google()}>Se connecter avec Google</button>
 
                         <button type={`button`} className={``} target="_blank"
                                 onClick={miss_pass_mode}>

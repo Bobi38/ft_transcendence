@@ -33,7 +33,9 @@ export default function App() {
 
     useEffect(() => {
         const init = async () => {
+            console.log("ID" + import.meta.env.VITE_GOOGLE_ID_CLIENT)
             const repco = await checkCo();
+            console.log("checko APPPPPPPP " + repco.success);
             if (!repco.success){
                 return;
             }

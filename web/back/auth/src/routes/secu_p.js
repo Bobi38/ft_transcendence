@@ -111,4 +111,33 @@ router.post('/maila2f_check_code' , async (req, res) => {
   }
 })
 
+router.post('/maila2f_check_code' , async (req, res) => {
+  try{
+    console.log("API /maila2f_check_code called")
+    const {code, host} = req.body;
+    if (!code || !host) {
+      return res.status(400).json({ success: false, message: 'Missing fields' });
+    }
+    console.log("API /maila2f_check_code je suis dans verif")
+    console.log(code);
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id }, include: {model: PswEmail, as: 'code' , where :{type: 2}} });
+    console.log(result.code[0].Code)
+    const limit = new Date(result.code[0].DateCreate.getTime() + 60 * 1000);
+    const isValid = await bcrypt.compare(code, result.code[0].Code);
+    console.log(limit);
+    if (code && isValid == true && (new Date() < limit)){
+      const co = result.code[0];
+      await co.destroy();
+      await result.update({co: true,Hostlastco: host, Datelastco: new Date()});
+      return res.status(201).json({success: true, message:"good"});
+    }
+    else
+      return res.status(400).json({success: true, message:"wrong code"})
+  }catch(err){
+    return res.status(500).json({success: false, message: "back check_code" + err});
+  }
+})
+
 export default router;
