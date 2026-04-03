@@ -47,10 +47,9 @@ async function fullmess(mess, Conv){
 }
 
 async function CreatPrivMess(){
-    const toto = await User.findOne({where :{name: 'toto'}})
-    const tata = await User.findOne({where :{name: 'tata'}})
-    const titi = await User.findOne({where :{name: 'titi'}})
-    console.log("id  : " , toto.id,tata.id,titi.id);
+    const toto = await User.findOne({where :{name: 'tr1'}})
+    const tata = await User.findOne({where :{name: 'tr3'}})
+    const titi = await User.findOne({where :{name: 'tr2'}})
     const Conv1 = await PrivChat.create({id1: toto.id, id2:tata.id});
     const Conv2 = await PrivChat.create({id1: titi.id, id2:tata.id});
     const Conv3 = await PrivChat.create({id1: toto.id, id2:titi.id});
