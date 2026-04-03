@@ -20,7 +20,7 @@ export default function MailA2F() {
 
 
     async function maila2f_send_code() {
-        const url = `/api/secu/repjson`;
+        const url = `/api/secu/send_mail`;
 
         console.log(`${url}`)
 

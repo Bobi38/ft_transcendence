@@ -4,17 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 /* back */
 import checkCo from "TOOL/fonction_usefull.js"
-import {showAlert} from "TOOL/fonction_usefull.js"
 
 /* Css */
-import "./Pong3D.scss";
+import "./Pong3DIa.scss";
 
 /* Components */
-import { App as GameApp } from "FRONT/game/app.ts";
+import { App as GameApp } from "FRONT/gameVsIa/app.ts";
 import Button from "FRONT/Component/Button/Button.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
-export default function Pong3D() {
+export default function Pong3DIa() {
 
 
     const navigate = useNavigate();
@@ -24,6 +23,7 @@ export default function Pong3D() {
     useEffect(() => {
         if (canvasRef.current == null)
             return ;
+
         let gameApp = null;
 
         const init = async () => {
@@ -35,21 +35,19 @@ export default function Pong3D() {
 
             if (canvasRef.current) {
                 gameApp = new GameApp(canvasRef.current);
-                gameApp.onUnauthorized = () => showAlert("Tu as deja une page ouverte sur Pong3D", "danger");
             }
         };
 
         init();
 
         return () => {
-            console.log("testsaasdawd");
             gameApp?.dispose?.();
         };
     }, [canvasRef]);
 
     return (
-        <main className={`Pong3D-root`}>
-			<a href="/" className="button">Home</a>
+        <main className={`Pong3DIa-root`}>
+			<a href="/" className="button">Huome</a>
             <canvas ref={canvasRef} />
         </main>
     )
