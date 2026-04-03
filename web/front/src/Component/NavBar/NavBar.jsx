@@ -11,6 +11,7 @@ export default function NavBar() {
 
     const { showLog, setShowLog } = useAuth();
 
+	const state = showLog;
 	function logout() {
 	   console.log("logout(1) called")
 	   fetch('/api/auth/logout', {
@@ -46,7 +47,11 @@ export default function NavBar() {
 		<nav className={`Navbar-root`}>
 
 			<Button path={`/`}> Home </Button>
-
+			{showLog === AUTH.NONE &&(
+				<a href="/privacy" target="_blank" rel="noopener noreferrer">
+                Politique de confidentialité
+				</a>
+			)}
 			<div className={`Navbar-center`}>
 				<p>{time}</p>
 
@@ -56,7 +61,11 @@ export default function NavBar() {
 				</button>
 				
 			</div>
-
+			{state === AUTH.NONE && (
+				<a href="/terms" target="_blank" rel="noopener noreferrer">
+                Conditions d'utilisation
+				</a>
+			)}
 			<Button path={`/Profile`}>Profile</Button>
 		</nav>
     );

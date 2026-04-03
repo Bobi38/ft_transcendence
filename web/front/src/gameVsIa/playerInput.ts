@@ -135,5 +135,5 @@ export class PlayerInput {
 
     public getNewRacketRot() : Quaternion {
         return this._newRacketRot.clone();
-    } 
+    }
 }

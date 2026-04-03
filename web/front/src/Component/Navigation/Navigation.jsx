@@ -17,23 +17,18 @@ export default function Navigation({ children }) {
 
     const navigate = useNavigate();
     const {pathname} = useLocation();
+    const { showLog, setShowLog } = useAuth();
 
     const connection_check = async () => {
         const res = await checkCo();
         if (!res.success && pathname !== '/'){
             navigate('/');
-            // setShowLog(AUTH.LOGIN)
         }
     };
-
+    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
     useEffect(() => {
         connection_check();
     }, []);
-
-
-    const { showLog, setShowLog } = useAuth();
-
-    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
 
 
     return (
@@ -41,7 +36,7 @@ export default function Navigation({ children }) {
 
             <div className={`${is_popup}`} >
                 <div className={`${is_popup} Navigation-PopUp`} >
-                    {showLog !== AUTH.NONE && <PopUp setShowLog={setShowLog} showLog={showLog}/>}
+                    {showLog !== AUTH.NONE && <PopUp/>}
                 </div>
             </div>
 

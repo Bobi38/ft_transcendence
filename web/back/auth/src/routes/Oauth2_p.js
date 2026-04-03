@@ -62,15 +62,16 @@ router.get('/github/callback', async (req, res) => {
   }
   let token = "";
   if (result.length === 0) {
-    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
+    const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
     console.log("New user created:", newUser);
     token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: newUser.id});
   }
   else {
-    await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
-    //const MPFA = tcheck_MPFA(result[0], frontendUrl);
-    // await result[0].update({MPFA: MPFA});
+    const MPFA = tcheck_MPFA(result[0], frontendUrl);
+    await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
+    
+    await result[0].update({MPFA: MPFA});
     console.log("Existing user logged in:", result[0].name);
     token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
     const re = await Co.create({token: token, userId: result[0].id});
@@ -79,5 +80,43 @@ router.get('/github/callback', async (req, res) => {
   console.log("front " + frontendUrl)
   res.redirect(frontendUrl);
 });
+
+
+router.post('/google', async (req, res) => {
+  console.log("dans google")
+  const { access_token, frontendUrl } = req.body;
+   try {
+    console.log("1 google")
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    console.log("2 google")
+    const { sub, name, email, picture } = await response.json();
+    const result = await User.findAll({ where: { mail: email } });
+    const nam = await User.findAll({where :{name: name}})
+    if (nam.length != 0){
+    let prefix = genRanHex(6);
+    name = name + prefix
+    }
+    let token = "";
+    if (result.length === 0) {
+      const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
+      token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
+      const re = await Co.create({token: token, userId: newUser.id});
+    }
+    else {
+      await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
+      //const MPFA = tcheck_MPFA(result[0], frontendUrl);
+      // await result[0].update({MPFA: MPFA});
+      token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
+      const re = await Co.create({token: token, userId: result[0].id});
+    }
+    res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+    return res.status(201).json({ success: true});
+  } catch (err) {
+    res.status(401).json({ success: false, message: "error back google " + err });
+  }
+})
 
 export default router;

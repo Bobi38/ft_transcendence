@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
+  "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
@@ -15,6 +15,7 @@
     "@babylonjs/havok": "^1.3.11",
     "@babylonjs/inspector": "^8.53.0",
     "@colyseus/sdk": "^0.17.34",
+    "@react-oauth/google": "^0.13.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
