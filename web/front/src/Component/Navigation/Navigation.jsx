@@ -23,17 +23,12 @@ export default function Navigation({ children }) {
         const res = await checkCo();
         if (!res.success && pathname !== '/'){
             navigate('/');
-            // setShowLog(AUTH.LOGIN)
         }
     };
-
+    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
     useEffect(() => {
         connection_check();
     }, []);
-
-
-
-    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
 
 
     return (

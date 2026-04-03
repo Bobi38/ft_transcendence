@@ -30,7 +30,6 @@ export default function Home() {
 
     const { showLog, setShowLog } = useAuth();
 
-    const is_popup = showLog === AUTH.NONE ? "hidden" : "visible";
     const showLogRef = useRef(showLog);
 
     useEffect(() => {
@@ -55,7 +54,7 @@ export default function Home() {
             return ;
         } else if (!resCo.success && resCo.MPFA === true) {
             console.log("in MPFA");
-            if (sho !== AUTH.MPFA) setShowLog(AUTH.MPFA);
+            if (sho !== AUTH.MAILA2F) setShowLog(AUTH.MAILA2F);
             sessionStorage.clear();
             return ;
         } else{
