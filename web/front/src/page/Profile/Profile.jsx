@@ -10,6 +10,7 @@ import SocketM from "TOOL/SocketManag.js";
 import "./Profile.scss";
 
 /* Components */
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Profile() {
@@ -17,6 +18,7 @@ export default function Profile() {
     const [showFormPassword, setShowFormPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isReadOnly, setIsReadOnly] = useState(true);
+    const { showLog, setShowLog } = useAuth();
 
     const [user, setUser] = useState({
         login: "",
@@ -225,6 +227,18 @@ export default function Profile() {
 
                 </div>
             </div>
+			{showLog === AUTH.NONE && (
+				<div className={`Navbar-policy`}>
+					<a href="/privacy" target="_blank" rel="noopener noreferrer">
+					Politique de confidentialité
+					</a>
+
+					<a href="/terms" target="_blank" rel="noopener noreferrer">
+					Conditions d'utilisation
+					</a>
+				</div>
+			)}
+
 
         </section>
     )

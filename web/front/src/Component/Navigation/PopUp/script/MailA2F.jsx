@@ -28,7 +28,7 @@ export default function MailA2F() {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-        });
+        }, null, null, true);
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;
@@ -57,7 +57,7 @@ export default function MailA2F() {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(data),
-        })
+        }, null, null, true);
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;

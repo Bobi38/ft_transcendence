@@ -27,7 +27,6 @@ import TermsOfService   from "./Component/PP&ToS/Terme_Security.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import Pong3DIa         from    "FRONT/page/all_game/Pong3DIa/Pong3DIa.jsx";
 import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
-import { AUTH } from "../tool/AuthContext";
 
 
 export default function App() {
@@ -36,7 +35,6 @@ export default function App() {
     const [notif, setNotif] = useState(null);
     const { setShowFriend } = useFriend();
 
-    console.log("mon env : ", import.meta.env.VITE_GOOGLE_ID_CLIENT)
     useEffect(() => {
         const init = async () => {
 

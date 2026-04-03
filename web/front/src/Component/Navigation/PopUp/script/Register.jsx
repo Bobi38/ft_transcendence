@@ -43,7 +43,7 @@ export default function Register() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
-        });
+        }, null, null, true);
         console.log("register_submit:", repjson);
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
@@ -55,8 +55,8 @@ export default function Register() {
     }
 
     function login_mode() {
-        // console.log("login_mode(1) Passage en mode connection: ", AUTH.REGISTER);
-        setShowLog(AUTH.LOGIN)
+        sessionStorage.clear();
+        setShowLog(AUTH.LOGIN);
     }
 
 
