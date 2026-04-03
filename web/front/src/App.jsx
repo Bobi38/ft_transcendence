@@ -35,6 +35,7 @@ export default function App() {
     const [notif, setNotif] = useState(null);
     const { setShowFriend } = useFriend();
 
+    console.log("App.jsx showLog:", import.meta.env.VITE_GOOGLE_ID_CLIENT);
     useEffect(() => {
         const init = async () => {
 
