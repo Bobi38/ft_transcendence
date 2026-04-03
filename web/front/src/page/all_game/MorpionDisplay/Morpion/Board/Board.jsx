@@ -22,11 +22,10 @@ export default function Board({ board , isGame }) {
 
             {isGame && board?.map((element, index) => (
 
-                <button key={index} className={`square`} 
+                <button key={index} className={`square`}
                         onClick={() => handleClick(index)}>
                     {element}
                 </button>
-                
             ))}
 
             {!isGame && board?.map((element, index) => (
@@ -36,7 +35,6 @@ export default function Board({ board , isGame }) {
                 </button>
 
             ))}
-
         </div>
     );
 }

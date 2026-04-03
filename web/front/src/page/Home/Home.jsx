@@ -17,13 +17,13 @@ import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 
 const cards_content = [
 	{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
-	{ text:"Private Message", path: "/PrivateMessage" },
+	{ text:"Friends", path: "/PrivateMessage" },
 	{ text:"Morpion", path: "/Morpion" },
 	{ text:"Pong3D", path: "/Pong3D" },
 	{ text:"Pond2D", path: "/Pond2D" },
-	{ text:"Contact Us", path: "/ContactUs" },
+	{ text:"Spec.", path: "/SpecMorpion" },
 	{ text:"Stats", path: "/Stats" },
-	{ text:"Nothing", path: "/Nothing" },
+	{ text:"Contact Us", path: "/ContactUs" },
 ]
 
 export default function Home() {
@@ -91,7 +91,6 @@ export default function Home() {
 				</div>
                 <HomeChat/>
 			</div>
-            
 		</div>
 	)
 }

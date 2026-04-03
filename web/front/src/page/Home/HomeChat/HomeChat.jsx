@@ -35,7 +35,6 @@ export default function HomeChat() {
 
     async function add_message_global(time){
         if (!time) return
-        
 
         const url = `/api/chatG/add_message_global`;
 
@@ -54,7 +53,7 @@ export default function HomeChat() {
 
     useEffect( () => {
         fetch_global_message()
-		
+
         const init = async () => {
             const handle_global_message = (data) => {
                 if (data.type === "auth_good") return
@@ -95,7 +94,7 @@ export default function HomeChat() {
         SocketM.sendd('chat', data);
         setInput("");
     };
-    
+
     return (
 		<section className={`HomeChat-root`}>
 
@@ -131,7 +130,7 @@ export default function HomeChat() {
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
 					/>
-				<button type="submit">Send</button>
+				<button type="submit" className="send-btn">Send</button>
 			</form>
 		</section>
     )

@@ -10,79 +10,21 @@ import './Morpion.scss';
 /* Components */
 import Board from "./Board/Board.jsx";
 
-function RebootTruc() {
-    function sendType(s_type){
-        SocketM.sendd('morp',{
-                type: s_type,
-            })   
-    }
-
-    return (
-        <button 
-            onClick={() =>{sendType("bot")}}
-            onContextMenu={(e) => {
-                e.preventDefault();
-                sendType('reboot');               
-            }}
-            style={{ cursor: 'add bot' }}
-            >
-                add Bot
-        </button>
-    );
-
-}
-
-function GoOut(){
-    function sendType(s_type){
-        SocketM.sendd('morp',{
-                type: s_type,
-            })   
-    }
-
-    return (
-        <button 
-            onClick={() =>{sendType("leave")}}
-            onContextMenu={(e) => {
-                e.preventDefault();
-                sendType('bot');               
-            }}
-            style={{ cursor: 'add bot' }}
-            >
-                je veux partir
-        </button>
-    );
-}
-
-function SelectSecondPlayer(){
-    return (
-        <button onClick={() => {
-            SocketM.sendd('morp',{
-                type: "second",
-            })
-        }}>
-            second / first
-        </button>
-    ); 
-}
-
-function NouvellePartie({ setBoard }){
+function NewPartie() {
     function sendMessage(s_message){
         SocketM.sendd('morp',{
                 type: "play",
                 message: s_message,
-            })   
+            })
     }
     return (
-        <button
-            onClick={() => {
-            setBoard(Array(9).fill(""));
-            sendMessage("player");            
-        }}
+        <button className="send-btn"
+            onClick={() => { sendMessage("player"); }}
             onContextMenu={(e) => {
-                e.preventDefault();
-                sendMessage('bot');               
-            }}
-            style={{ cursor: 'add bot' }}>
+				e.preventDefault();
+				sendMessage('bot');
+			}}
+			>
             Search Game
         </button>
     );
@@ -90,17 +32,15 @@ function NouvellePartie({ setBoard }){
 
 export default function Morpion() {
 
-    const [msg, setMsg] = useState("Royal Morpion(the ultim morpion)");
-    const [board, setBoard] = useState(null);
+    const [msg, setMsg] = useState("Welcome");
+    const [board, setBoard] = useState(Array(9).fill(""));
     const [wait, setWait] = useState(0);
 
       useEffect(() => {
 
         console.log("Morpion component called");
 
-        const handleTest = (data) => {
-         
-            console.log("Morpion component handleTest data:", data)
+        const handleSocket = (data) => {
             if (data?.message){
                 setMsg(data.message);
             }
@@ -109,7 +49,7 @@ export default function Morpion() {
             }
         };
 
-        SocketM.on("morp",handleTest, "un");
+        SocketM.on("morp",handleSocket, "un");
 
         return () => {
             SocketM.off("morp", "un");
@@ -129,27 +69,74 @@ export default function Morpion() {
     return (
         <div className={`Morpion-root`}>
 
-            <div className={`info`}>
-
-                {/* <RebootTruc/>
-
-                <GoOut/>
-
-                <SelectSecondPlayer/> */}
-
-                <div className="status">
-                    {msg === "search" ?
-                        <>searching player<span className={`wait`}>{".".repeat(wait)}</span></>
-                        : msg
-                    }
-                </div>
-
+			<div className="status">
+				{msg === "search" ?
+					<p>searching player{".".repeat(wait)}</p>
+					:
+					<p>{msg}</p>
+				}
             </div>
 
             <Board board={board} isGame={true}/>
 
-            <NouvellePartie setBoard={setBoard}/>
+            <NewPartie/>
 
         </div>
     );
 }
+
+
+//function RebootTruc() {
+//    function sendType(s_type){
+//        SocketM.sendd('morp',{
+//                type: s_type,
+//            })
+//    }
+
+//    return (
+//        <button
+//            onClick={() =>{sendType("bot")}}
+//            onContextMenu={(e) => {
+//                e.preventDefault();
+//                sendType('reboot');
+//            }}
+//            style={{ cursor: 'add bot' }}
+//            >
+//                add Bot
+//        </button>
+//    );
+
+//}
+
+//function GoOut(){
+//    function sendType(s_type){
+//        SocketM.sendd('morp',{
+//                type: s_type,
+//            })
+//    }
+
+//    return (
+//        <button
+//            onClick={() =>{sendType("leave")}}
+//            onContextMenu={(e) => {
+//                e.preventDefault();
+//                sendType('bot');
+//            }}
+//            style={{ cursor: 'add bot' }}
+//            >
+//                je veux partir
+//        </button>
+//    );
+//}
+
+//function SelectSecondPlayer(){
+//    return (
+//        <button onClick={() => {
+//            SocketM.sendd('morp',{
+//                type: "second",
+//            })
+//        }}>
+//            second / first
+//        </button>
+//    );
+//}

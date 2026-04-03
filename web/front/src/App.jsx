@@ -115,7 +115,8 @@ export default function App() {
                     <Route path={`/PrivateMessage`} element={<Navigation> <PrivateMessage/> </Navigation>}/>
                     <Route path={`/Profile`}        element={<Navigation> <Profile/>        </Navigation>}/>
                     <Route path={`/Stats`}          element={<Navigation> <Stats/>          </Navigation>}/>
-                    <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay/> </Navigation>}/>
+                    <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay isGame={true}/> </Navigation>}/>
+                    <Route path={`/SpecMorpion`}    element={<Navigation> <MorpionDisplay isGame={false}/> </Navigation>}/>
                     <Route path={`/Pong3D`}         element={<Pong3D/>}/>
 
                     {/* bad path */}
