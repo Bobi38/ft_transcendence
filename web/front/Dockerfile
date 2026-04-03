@@ -14,10 +14,13 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ARG VITE_GOOGLE_ID_CLIENT
+ENV VITE_GOOGLE_ID_CLIENT=$VITE_GOOGLE_ID_CLIENT
 RUN npm run build
 
 
 FROM nginx:alpine AS prod
+
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY prod/nginx.conf /etc/nginx/conf.d/default.conf
