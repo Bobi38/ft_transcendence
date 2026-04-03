@@ -66,9 +66,9 @@ class SocketManag{
         this.socket[name].onmessage = (event) => {
             if (!event.data) {return;}
             const dataa = JSON.parse(event.data);
-            console.log("Message reçu via WebSocket[" + name + "]:", dataa.type, dataa.mess);
+            // console.log("Message reçu via WebSocket[" + name + "]:", dataa.type, dataa.mess);
             // if (dataa.type === 'message') {
-                console.log("Message reçu de type message via WebSocket[" + name + "]:", dataa.mess);
+                // console.log("Message reçu de type message via WebSocket[" + name + "]:", dataa.mess);
                 this.listeners[name].forEach(cb => cb(dataa));
             // }
             if (dataa.type === 'ping'){
@@ -113,7 +113,7 @@ class SocketManag{
     }
 
     sendd (name, data){
-        console.log("sendd called with data:", data);
+        // console.log("sendd called with data:", data);
         const socket = this.socket[name];
         if (!socket){
             if (name === "friend" && data.type === "co_first"){
@@ -124,14 +124,14 @@ class SocketManag{
             console.log("pas de socket pour " + name);
             return ;
         }
-        console.log("coucou je suis dans sendd" + " " + socket.readyState);
+        // console.log("coucou je suis dans sendd" + " " + socket.readyState);
 
         if (socket.readyState !== WebSocket.OPEN) {
             console.log("proble de socket :envoie impossible");
             this.queue[name].push(data);
             return;
         }
-        console.log("envoi du message via WebSocket:", data, " to socket:", name);
+        // console.log("envoi du message via WebSocket:", data, " to socket:", name);
         socket.send(JSON.stringify(data));
     }
     

@@ -1,4 +1,5 @@
 /* extern */
+import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
 /* back */
@@ -16,6 +17,9 @@ import useFetch from "HOOKS/useFetch.jsx";
 export default function Register() {
 
     const {setShowLog, showLog} = useAuth();
+    const [showPrivacy, setShowPrivacy] = useState(false);
+
+
 
     async function register_submit(e){
 
@@ -39,7 +43,7 @@ export default function Register() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
-        });
+        }, null, null, true);
         console.log("register_submit:", repjson);
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
@@ -51,8 +55,8 @@ export default function Register() {
     }
 
     function login_mode() {
-        // console.log("login_mode(1) Passage en mode connection: ", AUTH.REGISTER);
-        setShowLog(AUTH.LOGIN)
+        sessionStorage.clear();
+        setShowLog(AUTH.LOGIN);
     }
 
 
@@ -60,7 +64,7 @@ export default function Register() {
         <>
             <div className={`script-in-root`}>
 
-                <h4>Register</h4>
+                <h1>Register</h1>
                 
                 <form id={`register`} className={``} onSubmit={register_submit}>
 
@@ -73,6 +77,20 @@ export default function Register() {
 
                     <label htmlFor={`password`}>Password</label>
                     <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
+
+                    <div style={{ marginTop: "10px" }}>
+                        <input type="checkbox" id="legal" name="legal" required />
+                        <label htmlFor="legal" style={{ marginLeft: "5px" }}>
+                        J'accepte les{" "}
+                        <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
+                        Conditions d'utilisation
+                        </a>{" "}
+                        et la{" "}
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
+                        Politique de confidentialité
+                        </a>
+                        </label>
+                    </div>
 
                     <div className={`button-container`}>
 

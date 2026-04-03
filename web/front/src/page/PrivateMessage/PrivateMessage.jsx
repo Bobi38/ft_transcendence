@@ -79,7 +79,7 @@ export default function PrivateMessage() {
                 fetch_private_message(goToConv);
                 return;
             }
-            if (data.login === goToConv || data.monMsg == true)
+            if (data.type == 'priv_mess' && (data.login === goToConv || data.monMsg == true))
                 setDisplayedMessages(prev => [...prev, data]);
             fetch_go_to_conv_private();
         }

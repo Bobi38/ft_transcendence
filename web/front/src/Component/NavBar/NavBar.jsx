@@ -11,6 +11,7 @@ export default function NavBar() {
 
     const { showLog, setShowLog } = useAuth();
 
+	const state = showLog;
 	function logout() {
 	   console.log("logout(1) called")
 	   fetch('/api/auth/logout', {
@@ -44,9 +45,8 @@ export default function NavBar() {
 
     return (
 		<nav className={`Navbar-root`}>
-
+			
 			<Button path={`/`}> Home </Button>
-
 			<div className={`Navbar-center`}>
 				<p>{time}</p>
 
@@ -56,8 +56,8 @@ export default function NavBar() {
 				</button>
 				
 			</div>
-
 			<Button path={`/Profile`}>Profile</Button>
+
 		</nav>
     );
 }

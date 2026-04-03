@@ -16,6 +16,11 @@ export class Ball {
         this._velocity = velocity;
     }
 
+    public dispose() {
+        this._node.dispose();
+        this._node = null;
+    }
+
     public setVelocity(velocity : Vector3) {
         this._velocity = velocity.clone();
     }
@@ -25,7 +30,6 @@ export class Ball {
     }
 
     public getPhysicsBodyPosition() : Vector3 {
-        // this._app.getEngine().getPosi
         return this._node.position.clone();
     }
 

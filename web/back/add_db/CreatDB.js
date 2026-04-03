@@ -25,14 +25,13 @@ import { CreatGameMorp } from './morpion/seedmorp.js';
 async function CreatUser() {
 
     const CrypPass = await bcrypt.hash('tt', 10);
-    const CrypPassNi = await bcrypt.hash('12', 10);
-    const toto = await User.create({name: 'toto', password: CrypPass, mail: 'toto@test.c', co: false});
-    const titi = await User.create({name: 'titi', password: CrypPass, mail: 'titi@test.c', co: false});
-    const tata = await User.create({name: 'tata', password: CrypPass, mail: 'tata@test.c', co: false});
-    const tutu = await User.create({name: 'tutu', password: CrypPass, mail: 'tutu@test.c', co: false});
-    const ni = await User.create({name: '⏰ni⏰', password: CrypPassNi, mail: 'ni@g.fr', co: false});
-    const no = await User.create({name: 'nona', password: CrypPass, mail: 'nono@test.c', co: false});
-    const na = await User.create({name: 'nana', password: CrypPass, mail: 'nana@test.c', co: false});
+    const toto = await User.create({name: 'tr1', password: CrypPass, mail: 'tr1@yopmail.com', co: false});
+    const titi = await User.create({name: 'tr2', password: CrypPass, mail: 'tr2@yopmail.com', co: false});
+    const tata = await User.create({name: 'tr3', password: CrypPass, mail: 'tr3@yopmail.com', co: false});
+    const tutu = await User.create({name: 'tr4', password: CrypPass, mail: 'tr4@yopmail.com', co: false});
+    const ni = await User.create({name: 'tr5', password: CrypPass, mail: 'tr5@yopmail.com', co: false});
+    const no = await User.create({name: 'tr6', password: CrypPass, mail: 'tr6@yopmail.com', co: false});
+    const na = await User.create({name: 'tr7', password: CrypPass, mail: 'tr7@yopmail.com', co: false});
 }
 
 async function fullmess(mess, Conv){
@@ -48,10 +47,9 @@ async function fullmess(mess, Conv){
 }
 
 async function CreatPrivMess(){
-    const toto = await User.findOne({where :{name: 'toto'}})
-    const tata = await User.findOne({where :{name: 'tata'}})
-    const titi = await User.findOne({where :{name: 'titi'}})
-    console.log("id  : " , toto.id,tata.id,titi.id);
+    const toto = await User.findOne({where :{name: 'tr1'}})
+    const tata = await User.findOne({where :{name: 'tr3'}})
+    const titi = await User.findOne({where :{name: 'tr2'}})
     const Conv1 = await PrivChat.create({id1: toto.id, id2:tata.id});
     const Conv2 = await PrivChat.create({id1: titi.id, id2:tata.id});
     const Conv3 = await PrivChat.create({id1: toto.id, id2:titi.id});

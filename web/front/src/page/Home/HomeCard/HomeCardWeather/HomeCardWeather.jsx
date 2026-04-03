@@ -1,6 +1,8 @@
 /* extern */
 import { useEffect, useState } from "react";
 
+import { useAuth, AUTH } from "TOOL/AuthContext.jsx"
+
 /* back */
 
 /* Css */
@@ -9,6 +11,8 @@ import "./HomeCardWeather.scss";
 /* Components */
 
 export default function HomeCardWeather() {
+
+	  const { showLog } = useAuth();
 
 	const [weather, setWeather] = useState({
 		icon: null,
@@ -20,6 +24,9 @@ export default function HomeCardWeather() {
 		
 		async function fetchWeather() {
 			try {
+				const current = showLog;
+				if (current != AUTH.NONE)
+					return ;
 				console.log("fetchWeather(1) called");
 				const response = await fetch("/api/profile/Homeweather", {
 					method: "GET",
@@ -41,7 +48,7 @@ export default function HomeCardWeather() {
 		}
 
 		fetchWeather();
-	}, []);
+	}, [showLog]);
 	
 	const [activeWeather, setActiveWeather] = useState({"": ""})
 	

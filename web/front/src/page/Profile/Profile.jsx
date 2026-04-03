@@ -10,11 +10,13 @@ import SocketM from "TOOL/SocketManag.js";
 import "./Profile.scss";
 
 /* Components */
+import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Profile() {
 
     const [showPassword, setShowPassword] = useState(false);
+    const { showLog, setShowLog } = useAuth();
 
     const [user, setUser] = useState({ login: "", tel: "", });
 
@@ -72,8 +74,14 @@ export default function Profile() {
             credentials: "include",
             body: JSON.stringify(user)
         });
+        console.log(repjson.status + " " + repjson.success)
+        if (repjson && !repjson.success && repjson.status < 500 && repjson.status >= 400){
+            showAlert(repjson.message, "danger");
+            return;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
+
         sessionStorage.setItem('username', repjson.username);
         console.log("oldname: ", repjson.oldname, " newname: ", repjson.username);
         if (repjson.oldname !== repjson.username) {
@@ -188,7 +196,17 @@ export default function Profile() {
 
                 </div>
             </div>
+			{showLog === AUTH.NONE && (
+				<div className={`Navbar-policy`}>
+					<a href="/privacy" target="_blank" rel="noopener noreferrer">
+					Politique de confidentialité
+					</a>
 
+					<a href="/terms" target="_blank" rel="noopener noreferrer">
+					Conditions d'utilisation
+					</a>
+				</div>
+			)}
         </section>
     )
 }

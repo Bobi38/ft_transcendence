@@ -54,39 +54,13 @@ export class Ball {
         const ballNode = new TransformNode("ballNode", this._scene);
         ballNode.position = position;
         this._node = ballNode;
-        // const ballShape = new PhysicsShapeSphere(Vector3.Zero(), 0.5, this._scene);
-        // const ball = new PhysicsBody(ballNode, PhysicsMotionType.DYNAMIC, false, this._scene);
-        // ball.shape = ballShape;
-        // const material = {friction: 0, restitution: 1};
-        // ballShape.material = material;
-        // ball.setMassProperties({mass: 1});
-        // ball.setLinearDamping(0);
-        // ball.setAngularDamping(0);
         this._mesh.parent = ballNode;
-        // this._body = ball;
-        // this._body.disablePreStep = false;
         this._mesh.position = Vector3.Zero();
         this._velocity = velocity;
-        //this._body.setLinearVelocity(velocity);
-
-        // this._physicsObserver = scene.onBeforePhysicsObservable.add(() => {
-        //     const ballVelocity = this._body.getLinearVelocity();
-        //     const ballSpeed = ballVelocity.length();
-        //     const smoothingFactor = 0.95;
-        //     if (ballSpeed > this._maxSpeed) {
-        //         const target = ballSpeed / this._maxSpeed;
-        //         const scale = Scalar.Lerp(1, target, 1 - smoothingFactor);
-        //         ballVelocity.scaleInPlace(scale);
-        //         this._body.setLinearVelocity(ballVelocity);
-        //     }
-        // });
-        // const physicsViewer = new PhysicsViewer(this._scene);
-        // physicsViewer.showBody(ball);
     }
 
     public correctPosAndVel() {
         if (!this.serverPatch) return ;
-        //console.log(this.recentImpact, this.ignoreServerUntil);
         if (this.recentImpact || this._clock.tick < this.ignoreServerUntil || (this.ignoreServerAfter != null && this._clock.tick >= this.ignoreServerAfter)) {
             this.serverPatch = null;
             return;
@@ -133,7 +107,6 @@ export class Ball {
         const preRollbackPos = this.getPhysicsBodyPosition();
         this.setPhysicsBodyPosition(this.serverPatch.position);
         this.setVelocity(this.serverPatch.velocity);
-        //console.log("patch vel:", this.serverPatch.velocity, "setVel:", this.getVelocity());
         this.snapshots.clearAfterTickIncluded(patchTick);
         this.snapshots.saveSnapshot(patchTick, this.serverPatch.position, this.serverPatch.velocity);
         this.isResimming = true;
@@ -170,22 +143,8 @@ export class Ball {
         this.visualOffset.scaleInPlace(correctionFactor);
     }
 
-    // public setupSmoothing() {
-    //     this._scene.onBeforeRenderObservable.add(() => {
-    //         if (this.visualOffset.lengthSquared() < 0.0001) return;
-    //         const dt = this._app.getEngine().getDeltaTime() / 1000; 
-    //         const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
-    //         const correctionFactor = Math.exp(-smoothingSpeed * dt);
-    //         this.setMeshPosition(this.visualOffset);
-    //         this.visualOffset.scaleInPlace(correctionFactor);
-    //     });
-    // }
-
-
-
     public setVelocity(velocity : Vector3) {
         this._velocity = velocity.clone();
-        //this._body.setLinearVelocity(velocity);
     }
 
     // public setAngularVelocity(velocity : Vector3) {
@@ -205,33 +164,22 @@ export class Ball {
     }
 
     public getPhysicsBodyPosition() : Vector3 {
-        // this._app.getEngine().getPosi
         return this._node.position.clone();
     }
 
     public getVelocity() : Vector3 {
         return this._velocity.clone();
-        //return this._body.getLinearVelocity();
     }
 
     public dispose() {
         this._shadows[0].removeShadowCaster(this._mesh);
         this._shadows[1].removeShadowCaster(this._mesh);
         this._scene.onBeforePhysicsObservable.remove(this._physicsObserver);
-        //this._body.shape.dispose();
-        //this._body.dispose();
+        this._node.dispose();
+        this._node = null;
         this._mesh.dispose();
         this._physicsObserver = null;
         this._mesh = null;
-        //this._body = null;
         this._scene = null;
     }
-
-    // public addToBodies(bodies: PhysicsBody[]) {
-    //     bodies.push(this._body);
-    // }
-
-    // public forceBodyUpdateFromPhysicsEngine() {
-    //     this._body.transformNode.computeWorldMatrix(true);
-    // }
 }

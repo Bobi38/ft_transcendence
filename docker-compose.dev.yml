@@ -9,7 +9,7 @@ services:
     networks:
       - home
     env_file: 
-      - .env
+      - .env_dev
     secrets:
       - data_pswd
     healthcheck:
@@ -26,7 +26,7 @@ services:
     ports:
       - "8081:80"
     env_file: 
-      - .env
+      - .env_dev
     networks:
       - home
     restart: always
@@ -37,7 +37,7 @@ services:
       context: ./web/back
       dockerfile: init_db/Dockerfile
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -54,7 +54,7 @@ services:
       context: ./web/back
       dockerfile: add_db/Dockerfile
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -78,6 +78,8 @@ services:
         condition: service_healthy
     networks:
       - home
+    env_file: 
+      - .env_dev
     ports:
       - "5173:5173"
     volumes:
@@ -93,7 +95,7 @@ services:
       target: dev
     container_name: gateway
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -117,7 +119,7 @@ services:
       target : dev
     container_name: auth
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -141,7 +143,7 @@ services:
       target: dev
     container_name: chatp_service
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -165,7 +167,7 @@ services:
       target: dev
     container_name: chatg_service
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -189,7 +191,7 @@ services:
       target: dev
     container_name: user_service
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -213,7 +215,7 @@ services:
       target: dev
     container_name: pong3d
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -240,7 +242,7 @@ services:
       target: dev
     container_name: morpion
     env_file: 
-      - .env
+      - .env_dev
     depends_on:
       mysql:
         condition: service_healthy
