@@ -99,6 +99,10 @@ export default function Login() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token, frontendUrl: window.location.origin })
                 }, null, null, true);
+                if (repjson && repjson.success == true && repjson.MPFA == true) {
+                    setShowLog(AUTH.MAILA2F);
+                    return;
+                }
                 if (!repjson){
                     showAlert("Impossible de se connecter pour le moment", "danger");
                     return;

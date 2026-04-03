@@ -82,19 +82,43 @@ router.get('/github/callback', async (req, res) => {
 });
 
 
-index-CuLdjldc.js:9 Uncaught 
-_.pd
-message
-: 
-"Missing required parameter client_id."
-stack
-: 
-"Error: Missing required parameter client_id.\n    at new _.pd (https://accounts.google.com/gsi/client:102:28)\n    at _.qd (https://accounts.google.com/gsi/client:90:42)\n    at _.Yf (https://accounts.google.com/gsi/client:129:172)\n    at new Nu (https://accounts.google.com/gsi/client:383:83)\n    at Object.initTokenClient (https://accounts.google.com/gsi/client:388:573)\n    at https://localhost:9443/assets/index-CuLdjldc.js:10:72933\n    at commitHookEffectListMount (https://localhost:9443/assets/index-CuLdjldc.js:9:201783)\n    at commitPassiveMountOnFiber (https://localhost:9443/assets/index-CuLdjldc.js:9:237685)\n    at recursivelyTraversePassiveMountEffects (https://localhost:9443/assets/index-CuLdjldc.js:9:237282)\n    at commitPassiveMountOnFiber (https://localhost:9443/assets/index-CuLdjldc.js:9:240024)"
-type
-: 
-"missing_required_parameter"
-[[Prototype]]
-: 
-Error
+router.post('/google', async (req, res) => {
+  console.log("dans google")
+  const { access_token, frontendUrl } = req.body;
+   try {
+    console.log("1 google")
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    console.log("2 google")
+    const { sub, name, email, picture } = await response.json();
+    const result = await User.findAll({ where: { mail: email } });
+    const nam = await User.findAll({where :{name: name}})
+    if (nam.length != 0){
+    let prefix = genRanHex(6);
+    name = name + prefix
+    }
+    let token = "";
+    let MPFA;
+    if (result.length === 0) {
+      const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
+      token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
+      const re = await Co.create({token: token, userId: newUser.id});
+      MPFA = newUser.MPFA;
+    }
+    else {
+      await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date()});
+      MPFA = tcheck_MPFA(result[0], frontendUrl);
+      await result[0].update({MPFA: MPFA});
+      token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
+      const re = await Co.create({token: token, userId: result[0].id});
+    }
+    res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+    return res.status(201).json({ success: true, MPFA: MPFA, message: "connected"});
+  } catch (err) {
+    res.status(401).json({ success: false, message: "error back google " + err });
+  }
+})
 
 export default router;
