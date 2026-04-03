@@ -15,6 +15,9 @@
 		@include mix.full;
 		display: flex;
 		align-items: center;
+		.Board-root {
+			min-height: 150px;
+		}
 	}
 
 	.MorpionDisplay-content {

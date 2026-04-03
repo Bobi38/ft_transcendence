@@ -12,6 +12,5 @@
     .square {
         @include mix.default_card;
         font-size: 2rem;
-		min-height: 150px;
     }
 }
