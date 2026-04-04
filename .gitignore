@@ -1,6 +1,6 @@
 conf/secrets/*
 secrets
-.env
+.env*
 *rror
 *nico*
 .vite

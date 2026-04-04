@@ -1,4 +1,5 @@
 /* extern */
+import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
 /* back */
@@ -16,6 +17,9 @@ import useFetch from "HOOKS/useFetch.jsx";
 export default function Register() {
 
     const {setShowLog, showLog} = useAuth();
+    const [showPrivacy, setShowPrivacy] = useState(false);
+
+
 
     async function register_submit(e){
 
@@ -39,7 +43,7 @@ export default function Register() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
-        });
+        }, null, null, true);
         console.log("register_submit:", repjson);
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
@@ -51,8 +55,8 @@ export default function Register() {
     }
 
     function login_mode() {
-        // console.log("login_mode(1) Passage en mode connection: ", AUTH.REGISTER);
-        setShowLog(AUTH.LOGIN)
+        sessionStorage.clear();
+        setShowLog(AUTH.LOGIN);
     }
 
 

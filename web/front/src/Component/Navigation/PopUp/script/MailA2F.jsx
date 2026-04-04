@@ -20,7 +20,7 @@ export default function MailA2F() {
 
 
     async function maila2f_send_code() {
-        const url = `/api/secu/repjson`;
+        const url = `/api/secu/send_mail`;
 
         console.log(`${url}`)
 
@@ -28,7 +28,7 @@ export default function MailA2F() {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-        });
+        }, null, null, true);
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;
@@ -57,7 +57,7 @@ export default function MailA2F() {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(data),
-        })
+        }, null, null, true);
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;

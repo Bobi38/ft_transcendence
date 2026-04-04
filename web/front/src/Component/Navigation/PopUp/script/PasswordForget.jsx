@@ -1,8 +1,9 @@
 /* extern */
 import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { FaGithub } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SocketM from "TOOL/SocketManag";
+import {showAlert} from "TOOL/fonction_usefull"
 
 /* back */
 
@@ -17,29 +18,44 @@ export default function PasswordForget() {
 
     const {setShowLog, showLog} = useAuth();
 
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState("");
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState("");
     const [showCodeInput, setShowCodeInput] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
+    const [mail, setmail] = useState("");
+
+    useEffect(() =>{
+        if (sessionStorage.getItem("CodeInput") == "true")
+            setShowCodeInput(true);
+        else if (sessionStorage.getItem("chgPsswrd") == "true")
+            setChangePassword(true);
+        else
+            sessionStorage.setItem("CodeInput", "false");
+        console.log("in use " + sessionStorage.getItem("CodeInput"));
+    }, [])
 
     async function send_code() {
 
         // setShowCodeInput(true);
         // return
+        if (!mail)
+            return;
         const url = `/api/secu/recupPswd`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "GET",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
-            credentials: "include",
-        });
+            body: JSON.stringify({mail: mail}),
+        }, null, null, true);
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;
         }
-        
         setShowCodeInput(true);
+        sessionStorage.setItem("CodeInput", "true");
+
     }
 
 
@@ -52,17 +68,16 @@ export default function PasswordForget() {
             code: formData.get("code"),
             host:  window.location.host
         }
-        const code = formData.get("code");
-
-        const url = `/api/secu/check_code`;
+        setmail("");
+        const url = `/api/secu/recupPswd_check_code`;
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            credentials: "include",
+            credential: "include",
             body: JSON.stringify(data),
-        })
+        }, null, null, true)
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
@@ -71,13 +86,49 @@ export default function PasswordForget() {
             console.log(repjson.message)
             return ;
         }
-        SocketM.sendd('friend', {type: 'co'});
+        setShowCodeInput(false)
         setChangePassword(true)
-        setShowLog(AUTH.LOGIN);
+        sessionStorage.setItem("CodeInput", "false");
+        sessionStorage.setItem("chgPsswrd", "true");
     }
 
-    function login_mode() {
+    async function handle_modify_password() {
+        if (showPassword != showPasswordConfirm){
+            return ;
+        }
+        const url = `/api/secu/majPswd`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({new_psd: showPassword}),
+        }, null, null, true)
+        if (repjson.status < 500 && repjson.status >= 400){
+            showAlert(`${repjson.message}`, "danger");
+            return ;
+        }
+        if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
+            return ;
+        }
+        setShowPassword("");
+        setShowPasswordConfirm("")
+        sessionStorage.clear()
         setShowLog(AUTH.LOGIN)
+    }
+
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/clearcookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
     }
 
     return (
@@ -87,12 +138,16 @@ export default function PasswordForget() {
                 <h1>Password Forget</h1>
 
                 {!showCodeInput && (
-                    <div className={`button-container`}>
+                    <div>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" value={mail} onChange={(e) => setmail(e.target.value)}/>
+                        <div className={`button-container`}>
 
-                        <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
-                            Send mail verification
-                        </button>
-                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                            <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
+                                Send mail verification
+                            </button>
+                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                        </div>
                     </div>
                 )}
 
@@ -100,10 +155,11 @@ export default function PasswordForget() {
 
                     <form id={`forgetPassword`} className={``} onSubmit={check_code}>
 
-                        <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
-
                         <div className={`button-container`}>
+                            <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
                             <button type={`submit`} className={``}>Valider</button>
+                            <label htmlFor="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="you@example.com" value={mail} onChange={(e) => setmail(e.target.value)}/>
                             <button type={`button`} className={``} onClick={send_code}>Send a new mail verification</button>
                             <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
                         </div>
@@ -124,9 +180,10 @@ export default function PasswordForget() {
                                 name="password"
                                 className="password-field"
                                 placeholder="Votre nouveau mot de passe"
+                                value={showPassword}
+                                onChange={(e) => setShowPassword(e.target.value)}
                             />
-                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            <span className="toggle-icon" onClick={() => setShowPassword(showPassword)}>
                             </span>
                         </div>
 
@@ -138,15 +195,15 @@ export default function PasswordForget() {
                                 name="confirmepassword"
                                 className="password-field"
                                 placeholder="Confirmation du nouveau mot de passe"
+                                value={showPasswordConfirm}
+                                onChange={(e) => setShowPasswordConfirm(e.target.value)}
                             />
-                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            <span className="toggle-icon" onClick={() => setShowPasswordConfirm(showPasswordConfirm)}>
                             </span>
                         </div>
 
                         <div className={`button-container`}>
-                            <button type={`submit`} className={``}>Modifier mon mot de passe</button>
-                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                            <button type={`button`} className={``} onClick={handle_modify_password}>Modifier mon mot de passe</button>
                         </div>
                     </form>
                 )}

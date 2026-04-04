@@ -1,14 +1,34 @@
+// import {AUTH, useAuth} from "TOOL/AuthContext.jsx";
+
+
+
 export default async function useFetch(url, type_request, callbacksucces = null, callbackfail = null){
-    console.log("useFetch(1) url:", url);
+    // const tab = {
+    // "/api/auth/login": true,
+    // "/api/auth/register": true,
+    // "/api/oauth2/google": true,
+    // "/api/oauth2/github": true,
+    // "/api/oauth2/github/callback": true,
+    // "/api/secu/recupPswd": true,
+    // "/api/secu/recupPswd_check_code": true,
+    // "/api/secu/majPswd": true,
+    // "/api/secu/clearcookie": true,
+    // }
+
+
+    // if (showLog !== AUTH.NONE && !tab[url])
+    //     return null;
+
     try {
 
         const response = await fetch(url, type_request);
         console.log("useFetch(2) after fetch response:", response);
 
         const repjson = await response.json();
+        repjson.status = response.status
         if (response.status >= 500){
             console.log("useFetch(3) response.status >= 500", repjson.message)
-            return null;
+            return repjson;
         }
         
         repjson.status = response.status

@@ -1,7 +1,7 @@
 export function showAlert(message, type = "danger") {
     const container = document.getElementById("alert-container");
     if (!container) return
-    
+
     container.className = type === "danger" ? "danger" : "success";
     container.textContent = message;
 

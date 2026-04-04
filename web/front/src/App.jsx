@@ -27,7 +27,6 @@ import TermsOfService   from "./Component/PP&ToS/Terme_Security.jsx";
 import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
 import Pong3DIa         from    "FRONT/page/all_game/Pong3DIa/Pong3DIa.jsx";
 import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
-import { AUTH } from "../tool/AuthContext";
 
 
 export default function App() {
@@ -36,15 +35,13 @@ export default function App() {
     const [notif, setNotif] = useState(null);
     const { setShowFriend } = useFriend();
 
+    console.log("App.jsx showLog:", import.meta.env.VITE_GOOGLE_ID_CLIENT);
     useEffect(() => {
         const init = async () => {
 
             const repco = await checkCo();
 
             if (!repco.success){
-                if (showLog === AUTH.NONE){
-                    setShowLog(AUTH.LOGIN)
-                }
                 return;
             }
             if (!SocketM.getState("chat") || SocketM.getState("chat") === "closed")
@@ -125,7 +122,8 @@ export default function App() {
                     <Route path={`/PrivateMessage`} element={<Navigation> <PrivateMessage/> </Navigation>}/>
                     <Route path={`/Profile`}        element={<Navigation> <Profile/>        </Navigation>}/>
                     <Route path={`/Stats`}          element={<Navigation> <Stats/>          </Navigation>}/>
-                    <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay/> </Navigation>}/>
+                    <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay isGame={true}/> </Navigation>}/>
+                    <Route path={`/SpecMorpion`}    element={<Navigation> <MorpionDisplay isGame={false}/> </Navigation>}/>
                     <Route path={`/Pong3D`}         element={<Pong3D/>}/>
                     <Route path={`/Pong3DIa`}       element={<Pong3DIa/>}/>
                     <Route path={`/terms`}          element={<TermsOfService/>}/>

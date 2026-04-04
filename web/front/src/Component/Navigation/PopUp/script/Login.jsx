@@ -44,8 +44,8 @@ export default function Login() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        });
-
+        }, null, null, true);
+        console.log(repjson);
         if (!repjson){
             showAlert("Impossible de se connecter pour le moment", "danger");
             return;
@@ -60,37 +60,26 @@ export default function Login() {
             showAlert(`Erreur : ${repjson.message}`, "danger");
             return ;
         }
-
-
-        // sessionStorage.setItem('type', "success");
-        // sessionStorage.setItem('message', "Connexion réussie");
-        // sessionStorage.setItem('token', repjson.token);
-        // sessionStorage.setItem('username', repjson.username);
-
-        // if (repjson.MPFA) {
-        //     setShowLog(AUTH.MAILA2F);
-        // }
+        if (repjson.MPFA) {
+            setShowLog(AUTH.MAILA2F);
+        }
         
-        // if (!repjson.MPFA) {
-        setShowLog(AUTH.NONE);
-        SocketM.sendd('friend', {type: 'co_first'});
+        if (!repjson.MPFA) {
+            setShowLog(AUTH.NONE);
+            SocketM.sendd('friend', {type: 'co_first'});
+        };
+    };
 
-    // };
-}
     const password_forget_mode = () => {
-        console.log("password_forget_mode(1) Passage en mode inscription:", AUTH.PASSFORGET);
-
+        sessionStorage.clear();
         setShowLog(AUTH.PASSFORGET);
         
     };
 
     const register_mode = () => {
-        console.log("register_mode(1) Passage en mode inscription:", AUTH.REGISTER);
-
+        sessionStorage.clear();
         setShowLog(AUTH.REGISTER);
     }
-
-    use
     
     const handle_git = () => {
         const frontendUrl = window.location.origin;
@@ -109,7 +98,11 @@ export default function Login() {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token, frontendUrl: window.location.origin })
-                });
+                }, null, null, true);
+                if (repjson && repjson.success == true && repjson.MPFA == true) {
+                    setShowLog(AUTH.MAILA2F);
+                    return;
+                }
                 if (!repjson){
                     showAlert("Impossible de se connecter pour le moment", "danger");
                     return;

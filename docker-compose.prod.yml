@@ -53,6 +53,10 @@ services:
       context: ./web/front
       dockerfile: Dockerfile
       target: prod
+      args:
+        VITE_GOOGLE_ID_CLIENT: ${VITE_GOOGLE_ID_CLIENT}
+    env_file: 
+      - .env
     depends_on:
       mysql:
         condition: service_healthy
