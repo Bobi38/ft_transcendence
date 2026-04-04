@@ -52,6 +52,11 @@ export class App {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
 
+        if (this._isMobileDevice()) {
+            this._showMobileLockout();
+            return;
+        }
+
         this._engine = new Engine(this._canvas, true, {adaptToDeviceRatio: true});
         this._scene = new Scene(this._engine);
 
@@ -486,6 +491,41 @@ export class App {
         this._room.leave(false);
         this._scene.dispose();
         this._engine.dispose();
+    }
+
+    private _isMobileDevice(): boolean {
+        const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        const hasTouchPoints = navigator.maxTouchPoints > 0;
+        const hasTouchEvents = 'ontouchstart' in window;
+        return hasCoarsePointer || hasTouchPoints || hasTouchEvents;
+    }
+
+    private _showMobileLockout() {
+        this._canvas.style.display = "none";
+        const overlay = document.createElement("div");
+        
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100vw";
+        overlay.style.height = "100vh";
+        overlay.style.backgroundColor = "#1a1a1a";
+        overlay.style.color = "#ffffff";
+        overlay.style.display = "flex";
+        overlay.style.flexDirection = "column";
+        overlay.style.justifyContent = "center";
+        overlay.style.alignItems = "center";
+        overlay.style.fontFamily = "sans-serif";
+        overlay.style.zIndex = "9999";
+
+        overlay.innerHTML = `
+            <h1 style="font-size: 2rem; margin-bottom: 1rem; color: #ff4757;">Desktop Required</h1>
+            <p style="font-size: 1.2rem; text-align: center; max-width: 80%; line-height: 1.5;">
+                Sorry! This game requires a keyboard and mouse to play. <br><br>
+                Please visit us on a computer to join the match.
+            </p>
+        `;
+        document.body.appendChild(overlay);
     }
 
     public getTick() : number {
