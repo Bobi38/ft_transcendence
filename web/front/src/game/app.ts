@@ -87,7 +87,6 @@ export class App {
         this._setupPhysicsMessagesListener();
         
         this._engine.runRenderLoop(() => {
-            console.log("still here");
             this._updatePhysicsAndRender();
         });
         window.addEventListener('resize', () => {
@@ -288,6 +287,7 @@ export class App {
         this._isNear = this._room.state.players.get(this._player.sessionId).sideNear;
         this._callback.listen("roomStatus", () => {
             const status = this._room.state.roomStatus;
+            console.log(status);
             switch (status) {
                 case RoomStatus.WAITING:
                     this._ui.showWaitingUI();
