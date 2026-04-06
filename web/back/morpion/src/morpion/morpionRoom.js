@@ -169,8 +169,8 @@ class MorpionRoom extends Room {
             ) {
 
                 this.notifyTurn(
-                    { message: "gagne", board: this._board, turn: false },
-                    { message: "perdu", board: this._board, turn: false });
+                    { message: m.msgs.w_msg, board: this._board, turn: false },
+                    { message: m.msgs.l_msg, board: this._board, turn: false });
                     
                 console.log(`victoire avec ligne ${i}`);
                 this._how_win = ["horizontal","vertical","diagonal_lr"][Math.floor (i / 3)];
@@ -186,7 +186,7 @@ class MorpionRoom extends Room {
 
         if (!this._board.includes(" ")) {
             console.log(`draw : ${this}`);
-            this.sendAll({message: "egalite", board: this._board, turn: false} );
+            this.sendAll({message: m.msgs.draw, board: this._board, turn: false} );
             this.handleEndGame("draw");
             return true;
         }
