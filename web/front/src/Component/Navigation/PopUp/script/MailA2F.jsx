@@ -2,6 +2,7 @@
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
 import SocketM from "TOOL/SocketManag";
+import showAlert from 'TOOL/fonction_usefull'
 
 /* back */
 
@@ -19,19 +20,24 @@ export default function MailA2F() {
     const [showCodeInput, setShowCodeInput] = useState(false);
 
 
-    async function maila2f_send_code() {
+    async function maila2f_send_code(e) 
+    {
+        const btn = e.currentTarget; 
+        
+        if (btn) btn.disabled = true; 
+
         const url = `/api/secu/send_mail`;
-
-        console.log(`${url}`)
-
         const repjson = await useFetch(`${url}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         }, null, null, true);
-        if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
-            return ;
+
+        if (btn) btn.disabled = false;
+
+        if (!repjson || (repjson && !repjson.success)) {
+            console.log(repjson.message);
+            return;
         }
         
         setShowCodeInput(true);
@@ -106,7 +112,10 @@ export default function MailA2F() {
 
                         <div className={`button-container`}>
                             <button type={`submit`} className={``}>Valider</button>
-                            <button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
+
+                            <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
+                                Send mail verification
+                            </button>
                             <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
                         </div>
                     </form>
