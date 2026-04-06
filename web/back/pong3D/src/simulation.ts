@@ -157,6 +157,8 @@ export class Simulation {
         this._scene.dispose();
         this._scene = null;
     }
+    this._engine.dispose();
+    this._engine = null;
   }
 
   public getTick() : number {
