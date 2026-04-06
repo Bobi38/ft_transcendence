@@ -18,7 +18,7 @@ import StatPong3D from './models/StatPong3D.js';
 import PswEmail from './models/PssWrdEmail.js';
 
 // creatdb
-import { CreatGameMorp } from './morpion/seedmorp.js';
+//import { CreatGameMorp } from './morpion/seedmorp.js';
 
 
 
@@ -80,7 +80,7 @@ async function addDb(){
       console.log("History created");
       await CreatFriend();
       console.log("Friend created");
-      await CreatGameMorp();
+      //await CreatGameMorp();
     }
 }
 

@@ -1,19 +1,11 @@
 
 import express from 'express';
 import session from "express-session";
-import http from 'http';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-// import {Server as ColyServ} from "colyseus";
-// import { GameRoom } from './colyseus/GameRoom.js';
-// import router from './routes/index.js';
-// import router from './router.js';
-import { majDb } from './CreatDB.js';
-import { addDb } from './CreatDB.js';
 
 
 //router

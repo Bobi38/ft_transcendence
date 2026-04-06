@@ -22,12 +22,16 @@ router.post('/login', async (req, res) => {
       console.log("Api /login called Invalid email format",email);
       return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
+    console.log("wweeeeeeeeeeeeeeh");
     const result = await User.findAll({ where: { mail: email } });
+    console.log("wwaaaaaaaaah", result);
     if (result.length === 0)
         return res.status(401).json({success: false, message: 'Email not found'});
+    console.log("wiiiiiiii")
     const DecrypPass = await bcrypt.compare(password, result[0].password);
     if (!DecrypPass)
         return res.status(401).json({success: false, message: 'Password not valid'});
+    console.log("wuuuuuuuuuuuuuuuuuuuuuu");
     const iid = await Co.findAll({where: { userId: result[0].id}})
       console.log("Api /login " + result[0].id," avant token");
     const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
