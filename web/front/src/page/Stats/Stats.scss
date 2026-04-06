@@ -2,38 +2,35 @@
 @use "STYLE/_mixin" as mix;
 
 .Stats-root{
-
 	@include mix.page;
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;/*en haut*/
-    text-align: center;
-    gap: 0.5rem;
+	align-items: center;
+    gap: 1rem;
     padding: 1rem;
 
-    .Stats-selection{
+	h1 {
+		text-align: center;
+		font-size: 1.25rem;
+	}
 
-        .Stats-btn{
-            background-color: rgba(0, 0, 0, 0.150);
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            margin: 0.5rem;
-            font-size: 1rem;
+	.btn_container{
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
 
-            &:hover{
-                background-color: rgba(0, 0, 0, 0.3);
-            }
-        }
-    }
+		.Stats-btn {
+			background-color: $grey-light;
+			border: none;
+			border-radius: 0.5rem;
+			padding: 0.5rem 1rem;
+			font-size: 1.15rem;
+			transition: all 0.2s;
 
-    .Stats-container{
-        height: 0;
-        width: 100%;
-        flex: 1;
-         li , li button {
-            color: rgb(2, 119, 143);
-        }
+			&:hover{
+				background-color: $grey;
+			}
+		}
     }
 }

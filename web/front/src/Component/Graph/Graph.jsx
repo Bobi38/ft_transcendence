@@ -25,6 +25,13 @@ export default function Graph({ v1, v2, v3, v4 }) {
     const mid3 = (stop2 + p3 / 2) * 3.6;
     const mid4 = (stop3 + p4 / 2) * 3.6;
 
+	if (total == 0)
+	{
+		return (
+			<div className="Graph-root Graph-empty"><span>Go play games its empty here</span></div>
+		);
+	}
+
     return (
         <div className="Graph-root" style={{
             "--stop1": `${stop1}%`,

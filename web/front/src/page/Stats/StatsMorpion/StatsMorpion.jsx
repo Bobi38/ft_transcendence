@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import "./StatsMorpion.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";   
+import useFetch from "HOOKS/useFetch.jsx";
 import Graph from "COMP/Graph/Graph.jsx"; 
-import Paging from "COMP/Paging/Paging.jsx"; 
+import Paging from "COMP/Paging/Paging.jsx";
 import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 
 export default function StatsMorpion({ username, setUsername }) {
@@ -21,7 +21,7 @@ export default function StatsMorpion({ username, setUsername }) {
 
     async function fetch_stats() {
 
-        const url = username 
+        const url = username
             ? `/api/morpion/get_stat?name=${username}`
             : `/api/morpion/get_stat`;
 
@@ -48,22 +48,20 @@ export default function StatsMorpion({ username, setUsername }) {
         const win_vertical = data.type_X_vertical_winner + data.type_O_vertical_winner
         const win_diagonal = data.type_X_diagonal_winner + data.type_O_diagonal_winner
 
-
         const lose_horizontal = data.type_X_horizontal_loser + data.type_O_horizontal_loser
         const lose_vertical = data.type_X_vertical_loser + data.type_O_vertical_loser
         const lose_diagonal = data.type_X_diagonal_loser + data.type_O_diagonal_loser
 
-
         const type_X_win = data.type_X_horizontal_winner + data.type_X_vertical_winner + data.type_X_diagonal_winner
         const type_X_lose = data.type_X_horizontal_loser + data.type_X_vertical_loser + data.type_X_diagonal_loser
-        
+
         const type_O_win = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
         const type_O_lose = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
-        
+
         const win_abort = data.type_X_abort_winner + data.type_O_abort_winner
         const draw = data.type_X_draw + data.type_O_draw
         const lose_abort = data.type_X_abort_loser + data.type_O_abort_loser
-        
+
         const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
@@ -93,7 +91,6 @@ export default function StatsMorpion({ username, setUsername }) {
         }
     }
 
-
     async function fetch_history(page_nb) {
 
         const url = username
@@ -120,14 +117,19 @@ export default function StatsMorpion({ username, setUsername }) {
         fetch_history(currentPage - 1);
     }, [username, currentPage]);
 
-
+	const StatBlock = ({ title, win, lose, className = "" }) => (
+		<div className={`stat-block ${className}`}>
+			{title && <p>{title}</p>}
+			<p>win: {win ?? 0}</p> <p>lose: {lose ?? 0}</p>
+		</div>
+	);
 
     /* form */
     const [inputValue, setInputValue] = useState("");
 
-
     return (
         <section className={`StatsMorpion-root border-base`}>
+
             <div className={`history-container border-1`}>
 
                 <div className={`history-card-container border-2`}>
@@ -138,70 +140,49 @@ export default function StatsMorpion({ username, setUsername }) {
 
                 </div>
                 <Paging totalPages={Math.ceil(totalGames / limit)} currentPage={currentPage} setNewPage={setNewPage}/>
-
             </div>
 
-            <aside className={`aside border-1`}>
-				<div className={`search border-2`}>
-					<form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1);setInputValue("")}}>
-						<input type={`text`} value={inputValue} onChange={(e) => {setInputValue(e.target.value);}}/>
-						<input type={`submit`} value={`search`}/>
-					</form>
+            <aside>
+
+				<form onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1); setInputValue("")}}>
+					<input type={`text`} id="name" value={inputValue} onChange={(e) => {setInputValue(e.target.value);}}
+						placeholder="Someone name"/>
+					<input type={`submit`} value={`search`}/>
+				</form>
+
+				<hr />
+
+				<div className="content">
+					<p className="p-full">Total game played: 100</p>
+					<p className="p-full">Total lose: 9</p>
+					<p className="p-full">Total win: 99</p>
+					<p className="p-full">Win by surrender: 10</p>
+					<p className="p-full">Lose by surrender: 10</p>
+					<p className="p-full">Winrate: 10%</p>
+					<p className="p-full">Winrate with X: 10%</p>
+					<p className="p-full">Winrate with O: 10%</p>
+					<p className="p-full">Winrate in digonal: 10%</p>
+					<p className="p-full">Winrate in horizontal: 10%</p>
+					<p className="p-full">Winrate in vertical: 10%</p>
 				</div>
-
-				<div className={`game-winrate border-2`}>
-
-					<div className={`wl-graph border-3`}>
-						<div className={`wl-graph2 border-5`}>
-							<div>
-								<span>Win:{statToDisplay?.all_win_without_abort}</span>
-								<span>Lose:{statToDisplay?.all_lose_without_abort}</span>
-							</div>
-							<div>
-								<span>AbortWin:{statToDisplay?.win_abort}</span>
-								<span>AbortLose:{statToDisplay?.lose_abort}</span>
-							</div>
-						</div>
-						<Graph v1={statToDisplay?.all_win_without_abort}v2={statToDisplay?.all_lose_without_abort}v3={statToDisplay?.win_abort}v4={statToDisplay?.lose_abort}/>
-					</div>
-
-					<div className={`wl-o-x border-3`}>
-
-						<div>
-							<p>Type O:</p>
-							<p>win: {statToDisplay?.type_O_win}</p>
-							<p>lose: {statToDisplay?.type_O_lose}</p>
-						</div>
-
-						<div>
-							<p>Type X:</p>
-							<p>win: {statToDisplay?.type_X_win}</p>
-							<p>lose: {statToDisplay?.type_X_lose}</p>
-						</div>
-					</div>
-
-					<div className={`wl-horizontal border-3`}>
-
-						<p>horizontal</p>
-						<p>win: {statToDisplay?.win_horizontal}</p>
-						<p>lose: {statToDisplay?.lose_horizontal}</p>
-
-					</div>
-
-					<div className={`wl-diagonal border-3`}>
-						<p>diagonal</p>
-						<p>win: {statToDisplay?.win_diagonal}</p>
-						<p>lose: {statToDisplay?.lose_diagonal}</p>
-					</div>
-
-					<div className={`wl-vertical border-3`}>
-						<p>vertical</p>
-						<p>win: {statToDisplay?.win_vertical}</p>
-						<p>lose: {statToDisplay?.lose_vertical}</p>
-					</div>
-				</div>
-            </aside>
-        </section>
-    )
+			</aside>
+			</section>
+		)
 }
 
+		{/*<div>
+			<div>
+				<StatBlock title="normal" win={statToDisplay?.all_win_without_abort} lose={statToDisplay?.all_lose_without_abort} className="wl-o-x" />
+				<StatBlock title="by abort" win={statToDisplay?.win_abort} lose={statToDisplay?.lose_abort} className="wl-o-x" />
+			</div>
+			<Graph v1={statToDisplay?.all_win_without_abort}v2={statToDisplay?.all_lose_without_abort}v3={statToDisplay?.win_abort}v4={statToDisplay?.lose_abort}/>
+		</div>
+
+		<div>
+			<StatBlock title="Type O" win={statToDisplay?.type_O_win} lose={statToDisplay?.type_O_lose} className="wl-o-x" />
+			<StatBlock title="Type X" win={statToDisplay?.type_X_win} lose={statToDisplay?.type_X_lose} className="wl-o-x" />
+		</div>
+
+		<StatBlock title="Horizontal" win={statToDisplay?.win_horizontal} lose={statToDisplay?.lose_horizontal} className="wl-horizontal" />
+		<StatBlock title="Diagonal" win={statToDisplay?.win_diagonal} lose={statToDisplay?.lose_diagonal} className="wl-diagonal" />
+		<StatBlock title="Vertical" win={statToDisplay?.win_vertical} lose={statToDisplay?.lose_vertical} className="wl-vertical" />*/}

@@ -38,7 +38,6 @@ export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    
     return (
         <article className={`StatsMorpionHistoryCard-root border-base`}>
             <div className={`${style_card(stats.how_win)}`}></div>

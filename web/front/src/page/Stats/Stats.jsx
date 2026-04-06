@@ -29,25 +29,20 @@ export default function Stats() {
     return (
 		<div className={`Stats-root`}>
 
-			<div className={`Stats-selection`}>
+			<h1>Stats of {username} {selected}</h1>
 
-				<h3>Stats of {username} {selected}</h3>
-				{/* <button className={`Stats-btn`} onClick={() => stats_handle("Pong3D")}>Pong3D</button> */}
+			<div className="btn_container">
+				<button className={`Stats-btn`} onClick={() => stats_handle("Pong3D")}>Pong3D</button>
 				<button className={`Stats-btn`} onClick={() => stats_handle("Morpion")}>Morpion</button>
-
 			</div>
+
 
 			<hr />
 {/* ------------------------------------------------------------------------------------------------------------------ */}
+			{!selected && <p>Select a game to see the stats</p>}
 
-			<div className={`Stats-container`}>
-
-				{!selected && <p>Select a game to see the stats</p>}
-
-				{/* {selected === "Pong3D" && <StatsPong3D username={username} setUsername={setUsername} />} */}
-				{selected === "Morpion" && <StatsMorpion username={username} setUsername={setUsername} />}
-
-			</div>
+			{/* {selected === "Pong3D" && <StatsPong3D username={username} setUsername={setUsername} />} */}
+			{selected === "Morpion" && <StatsMorpion username={username} setUsername={setUsername} />}
 		</div>
     )
 }
