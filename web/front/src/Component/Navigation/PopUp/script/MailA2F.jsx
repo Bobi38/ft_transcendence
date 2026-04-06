@@ -70,6 +70,19 @@ export default function MailA2F() {
         setShowLog(AUTH.NONE);
     }
 
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/clearcookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
+    }
+
     return (
         <>
             <div className={`script-in-root`}>
@@ -77,22 +90,26 @@ export default function MailA2F() {
                 <h1>MailA2F</h1>
 
                 {!showCodeInput && (
-					<button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
-						Send mail verification
-                    </button>
+                    <>
+                        <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
+                            Send mail verification
+                        </button>
+                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                    </>
                 )}
 
                 {showCodeInput && (
 
-                  <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
+                    <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
 
-                    <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
+                        <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
 
-                      <div className={`button-container`}>
-                          <button type={`submit`} className={``}>Valider</button>
-                          <button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
-                      </div>
-                  </form>
+                        <div className={`button-container`}>
+                            <button type={`submit`} className={``}>Valider</button>
+                            <button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
+                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                        </div>
+                    </form>
 
                 )}
 
