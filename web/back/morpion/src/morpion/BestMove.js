@@ -26,15 +26,12 @@ function checkVictory(board, move) {
 function defineCurrent(board) {
     let nbX = 0;
     let nbO = 0;
-    let nbOther = 0;
 
     for(let square of board){
         if (square === 'X')
             nbX++;
         else if (square === 'O')
             nbO++;
-        else
-            nbOther++;
     }
 
     return nbX > nbO ? "O" : "X";
@@ -45,15 +42,20 @@ export default function checkBestMove(board) {
         .map((value, index) => value === " " ? index : null)
         .filter(v => v !== null);
 
+    if (ids.includes(4)) return 4;
+
     let len = ids.length;
+
+    if (len >= 8){
+        const filtered = ids.filter(v => [0, 2, 6, 8].includes(v))
+        return filtered[Math.floor(Math.random() * filtered.length)];
+    }
 
     if (len === 0) return null;
     
     let actif = defineCurrent(board);
     let inactif = actif === "X" ? "O" : "X";
     let best = 1000;
-
-    if (!actif) return null;
 
     for(let id of ids){
 
@@ -71,9 +73,5 @@ export default function checkBestMove(board) {
     if (best !== 1000)
         return best;
     
-    if (ids.includes(4)) return 4;
-    
-    if (len === 1) return ids[0];
-
-    return ids[1];
+    return ids[Math.floor(Math.random() * ids.length)];
 }

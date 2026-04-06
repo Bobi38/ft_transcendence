@@ -54,8 +54,16 @@ export default function Register() {
         setShowLog(AUTH.LOGIN);
     }
 
-    function login_mode() {
+    async function login_mode() {
         sessionStorage.clear();
+        const url = `/api/secu/clearcookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
         setShowLog(AUTH.LOGIN);
     }
 
