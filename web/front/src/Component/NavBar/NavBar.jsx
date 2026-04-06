@@ -45,16 +45,15 @@ export default function NavBar() {
 
     return (
 		<nav className={`Navbar-root`}>
-			
+
 			<Button path={`/`}> Home </Button>
 			<div className={`Navbar-center`}>
 				<p>{time}</p>
 
-				
 				<button className={`logout`} onClick={(logout)}>
 					Logout
 				</button>
-				
+
 			</div>
 			<Button path={`/Profile`}>Profile</Button>
 

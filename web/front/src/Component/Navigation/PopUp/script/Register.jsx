@@ -17,9 +17,6 @@ import useFetch from "HOOKS/useFetch.jsx";
 export default function Register() {
 
     const {setShowLog, showLog} = useAuth();
-    const [showPrivacy, setShowPrivacy] = useState(false);
-
-
 
     async function register_submit(e){
 
@@ -61,47 +58,39 @@ export default function Register() {
 
 
     return (
-        <>
-            <div className={`script-in-root`}>
+		<div className={`script-in-root`}>
+			<h1>Register</h1>
 
-                <h1>Register</h1>
-                
-                <form id={`register`} className={``} onSubmit={register_submit}>
+			<form id={`register`} className={``} onSubmit={register_submit}>
 
+				<label htmlFor={`name`}>Nickname</label>
+				<input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
 
-                    <label htmlFor={`name`}>Nickname</label>
-                    <input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
+				<label htmlFor={`email`}>Email</label>
+				<input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
 
-                    <label htmlFor={`email`}>Email</label>
-                    <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
+				<label htmlFor={`password`}>Password</label>
+				<input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
-                    <label htmlFor={`password`}>Password</label>
-                    <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
+				<div style={{ marginTop: "10px" }}>
+					<input type="checkbox" id="legal" name="legal" required />
+					<label htmlFor="legal" style={{ marginLeft: "5px" }}>
+					J'accepte les{" "}
+					<a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
+					Conditions d'utilisation
+					</a>{" "}
+					et la{" "}
+					<a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
+					Politique de confidentialité
+					</a>
+					</label>
+				</div>
 
-                    <div style={{ marginTop: "10px" }}>
-                        <input type="checkbox" id="legal" name="legal" required />
-                        <label htmlFor="legal" style={{ marginLeft: "5px" }}>
-                        J'accepte les{" "}
-                        <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
-                        Conditions d'utilisation
-                        </a>{" "}
-                        et la{" "}
-                        <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
-                        Politique de confidentialité
-                        </a>
-                        </label>
-                    </div>
-
-                    <div className={`button-container`}>
-
-                        <button type={`submit`} className={``}>Register</button>
-                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-
-                    </div>
-
-                </form>
-
-            </div>
-        </>
+				<div className={`button-container`}>
+					<button type={`submit`} className={``}>Register</button>
+					<button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+				</div>
+			</form>
+		</div>
     )
 }

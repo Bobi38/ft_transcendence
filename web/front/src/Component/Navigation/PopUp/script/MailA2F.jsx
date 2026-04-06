@@ -1,5 +1,4 @@
 /* extern */
-import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
 import SocketM from "TOOL/SocketManag";
 
@@ -33,11 +32,8 @@ export default function MailA2F() {
             console.log(repjson.message)
             return ;
         }
-        
         setShowCodeInput(true);
     }
-
-
 
     async function maila2f_check_code(e) {
         e.preventDefault();
@@ -71,32 +67,27 @@ export default function MailA2F() {
     }
 
     return (
-        <>
-            <div className={`script-in-root`}>
+		<div className={`script-in-root`}>
+			<h1>MailA2F</h1>
 
-                <h1>MailA2F</h1>
+			{!showCodeInput && (
+				<button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
+					Send mail verification
+				</button>
+			)}
 
-                {!showCodeInput && (
-					<button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
-						Send mail verification
-                    </button>
-                )}
+			{showCodeInput && (
 
-                {showCodeInput && (
+				<form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
 
-                  <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
+				<input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
 
-                    <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
-
-                      <div className={`button-container`}>
-                          <button type={`submit`} className={``}>Valider</button>
-                          <button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
-                      </div>
-                  </form>
-
-                )}
-
-            </div>
-      </>
+					<div className={`button-container`}>
+						<button type={`submit`} className={``}>Valider</button>
+						<button type={`button`} className={``} onClick={maila2f_send_code}>Send a new mail verification</button>
+					</div>
+				</form>
+			)}
+		</div>
   );
 }

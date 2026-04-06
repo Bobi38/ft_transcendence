@@ -2,8 +2,6 @@
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
-import { useEffect } from "react";
-
 /* back */
 import { showAlert } from "TOOL/fonction_usefull.js";
 import SocketM from "TOOL/SocketManag";
@@ -15,8 +13,6 @@ import "../PopUp.scss";
 import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 import { useGoogleLogin } from '@react-oauth/google';
 import useFetch from "HOOKS/useFetch.jsx";
-import { use } from "react";
-import { web } from "webpack";
 
 export default function Login() {
 
@@ -63,7 +59,6 @@ export default function Login() {
         if (repjson.MPFA) {
             setShowLog(AUTH.MAILA2F);
         }
-        
         if (!repjson.MPFA) {
             setShowLog(AUTH.NONE);
             SocketM.sendd('friend', {type: 'co_first'});
@@ -73,14 +68,13 @@ export default function Login() {
     const password_forget_mode = () => {
         sessionStorage.clear();
         setShowLog(AUTH.PASSFORGET);
-        
     };
 
     const register_mode = () => {
         sessionStorage.clear();
         setShowLog(AUTH.REGISTER);
     }
-    
+
     const handle_git = () => {
         const frontendUrl = window.location.origin;
         const backUrl = window.location.hostname;
@@ -165,7 +159,6 @@ export default function Login() {
                                 onClick={password_forget_mode}>
                                 Password forgot ?
                         </button>
-
                     </div>
                 </form>
             </div>

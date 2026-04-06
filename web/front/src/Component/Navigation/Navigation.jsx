@@ -108,7 +108,6 @@ export default function Navigation({ children }) {
 			</div>
 
 			<NavBar/>
-
 		</main>
     );
 }
