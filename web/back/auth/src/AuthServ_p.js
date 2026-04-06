@@ -44,7 +44,7 @@ app.use('/', securoute);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
     });
   } catch (err) {
-    console.error("Erreur lors de l'initialisation du serveur :", err);
+    console.error("Error while initializing server :", err);
     process.exit(1);
   }
 })();

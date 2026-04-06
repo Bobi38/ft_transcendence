@@ -112,7 +112,7 @@ app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
       }
     });
   } catch (err) {
-    console.error("Erreur lors de l'initialisation du serveur :", err);
+    console.error("Error while initializing server :", err);
     process.exit(1);
   }
 })();

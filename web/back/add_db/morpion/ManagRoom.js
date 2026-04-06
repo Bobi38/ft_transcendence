@@ -68,29 +68,29 @@ class ManagerRoom {
         return newRoom;
     }
 
-    removePlayer(player, message = "bye bye") { //inutile
-        for (const room of this._rooms.values()) {
-            if (room.isInRoom(player)) {
-                room.removePlayer(player, message);
-                console.log(`tu vois 0 ? lenght = ${room.length()}`);
-                if (room.length() === 0) {
-                    console.log("oui j ai vu 0");
-                    this.removeRoom(room);
-                }
-                return;
-            }
-        }
-    }
+    // removePlayer(player, message = "bye bye") { //inutile
+    //     for (const room of this._rooms.values()) {
+    //         if (room.isInRoom(player)) {
+    //             room.removePlayer(player, message);
+    //             console.log(`tu vois 0 ? lenght = ${room.length()}`);
+    //             if (room.length() === 0) {
+    //                 console.log("oui j ai vu 0");
+    //                 this.removeRoom(room);
+    //             }
+    //             return;
+    //         }
+    //     }
+    // }
 
     removeAll() {
         this._rooms.forEach(r => {r.remove();})
         this._rooms.clear();
     }
 
-    sendAll(mess) { //inutile
-        this._rooms.forEach(
-            room => room.sendAll(mess))
-    }
+    // sendAll(mess) { //inutile
+    //     this._rooms.forEach(
+    //         room => room.sendAll(mess))
+    // }
 
     startOutTimer(game) {
         game.clearOutTimer();

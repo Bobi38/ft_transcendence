@@ -111,7 +111,7 @@ class Room {
 
     setLock(state) {
         if (state === true && this._players.size < this._min_players) {
-            throw new Error("Nombre de joueurs minimum non atteint");
+            throw new Error("Not enough players in room");
         }
 
         this._locked = state;

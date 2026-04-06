@@ -39,8 +39,8 @@ router.get('/send_mail', async (req, res) => {
         await transporter.sendMail({
             from: "noreply.transc@gmail.com",
             to: result.mail,
-            subject: "Votre code de connexion",
-            text: `Votre code pour finalier votre connexion est : ${code}`
+            subject: "Votre connection code",
+            text: `Your code to finalize connection is : ${code}`
         });
         const CrypPass = await bcrypt.hash(code, 10);
         const check = await PswEmail.findOne({ where: { idUser: decoded.id, type: 1 } });
@@ -48,7 +48,7 @@ router.get('/send_mail', async (req, res) => {
           await check.destroy();
         console.log("API /api/secu/send_mail " + code + " " + CrypPass);
         await result.createCode({type: 1, Code : CrypPass, DateCreate: new Date()});  
-        return res.status(201).json({success: true, message: "message send"});
+        return res.status(201).json({success: true, message: "message sent"});
     }catch(err){
         return res.status(500).json({success:false, message: "error" + err})
     }
@@ -63,7 +63,7 @@ router.post('/recupPswd', async (req, res) => {
         }
         const result = await User.findOne({ where: { mail: mail } });
         if (!result)
-            return res.status(401).json({success: false, message: "Cet email n'existe pas"});
+            return res.status(401).json({success: false, message: "This email address does not exist"});
         const code = crypto.randomInt(100000, 999999).toString();
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -75,8 +75,8 @@ router.post('/recupPswd', async (req, res) => {
         await transporter.sendMail({
             from: "noreply.transc@gmail.com",
             to: result.mail,
-            subject: "Votre code de connexion",
-            text: `Votre code pour changer de mot de passe est : ${code}`
+            subject: "Your connection code",
+            text: `Your code to finalize connection is : ${code}`
         });
         console.log("API /api/secu/recupPswd " + code);
         const CrypPass = await bcrypt.hash(code, 10);
@@ -86,7 +86,7 @@ router.post('/recupPswd', async (req, res) => {
         await result.createCode({type: 2, Code : CrypPass, DateCreate: new Date()});
         const token = jwt.sign({id: result.id}, secret, {expiresIn: '12h'});
         res.cookie('ChgPSWD', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-        return res.status(201).json({success: true, message: "message send"});
+        return res.status(201).json({success: true, message: "message sent"});
     }catch(err){
         return res.status(500).json({success:false, message: "error" + err})
     }
@@ -170,7 +170,7 @@ router.post('/majPswd', async(req,res) => {
             res.clearCookie('ChgPSWD');
             return res.status(201).json({success: true, message: "good"});
         }
-        return res.status(400).json({success: false, message: "Veuillez remplir la case (nouveau mot de passe)"});
+        return res.status(400).json({success: false, message: "Please fill the field (new password)"});
     }catch(err){
         res.status(500).json({success: false, message: "error majpass " + err});
     }

@@ -287,6 +287,6 @@ export async function CreatGameMorp() {
       }
     ]);
 
-    console.log("✅ GameMorp seed inséré");
+    console.log("GameMorp seed inséré");
   }
 }

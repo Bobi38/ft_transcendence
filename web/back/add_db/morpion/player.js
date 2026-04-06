@@ -159,7 +159,7 @@ export class Player {
         const delay = Math.max(0, Date.now() + this.firstAlert - this._chrono);
 
         this.startTurnTimer(
-            () => this.send({ message: "dépêche toi" }),
+            () => this.send({ message: "hurry up" }),
             delay
         );
     }
