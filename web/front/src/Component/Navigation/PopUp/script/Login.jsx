@@ -55,6 +55,7 @@ export default function Login() {
             showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
             return ;
         }
+        sessionStorage.setItem('username', repjson.username);
 
         if (repjson.success === false){
             showAlert(`Erreur : ${repjson.message}`, "danger");
