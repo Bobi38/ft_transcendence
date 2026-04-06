@@ -13,29 +13,33 @@ import Board from "./Morpion/Board/Board.jsx";
 
 function SpecButton({ player_1, player_2, id }) {
     const handleClick = () => {
-        SocketM.sendd("morp", {  
+        SocketM.sendd("morp", {
             type: "spec",
             id,
         });
     };
 
     return (
-        <button onClick={handleClick}>
-            <p>{player_1} (X) vs {player_2} (O)</p>
-        </button>
+        <li onClick={handleClick}>
+            <button>{player_1} (X) vs {player_2 ?? "nobody"} (O)</button>
+        </li>
     );
 }
 
-export default function MorpionDisplay() {
-    
+export default function MorpionDisplay({isGame}) { // mode  spec or game
+
     const [list, setList] = useState({});
     const [specSelect, setSpecSelect] = useState(Array(9).fill(" "));
 
     function addBot(nb){
-        if (typeof nb !== "number" || isNaN(nb)) {
+		if (nb > 100)
+		{
+			console.log("the max is 100");
+			return;
+		}
+		if (typeof nb !== "number" || isNaN(nb)) {
             nb = 1;
         }
-    
         for (let i = 1; i <= nb; i++){
             setTimeout(() => {
                 SocketM.sendd(`morp`,{
@@ -44,27 +48,24 @@ export default function MorpionDisplay() {
             }, i * 100);
         }
     }
-    
+
     useEffect(() => {
         window.addBot = addBot;
-    
+
         return () => {
             delete window.addBot;
         };
     }, []);
 
     useEffect(() => {
-        console.log("Morpion component called");
 
+		SocketM.sendd("morp", {});
         const handleSpec = (data) => {
             console.log("Morpion component handleSpec data:", data)
-                // setSpecSelect({other_board: data.other_board, player: data.player})
             if (data?.other_board){
-                console.log("other board recu");
                 setSpecSelect(data.other_board)
             }
             if (data?.list){
-                console.log("taille list:", Object.keys(data.list).length);
                 setList(data.list);
             }
 
@@ -78,55 +79,43 @@ export default function MorpionDisplay() {
 
     }, []);
 
-    let data = {
-        player_1:1,
-        player_2:2,
-        map:"---x-x-xx",
-        game_id:1,
-    }
-    // data = null;
-
     return (
-    
+
         <div className={`MorpionDisplay-root border-base`}>
-            
-            <div className={`MorpionDisplay-actual-game border-1`}>
-                {/*  spectateur  */}
+            {isGame ?
+				<>
+					<h1>Royal Morpion</h1>
+					<hr />
 
-                {data &&
-                    <div className={`MorpionDisplay-spec-game`}> 
-                        <Board board={specSelect} isGame={false}/>
-                        {/* <p>login1: X</p>
-                        <Board board={data.map.split('')} isGame={false}/>
-                        <p>login2: 0</p> */}
-                    </div>
-                }
+					<Morpion/>
+				</>
+				: //switch view
+				<>
+					<h1>Spectate</h1>
+					<hr />
 
-                <div className={`MorpionDisplay-spec-info`} style={{height: data ? "65%" : "100%"}}>
-                {Object.keys(list).length === 0 ? (
-                    <p>No games running</p>
-                    ) : (
-                    <>
-                        <h3 className="MorpionDisplay-title">Game in progress</h3>
-                        {Object.entries(list).map(([id, game]) => (
-                            <SpecButton
-                                key={id}
-                                id={id}
-                                player_1={game.player_1}
-                                player_2={game.player_2}
-                            />
-                        ))}
-                    </>
-                )}
-                </div>
-
-            </div>
-
-            <div className={`MorpionDisplay-game border-1`}>
-                <Morpion/>
-            </div>
-
+					<div className="MorpionDisplay-content">
+						<Board board={specSelect} isGame={false}/>
+						<aside>
+							<h2>
+								{Object.keys(list).length > 0
+									? "Game list" : "No games running"
+								}
+							</h2>
+							<ul>
+								{Object.entries(list).map(([id, game]) => (
+									<SpecButton
+									key={id}
+									id={id}
+									player_1={game.player_1}
+									player_2={game.player_2}
+									/>
+								))}
+							</ul>
+						</aside>
+					</div>
+				</>
+			}
         </div>
-
     )
 }

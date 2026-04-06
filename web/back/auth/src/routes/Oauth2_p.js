@@ -100,20 +100,22 @@ router.post('/google', async (req, res) => {
     name = name + prefix
     }
     let token = "";
+    let MPFA;
     if (result.length === 0) {
-      const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
+      const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
       token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
       const re = await Co.create({token: token, userId: newUser.id});
+      MPFA = newUser.MPFA;
     }
     else {
-      await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: false});
-      //const MPFA = tcheck_MPFA(result[0], frontendUrl);
-      // await result[0].update({MPFA: MPFA});
+      await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date()});
+      MPFA = tcheck_MPFA(result[0], frontendUrl);
+      await result[0].update({MPFA: MPFA});
       token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
       const re = await Co.create({token: token, userId: result[0].id});
     }
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-    return res.status(201).json({ success: true});
+    return res.status(201).json({ success: true, MPFA: MPFA, message: "connected"});
   } catch (err) {
     res.status(401).json({ success: false, message: "error back google " + err });
   }

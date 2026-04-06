@@ -48,13 +48,14 @@ export default function PasswordForget() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({mail: mail}),
-        });
+        }, null, null, true);
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;
         }
         setShowCodeInput(true);
         sessionStorage.setItem("CodeInput", "true");
+
     }
 
 
@@ -62,14 +63,11 @@ export default function PasswordForget() {
     async function check_code(e) {
         e.preventDefault();
 
-        if (!mail)
-            return ;
         const formData = new FormData(e.target);
         const data = {
             code: formData.get("code"),
             host:  window.location.host
         }
-        const code = formData.get("code");
         setmail("");
         const url = `/api/secu/recupPswd_check_code`;
         console.log(`${url}`)
@@ -79,7 +77,7 @@ export default function PasswordForget() {
             headers: { "Content-Type": "application/json" },
             credential: "include",
             body: JSON.stringify(data),
-        })
+        }, null, null, true)
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
@@ -94,12 +92,7 @@ export default function PasswordForget() {
         sessionStorage.setItem("chgPsswrd", "true");
     }
 
-    function ret_mode() {
-        sessionStorage.clear();
-        setShowLog(AUTH.LOGIN);
-    }
-
-    async function login_mode() {
+    async function handle_modify_password() {
         if (showPassword != showPasswordConfirm){
             return ;
         }
@@ -110,7 +103,7 @@ export default function PasswordForget() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({new_psd: showPassword}),
-        })
+        }, null, null, true)
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
@@ -125,6 +118,19 @@ export default function PasswordForget() {
         setShowLog(AUTH.LOGIN)
     }
 
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/clearcookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
+    }
+
     return (
         <>
             <div className={`script-in-root`}>
@@ -135,13 +141,13 @@ export default function PasswordForget() {
                     <div>
                         <label htmlFor="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="you@example.com" value={mail} onChange={(e) => setmail(e.target.value)}/>
-                    <div className={`button-container`}>
+                        <div className={`button-container`}>
 
-                        <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
-                            Send mail verification
-                        </button>
-                        <button type={`button`} className={``} onClick={ret_mode}>Connexion</button>
-                    </div>
+                            <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
+                                Send mail verification
+                            </button>
+                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
+                        </div>
                     </div>
                 )}
 
@@ -149,9 +155,8 @@ export default function PasswordForget() {
 
                     <form id={`forgetPassword`} className={``} onSubmit={check_code}>
 
-                        <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
-
                         <div className={`button-container`}>
+                            <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
                             <button type={`submit`} className={``}>Valider</button>
                             <label htmlFor="email">Email</label>
                             <input type="email" id="email" name="email" placeholder="you@example.com" value={mail} onChange={(e) => setmail(e.target.value)}/>
@@ -198,7 +203,7 @@ export default function PasswordForget() {
                         </div>
 
                         <div className={`button-container`}>
-                            <button type={`button`} className={``} onClick={login_mode}>Modifier mon mot de passe</button>
+                            <button type={`button`} className={``} onClick={handle_modify_password}>Modifier mon mot de passe</button>
                         </div>
                     </form>
                 )}

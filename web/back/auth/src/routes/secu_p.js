@@ -78,12 +78,11 @@ router.post('/recupPswd', async (req, res) => {
             subject: "Votre code de connexion",
             text: `Votre code pour changer de mot de passe est : ${code}`
         });
-
+        console.log("API /api/secu/recupPswd " + code);
         const CrypPass = await bcrypt.hash(code, 10);
         const check = await PswEmail.findOne({ where: { idUser: mail, type: 2 } });
         if (check)
           await check.destroy();
-
         await result.createCode({type: 2, Code : CrypPass, DateCreate: new Date()});
         const token = jwt.sign({id: result.id}, secret, {expiresIn: '12h'});
         res.cookie('ChgPSWD', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
@@ -137,11 +136,11 @@ router.post('/recupPswd_check_code' , async (req, res) => {
       console.log(result.code[0].Code)
       const limit = new Date(result.code[0].DateCreate.getTime() + 60 * 1000);
       const isValid = await bcrypt.compare(code, result.code[0].Code);
+      console.log(isValid);
       console.log(limit);
       if (code && isValid == true && (new Date() < limit)){
           const co = result.code[0];
           await co.destroy();
-          await result.update({co: true,Hostlastco: host, Datelastco: new Date()});
           return res.status(201).json({success: true, message:"good"});
       }
       else
@@ -174,6 +173,17 @@ router.post('/majPswd', async(req,res) => {
         return res.status(400).json({success: false, message: "Veuillez remplir la case (nouveau mot de passe)"});
     }catch(err){
         res.status(500).json({success: false, message: "error majpass " + err});
+    }
+})
+
+router.get('/clearcookie', async(req, res) => {
+    try{
+        if (!req.cookies.ChgPSWD)
+            return res.status(400).json({success: false, message: "token invalid"});
+        res.clearCookie('ChgPSWD');
+        return res.status(200).json({success: true, message: "cookie cleared"});
+    }catch(err){
+        return res.status(500).json({success: false, message: "error clearcookie " + err});
     }
 })
 

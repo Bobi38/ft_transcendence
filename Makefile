@@ -61,13 +61,13 @@ logs%:
 
 logs-%:
 	docker compose  -f docker-compose.dev.yml logs -f $*
-	
+
 logs:
 	docker compose  -f docker-compose.prod.yml logs -f
-	
+
 logst:
 	docker compose  -f docker-compose.dev.yml logs -f -t
-	
+
 logs_alert_flo:
 	docker compose  -f docker-compose.dev.yml logs -f -t --tail 0
 
