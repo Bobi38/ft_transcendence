@@ -7,7 +7,6 @@ import "./StatsMorpion.scss";
 
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";
-import Graph from "COMP/Graph/Graph.jsx"; 
 import Paging from "COMP/Paging/Paging.jsx";
 import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 

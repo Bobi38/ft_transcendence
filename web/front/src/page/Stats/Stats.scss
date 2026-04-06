@@ -19,18 +19,5 @@
 		display: flex;
 		flex-direction: row;
 		gap: 1rem;
-
-		.Stats-btn {
-			background-color: $grey-light;
-			border: none;
-			border-radius: 0.5rem;
-			padding: 0.5rem 1rem;
-			font-size: 1.15rem;
-			transition: all 0.2s;
-
-			&:hover{
-				background-color: $grey;
-			}
-		}
     }
 }

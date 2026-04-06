@@ -3,11 +3,13 @@
 
 .AddFriends-root{
 
-    .add{
+    form {
         @include mix.fullw;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
+		justify-content: center;
+		gap: 1rem;
         padding: 0.5rem;
     }
     .response{
@@ -22,20 +24,23 @@
         .bloc1{padding-bottom: 0.5rem;}
         .bloc2{padding-top: 0.5rem;}
 
-        h4 {
+        h2 {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 0.5rem;
         }
         .one-response{
-            padding: 0.5rem;
-            display: flex;
+			display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+			
+            padding: 0.5rem;
+			border-radius: 15px;
+			transition: all 0.2s;
 
-            &:hover {
+			&:hover {
                 background-color: rgba(0, 0, 0, 0.100);
             }
             .div-btn{

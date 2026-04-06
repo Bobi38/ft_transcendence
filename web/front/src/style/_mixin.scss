@@ -34,6 +34,8 @@
 }
 
 @mixin default_card {
+	width: unset;
+
     transition: all 0.2s;
     padding: 0.6rem;
 

@@ -63,19 +63,6 @@ $width_game_winrate: 100% - $width_history;
 				width: 100%;
 				max-width: 320px;
 			}
-
-			input[type="submit"] {
-				width: fit-content;
-				padding: 0.5rem 1rem;
-
-				border: none;
-				border-radius: 50px;
-				background-color: $grey-light;
-				transition: all 0.2s;
-				&:hover {
-					background-color: $grey;
-				}
-			}
 		}
     }
 }

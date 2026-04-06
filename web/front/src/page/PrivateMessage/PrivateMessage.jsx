@@ -47,7 +47,7 @@ export default function PrivateMessage() {
 
     async function fetch_private_message(goToConv){
 
-        const url = goToConv 
+        const url = goToConv
             ? `/api/chatP/get_chat_private?name=${goToConv}`
             : `/api/chatP/get_chat_private`;
 
@@ -68,7 +68,7 @@ export default function PrivateMessage() {
 	useEffect(() => {
         const handle_private_message = async (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.type === "updateName_good"){             
+            if (data.type === "updateName_good"){
                 if (data.old_name === goToConv){
                     setGoToConv(data.new_name);
                     fetch_go_to_conv_private();
@@ -110,7 +110,7 @@ export default function PrivateMessage() {
 						{displayedInfoConv && displayedInfoConv.map((msg,index) => (
 							<div key={index} className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
 								<div className={`header-last-conv border-4`}>
-									<h4>{msg.login}</h4><p>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</p>
+									<h2>{msg.login}</h2><p>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</p>
 								</div>
 								<p className={`truncate`}>{msg.lastMessage}</p>
 							</div>

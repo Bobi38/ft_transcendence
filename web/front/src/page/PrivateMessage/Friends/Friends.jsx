@@ -94,7 +94,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
 	            {responseFriendArray && responseFriendArray.map((msg, index) => (
 	                <div key={index} className="one-friend border-1">
-	                    <h5>{msg.login}</h5>
+	                    <h2>{msg.login}</h2>
 
 	                    <div className="div-btn">
 	                        <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>Message</button>

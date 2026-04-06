@@ -115,12 +115,10 @@ export default function AddFriends() {
 			<h1>Friends request</h1>
 			<hr />
 			<div className="content">
-				<div className={`add border-1`}>
-					<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
-						<input  type={`text`} id={`add-friend`} placeholder="Nickname"/>
-						<button type={`submit`}>Add friend</button>
-					</form>
-				</div>
+				<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
+					<input  type={`text`} id={`add-friend`} placeholder="Nickname" required/>
+					<button type={`submit`}>Add friend</button>
+				</form>
 
 				<hr className={`big`}/>
 
@@ -129,11 +127,11 @@ export default function AddFriends() {
 					<Hr mode={`column`} initial={120} min1={100} thickness={2}>
 
 						<div className={`bloc1`}>
-							<h4>Sended request</h4>
+							<h2>Sended request</h2>
 							{responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
 								<div key={`me-${index}`}>
 									<div className={`one-response border-2`}>
-									<h5>{msg.login}</h5>
+									<h3>{msg.login}</h3>
 										<div className={`div-btn border-3`}>
 											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Remove</button>
 										</div>
@@ -144,11 +142,11 @@ export default function AddFriends() {
 
 
 						<div className={`bloc2`}>
-							<h4>Receve request</h4>
+							<h2>Receve request</h2>
 							{responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
 								<div key={`other-${index}`}>
 									<div className={`one-response border-2`}>
-									<h5>{msg.login}</h5>
+									<h3>{msg.login}</h3>
 										<div className={`div-btn border-3`}>
 											<button onClick={() => {handel_response({login: msg.login, response: true })}}>Accept</button>
 											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Refuse</button>

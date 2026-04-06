@@ -63,7 +63,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="tel
 
 hr {
 	@include mix.fullw;
-	border: 4px solid $grey-dark;
+	border: 4px solid $grey;
 	border-radius: 50px;
 }
 
@@ -80,6 +80,21 @@ button {
 	background: none;
 }
 
+button, input[type="submit"]
+{
+	width: fit-content;
+	background-color: $grey-light;
+	border: none;
+	border-radius: 0.5rem;
+	padding: 0.5rem 1rem;
+	font-size: 1.15rem;
+	transition: all 0.2s;
+
+	&:hover{
+		background-color: $grey;
+	}
+}
+
 .send-btn {
 	padding: 0.5rem 1rem;
 	border-radius: 50px;
@@ -88,6 +103,7 @@ button {
 	background-color: white;
 
 	&:hover {
+		background-color: white;
 		border-color: $active;
 		scale: 1.05;
 	}

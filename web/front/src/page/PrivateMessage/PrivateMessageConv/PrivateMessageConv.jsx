@@ -96,36 +96,28 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 			<h1>{login}</h1>
 			<hr />
 
-            
 			<div className="content">
-
                 <div id={`alert-container`}></div>
-                
+
 				<div className="message border-1">
-						{displayedMessages && displayedMessages.map((msg, index) => { return (
+					{displayedMessages && displayedMessages.map((msg, index) => { return (
 
-							<div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
+						<div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
 
-								{/* {index != 0 && <hr/>} */}
-								{msg.monMsg ? (
-									<div>
-										<div><span>{msg.timer}</span></div>
-										<p>{msg.message}</p>
-									</div>
-								) : (
-									<div >
-										<div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
-										<p>{msg.message}</p>
-									</div>
-								)}
-								{/* <h3>{msg.login}</h3>
-								<p>{msg.message}</p> */}
-
-							</div>
-
-						);})}
-
-
+							{/* {index != 0 && <hr/>} */}
+							{msg.monMsg ? (
+								<div>
+									<div><span>{msg.timer}</span></div>
+									<p>{msg.message}</p>
+								</div>
+							) : (
+								<div >
+									<div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
+									<p>{msg.message}</p>
+								</div>
+							)}
+						</div>
+					);})}
 				</div>
 				<hr />
 				<form onSubmit={handler_submit}>
