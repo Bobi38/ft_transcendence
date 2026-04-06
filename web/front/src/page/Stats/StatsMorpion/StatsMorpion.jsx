@@ -170,19 +170,3 @@ export default function StatsMorpion({ username, setUsername }) {
 		)
 }
 
-		{/*<div>
-			<div>
-				<StatBlock title="normal" win={statToDisplay?.all_win_without_abort} lose={statToDisplay?.all_lose_without_abort} className="wl-o-x" />
-				<StatBlock title="by abort" win={statToDisplay?.win_abort} lose={statToDisplay?.lose_abort} className="wl-o-x" />
-			</div>
-			<Graph v1={statToDisplay?.all_win_without_abort}v2={statToDisplay?.all_lose_without_abort}v3={statToDisplay?.win_abort}v4={statToDisplay?.lose_abort}/>
-		</div>
-
-		<div>
-			<StatBlock title="Type O" win={statToDisplay?.type_O_win} lose={statToDisplay?.type_O_lose} className="wl-o-x" />
-			<StatBlock title="Type X" win={statToDisplay?.type_X_win} lose={statToDisplay?.type_X_lose} className="wl-o-x" />
-		</div>
-
-		<StatBlock title="Horizontal" win={statToDisplay?.win_horizontal} lose={statToDisplay?.lose_horizontal} className="wl-horizontal" />
-		<StatBlock title="Diagonal" win={statToDisplay?.win_diagonal} lose={statToDisplay?.lose_diagonal} className="wl-diagonal" />
-		<StatBlock title="Vertical" win={statToDisplay?.win_vertical} lose={statToDisplay?.lose_vertical} className="wl-vertical" />*/}
