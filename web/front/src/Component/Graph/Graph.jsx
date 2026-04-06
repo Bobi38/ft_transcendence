@@ -1,5 +1,4 @@
 /* extern */
-import { useEffect, useState } from "react";
 
 /* back */
 
@@ -9,23 +8,18 @@ import "./Graph.scss";
 /* Components */
 
 
-    
 export default function Graph({ v1, v2, v3, v4 }) {
     const total = v1 + v2 + v3 + v4;
 
-    // Calcul des pourcentages de chaque part
     const p1 = (v1 / total) * 100;
     const p2 = (v2 / total) * 100;
     const p3 = (v3 / total) * 100;
     const p4 = (v4 / total) * 100;
 
-    // Calcul des points d'arrêt cumulés pour le dégradé
     const stop1 = p1;
     const stop2 = stop1 + p2;
     const stop3 = stop2 + p3;
 
-    // Calcul du milieu de chaque tranche (en degrés pour la rotation)
-    // On multiplie par 3.6 car 100% = 360deg
     const mid1 = (p1 / 2) * 3.6;
     const mid2 = (stop1 + p2 / 2) * 3.6;
     const mid3 = (stop2 + p3 / 2) * 3.6;

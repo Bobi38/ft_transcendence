@@ -2,17 +2,17 @@
 
 .Graph-root {
     position: relative;
-    height: 200px; 
+    height: 200px;
     width: 200px;
     border-radius: 50%;
-    /* Utilisation des points d'arrêt dynamiques */
-    background: conic-gradient(
-        blue 0% var(--stop1), 
-        red var(--stop1) var(--stop2), 
-        rgb(75, 75, 240) var(--stop2) var(--stop3), 
+
+	background: conic-gradient(
+        blue 0% var(--stop1),
+        red var(--stop1) var(--stop2),
+        rgb(75, 75, 240) var(--stop2) var(--stop3),
         rgb(226, 43, 144) var(--stop3) 100%
     );
-    
+
     .label {
         position: absolute;
         top: 50%; 
@@ -27,17 +27,17 @@
     .v4{color :rgb(226, 43, 144); color: rgba(0, 0, 0, 0.3);}
 }
 
-//@media (width <= 1150px) {
+@media (width <= 1150px) {
 
-//    .Graph-root {
-//        height: 150px;
-//        width: 150px;
-//        .label {
-//            //20/50px 45/150px 60/200px
-//            transform: translate(-50%, -50%) rotate(var(--a)) translateY(-45px) rotate(calc(var(--a) * -1));
-//        }
-//    }
-//}
+    .Graph-root {
+        height: 150px;
+        width: 150px;
+        .label {
+            //20/50px 45/150px 60/200px
+            transform: translate(-50%, -50%) rotate(var(--a)) translateY(-45px) rotate(calc(var(--a) * -1));
+        }
+    }
+}
 
 @media (width <= $tablet) {
 

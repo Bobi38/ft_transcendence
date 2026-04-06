@@ -9,7 +9,7 @@ import "./Paging.scss";
 /* Components */
 
 
-    
+
 export default function Paging({ totalPages, currentPage, setNewPage}) {
 
     function default_tab() {

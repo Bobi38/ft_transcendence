@@ -96,7 +96,7 @@ export default function StatsMorpion({ username, setUsername }) {
 
     async function fetch_history(page_nb) {
 
-        const url = username 
+        const url = username
             ? `/api/morpion/get_history/${page_nb}?limit=${limit}&name=${username}`
             : `/api/morpion/get_history/${page_nb}?limit=${limit}`;
 
@@ -144,9 +144,7 @@ export default function StatsMorpion({ username, setUsername }) {
             <aside className={`aside border-1`}>
 				<div className={`search border-2`}>
 					<form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1);setInputValue("")}}>
-						<input type={`text`} value={inputValue}
-							onChange={(e) => {setInputValue(e.target.value);}}
-							/>
+						<input type={`text`} value={inputValue} onChange={(e) => {setInputValue(e.target.value);}}/>
 						<input type={`submit`} value={`search`}/>
 					</form>
 				</div>
@@ -156,20 +154,18 @@ export default function StatsMorpion({ username, setUsername }) {
 					<div className={`wl-graph border-3`}>
 						<div className={`wl-graph2 border-5`}>
 							<div>
-								<span style={{color: "blue"}}>Win:{statToDisplay?.all_win_without_abort}</span>
-								<span style={{color: "red"}}>Lose:{statToDisplay?.all_lose_without_abort}</span>
+								<span>Win:{statToDisplay?.all_win_without_abort}</span>
+								<span>Lose:{statToDisplay?.all_lose_without_abort}</span>
 							</div>
 							<div>
-								<span style={{color: "rgb(75, 75, 240)"}}>AbortWin:{statToDisplay?.win_abort}</span>
-								<span style={{color: "rgb(226, 43, 144)"}}>AbortLose:{statToDisplay?.lose_abort}</span>
+								<span>AbortWin:{statToDisplay?.win_abort}</span>
+								<span>AbortLose:{statToDisplay?.lose_abort}</span>
 							</div>
 						</div>
 						<Graph v1={statToDisplay?.all_win_without_abort}v2={statToDisplay?.all_lose_without_abort}v3={statToDisplay?.win_abort}v4={statToDisplay?.lose_abort}/>
 					</div>
 
 					<div className={`wl-o-x border-3`}>
-
-						{/* <p>ox-win-loss</p> */}
 
 						<div>
 							<p>Type O:</p>
