@@ -198,7 +198,7 @@ export class Player {
         const all = JSON.stringify({
             list: structuredClone(this.list),
         });
-        console.log(`list recu`, all);
+        // console.log(`list recu`, all);
 
         for (const socket of this._sockets.values()){
             try {

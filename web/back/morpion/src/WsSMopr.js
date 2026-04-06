@@ -81,7 +81,7 @@ export function initWebSMopr(server) {
         console.log("clear ", bot);
         players.delete(bot.getId());
         socket.sendList();
-      }, 90000);
+      }, 20 * 60 * 1000);
     }
 
     manager_room.sendList = () => {

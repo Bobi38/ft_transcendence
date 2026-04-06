@@ -76,20 +76,20 @@ function move(player, move){
         }
 
         game.switchTurn();
-        console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
-        console.log("mess4");
+        // console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
+        // console.log("mess4");
         if (game.isState("play"))
             game.notifyTurn(
                 {message: msgs.my_turn, turn: true},
                 {message: msgs.other_turn, turn: false}
             )
         if (game.isState("end")) {
-            console.log(`le jeu est terminer`);
+            // console.log(`le jeu est terminer`);
             return true;
         }
-        console.log("mess5");
+        // console.log("mess5");
         game.startTurnTimer();
-        console.log("mess6");
+        // console.log("mess6");
         return false;
     }
 }
