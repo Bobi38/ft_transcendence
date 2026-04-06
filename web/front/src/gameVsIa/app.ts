@@ -202,7 +202,7 @@ export class App {
     }
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
-        let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
+        let assets = await ImportMeshAsync("/app/media/mii.glb", this._scene);
         const body = assets.meshes[0];        
 
         if (isPlayer) {

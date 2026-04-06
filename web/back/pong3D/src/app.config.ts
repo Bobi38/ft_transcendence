@@ -6,6 +6,7 @@ import {
     createRouter,
     createEndpoint,
 } from "colyseus";
+import cors from "cors";
 
 /**
  * Import your Room files
@@ -39,6 +40,11 @@ const server = defineServer({
      * Read more: https://expressjs.com/en/starter/basic-routing.html
      */
     express: (app) => {
+        app.use(cors(
+            {origin: true,
+            credentials: true}
+        ));
+
         app.get("/hi", (req, res) => {
             res.send("It's time to kick ass and chew bubblegum!");
         });

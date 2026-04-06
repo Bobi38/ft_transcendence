@@ -7,7 +7,7 @@ export enum RoomStatus {
   PLAYER_DISCONNECTED = 3,
   AWAITING_RECONNECTION = 4
 }
-
+    
 export class Vector3 extends Schema {
   @type("number") x: number = 0;
   @type("number") y: number = 3;

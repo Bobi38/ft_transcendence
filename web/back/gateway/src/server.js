@@ -75,10 +75,17 @@ app.use('/api/chatP', createProxyMiddleware({
   changeOrigin: true
 }))
 
-app.use('/api/pong3d', createProxyMiddleware({
+
+const pong3dProxy = createProxyMiddleware({
   target: 'http://pong3d:2567',
-  changeOrigin: true
-}))
+  changeOrigin: true,
+  ws: true,
+  pathRewrite: {
+    '^/api/pong3d': '',
+  },
+});
+
+app.use('/api/pong3d', pong3dProxy);
 
 app.use('/api/morpion', createProxyMiddleware({
   target: 'http://morpion:9004',
@@ -95,9 +102,14 @@ app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
     // await majDb();
     // console.log("DB mise à jour avec succès");
     // addDb();
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
+    });
+    server.on('upgrade', (req, socket, head) => {
+      if (req.url.startsWith('/api/pong3d')) {
+        pong3dProxy.upgrade(req, socket, head);
+      }
     });
   } catch (err) {
     console.error("Erreur lors de l'initialisation du serveur :", err);
