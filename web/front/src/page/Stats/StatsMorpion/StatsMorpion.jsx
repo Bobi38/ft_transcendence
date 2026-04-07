@@ -125,14 +125,22 @@ export default function StatsMorpion({ username, setUsername }) {
 
             <div className={`history-container border-1`}>
 
-                <div className={`history-card-container border-2`}>
+				{historyUser.length !== 0 ? (
+					<>
+						<div className={`history-card-container border-2`}>
 
-                    {historyUser?.map((element, index) => {
-                        return (<StatsMorpionHistoryCard key={index} stats={element} nameSearched={username}/>)
-                    })}
+							{historyUser?.map((element, index) => {
+								return (<StatsMorpionHistoryCard key={index} stats={element} nameSearched={username}/>)
+							})}
 
-                </div>
-                <Paging totalPages={Math.ceil((statToDisplay?.total_game ?? 1) / limit)} currentPage={currentPage} setNewPage={setNewPage}/>
+						</div>
+						<Paging totalPages={Math.ceil((statToDisplay?.total_game ?? 1) / limit)} currentPage={currentPage} setNewPage={setNewPage}/>
+					</>
+				):(
+					<div className="histoy-empty">
+						<p>Go play games, nothing here...</p>
+					</div>
+				)}
             </div>
 
             <aside>
