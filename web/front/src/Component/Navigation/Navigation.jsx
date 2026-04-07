@@ -87,9 +87,6 @@ export default function Navigation({ children }) {
 
         connection_handler();
 
-        // refNavigationRoot.current.addEventListener("click", connection_handler);
-        // return () => refNavigationRoot.current.removeEventListener("click", connection_handler);
-
     }, [showLogRef, refNavigationRoot.current]);
 
     return (

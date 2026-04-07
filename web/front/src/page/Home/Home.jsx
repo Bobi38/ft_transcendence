@@ -21,7 +21,6 @@ const cards_content = [
 export default function Home() {
 
 	return (
-
 		<div id={`Home-root`}>
 
 			<div className={`menu`}>
@@ -34,5 +33,5 @@ export default function Home() {
                 <HomeChat/>
 			</div>
 		</div>
-	)
+	);
 }

@@ -2,9 +2,9 @@
 import "./ContactCard.scss";
 
 /* Components */
-import { FaGithub, FaLinkedin }     from "react-icons/fa";
-import { Si42 }                     from "react-icons/si";
-import Button                       from "COMP/Button/Button.jsx"
+import { FaGithub, FaLinkedin }     from    "react-icons/fa";
+import { Si42 }                     from    "react-icons/si";
+import Button                       from    "COMP/Button/Button.jsx"
 
 export default function ContactCard({
 		name = "default name",

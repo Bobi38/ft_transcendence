@@ -1,11 +1,11 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState } 	from	"react";
 
 /* Css */
 import "./HomeCardWeather.scss";
 
 /* Components */
-import { useAuth, AUTH } from "HOOKS/useAuth.jsx"
+import { useAuth, AUTH }		from	"HOOKS/useAuth.jsx"
 
 export default function HomeCardWeather() {
 
@@ -17,12 +17,12 @@ export default function HomeCardWeather() {
 		title: null, 
 		temp: null,
 	});
+
 	useEffect(() => {
 		
 		async function fetchWeather() {
 			try {
-				const current = showLog;
-				if (current != AUTH.NONE)
+				if (showLog != AUTH.NONE)
 					return ;
 				console.log("fetchWeather(1) called");
 				const response = await fetch("/api/profile/Homeweather", {
@@ -47,10 +47,9 @@ export default function HomeCardWeather() {
 		fetchWeather();
 	}, [showLog]);
 	
-	const [activeWeather, setActiveWeather] = useState({"": ""})
+	const [activeWeather, setActiveWeather] = useState({ "":"" })
 	
 	useEffect(() => {
-
 		setActiveWeather({
 			backgroundImage: `url(${weather.icon})`,
 		})
@@ -58,13 +57,13 @@ export default function HomeCardWeather() {
 	
     return (
 		<button className={`HomeCard-root HomeCardWeather`} style={activeWeather}>
-				<p>
-					<span>{weather.descript}</span><br/><br/>
-					<span>{weather.title}</span><br/>
-					<span>{weather.temp}</span>
-				</p>
+			<p>
+				<span>{weather.descript}</span><br/><br/>
+				<span>{weather.title}</span><br/>
+				<span>{weather.temp}</span>
+			</p>
 		</button>
-	)
+	);
 }
 
 

@@ -14,6 +14,7 @@ export default function PopUp() {
     const {showLog, setShowLog} = useAuth();
 
     async function login_mode() {
+        
         sessionStorage.clear();
         const url = `/api/secu/clearcookie`;
         console.log(`${url}`)
@@ -24,6 +25,7 @@ export default function PopUp() {
             credential: "include",
         }, null, null, true)
         setShowLog(AUTH.LOGIN);
+
     }
 
     const password_forget_mode = () => {
@@ -47,7 +49,6 @@ export default function PopUp() {
             {showLog === AUTH.REGISTER && <Register login_mode={login_mode}/>}
             {showLog === AUTH.PASSFORGET && <PasswordForget login_mode={login_mode}/>}
 
-
         </div>
-    )
+    );
 }

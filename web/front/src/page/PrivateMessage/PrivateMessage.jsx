@@ -18,9 +18,9 @@ export default function PrivateMessage() {
     const [goToAction, setGoToAction] = useState(2)
     const [goToConv, setGoToConv] = useState(null)
     const { showFriend, setShowFriend } = useFriend();
-
+    
+    
     const [displayedInfoConv, setDisplayedInfoConv] = useState([]);
-
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
     async function fetch_go_to_conv_private(){
@@ -119,11 +119,11 @@ export default function PrivateMessage() {
 				<div className={`display-screen border-2`}>
 					{goToAction === 1 && <AddFriends />}
 					{goToAction === 2 && <Friends setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
-					{goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
+					{goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} /> 
 
 				</div>
 			</Hr>
 		</div>
-    )
+    );
 }
 

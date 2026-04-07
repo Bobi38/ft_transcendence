@@ -10,11 +10,7 @@ import useFetch                 from    "TOOL/useFetch.jsx";
     
 export default function Friends({setGoToAction, setGoToConv}) {
 
-
-    console.log("Friends Components called")
-
     const [responseFriendArray, setResponseFriendArray] = useState([]);
-
 
     async function all_friend(){
         const url = `/api/friend`;
@@ -79,7 +75,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
         await dlt_friend(friend.login);
         await all_friend();
         SocketM.send("friend", {type: "maj_frd", login: friend});
-
     }
 
 

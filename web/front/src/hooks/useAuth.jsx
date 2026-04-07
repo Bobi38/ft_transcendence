@@ -11,13 +11,13 @@ export const AUTH = {
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [showLog, setShowLog] = useState(AUTH.NONE);
+    const [showLog, setShowLog] = useState(AUTH.NONE);
 
-  return (
-    <AuthContext.Provider value={{ showLog, setShowLog }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ showLog, setShowLog }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export const useAuth = () => useContext(AuthContext);

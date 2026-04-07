@@ -10,7 +10,9 @@ import Button 				from	"COMP/Button/Button.jsx";
 export default function NavBar() {
 
     const { setShowLog } = useAuth();
+
 	function logout() {
+		
 	   console.log("logout(1) called")
 	   fetch('/api/auth/logout', {
 	       method: 'GET',

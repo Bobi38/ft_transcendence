@@ -122,97 +122,82 @@ export default function PasswordForget({login_mode}) {
         setShowLog(AUTH.LOGIN)
     }
 
-    async function login_mode() {
-        sessionStorage.clear();
-        const url = `/api/secu/cookie`;
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credential: "include",
-        }, null, null, true)
-        setShowLog(AUTH.LOGIN);
-    }
-
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>Password Forget</h1>
+            <h1>Password Forget</h1>
 
-                {showMode === "send_code" && (
-                    <>
-                        <form onSubmit={(e) => {send_code(e)}}>
+            {showMode === "send_code" && (
+                <>
+                    <form onSubmit={(e) => {send_code(e)}}>
 
-                            <label htmlFor={`email`}>Email</label>
-                            <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
-                            <button type={`submit`} >Send mail verification</button>
+                        <label htmlFor={`email`}>Email</label>
+                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
+                        <button type={`submit`} >Send mail verification</button>
 
-                        </form>
-                        <button type={`button`} onClick={login_mode}>Connexion</button>
-                    </>
-                )}
+                    </form>
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
+                </>
+            )}
 
-                {showMode === "check_code" && (
-                    <>
-                        <form onSubmit={(e) => {check_code(e)}}>
+            {showMode === "check_code" && (
+                <>
+                    <form onSubmit={(e) => {check_code(e)}}>
 
-                                <input type={`text`} 
-                                        id={`code`} name={`code`} 
-                                        placeholder={`Entrez Code`}/>
-                                <button type={`submit`}>Valider</button>
+                            <input type={`text`} 
+                                    id={`code`} name={`code`} 
+                                    placeholder={`Entrez Code`}/>
+                            <button type={`submit`}>Valider</button>
 
-                        </form>
-                        <hr/>
-                        <form onSubmit={(e) => {send_code(e)}}>
+                    </form>
+                    <hr/>
+                    <form onSubmit={(e) => {send_code(e)}}>
 
-                            <label htmlFor={`email`}>Email</label>
-                            <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
-                            <button type={`submit`} >Send mail verification</button>
+                        <label htmlFor={`email`}>Email</label>
+                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
+                        <button type={`submit`} >Send mail verification</button>
 
-                        </form>
-                        <button type={`button`} onClick={login_mode}>Connexion</button>
+                    </form>
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
 
-                    </>
-                )}
+                </>
+            )}
 
-                {showMode === "new_password" && (
-                    <>
-                        <form onSubmit={(e) => {handle_pass(e)}}>
+            {showMode === "new_password" && (
+                <>
+                    <form onSubmit={(e) => {handle_pass(e)}}>
 
-                            <label htmlFor={`password`}>Nouveau Mot de passe</label>
-                            <div className={`input-wrapper`}>
-                                <input type={showPassword ? "text" : "password"}
-                                    id={`password`} name={`password`}
-                                    className={`password-field`}
-                                    placeholder={`Votre nouveau mot de passe`}
-                                    />
-                                <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <VscEyeClosed /> : <VscEye />}
-                                </span>
-                            </div>
+                        <label htmlFor={`password`}>Nouveau Mot de passe</label>
+                        <div className={`input-wrapper`}>
+                            <input type={showPassword ? "text" : "password"}
+                                id={`password`} name={`password`}
+                                className={`password-field`}
+                                placeholder={`Votre nouveau mot de passe`}
+                                />
+                            <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            </span>
+                        </div>
 
-                            <label htmlFor={`confirmePassword`}>Confirmer Mot de passe</label>
-                            <div className={`input-wrapper`}>
-                                <input type={showPassword ? "text" : "password"}
-                                    id={`confirmePassword`} name={`confirmePassword`}
-                                    className={`password-field`}
-                                    placeholder={`Confirmation du nouveau mot de passe`}
-                                    />
-                                <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <VscEyeClosed /> : <VscEye />}
-                                </span>
-                            </div>
+                        <label htmlFor={`confirmePassword`}>Confirmer Mot de passe</label>
+                        <div className={`input-wrapper`}>
+                            <input type={showPassword ? "text" : "password"}
+                                id={`confirmePassword`} name={`confirmePassword`}
+                                className={`password-field`}
+                                placeholder={`Confirmation du nouveau mot de passe`}
+                                />
+                            <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
+                            </span>
+                        </div>
 
-                            <button type={`submit`}>Modifier mon mot de passe</button>
+                        <button type={`submit`}>Modifier mon mot de passe</button>
 
-                        </form>
-                        <button type={`button`} onClick={login_mode}>Connexion</button>
-                    </>
-                )}
+                    </form>
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
+                </>
+            )}
 
-            </div>
-        </>
+        </div>
     );
 }

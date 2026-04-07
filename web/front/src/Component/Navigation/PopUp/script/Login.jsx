@@ -1,6 +1,7 @@
 /* extern */
 import { FaGithub }         from    "react-icons/fa";
 import { FcGoogle }         from    "react-icons/fc";
+import { useGoogleLogin }   from    '@react-oauth/google';
 
 /* Css */
 import "../PopUp.scss";
@@ -10,7 +11,6 @@ import SocketM              from    "TOOL/SocketManag";
 import { showAlert }        from    "TOOL/fonction_usefull.js";
 import useFetch             from    "TOOL/useFetch.jsx";
 import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
-import { useGoogleLogin }   from    '@react-oauth/google';
 
 export default function Login({ password_forget_mode, register_mode}) {
 
@@ -31,10 +31,10 @@ export default function Login({ password_forget_mode, register_mode}) {
             return;
         }
 
-        const api_url = `/api/auth/login`;
-        console.log(`${api_url}`)
+        const url = `/api/auth/login`;
+        console.log(`${url}`)
 
-        const repjson = await useFetch(`${api_url}`, {
+        const repjson = await useFetch(`${url}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -48,6 +48,7 @@ export default function Login({ password_forget_mode, register_mode}) {
             showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
             return ;
         }
+
         sessionStorage.setItem('username', repjson.username);
 
         if (repjson.success === false){
@@ -74,10 +75,10 @@ export default function Login({ password_forget_mode, register_mode}) {
     const handle_google = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try{
-                const api_url = "/api/oauth2/google";
-                console.log(`${api_url}`)
+                const url = "/api/oauth2/google";
+                console.log(`${url}`)
 
-                const repjson = await useFetch(`${api_url}`, {
+                const repjson = await useFetch(`${url}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token, frontendUrl: window.location.origin })
@@ -101,57 +102,55 @@ export default function Login({ password_forget_mode, register_mode}) {
     });
 
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>Connexion</h1>
-                <form id={`login`} onSubmit={(e) => {login_submit(e)}}>
+            <h1>Connexion</h1>
+            <form id={`login`} onSubmit={(e) => {login_submit(e)}}>
 
 
-                    <label  htmlFor="email">Email</label>
-                    <input  type={`email`}
-                            id={`email`}
-                            name={`email`}
-                            placeholder={`you@exemple.com`}
-                            required
-                    />
+                <label  htmlFor="email">Email</label>
+                <input  type={`email`}
+                        id={`email`}
+                        name={`email`}
+                        placeholder={`you@exemple.com`}
+                        required
+                />
 
-                    <label  htmlFor="password">Password</label>
-                    <input  type={`password`}
-                            id={`password`}
-                            name={`password`}
-                            placeholder={`1234btw`}
-                            required
-                    />
+                <label  htmlFor="password">Password</label>
+                <input  type={`password`}
+                        id={`password`}
+                        name={`password`}
+                        placeholder={`1234btw`}
+                        required
+                />
 
-                    <div className={`button-container`}>
+                <div className={`button-container`}>
 
-                        <button type={`submit`} className={``}>
-                                Connexion
+                    <button type={`submit`} className={``}>
+                            Connexion
+                    </button>
+
+                    <button type={`button`} className={``} target="_blank"
+                            onClick={handle_git}>
+                            <FaGithub/> GitHub
+                    </button>
+
+                    <button onClick={handle_google}>
+                        <FcGoogle/> Google
                         </button>
 
-                        <button type={`button`} className={``} target="_blank"
-                                onClick={handle_git}>
-                                <FaGithub/> GitHub
-                        </button>
+                    <button type={`button`} className={``}
+                            onClick={register_mode}>
+                            Register
+                    </button>
 
-                        <button onClick={handle_google}>
-                            <FcGoogle/> Google
-                            </button>
+                    <button type={`button`} className={``} target="_blank"
+                            onClick={password_forget_mode}>
+                            Password forgot ?
+                    </button>
 
-                        <button type={`button`} className={``}
-                                onClick={register_mode}>
-                                Register
-                        </button>
-
-                        <button type={`button`} className={``} target="_blank"
-                                onClick={password_forget_mode}>
-                                Password forgot ?
-                        </button>
-
-                    </div>
-                </form>
-            </div>
-        </>
-    )
+                </div>
+            </form>
+        </div>
+    );
 }

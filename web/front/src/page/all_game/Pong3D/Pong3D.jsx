@@ -12,9 +12,7 @@ import { App as GameApp }       from    "FRONT/game/app.ts";
 
 export default function Pong3D() {
 
-
     const navigate = useNavigate();
-
     const canvasRef = useRef(null);
 
     useEffect(() => {
@@ -38,7 +36,6 @@ export default function Pong3D() {
         init();
 
         return () => {
-            console.log("testsaasdawd");
             gameApp?.dispose?.();
         };
     }, [canvasRef]);

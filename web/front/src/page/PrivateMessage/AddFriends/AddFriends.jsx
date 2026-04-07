@@ -10,6 +10,7 @@ import useFetch                 from    "TOOL/useFetch.jsx";
 import Hr                       from    "FRONT/Component/Hr/Hr.jsx";
 
 export default function AddFriends() {
+
     const fetch_type = {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -48,9 +49,7 @@ export default function AddFriends() {
             return;
         fetch_all_request_friend();
         SocketM.send("friend", {type: "req_frd", login: name});
-        console.log("add_friend(info) good");
     }
-
 
     async function fetch_all_request_friend(){
         const url = `/api/friend/requests`;
@@ -63,8 +62,6 @@ export default function AddFriends() {
         console.log("all_request_friend", repjson.message)
         setResponseFriendArray(repjson.message)
     }
-
-
 
     useEffect(() => {
         fetch_all_request_friend();
@@ -81,13 +78,12 @@ export default function AddFriends() {
 
     }, []);
 
-
     const handel_form = (e) =>{
-        console.log("handel_form(1) called")
+        // console.log("handel_form(1) called")
         const el_add_friend = document.getElementById("add-friend")
-        console.log("handel_form(2) demande envoyer", el_add_friend.value)
+        // console.log("handel_form(2) demande envoyer", el_add_friend.value)
         add_friend(el_add_friend.value)
-        console.log("handel_form(info) clear input value")
+        // console.log("handel_form(info) clear input value")
         el_add_friend.value = ""
     }
     
