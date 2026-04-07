@@ -23,11 +23,14 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
     const result = await User.findAll({ where: { mail: email } });
+    console.log("wwaaaaaaaaah", result);
     if (result.length === 0)
-        return res.status(404).json({success: false, message: 'Email not find'});
+        return res.status(401).json({success: false, message: 'Email not found'});
+    console.log("wiiiiiiii")
     const DecrypPass = await bcrypt.compare(password, result[0].password);
     if (!DecrypPass)
-        return res.status(404).json({success: false, message: 'Password not valid'});
+        return res.status(401).json({success: false, message: 'Password not valid'});
+    console.log("wuuuuuuuuuuuuuuuuuuuuuu");
     const iid = await Co.findAll({where: { userId: result[0].id}})
       console.log("Api /login " + result[0].id," avant token");
     const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
@@ -42,10 +45,10 @@ router.post('/login', async (req, res) => {
     await result[0].update({MPFA: MPFA});
     await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
     res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-    res.status(201).json({  success : true , message: 'Utilisateur connecte', token: token, username: result[0].name, MPFA: MPFA });
+    res.status(201).json({  success : true , message: 'User connected', token: token, username: result[0].name, MPFA: MPFA });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Erreur MySQL' });
+    //console.error(err);
+    res.status(500).json({ success: false, message: 'MySQL error', err});
   }
 });
 
@@ -54,30 +57,29 @@ router.post('/register', async (req, res) => {
     console.log("Api /register called");
     const { name, password, email } = req.body;
     try {
-      console.log("1")
       if (!name || !password || !email) {
-        return res.status(400).json({ success: false, message: 'Il manque ' });
+        return res.status(400).json({ success: false, message: 'Missing necessary field' });
       }
       if (!validator.isEmail(email)){
-        return res.status(400).json({ success: false, message: "Le format de l'email est invalide" });
+        return res.status(400).json({ success: false, message: "Invalid email format" });
       }
       const find = await User.findAll({ where: { mail: email } });
       if (find.length != 0) {
         if (find[0].OAuth == true)
-          return res.status(409).json({success: false, message: 'Email deja utilise via Github ou Gmail'});
+          return res.status(409).json({success: false, message: 'Email already in use via Github/Google'});
         else
-          return res.status(409).json({success: false, message: 'Email deja utilise'});
+          return res.status(409).json({success: false, message: 'Email already in use'});
       }
         const nam = await User.findAll({where :{name: name}})
         if (nam.length != 0)
-            return res.status(409).json({success: false, message: 'Nom deja utilise'})
+            return res.status(409).json({success: false, message: 'Username already used'})
         console.log("Api /register av");
         const CrypPass = await bcrypt.hash(password, 10);
         const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
         console.log("Api /register ID", result.insertId);
-        res.status(201).json({success: true, message: 'Utilisateur ajouté', user_id: result.insertId});
+        res.status(201).json({success: true, message: 'User registered', user_id: result.insertId});
     } catch (err) {
-        res.status(500).json({success: false, message: 'Erreur MySQL' + err });
+        res.status(500).json({success: false, message: 'MySQL error' + err });
     }
 });
 
@@ -90,10 +92,10 @@ router.get('/logout', async (req, res) => {
     await result[0].update({co: false, MPFA: true});
     await Co.destroy({ where: { userId: decoded.id } });
     res.clearCookie('token');
-    res.status(201).json({ success: true, message: 'Utilisateur deconnecte' });
+    res.status(201).json({ success: true, message: 'User disconnected' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Erreur MySQL' });
+    res.status(500).json({ success: false, message: 'MySQL error' });
   }
 });
 

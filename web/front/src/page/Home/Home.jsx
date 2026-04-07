@@ -1,14 +1,10 @@
-/* extern */
-
-/* back */
-
 /* Css */
 import "./Home.scss";
 
 /* Components */
-import HomeChat from "./HomeChat/HomeChat.jsx";
-import HomeCard from "./HomeCard/HomeCard.jsx";
-import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
+import HomeChat 			from	"./HomeChat/HomeChat.jsx";
+import HomeCard 			from	"./HomeCard/HomeCard.jsx";
+import HomeCardWeather 		from	"./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 
 
 const cards_content = [
@@ -36,5 +32,5 @@ export default function Home() {
                 <HomeChat/>
 			</div>
 		</div>
-	)
+	);
 }

@@ -1,12 +1,8 @@
-/* extern */
-
-/* back */
-
 /* Css */
 import "./ContactUs.scss";
 
 /* Components */
-import ContactCard from "./ContactCard/ContactCard";
+import ContactCard          from    "./ContactCard/ContactCard";
 
 const teamMembers = [
     { name: "Membre 0" },
@@ -26,7 +22,6 @@ export default function ContactUs() {
 
     return (
         <section className={`ContactUs-root`}>
-
             <h1>Contact us !</h1>
 
 			<hr />

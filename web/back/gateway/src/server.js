@@ -1,19 +1,11 @@
 
 import express from 'express';
 import session from "express-session";
-import http from 'http';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-// import {Server as ColyServ} from "colyseus";
-// import { GameRoom } from './colyseus/GameRoom.js';
-// import router from './routes/index.js';
-// import router from './router.js';
-import { majDb } from './CreatDB.js';
-import { addDb } from './CreatDB.js';
 
 
 //router
@@ -75,10 +67,17 @@ app.use('/api/chatP', createProxyMiddleware({
   changeOrigin: true
 }))
 
-app.use('/api/pong3d', createProxyMiddleware({
+
+const pong3dProxy = createProxyMiddleware({
   target: 'http://pong3d:2567',
-  changeOrigin: true
-}))
+  changeOrigin: true,
+  ws: true,
+  pathRewrite: {
+    '^/api/pong3d': '',
+  },
+});
+
+app.use('/api/pong3d', pong3dProxy);
 
 app.use('/api/morpion', createProxyMiddleware({
   target: 'http://morpion:9004',
@@ -95,12 +94,17 @@ app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
     // await majDb();
     // console.log("DB mise à jour avec succès");
     // addDb();
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
     });
+    server.on('upgrade', (req, socket, head) => {
+      if (req.url.startsWith('/api/pong3d')) {
+        pong3dProxy.upgrade(req, socket, head);
+      }
+    });
   } catch (err) {
-    console.error("Erreur lors de l'initialisation du serveur :", err);
+    console.error("Error while initializing server :", err);
     process.exit(1);
   }
 })();

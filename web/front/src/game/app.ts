@@ -108,10 +108,10 @@ export class App {
     }
 
     private async _connectOrReconnectToRoom() {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const protocol = window.location.protocol;
         const hostname = window.location.hostname;
-        console.log("iciiiiiiii====   " , `${protocol}//${hostname}:2567`);
-        let colyseusSDK = new Client(`${protocol}//${hostname}:2567`);
+        console.log("iciiiiiiii====   " , `${protocol}//${hostname}/api/pong3d`);
+        let colyseusSDK : Client = new Client(`${protocol}//${hostname}:9443/api/pong3d`);
         const token = sessionStorage.getItem("token");
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
@@ -125,6 +125,8 @@ export class App {
             }
         } catch (e) {
             console.log("Reconnect failed or no previous session, joining new room:", e);
+            if (reconnectionGameToken)
+                localStorage.removeItem("reconnectionGameToken")
             try {
                 room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
             } catch (newRoomError) {
@@ -442,7 +444,7 @@ export class App {
     }
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
-        let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
+        let assets = await ImportMeshAsync("/app/media/mii.glb", this._scene);
         const body = assets.meshes[0];        
 
         if (isPlayer) {

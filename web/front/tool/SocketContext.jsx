@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect } from 'react';
-import { useAuth, AUTH } from './AuthContext';
+import { useAuth, AUTH } from '"HOOKS/useAuth.jsx"';
 
 const SocketContext = createContext(null);
 

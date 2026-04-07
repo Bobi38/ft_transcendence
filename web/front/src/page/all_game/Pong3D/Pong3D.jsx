@@ -1,16 +1,14 @@
 /* extern */
-import { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-/* back */
-import checkCo from "TOOL/fonction_usefull.js"
-import {showAlert} from "TOOL/fonction_usefull.js"
+import { useRef, useEffect }    from    "react";
+import { useNavigate }          from    "react-router-dom";
 
 /* Css */
 import "./Pong3D.scss";
 
 /* Components */
-import { App as GameApp } from "FRONT/game/app.ts";
+import checkCo                  from    "TOOL/fonction_usefull.js"
+import {showAlert}              from    "TOOL/fonction_usefull.js"
+import { App as GameApp }       from    "FRONT/game/app.ts";
 
 export default function Pong3D() {
 
@@ -38,7 +36,6 @@ export default function Pong3D() {
         init();
 
         return () => {
-            console.log("testsaasdawd");
             gameApp?.dispose?.();
         };
     }, [canvasRef]);

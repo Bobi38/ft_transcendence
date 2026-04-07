@@ -1,14 +1,14 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }      from "react";
 
 /* back */
 /* Css */
 import "./StatsMorpion.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
-import Paging from "COMP/Paging/Paging.jsx";
-import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
+import useFetch                     from "TOOL/useFetch.jsx";
+import Paging                       from "COMP/Paging/Paging.jsx";
+import StatsMorpionHistoryCard      from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 
 function cal_percentage(value, max)
 {

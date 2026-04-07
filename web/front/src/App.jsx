@@ -1,37 +1,37 @@
 /* extern */
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from    "react-router-dom";
+import { useEffect, useState }          from    "react";
 
 /* back */
-import SocketM from "TOOL/SocketManag";
-import checkCo from "TOOL/fonction_usefull.js"
-import { useAuth } from "TOOL/AuthContext.jsx"
-import { FRIEND, useFriend } from "TOOL/FriendContext.jsx";
+import checkCo                          from    "TOOL/fonction_usefull.js"
+import SocketM                          from    "TOOL/SocketManag";
+import { FRIEND, useFriend }            from    "TOOL/FriendContext.jsx";
+import { useAuth }                      from    "HOOKS/useAuth.jsx"
 
 /* Css */
 import './style/index.scss'
 
 /* Components */
-import Navigation       from    "FRONT/Component/Navigation/Navigation.jsx";
+import Navigation                       from    "FRONT/Component/Navigation/Navigation.jsx";
 // ./src/page/
-import Home             from    "FRONT/page/Home/Home.jsx";
-import ContactUs        from    "FRONT/page/ContactUs/ContactUs.jsx";
-import ErrorRedir       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
-import PrivateMessage   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
-import Profile          from    "FRONT/page/Profile/Profile.jsx";
-import Stats            from    "FRONT/page/Stats/Stats.jsx";
-import PrivacyPolicy    from "./Component/PP&ToS/Privacy_Policy.jsx";
-import TermsOfService   from "./Component/PP&ToS/Terme_Security.jsx";
+import Home                             from    "FRONT/page/Home/Home.jsx";
+import ContactUs                        from    "FRONT/page/ContactUs/ContactUs.jsx";
+import ErrorRedir                       from    "FRONT/page/ErrorRedir/ErrorRedir.jsx";
+import PrivateMessage                   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
+import Profile                          from    "FRONT/page/Profile/Profile.jsx";
+import Stats                            from    "FRONT/page/Stats/Stats.jsx";
+import PrivacyPolicy                    from    "COMP/PP&ToS/Privacy_Policy.jsx";
+import TermsOfService                   from    "COMP/PP&ToS/Terme_Security.jsx";
 
 // ./src/page/all_game
-import Pong3D           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
-import Pong3DIa         from    "FRONT/page/all_game/Pong3DIa/Pong3DIa.jsx";
-import MorpionDisplay          from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
+import Pong3D                           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
+import Pong3DIa                         from    "FRONT/page/all_game/Pong3DIa/Pong3DIa.jsx";
+import MorpionDisplay                   from    "FRONT/page/all_game/MorpionDisplay/MorpionDisplay.jsx";
 
 
 export default function App() {
 
-    const { showLog, setShowLog } = useAuth();
+    const { showLog } = useAuth();
     const [notif, setNotif] = useState(null);
     const { setShowFriend } = useFriend();
 

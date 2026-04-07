@@ -1,14 +1,12 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
+import { useState } 			from	"react";
 
 /* Css */
 import "./Stats.scss";
 
 /* Components */ 
-import StatsMorpion from "./StatsMorpion/StatsMorpion.jsx";
-import StatsPong3D from "./StatsPong3D/StatsPong3D.jsx";
+import StatsMorpion 			from	"./StatsMorpion/StatsMorpion.jsx";
+// import StatsPong3D 				from	"./StatsPong3D/StatsPong3D.jsx";
 
 
 export default function Stats() {

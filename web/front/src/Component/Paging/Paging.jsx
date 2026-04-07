@@ -1,12 +1,8 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
+import { useEffect, useState }  from    "react";
 
 /* Css */
 import "./Paging.scss";
-
-/* Components */
 
 export default function Paging({ totalPages, currentPage, setNewPage}) {
 

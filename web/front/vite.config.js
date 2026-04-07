@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react'; // ou react si tu utilises React
+import react from '@vitejs/plugin-react';
 import path from 'path'
 
 export default defineConfig({

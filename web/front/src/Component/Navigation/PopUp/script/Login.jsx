@@ -1,4 +1,7 @@
 /* extern */
+import { FaGithub }         from    "react-icons/fa";
+import { FcGoogle }         from    "react-icons/fc";
+import { useGoogleLogin }   from    '@react-oauth/google';
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
@@ -10,21 +13,25 @@ import SocketM from "TOOL/SocketManag";
 import "../PopUp.scss";
 
 /* Components */
+import SocketM              from    "TOOL/SocketManag";
+import { showAlert }        from    "TOOL/fonction_usefull.js";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 import { useGoogleLogin } from '@react-oauth/google';
 import useFetch from "HOOKS/useFetch.jsx";
 
-export default function Login() {
+export default function Login({ password_forget_mode, register_mode}) {
 
-    const {setShowLog, showLog} = useAuth();
+    const {setShowLog} = useAuth();
 
-    const login_submit = async (event) => {
+    const login_submit = async (e) => {
 
-		event.preventDefault();
-        const form = event.target;
+		e.preventDefault();
+        const form = e.target;
         const data = {
-            email: form.email.value.trim(),
-            password: form.password.value.trim(),
+            email: form.email.value,
+            password: form.password.value,
             host: window.location.host
         };
 
@@ -33,15 +40,14 @@ export default function Login() {
             return;
         }
 
-        const api_url = `/api/auth/login`;
-        console.log(`${api_url}`)
+        const url = `/api/auth/login`;
+        console.log(`${url}`)
 
-        const repjson = await useFetch(`${api_url}`, {
+        const repjson = await useFetch(`${url}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         }, null, null, true);
-        console.log(repjson);
         if (!repjson){
             showAlert("Impossible de se connecter pour le moment", "danger");
             return;
@@ -51,6 +57,8 @@ export default function Login() {
             showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
             return ;
         }
+
+        sessionStorage.setItem('username', repjson.username);
 
         if (repjson.success === false){
             showAlert(`Erreur : ${repjson.message}`, "danger");
@@ -65,16 +73,6 @@ export default function Login() {
         };
     };
 
-    const password_forget_mode = () => {
-        sessionStorage.clear();
-        setShowLog(AUTH.PASSFORGET);
-    };
-
-    const register_mode = () => {
-        sessionStorage.clear();
-        setShowLog(AUTH.REGISTER);
-    }
-
     const handle_git = () => {
         const frontendUrl = window.location.origin;
         const backUrl = window.location.hostname;
@@ -85,10 +83,10 @@ export default function Login() {
     const handle_google = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try{
-                const api_url = "/api/oauth2/google";
-                console.log(`${api_url}`)
+                const url = "/api/oauth2/google";
+                console.log(`${url}`)
 
-                const repjson = await useFetch(`${api_url}`, {
+                const repjson = await useFetch(`${url}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token, frontendUrl: window.location.origin })
@@ -112,56 +110,55 @@ export default function Login() {
     });
 
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>Connexion</h1>
-                <form id={`login`} onSubmit={login_submit}>
+            <h1>Connexion</h1>
+            <form id={`login`} onSubmit={(e) => {login_submit(e)}}>
 
 
-                    <label  htmlFor="email">Email</label>
-                    <input  type={`email`}
-                            id={`email`}
-                            name={`email`}
-                            placeholder={`you@exemple.com`}
-                            required
-                    />
+                <label  htmlFor="email">Email</label>
+                <input  type={`email`}
+                        id={`email`}
+                        name={`email`}
+                        placeholder={`you@exemple.com`}
+                        required
+                />
 
-                    <label  htmlFor="password">Password</label>
-                    <input  type={`password`}
-                            id={`password`}
-                            name={`password`}
-                            placeholder={`1234btw`}
-                            required
-                    />
+                <label  htmlFor="password">Password</label>
+                <input  type={`password`}
+                        id={`password`}
+                        name={`password`}
+                        placeholder={`1234btw`}
+                        required
+                />
 
-                    <div className={`button-container`}>
+                <div className={`button-container`}>
 
-                        <button type={`submit`} className={``}>
-                                Connexion
+                    <button type={`submit`} className={``}>
+                            Connexion
+                    </button>
+
+                    <button type={`button`} className={``} target="_blank"
+                            onClick={handle_git}>
+                            <FaGithub/> GitHub
+                    </button>
+
+                    <button onClick={handle_google}>
+                        <FcGoogle/> Google
                         </button>
 
-                        <button type={`button`} className={``} target="_blank"
-                                onClick={handle_git}>
-                                <FaGithub/> GitHub
-                        </button>
+                    <button type={`button`} className={``}
+                            onClick={register_mode}>
+                            Register
+                    </button>
 
-                        <button onClick={handle_google}>
-                            <FcGoogle/> Google
-                            </button>
+                    <button type={`button`} className={``} target="_blank"
+                            onClick={password_forget_mode}>
+                            Password forgot ?
+                    </button>
 
-                        <button type={`button`} className={``}
-                                onClick={register_mode}>
-                                Register
-                        </button>
-
-                        <button type={`button`} className={``} target="_blank"
-                                onClick={password_forget_mode}>
-                                Password forgot ?
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </>
-    )
+                </div>
+            </form>
+        </div>
+    );
 }

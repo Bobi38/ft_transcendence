@@ -1,24 +1,19 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
-/* back */
-import SocketM from "TOOL/SocketManag";
 /* Css */
 import "./Friends.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
+import SocketM                  from    "TOOL/SocketManag";
+import useFetch                 from    "TOOL/useFetch.jsx";
 
 export default function Friends({setGoToAction, setGoToConv}) {
 
-
-    console.log("Friends Components called")
-
     const [responseFriendArray, setResponseFriendArray] = useState([]);
 
-
     async function all_friend(){
-        const url = `/api/friend/all_friend`;
+        const url = `/api/friend`;
 
         console.log(`${url}`)
 
@@ -38,10 +33,10 @@ export default function Friends({setGoToAction, setGoToConv}) {
         if (!name)
             return;
 
-        const url = `/api/friend/dlt_friend?name=${name}`;
+        const url = `/api/friend/${name}`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
-                method: "GET",
+                method: "DELETE",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
             }, null , function(repjson) {
@@ -79,7 +74,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
         await dlt_friend(friend.login);
         await all_friend();
         SocketM.send("friend", {type: "maj_frd", login: friend});
-
     }
 
     return (

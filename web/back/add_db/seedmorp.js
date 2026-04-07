@@ -1,4 +1,4 @@
-import GameMorp from "../models/GameMorp.js";
+import GameMorp from "./models/GameMorp.js";
 
 export async function CreatGameMorp() {
   const count = await GameMorp.count();
@@ -287,6 +287,6 @@ export async function CreatGameMorp() {
       }
     ]);
 
-    console.log("✅ GameMorp seed inséré");
+    console.log("GameMorp seed inséré");
   }
 }

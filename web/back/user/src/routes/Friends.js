@@ -19,7 +19,7 @@ function format_all_friend(relation) {
 	return tableau;
 };
 
-router.get('/all_friend', async (req, res) => {
+router.get('/', async (req, res) => {
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
@@ -52,9 +52,9 @@ export const getAllFriends = async (req, res) => {
     res.json(friends);
 };
 
-router.get('/add_friend', async (req, res) => {
+router.post('/', async (req, res) => {
 	try{
-		const name = req.query.name;
+		const name = req.body.name;
 		if (!name)
 			return res.status(400).json({success: false, message: "no name"});
 
@@ -77,7 +77,7 @@ router.get('/add_friend', async (req, res) => {
 	}
 })
 
-router.get('/dlt_friend', async (req, res) => {
+router.delete('/:name', async (req, res) => {
 	try{
 		const name = req.query.name;
 		if (!name)
@@ -116,7 +116,7 @@ function format_all_request_friend(name, relation) {
 	return data;
 };
 
-router.get('/all_request_friend', async (req,res) => {
+router.get('/requests', async (req,res) => {
 	try{
 		const token = req.cookies.token;
     	const decoded = jwt.verify(token, secret);
@@ -148,7 +148,7 @@ router.get('/all_request_friend', async (req,res) => {
 })
 
 
-router.post('/response_friend', async (req, res) => {
+router.patch('/response', async (req, res) => {
 	try {
 		let acceptt;
 		console.log("i m in response friend")
@@ -179,9 +179,9 @@ router.post('/response_friend', async (req, res) => {
 
 
 
-router.get('/is_friend', async (req, res) => {
+router.get('/:name/status', async (req, res) => {
 	try{
-		const name = req.query.name;
+		const name = req.params.name;
 		if (!name)
 			return res.status(400).json({success: false, message: "no name"});
 		const friend = await User.findOne({ where: { name: name } });

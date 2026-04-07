@@ -1,16 +1,14 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM  from "TOOL/SocketManag.js";
-import {useAuth, AUTH} from "TOOL/AuthContext.jsx"
+import { useEffect, useState }      from    "react";
 
 /* Css */
 import "./HomeChat.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch";
+import { showAlert }                from    "TOOL/fonction_usefull.js";
+import SocketM                      from    "TOOL/SocketManag.js";
+import useFetch                     from    "TOOL/useFetch";
+import {useAuth, AUTH}              from    "HOOKS/useAuth.jsx"
 
 export default function HomeChat() {
 
@@ -21,7 +19,7 @@ export default function HomeChat() {
 
     async function fetch_global_message(){
 
-        const url = `/api/chatG/get_chat_global`;
+        const url = `/api/chatG`;
 
         console.log(`${url}`)
 
@@ -38,7 +36,7 @@ export default function HomeChat() {
     async function add_message_global(time){
         if (!time) return
 
-        const url = `/api/chatG/add_message_global`;
+        const url = `/api/chatG`;
 
         console.log(`${url}`)
 

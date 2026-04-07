@@ -4,9 +4,8 @@ import {User, ChatG} from './index.js';
 
 const router = express.Router();
 
-router.get('/get_chat_global', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    console.log("dans get_chat_global-----");
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findAll({ where: { id: decoded.id } });
@@ -24,9 +23,8 @@ router.get('/get_chat_global', async (req, res) => {
   }
 });
 
-router.post('/add_message_global', async (req, res) => {
+router.post('/', async (req, res) => {
   try{
-    console.log("Api /add_message_global called");
     const chat = req.body;
     if (!chat.message || !chat.time) {
       return res.status(400).json({ success: false, message: 'Missing fields' });
