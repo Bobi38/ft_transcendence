@@ -1,5 +1,5 @@
 import { Quaternion, Vector3 } from "@babylonjs/core";
-import { RoomStatus } from "./app"
+import { RoomStatus } from "./App"
 
 export interface IPlayerState {
     pos: Vector3;

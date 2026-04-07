@@ -9,13 +9,13 @@ export class RacketHistory {
     private _states: Map<number, RacketState> = new Map();
     private _maxHistory: number = 200;
 
-    public record(tick: number, position: Vector3, rotation: Quaternion) {
-        this._states.set(tick, {
-            position: position.clone(),
-            rotation: rotation.clone()
+    public record(history: {tick: number, position: Vector3, rotation: Quaternion}) {
+        this._states.set(history.tick, {
+            position: history.position.clone(),
+            rotation: history.rotation.clone()
         });
         if (this._states.size > this._maxHistory) {
-            const oldestTick = tick - this._maxHistory;
+            const oldestTick = history.tick - this._maxHistory;
             this._states.delete(oldestTick);
         }
     }

@@ -1,6 +1,6 @@
 import { Matrix, Mesh, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
-import { PlayerInput } from "./playerInput";
-import { BallSnapshot, SnapshotBuffer } from "./snapshots";
+import { PlayerInput } from "./PlayerInput";
+import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
 import { RacketHistory } from "./RacketHistory";
 import { NetworkManager } from "./NetworkManager";
 
@@ -18,8 +18,8 @@ export class Player extends TransformNode {
     public racketOffset: Vector3;
     private _network: NetworkManager;
 
-    public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
-    public racketHistory : RacketHistory = new RacketHistory();
+    // public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
+    // public racketHistory : RacketHistory = new RacketHistory();
 
     constructor(camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[], network: NetworkManager) {
         super("player", scene);
@@ -78,7 +78,7 @@ export class Player extends TransformNode {
         //this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
-    public updateRacket(tick: number) {
+    public updateRacket() : {tick: number, position: Vector3, rotation: Quaternion} {
         if (!this._controlsEnabled)
             return ;
         this.racket.position = this._input.getNewRacketPos();
@@ -86,7 +86,8 @@ export class Player extends TransformNode {
         this._network.sendUpdateRacket(this.racket.position, this.racket.rotationQuaternion);
         // this.room.send("racketMoved", {position: this.racket.position.asArray(),
         //     rotation: this.racket.rotationQuaternion.asArray()});
-        this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
+        //this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
+        return {tick: 0, position: this.racket.position, rotation: this.racket.rotationQuaternion}
     }
 
     public getPlayerPosition() : Vector3 {

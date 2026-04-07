@@ -2,7 +2,7 @@ import { EventEmitter } from "./EventEmitter";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { StateCallbackStrategy } from "@colyseus/schema";
 import { MyRoomState } from "./schema/MyRoomState";
-import { BallSnapshot } from "./snapshots";
+import { BallSnapshot } from "./Snapshots";
 import { GameState } from "./GameState";
 import { Quaternion, Vector3 } from "@babylonjs/core";
 import { SynchronizedClock } from "./SynchronizedClock";

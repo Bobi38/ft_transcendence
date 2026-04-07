@@ -56,7 +56,7 @@ export class GUI {
         newGameBtn.background = "#4CAF50";
 
         newGameBtn.onPointerClickObservable.add(() => {
-            this._room.leave(true);
+            this._network.leave();
             localStorage.removeItem("reconnectionGameToken");
             window.location.reload();
             console.log("New Game clicked");

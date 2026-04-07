@@ -12,8 +12,15 @@ export class SnapshotBuffer {
 
     constructor() {}
 
-    public saveSnapshot(tick: number, position: Vector3, velocity: Vector3) {
-        this._snapshots.push({tick: tick, position: position, velocity: velocity});
+    // public saveSnapshot(tick: number, position: Vector3, velocity: Vector3) {
+    //     this._snapshots.push({tick: tick, position: position, velocity: velocity});
+    //     if (this._snapshots.length > this._MAX_SNAPSHOTS) {
+    //         this._snapshots.shift();
+    //     }
+    // }
+
+    public saveSnapshot(snapshot: BallSnapshot) {
+        this._snapshots.push(snapshot);
         if (this._snapshots.length > this._MAX_SNAPSHOTS) {
             this._snapshots.shift();
         }
