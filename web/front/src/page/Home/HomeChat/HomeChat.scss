@@ -6,7 +6,7 @@ $bg_color: rgb(196, 230, 236);
 	display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex:1;
+	gap: 1rem;
 
     text-align: center;
 	padding: 1rem;
@@ -15,30 +15,34 @@ $bg_color: rgb(196, 230, 236);
 	border: 5px $second-dark solid;
 	border-radius: 45px;
 	box-shadow: 0px 0px 7px 5px $main-dark;
-
-	h3 {
-		margin-bottom: 1rem;
-	}
+	
 
     .message-container {
         flex: 1;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         gap: 0.75rem;
         overflow-y: auto;
         scrollbar-width: thin;
 
         .message {
+			padding: 0.5rem;
             border-radius: 0.5rem;
-            background-color: rgb(89, 189, 189);
+            background-color: rgb(255, 255, 255);
 
-            &:hover {
-              background-color: rgb(79, 179, 179);
-            }
             p {
                 overflow-wrap: anywhere;
-            }
-        }
+			}
+			.time
+			{
+				display: flex;
+				align-items: center;
+				font-size: 0.75rem;
+				span {
+					padding-right: 0.5rem;
+				}
+			}
+		}
 
         .me {
             text-align: right;

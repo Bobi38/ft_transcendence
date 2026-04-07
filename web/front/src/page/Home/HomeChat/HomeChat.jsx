@@ -12,7 +12,6 @@ import {useAuth, AUTH}              from    "HOOKS/useAuth.jsx"
 
 export default function HomeChat() {
 
-    // const SocketM = useSocket();
     const {showLog} = useAuth()
     const [input, setInput] = useState("");
     const [displayedMessages, setDisplayedMessages] = useState([]);
@@ -30,7 +29,7 @@ export default function HomeChat() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        setDisplayedMessages(repjson.message);
+        setDisplayedMessages([...repjson.message].reverse());//reverse for front display
     }
 
     async function add_message_global(time){
@@ -51,8 +50,7 @@ export default function HomeChat() {
     }
 
     useEffect(() =>{
-        const currect = showLog;
-        if (currect !== AUTH.NONE)
+        if (showLog !== AUTH.NONE)
             return ;
         fetch_global_message()
 
@@ -60,22 +58,20 @@ export default function HomeChat() {
 
     useEffect( () => {
 
-
-        const currect = showLog;
-        if (currect !== AUTH.NONE)
+        if (showLog !== AUTH.NONE)
             return ;
         fetch_global_message()
 
         const init = async () => {
             const handle_global_message = (data) => {
-                if (data.type === "auth_good") return
+                if (data.type === "auth_good" || data.type === "ping") return
                 if (data.type === "updateName_good"){
                     fetch_global_message();
                     return;
                 }
                 console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
 
-                setDisplayedMessages((prev) => [...prev, data]);
+                setDisplayedMessages((prev) => [data, ...prev]);//reverse for front display
             };
             SocketM.on("chat", handle_global_message, "ChatG");
         };
@@ -84,7 +80,6 @@ export default function HomeChat() {
 
         return () => {
             SocketM.off("chat", "ChatG");
-
         };
     }, []);
 
@@ -110,34 +105,25 @@ export default function HomeChat() {
     return (
 		<section className={`HomeChat-root`}>
 
-			<h3>Global Chat</h3>
-
-            <p id={`alert-container`}></p>
+			<h2>Global Chat</h2>
 
 			<div className={`message-container`}>
 
 				{displayedMessages && displayedMessages.map((msg, index) => (
 
-					<div  key={index} className={`${msg.monMsg ? "me" : "other"}`}>
-						{/* {() => {console.log("displayedMessages", displayedMessages)}} */}
+					<div key={index} className={`message ${msg.monMsg ? "me" : "other"}`}>
 						{msg.monMsg ? (
-							<div className={`message`}>
-								<div>{msg.timer}</div>
-								<p>{msg.message}</p>
-							</div>
+							<p className="time">{msg.timer}</p>
 						) : (
-							<div className={`message`}>
-								<div><strong>{msg.login}</strong>{msg.timer}</div>
-								<p>{msg.message}</p>
-							</div>
+							<p className="time"><span>{msg.login}</span>{msg.timer}</p>
 						)}
-
+						<p>{msg.message}</p>
 					</div>
 				))}
 			</div>
 
 			<form onSubmit={handle_submit}>
-				<input
+				<input required
 					type="text"
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
