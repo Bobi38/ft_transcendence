@@ -59,12 +59,11 @@ export default function HomeCardWeather() {
 	}, [weather]);
 
     return (
-		<button className={`HomeCard-root HomeCardWeather`} style={activeWeather}>
-				<p>
-					<span>{weather.descript}</span><br/><br/>
-					<span>{weather.title}</span><br/>
-					<span>{weather.temp}</span>
-				</p>
+		<button className={`HomeCard-root HomeCardWeather`}>
+			<div className="background" style={activeWeather}></div>
+			<span>{weather.descript}</span>
+			<span>{weather.title}</span>
+			<span>{weather.temp}</span>
 		</button>
 	)
 }
