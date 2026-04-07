@@ -1,4 +1,4 @@
-import { PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
+import { Quaternion, Vector3 } from "@babylonjs/core";
 import { Env } from "./shared/media.js"
 
 function ToVec3(input: any) : Vector3 {

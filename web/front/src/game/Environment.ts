@@ -15,8 +15,8 @@ function ToQuat(input) : Quaternion {
 export class Environment {
     private _scene: Scene;
     //public bodies: PhysicsBody[] = [];
-    public wallMin: Vector3;
-    public wallMax: Vector3;
+    public wallMin: Vector3 = Vector3.Zero();
+    public wallMax: Vector3 = Vector3.Zero();
 
     constructor(scene: Scene) {
         this._scene = scene;

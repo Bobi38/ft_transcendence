@@ -75,7 +75,6 @@ export class MyRoom extends Room {
       return ;
     const ballPos = toSend.position;
     const ballVel = toSend.velocity;
-    // console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;
