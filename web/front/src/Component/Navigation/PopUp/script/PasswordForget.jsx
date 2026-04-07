@@ -27,7 +27,7 @@ export default function PasswordForget({login_mode}) {
             setShowMode("new_password");
         else
             sessionStorage.setItem("CodeInput", "false");
-        console.log("in use " + sessionStorage.getItem("CodeInput"));
+        // console.log("in use " + sessionStorage.getItem("CodeInput"));
     }, [])
 
     async function send_code(e) {

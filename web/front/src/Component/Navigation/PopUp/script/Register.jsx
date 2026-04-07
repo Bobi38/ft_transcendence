@@ -14,12 +14,9 @@ import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 import useFetch from "HOOKS/useFetch.jsx";
 
 
-export default function Register() {
+export default function Register({login_mode}) {
 
-    const {setShowLog, showLog} = useAuth();
-    const [showPrivacy, setShowPrivacy] = useState(false);
-
-
+    const {setShowLog} = useAuth();
 
     async function register_submit(e){
 
@@ -53,20 +50,6 @@ export default function Register() {
             return;
         setShowLog(AUTH.LOGIN);
     }
-
-    async function login_mode() {
-        sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credential: "include",
-        }, null, null, true)
-        setShowLog(AUTH.LOGIN);
-    }
-
 
     return (
         <>

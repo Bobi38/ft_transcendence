@@ -12,7 +12,6 @@ import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 
 export default function PopUp() {
 
-    
     const {showLog, setShowLog} = useAuth();
 
     async function login_mode() {
@@ -28,15 +27,25 @@ export default function PopUp() {
         setShowLog(AUTH.LOGIN);
     }
 
+    const password_forget_mode = () => {
+        sessionStorage.clear();
+        setShowLog(AUTH.PASSFORGET);
+    };
+
+    const register_mode = () => {
+        sessionStorage.clear();
+        setShowLog(AUTH.REGISTER);
+    }
+
     return (
 
         <div className={`PopUp-root`}>
 
             <div id={`alert-container`}></div>
 
-            {showLog === AUTH.LOGIN && <Login/>}
-            {showLog === AUTH.MAILA2F && <MailA2F/>}
-            {showLog === AUTH.REGISTER && <Register/>}
+            {showLog === AUTH.LOGIN && <Login password_forget_mode={password_forget_mode} register_mode={register_mode}/>}
+            {showLog === AUTH.MAILA2F && <MailA2F login_mode={login_mode}/>}
+            {showLog === AUTH.REGISTER && <Register login_mode={login_mode}/>}
             {showLog === AUTH.PASSFORGET && <PasswordForget login_mode={login_mode}/>}
 
 

@@ -2,8 +2,6 @@
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
-import { useEffect } from "react";
-
 /* back */
 import { showAlert } from "TOOL/fonction_usefull.js";
 import SocketM from "TOOL/SocketManag";
@@ -15,20 +13,18 @@ import "../PopUp.scss";
 import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 import { useGoogleLogin } from '@react-oauth/google';
 import useFetch from "HOOKS/useFetch.jsx";
-import { use } from "react";
-import { web } from "webpack";
 
-export default function Login() {
+export default function Login({ password_forget_mode, register_mode}) {
 
-    const {setShowLog, showLog} = useAuth();
+    const {setShowLog} = useAuth();
 
-    const login_submit = async (event) => {
+    const login_submit = async (e) => {
 
-		event.preventDefault();
-        const form = event.target;
+		e.preventDefault();
+        const form = e.target;
         const data = {
-            email: form.email.value.trim(),
-            password: form.password.value.trim(),
+            email: form.email.value,
+            password: form.password.value,
             host: window.location.host
         };
 
@@ -45,7 +41,6 @@ export default function Login() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         }, null, null, true);
-        console.log(repjson);
         if (!repjson){
             showAlert("Impossible de se connecter pour le moment", "danger");
             return;
@@ -70,17 +65,6 @@ export default function Login() {
             SocketM.sendd('friend', {type: 'co_first'});
         };
     };
-
-    const password_forget_mode = () => {
-        sessionStorage.clear();
-        setShowLog(AUTH.PASSFORGET);
-        
-    };
-
-    const register_mode = () => {
-        sessionStorage.clear();
-        setShowLog(AUTH.REGISTER);
-    }
     
     const handle_git = () => {
         const frontendUrl = window.location.origin;
@@ -123,7 +107,7 @@ export default function Login() {
             <div className={`script-in-root`}>
 
                 <h1>Connexion</h1>
-                <form id={`login`} onSubmit={login_submit}>
+                <form id={`login`} onSubmit={(e) => {login_submit(e)}}>
 
 
                     <label  htmlFor="email">Email</label>
