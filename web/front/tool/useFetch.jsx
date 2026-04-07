@@ -1,7 +1,3 @@
-// import {AUTH, useAuth} from "TOOL/AuthContext.jsx";
-
-
-
 export default async function useFetch(url, type_request, callbacksucces = null, callbackfail = null){
     // const tab = {
     // "/api/auth/login": true,

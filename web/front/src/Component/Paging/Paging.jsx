@@ -1,15 +1,9 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
+import { useEffect, useState }  from    "react";
 
 /* Css */
 import "./Paging.scss";
 
-/* Components */
-
-
-    
 export default function Paging({ totalPages, currentPage, setNewPage}) {
 
     function default_tab() {
@@ -60,10 +54,6 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
     const change_page = (arg) => {
         setNewPage(arg)
     }
-
-    // useEffect(() => {
-    //     console.log("tabWithDot: ", tabWithDot)
-    // }, [])
 
     return (
         <div className={`Paging-root`}>

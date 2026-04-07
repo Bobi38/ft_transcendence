@@ -5,7 +5,7 @@ const router = express.Router();
 
 const key = process.env.API_KEY_WEATHER
 
-router.get('/profile', async(req, res) =>{
+router.get('/', async(req, res) =>{
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
@@ -23,7 +23,7 @@ router.get('/profile', async(req, res) =>{
   }
 });
 
-router.post('/updateProfil', async(req, res) => {
+router.put('/', async(req, res) => {
   try{
     const user = req.body
     if (!user.login || !user.email || !user.tel){
@@ -50,7 +50,7 @@ router.post('/updateProfil', async(req, res) => {
   }
 });
 
-router.post('/majPass', async(req,res) => {
+router.patch('/password', async(req,res) => {
   try{
     const data = req.body;
     const token = req.cookies.token;

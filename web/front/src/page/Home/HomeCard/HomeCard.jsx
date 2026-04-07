@@ -1,13 +1,8 @@
-import { Link } from "react-router-dom";
-
-
-/* back */
+/* extern */
+import { Link } 	from	"react-router-dom";
 
 /* Css */
 import "./HomeCard.scss";
-
-/* Components */
-
 
 export default function HomeCard({children, path}) {
 
@@ -17,7 +12,7 @@ export default function HomeCard({children, path}) {
 				{children}
 			</p>
 		</Link>
-	)
+	);
 }
 
 

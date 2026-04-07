@@ -1,25 +1,16 @@
-/* extern */
-import { useState } from "react";
-import { FaGithub } from "react-icons/fa";
-
-/* back */
-import { showAlert } from "TOOL/fonction_usefull.js";
-
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-
-import useFetch from "HOOKS/useFetch.jsx";
-
-
-export default function Register() {
-
-    const {setShowLog, showLog} = useAuth();
-    const [showPrivacy, setShowPrivacy] = useState(false);
+import { showAlert }        from    "TOOL/fonction_usefull.js";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 
 
+
+export default function Register({login_mode}) {
+
+    const {setShowLog} = useAuth();
 
     async function register_submit(e){
 
@@ -54,62 +45,41 @@ export default function Register() {
         setShowLog(AUTH.LOGIN);
     }
 
-    async function login_mode() {
-        sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credential: "include",
-        }, null, null, true)
-        setShowLog(AUTH.LOGIN);
-    }
-
-
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>Register</h1>
-                
-                <form id={`register`} className={``} onSubmit={register_submit}>
+            <h1>Register</h1>
+            
+            <form id={`register`} onSubmit={(e) => {register_submit(e)}}>
 
 
-                    <label htmlFor={`name`}>Nickname</label>
-                    <input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
+                <label htmlFor={`name`}>Nickname</label>
+                <input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
 
-                    <label htmlFor={`email`}>Email</label>
-                    <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
+                <label htmlFor={`email`}>Email</label>
+                <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
 
-                    <label htmlFor={`password`}>Password</label>
-                    <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
+                <label htmlFor={`password`}>Password</label>
+                <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
-                    <div style={{ marginTop: "10px" }}>
-                        <input type="checkbox" id="legal" name="legal" required />
-                        <label htmlFor="legal" style={{ marginLeft: "5px" }}>
-                        J'accepte les{" "}
-                        <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
-                        Conditions d'utilisation
-                        </a>{" "}
-                        et la{" "}
-                        <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
-                        Politique de confidentialité
-                        </a>
-                        </label>
-                    </div>
+                <div style={{ marginTop: "10px" }}>
+                    <input type="checkbox" id="legal" name="legal" required />
+                    <label htmlFor="legal" style={{ marginLeft: "5px" }}>
+                    J'accepte les{" "}
+                    <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
+                    Conditions d'utilisation
+                    </a>{" "}
+                    et la{" "}
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
+                    Politique de confidentialité
+                    </a>
+                    </label>
+                </div>
 
-                    <div className={`button-container`}>
+                <button type={`submit`}>Register</button>
+                <button type={`button`} onClick={login_mode}>Connexion</button>
+            </form>
 
-                        <button type={`submit`} className={``}>Register</button>
-                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-
-                    </div>
-
-                </form>
-
-            </div>
-        </>
-    )
+        </div>
+    );
 }

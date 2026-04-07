@@ -1,8 +1,3 @@
-/* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-
 /* Css */
 import "./StatsPong3DHistoryCard.scss";
 

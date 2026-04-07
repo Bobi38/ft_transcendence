@@ -1,46 +1,44 @@
 /* extern */
-import { useState, useEffect } from "react";
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
-
-/*back*/
-import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM from "TOOL/SocketManag.js";
+import { useState, useEffect }      from    "react";
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
 import "./Profile.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
-import useFetch from "HOOKS/useFetch.jsx";
+import { showAlert }                from    "TOOL/fonction_usefull.js";
+import SocketM                      from    "TOOL/SocketManag.js";
+import useFetch                     from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }            from    "HOOKS/useAuth.jsx"
 
 export default function Profile() {
 
     const [showPassword, setShowPassword] = useState(false);
-    const { showLog, setShowLog } = useAuth();
+    const { showLog } = useAuth();
 
     const [user, setUser] = useState({ login: "", tel: "", });
 
     const handle_pass = async (e) => {
         e.preventDefault();
-        const password = e.target.password.value.trim();
-        const confirmepassword = e.target.confirmepassword.value.trim();
+        const password = e.target.password.value;
+        const confirmePassword = e.target.confirmePassword.value;
 
-        if (!password || !confirmepassword) {
+        if (!password || !confirmePassword) {
             showAlert("Veuillez remplir tous les champs", "danger");
             return;
         }
 
-        if (password !== confirmepassword) {
+        if (password !== confirmePassword) {
             showAlert("Les mots de passe ne correspondent pas", "danger");
             return;
         }
 
-        const url = `/api/profile/majPass`;
+        const url = `/api/profile/password`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PATCH",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({Pass: password})
@@ -64,12 +62,12 @@ export default function Profile() {
             return;
         }
 
-        const url = `/api/profile/updateProfil`;
+        const url = `/api/profile`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(user)
@@ -96,7 +94,7 @@ export default function Profile() {
 
     
     async function fetch_user_data(){
-        const url = `/api/profile/profile`;
+        const url = `/api/profile`;
 
         console.log(`${url}`)
 
@@ -117,28 +115,25 @@ export default function Profile() {
     return (
         <section className={`Profile-root`}>
 
-            <h3>Mon Profil</h3>
+            <h1>Mon Profil</h1>
 
             <div id={`alert-container`}></div>
 
-
             <div className={`form-container`}>
 
-                <form className={``} onSubmit={handle_submit}>
+                <form onSubmit={handle_submit}>
 
                     <label htmlFor={`login`}>Login</label>
                     <input  type={`text`}
-                            id={`login`}
-                            name={`login`}
+                            id={`login`} name={`login`}
                             value={user.login ?? ""}
                             onChange={(e) => setUser({ ...user, login: e.target.value }) }
                         />
 
 
-                    <label htmlFor={`email`} className={``}>Email</label>
+                    <label htmlFor={`email`}>Email</label>
                     <input  type={`email`}
-                            id={`email`}
-                            name={`email`}
+                            id={`email`} name={`email`}
                             title={`Can't be changed`}
                             value={user.email}
                             onChange={(e) => setUser({ ...user, email: e.target.value }) }
@@ -147,8 +142,7 @@ export default function Profile() {
 
                     <label htmlFor={`tel`}>Téléphone</label>
                     <input  type={`tel`}
-                            id={`tel`}
-                            name={`tel`}
+                            id={`tel`} name={`tel`}
                             value={user.tel ?? ""}
                             onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                             />
@@ -166,8 +160,7 @@ export default function Profile() {
                         <div className="input-wrapper">
                             <input
                                 type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
+                                id="password" name="password"
                                 className="password-field"
                                 placeholder="Votre nouveau mot de passe"
                             />
@@ -176,12 +169,11 @@ export default function Profile() {
                             </span>
                         </div>
 
-                        <label htmlFor="confirmepassword">Confirmer Mot de passe</label>
+                        <label htmlFor="confirmePassword">Confirmer Mot de passe</label>
                         <div className="input-wrapper">
                             <input
                                 type={showPassword ? "text" : "password"}
-                                id="confirmepassword"
-                                name="confirmepassword"
+                                id="confirmePassword" name="confirmePassword"
                                 className="password-field"
                                 placeholder="Confirmation du nouveau mot de passe"
                             />
@@ -196,18 +188,17 @@ export default function Profile() {
 
                 </div>
             </div>
-			{showLog === AUTH.NONE && (
-				<div className={`Navbar-policy`}>
-					<a href="/privacy" target="_blank" rel="noopener noreferrer">
-					Politique de confidentialité
-					</a>
 
-					<a href="/terms" target="_blank" rel="noopener noreferrer">
-					Conditions d'utilisation
-					</a>
-				</div>
-			)}
+            <div className={`Navbar-policy`}>
+                <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                Politique de confidentialité
+                </a>
+
+                <a href="/terms" target="_blank" rel="noopener noreferrer">
+                Conditions d'utilisation
+                </a>
+            </div>
         </section>
-    )
+    );
 }
 

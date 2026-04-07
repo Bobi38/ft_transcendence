@@ -22,7 +22,6 @@ router.post('/login', async (req, res) => {
       console.log("Api /login called Invalid email format",email);
       return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
-    console.log("wweeeeeeeeeeeeeeh");
     const result = await User.findAll({ where: { mail: email } });
     console.log("wwaaaaaaaaah", result);
     if (result.length === 0)

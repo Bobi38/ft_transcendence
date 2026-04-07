@@ -1,5 +1,5 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
 /* back */
 
@@ -7,9 +7,9 @@ import { useEffect, useState } from "react";
 import "./StatsPong3D.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";   
-import Paging from "COMP/Paging/Paging.jsx"; 
-import StatsPong3DHistoryCard from "./StatsPong3DHistoryCard/StatsPong3DHistoryCard";
+import useFetch                 from    "TOOL/useFetch.jsx";   
+import Paging                   from    "COMP/Paging/Paging.jsx"; 
+import StatsPong3DHistoryCard   from    "./StatsPong3DHistoryCard/StatsPong3DHistoryCard";
 
 export default function StatsPong3D({ username, setUsername }) {
 
