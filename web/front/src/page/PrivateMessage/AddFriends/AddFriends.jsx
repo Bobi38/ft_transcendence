@@ -46,7 +46,6 @@ export default function AddFriends() {
         console.log("add_friend(info) good");
     }
 
-
     async function fetch_all_request_friend(){
         const url = `/api/friend/all_request_friend`;
 
@@ -58,8 +57,6 @@ export default function AddFriends() {
         console.log("all_request_friend", repjson.message)
         setResponseFriendArray(repjson.message)
     }
-
-
 
     useEffect(() => {
         fetch_all_request_friend();
@@ -85,7 +82,7 @@ export default function AddFriends() {
         console.log("handel_form(info) clear input value")
         el_add_friend.value = ""
     }
-    
+
     const handel_response = async (arg) => {
         console.log("requestfriend finish", arg)
 
@@ -160,6 +157,5 @@ export default function AddFriends() {
 				</div>
 			</div>
         </div>
-
     )
 }

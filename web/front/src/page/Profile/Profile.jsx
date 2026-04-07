@@ -159,7 +159,6 @@ export default function Profile() {
 				<hr />
 
                 <div>
-
                     <form className="password-form" onSubmit={handle_pass}>
 
                         <label htmlFor="password">Nouveau Mot de passe</label>

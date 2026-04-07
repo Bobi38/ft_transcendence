@@ -17,11 +17,10 @@ export default function HomeCardWeather() {
 	const [weather, setWeather] = useState({
 		icon: null,
 		descript: null,
-		title: null, 
+		title: null,
 		temp: null,
 	});
 	useEffect(() => {
-		
 		async function fetchWeather() {
 			try {
 				const current = showLog;
@@ -49,16 +48,16 @@ export default function HomeCardWeather() {
 
 		fetchWeather();
 	}, [showLog]);
-	
+
 	const [activeWeather, setActiveWeather] = useState({"": ""})
-	
+
 	useEffect(() => {
 
 		setActiveWeather({
 			backgroundImage: `url(${weather.icon})`,
 		})
 	}, [weather]);
-	
+
     return (
 		<button className={`HomeCard-root HomeCardWeather`} style={activeWeather}>
 				<p>

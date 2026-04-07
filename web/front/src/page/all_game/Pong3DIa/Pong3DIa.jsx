@@ -1,5 +1,5 @@
 /* extern */
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 /* back */
@@ -10,14 +10,10 @@ import "./Pong3DIa.scss";
 
 /* Components */
 import { App as GameApp } from "FRONT/gameVsIa/app.ts";
-import Button from "FRONT/Component/Button/Button.jsx"
-import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Pong3DIa() {
 
-
     const navigate = useNavigate();
-
     const canvasRef = useRef(null);
 
     useEffect(() => {

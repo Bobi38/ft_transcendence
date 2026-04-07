@@ -9,8 +9,6 @@ import "./Friends.scss";
 /* Components */
 import useFetch from "HOOKS/useFetch.jsx";
 
-
-    
 export default function Friends({setGoToAction, setGoToConv}) {
 
 
@@ -60,7 +58,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
         console.log("good");
     }
 
-
     useEffect(() => {
         all_friend();
 
@@ -84,7 +81,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
         SocketM.send("friend", {type: "maj_frd", login: friend});
 
     }
-
 
     return (
         <div className={`Friends-root border-0`}>

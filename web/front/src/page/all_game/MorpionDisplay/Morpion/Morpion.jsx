@@ -85,6 +85,7 @@ export default function Morpion() {
     );
 }
 
+//can be usefull in the future
 
 //function RebootTruc() {
 //    function sendType(s_type){

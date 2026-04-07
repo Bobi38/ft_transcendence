@@ -10,10 +10,14 @@ import useFetch from "HOOKS/useFetch.jsx";
 import Paging from "COMP/Paging/Paging.jsx";
 import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 
+function cal_percentage(value, max)
+{
+	return (Math.round(value / max * 100))
+}
+
 export default function StatsMorpion({ username, setUsername }) {
 
     const limit = 5;
-    const [totalGames, setTotalGame] = useState(1);
     const [statToDisplay, setStatToDisplay] = useState(null);
     const [historyUser, setHistoryUser] = useState([]);
     const [currentPage, setNewPage] = useState(1);
@@ -34,7 +38,6 @@ export default function StatsMorpion({ username, setUsername }) {
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success)){
-            setTotalGame(null);
             setStatToDisplay(null);
             setHistoryUser([]);
             setNewPage(1);
@@ -42,6 +45,7 @@ export default function StatsMorpion({ username, setUsername }) {
         }
 
         const data = repjson.stat_user;
+		console.log(data)
 
         const win_horizontal = data.type_X_horizontal_winner + data.type_O_horizontal_winner
         const win_vertical = data.type_X_vertical_winner + data.type_O_vertical_winner
@@ -65,29 +69,27 @@ export default function StatsMorpion({ username, setUsername }) {
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
         const data_formated = {
-            win_horizontal: win_horizontal,
-            win_vertical: win_vertical,
-            win_diagonal: win_diagonal,
-            lose_horizontal: lose_horizontal,
-            lose_vertical: lose_vertical,
-            lose_diagonal: lose_diagonal,
-            type_X_win: type_X_win,
-            type_X_lose: type_X_lose,
-            type_O_win: type_O_win,
-            type_O_lose: type_O_lose,
-            win_abort: win_abort,
-            draw: draw,
-            lose_abort: lose_abort,
+			total_game: data.total_game,
+
             all_win_without_abort: all_win_without_abort,
-            all_lose_without_abort: all_lose_without_abort
+            all_lose_without_abort: all_lose_without_abort,
+			draw: draw,
+
+			win_abort: win_abort,
+			lose_abort: lose_abort,
+
+			winrate_total: cal_percentage(all_win_without_abort, all_lose_without_abort),
+			winrate_X: cal_percentage(type_X_win, (type_X_lose + type_X_win)),
+			winrate_O: cal_percentage(type_O_win, (type_O_lose + type_O_win)),
+			winrate_horizontal: cal_percentage(win_horizontal, all_win_without_abort),
+			winrate_vertical: cal_percentage(win_vertical, all_win_without_abort),
+			winrate_diagonal: cal_percentage(win_diagonal, all_win_without_abort),
         };
 
-        setStatToDisplay(data_formated);
-
-        if (totalGames < data.total_game){
-            setTotalGame(data.total_game);
+        if (statToDisplay != null && statToDisplay.total_game < data.total_game) {
             setNewPage(1)
         }
+		setStatToDisplay(data_formated);
     }
 
     async function fetch_history(page_nb) {
@@ -116,13 +118,6 @@ export default function StatsMorpion({ username, setUsername }) {
         fetch_history(currentPage - 1);
     }, [username, currentPage]);
 
-	const StatBlock = ({ title, win, lose, className = "" }) => (
-		<div className={`stat-block ${className}`}>
-			{title && <p>{title}</p>}
-			<p>win: {win ?? 0}</p> <p>lose: {lose ?? 0}</p>
-		</div>
-	);
-
     /* form */
     const [inputValue, setInputValue] = useState("");
 
@@ -138,7 +133,7 @@ export default function StatsMorpion({ username, setUsername }) {
                     })}
 
                 </div>
-                <Paging totalPages={Math.ceil(totalGames / limit)} currentPage={currentPage} setNewPage={setNewPage}/>
+                <Paging totalPages={Math.ceil((statToDisplay?.total_game ?? 1) / limit)} currentPage={currentPage} setNewPage={setNewPage}/>
             </div>
 
             <aside>
@@ -152,17 +147,18 @@ export default function StatsMorpion({ username, setUsername }) {
 				<hr />
 
 				<div className="content">
-					<p className="p-full">Total game played: 100</p>
-					<p className="p-full">Total lose: 9</p>
-					<p className="p-full">Total win: 99</p>
-					<p className="p-full">Win by surrender: 10</p>
-					<p className="p-full">Lose by surrender: 10</p>
-					<p className="p-full">Winrate: 10%</p>
-					<p className="p-full">Winrate with X: 10%</p>
-					<p className="p-full">Winrate with O: 10%</p>
-					<p className="p-full">Winrate in digonal: 10%</p>
-					<p className="p-full">Winrate in horizontal: 10%</p>
-					<p className="p-full">Winrate in vertical: 10%</p>
+					<p>Total game played: { statToDisplay?.total_game }</p>
+					<p>Total win: { statToDisplay?.all_win_without_abort }</p>
+					<p>Total lose: { statToDisplay?.all_lose_without_abort }</p>
+					<p>Total draw: { statToDisplay?.draw }</p>
+					<p>Win by surrender: { statToDisplay?.win_abort }</p>
+					<p>Lose by surrender: { statToDisplay?.lose_abort }</p>
+					<p>Winrate: { statToDisplay?.winrate_total }%</p>
+					<p>Winrate with X: { statToDisplay?.winrate_O }%</p>
+					<p>Winrate with O: { statToDisplay?.winrate_X }%</p>
+					<p>Winrate in horizontal: { statToDisplay?.winrate_horizontal }%</p>
+					<p>Winrate in vertical: { statToDisplay?.winrate_vertical }%</p>
+					<p>Winrate in digonal: { statToDisplay?.winrate_diagonal }%</p>
 				</div>
 			</aside>
 			</section>

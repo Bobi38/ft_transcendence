@@ -12,7 +12,7 @@ import "./PrivateMessageConv.scss";
 import useFetch from "HOOKS/useFetch.jsx";
 
 // login lui contient le login user
-export default function PrivateMessageConv({login, displayedMessages, setDisplayedMessages}) {    
+export default function PrivateMessageConv({login, displayedMessages, setDisplayedMessages}) {
 
     const [input, setInput] = useState("");
 

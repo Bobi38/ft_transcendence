@@ -60,22 +60,22 @@
     }
 }
 
-@mixin cardhistory($how_win: "draw"){
-    // pointer-events: none;
+@mixin cardhistory($how_win: "draw") {
     border-radius: 30px;
     opacity: 0.8;
     z-index: 3;
+
     @if $how_win == "draw" {
-        background: blue;
+        background: $grey;
     }
     @else if $how_win == "abort" {
-        background: rgb(231, 31, 115);
+        background: $grey;
     }
     @else if $how_win == "win"{
-        background: green;
+        background: $active;
     }
     @else if $how_win == "lose" {
-        background: red;
+        background: rgb(216, 46, 46);
     }
 }
 
@@ -110,12 +110,5 @@
 		opacity: 0;
 		z-index: 1002;
 		pointer-events: none;
-		animation: wii-flicker 0.15s infinite;
 	}
-}
-
-@keyframes wii-flicker {
-    0% { opacity: 0.1; }
-    50% { opacity: 0.2; }
-    100% { opacity: 0.1; }
 }
