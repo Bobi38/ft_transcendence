@@ -33,9 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', authroute);
-app.use('/', oauth2route);
-app.use('/', securoute);
+app.use('/aut', authroute);
+app.use('/Oauth', oauth2route);
+app.use('/secu', securoute);
 
 (async () => {
   try {

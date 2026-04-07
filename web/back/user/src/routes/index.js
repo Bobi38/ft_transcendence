@@ -50,6 +50,25 @@ export async function get_user_from_token(token) {
   }
 }
 
+export function format_all_request_friend(name, relation) {
+	const  Fother = [];
+	const Fme = []
+	
+	for(let i = relation.length - 1 ;i >= 0; i--){
+		const login = name === relation[i].User1.name ? relation[i].User2.name : relation[i].User1.name;
+		if (relation[i].User1.name == name)
+			Fme.push({login: login});
+		else
+			Fother.push({login: login})
+	}
+    
+	const data ={
+		Fme: Fme,
+		Fother: Fother
+	}
+	return data;
+};
+
 export {
     User,
     Friend,

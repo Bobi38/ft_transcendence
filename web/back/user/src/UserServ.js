@@ -12,8 +12,8 @@ import { initWebSFriend } from './WsFriend.js';
 
 
 
-import friendroute from './routes/Friends.js'
-import Profileroute from './routes/Profile.js'
+import friendroute from './routes/Friends/Friends.controller.js'
+import Profileroute from './routes/Profile/Profile.controller.js'
 
 dotenv.config();
 
@@ -37,8 +37,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', friendroute);
-app.use('/', Profileroute);
+app.use('/friend', friendroute);
+app.use('/profile', Profileroute);
 
 
 

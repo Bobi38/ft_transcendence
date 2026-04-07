@@ -11,11 +11,24 @@ class FriendDTO {
   }
 
     static validateToken(req) {
-    const token = req.cookies.token;
-    if (!token)
-        return { success: false, message: "no token" };
+        const token = req.cookies.token;
+        if (!token)
+            return { success: false, message: "no token" };
 
-    return { success: true, token };
+        return { success: true, token };
+    }
+
+    static validateResponse(body, toekn) {
+		const token = req.cookies.token;
+		const response = body.response;
+		const login = body.login;
+		if (response === undefined)
+			return { success: false, message: "no response" };
+		if (login === undefined)
+			return { success: false, message: "no login" };
+		if (!token)
+			return { success: false, message: "no token" };
+		return { success: true, token };
     }
 }
 

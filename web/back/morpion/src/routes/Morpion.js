@@ -2,15 +2,8 @@
 import 
 {
   User,
-  // Co,
-  // ChatG,
-  // PrivMess,
-  // PrivChat,
-  // Friend,
-  // PswEmail,
   StatMorp,
   GameMorp,
-  // HistoryMorp,
   jwt,
   secret,
   express,
