@@ -15,6 +15,12 @@ import { NetworkManager } from "./NetworkManager";
 import { GameState } from "./GameState"
 import { PhysicsEngine } from "./PhysicsEngine";
 
+export interface CharacterAssets {
+    mesh: AbstractMesh,
+    handNode: TransformNode,
+    racketNode: TransformNode
+}
+
 export enum RoomStatus {
   WAITING = 0,
   STARTED = 1,
@@ -23,23 +29,16 @@ export enum RoomStatus {
   AWAITING_RECONNECTION = 4
 }
 
-const TIMESTEP : number = 1/60;
-
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
     private _scene: Scene;
-    //private _environment: Environment;
     private _player: Player;
-    //private _enemy: Enemy;
-    //private _camera: PlayerCamera;
-    private MAX_SPEED: number = 40;
     private _ball: Ball;
     private _shadows : ShadowGenerator[] = [];
     private _ui : GUI;
     public  _clock : SynchronizedClock = new SynchronizedClock();
     private _isNear : boolean = true;
-    //private _pendingImpact : BallSnapshot = null;
     //public onUnauthorized?: () => void;
     private _gameState : GameState = new GameState();
     private _network : NetworkManager = new NetworkManager(this._gameState, this._clock);
@@ -96,147 +95,14 @@ export class App {
     private _updatePhysicsAndRender() {
         if (this._gameState.gameStatus == RoomStatus.STARTED) {
             this._physicsEngine.stepPhysics(this._engine.getDeltaTime());
-            // this._clock.updateAccumulator(this._engine.getDeltaTime());
-            // this._checkPendingImpact();
-            // this._ball.correctPosAndVel();
-            // while (this._clock.getAccumulator() >= TIMESTEP * 1000) {
-            //     this._updatePlayerAndEnemy();
-            //     this._executeStep();
-            //     this._checkRacketCollision();
-            //     this._checkWallCollision();
-            //     this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-            //     this._clock.tick++;
-            //     this._clock.setbackAccumulator();
-            // }
-            // this._ball.smoothPosition();
         }
         this._scene.render();
     }
 
-    // private _checkPendingImpact() {
-    //     if (!this._pendingImpact)
-    //         return ;
-    //     const ticksToResimulate = this._clock.tick - this._pendingImpact.tick;
-    //     console.log("impactTick:", this._pendingImpact.tick, "ticks to resim:", ticksToResimulate);
-    //     const preRollbackPos = this._ball.getPhysicsBodyPosition();
-    //     this._ball.setPhysicsBodyPosition(this._pendingImpact.position);
-    //     this._ball.setVelocity(this._pendingImpact.velocity);
-    //     this._ball.snapshots.clearAfterTickIncluded(this._pendingImpact.tick);
-    //     this._ball.snapshots.saveSnapshot(this._pendingImpact.tick, this._pendingImpact.position, this._pendingImpact.velocity);
-    //     this._ball.isResimming = true;
-    //     for (let i = 1; i < ticksToResimulate; i++) {
-    //         const simulatingTick = this._pendingImpact.tick + i;
-    //         this._executeStep();
-    //         const impactSnapshot = this._player.impactSnapshots.getSnapshotAtTick(simulatingTick);
-    //         if (impactSnapshot)
-    //             this._checkRacketCollision(impactSnapshot.snapshot);
-    //         this._checkWallCollision();
-    //         this._ball.snapshots.saveSnapshot(simulatingTick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
-    //     }
-    //     const postRollbackPos = this._ball.getPhysicsBodyPosition();
-    //     const teleportDelta = preRollbackPos.subtract(postRollbackPos);
-    //     this._ball.visualOffset.addInPlace(teleportDelta);
-    //     console.log("Other player hit the ball");
-    //     this._ball.isResimming = false;
-    //     this._pendingImpact = null;
-    // }
-
-    // public _executeStep() {
-    //     const oldPos = this._ball.getPhysicsBodyPosition();
-    //     const newPos = oldPos.add(this._ball.getVelocity().scale(TIMESTEP));
-    //     this._ball.setPhysicsBodyPosition(newPos);
-    // }
-
-    // public _checkRacketCollision(impactSnapshot? : BallSnapshot) {
-    //     const ballPos = this._ball.getPhysicsBodyPosition();
-    
-    //     const racketWorldMatrix = this._player.getRacketWorldMatrix();
-    //     const invRacketMatrix = racketWorldMatrix.clone().invert();
-    //     const localBallPos = Vector3.TransformCoordinates(ballPos, invRacketMatrix);
-    //     localBallPos.subtractInPlace(this._player.racketOffset);
-
-    //     const halfWidth = this._player.racketDimensions.x / 2;
-    //     const halfHeight = this._player.racketDimensions.y / 2;
-    //     const halfDepth = this._player.racketDimensions.z / 2;
-
-    //     const closestX = Math.max(-halfWidth,  Math.min(localBallPos.x, halfWidth));
-    //     const closestY = Math.max(-halfHeight, Math.min(localBallPos.y, halfHeight));
-    //     const closestZ = Math.max(-halfDepth,  Math.min(localBallPos.z, halfDepth));
-    //     const closest = new Vector3(closestX, closestY, closestZ);
-    //     const distanceSquared = localBallPos.subtract(closest).lengthSquared();
-
-    //     if (distanceSquared < (this._ball.radius ** 2)) {
-    //         let newVel : Vector3;
-    //         if (this._ball.isResimming) {
-    //             newVel = impactSnapshot.velocity;
-    //         } else {
-    //             newVel = this._player.getRacketHit();
-    //         }
-    //         this._ball.setVelocity(newVel);
-    //         if (!this._ball.isResimming) {
-    //             this._network.sendRacketImpact({position: ballPos, velocity: newVel, tick: this._clock.tick});
-    //             //this._room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._clock.tick});
-    //             console.log("woah i hit the ball at tick:", this._clock.tick);
-    //             console.log("new vel:", newVel);
-    //             this._ball.ignoreServerAfter = this._clock.tick;
-    //         }
-    //     }
-    // }
-
-    // public _checkWallCollision(){
-    //     const ballPos = this._ball.getPhysicsBodyPosition();
-    //     const radius = this._ball.radius;
-    //     const min = this._environment.wallMin;
-    //     const max = this._environment.wallMax;
-
-    //     const ballVel : Vector3 = this._ball.getVelocity();
-    //     if (ballPos.x - radius < min.x) {
-    //         ballPos.x = min.x + radius;
-    //         ballVel.x *= -1;
-    //     } else if (ballPos.x + radius > max.x) {
-    //         ballPos.x = max.x - radius;
-    //         ballVel.x *= -1;
-    //     }
-
-    //     if (ballPos.y - radius < min.y) {
-    //         ballPos.y = min.y + radius;
-    //         ballVel.y *= -1;
-    //     } else if (ballPos.y + radius > max.y) {
-    //         ballPos.y = max.y - radius;
-    //         ballVel.y *= -1;
-    //     }
-
-    //     this._ball.setPhysicsBodyPosition(ballPos);
-    //     this._ball.setVelocity(ballVel);
-    // }
-
     private _setupPhysicsMessagesListener() {
         this._network.on('onGoalScored', (goalData: any) => this._physicsEngine.updatePhysicsOnGoalScored(goalData));
-        //this._room.onMessage('Goal!', (data: any) => {
-        //     const tick = goalData.tick;
-        //     const newPos = new Vector3(goalData.position[0], goalData.position[1], goalData.position[2]);
-        //     console.log("server sent pos:", newPos);
-        //     this._ball.setPhysicsBodyPosition(newPos);
-        //     this._ball.setMeshPosition(Vector3.Zero());
-        //     this._ball.setVelocity(Vector3.Zero());
-        //     //this._ball.setAngularVelocity(Vector3.Zero());
-        //     this._ball.ignoreServerUntil = tick;
-        //     this._ball.snapshots.dispose();
-        //     console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
-        // });
         this._network.on('onOpponentHit', (hitData: any) => this._physicsEngine.updateBallOnOpponentHit(hitData));
-        // //this._room.onMessage("racketImpact", (data: any) => {
-        //     const ballPos = new Vector3(hitData.position[0], hitData.position[1], hitData.position[2]);
-        //     const ballVel = new Vector3(hitData.velocity[0], hitData.velocity[1], hitData.velocity[2]);
-        //     this._pendingImpact = {tick: hitData.tick, position: ballPos, velocity: ballVel};
-        // });
         this._network.on('onImpactResponse', (tick: number) => this._physicsEngine.updateFlagsOnImpactResponse(tick));
-        //this._room.onMessage("impactResponse", (tick) => {
-        //     this._ball.recentImpact = false;
-        //     this._ball.ignoreServerAfter = null;
-        //     this._ball.ignoreServerUntil = tick;
-        //     console.log("server acknowledges impact at tick:", tick);
-        // });
     }
 
     private _setupUI() {
@@ -249,12 +115,16 @@ export class App {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
         this._network.on('onDrop', (code: number, reason: string) => {
+            console.log('onDrop');
             this._player.lockControls();
             this._ui.showAwaitingReconnectionUI();
         });
         this._network.on('onReconnect', () => {
-            this._player.unlockControls();
-            this._ui.showNoUI();
+            console.log("lmao");
+            // this._player.unlockControls();
+            // this._ui.showNoUI();
+            console.log(this._gameState.gameStatus);
+            this._gameStatusStateMachine(this._gameState.gameStatus);
         });
         this._network.on('onLeave', () => {
             this._ui.showFailedReconnectionUI();
@@ -297,11 +167,11 @@ export class App {
         this._initLightAndBall(this._scene);
 
         this._gameState.players.forEach((player, id) =>
-            this._setupPlayer(id, player.pos, player.sideNear));
+            this._setupCharacters(player.isPlayer, id, player.pos, player.sideNear));
         this._network.on("onPlayerJoined", (sessionId: string, playerPos: Vector3, sideNear: boolean) => 
-            this._setupPlayer(sessionId, playerPos, sideNear));
+            this._setupCharacters(true, sessionId, playerPos, sideNear));
         this._network.on('onEnemyJoined', (sessionId: string, enemyPos: Vector3, sideNear: boolean) => 
-            this._setupEnemy(sessionId, enemyPos, sideNear));
+            this._setupCharacters(false, sessionId, enemyPos, sideNear));
     }
 
 
@@ -341,35 +211,33 @@ export class App {
         });
     }
 
-    private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
-        const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
-        const camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadows, this._network);
-        this._player.setPlayerInput(
-            new PlayerInput(this._scene, camera, this._player.getHandNode(), this._player.getRacketNode()));
-        this._physicsEngine.setPlayer(this._player);
-        this._physicsEngine.setCamera(camera);
+    private async _setupCharacters(isPlayer: boolean, sessionId: string, position: Vector3, isNearSide: boolean) {
+        const assets = await this._loadCharacterAssets(position, isPlayer, isNearSide);
+        if (isPlayer) {
+            const camera = new PlayerCamera(isNearSide, this._scene);
+            this._player = new Player(camera.getUniversalCamera(), sessionId, assets, this._scene, this._shadows, this._network);
+            this._player.setPlayerInput(
+                new PlayerInput(this._scene, camera, this._player.getHandNode(), this._player.getRacketNode()));
+            this._physicsEngine.setPlayer(this._player);
+            this._physicsEngine.setCamera(camera);
+        } else {
+            this._physicsEngine.setEnemy(new Enemy(this._scene, assets, this._shadows, isNearSide, this._gameState, sessionId));
+        }
     }
 
-    // private _updatePlayerAndEnemy() {
-    //     if (this._player) {
-    //         this._player.updateBody();
-    //         this._player.updateRacket(this._clock.tick);
-    //         this._camera.updateCamera(this._isNear, this._player.getPlayerPosition());
-    //     }
-    //     if (this._enemy) {
-    //         this._enemy.updateBody();
-    //         this._enemy.updateRacket();
-    //     }
+    // private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
+    //     const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
+        
     // }
 
-    private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
-        const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
-        this._physicsEngine.setEnemy(new Enemy(this._scene, enemyAssets, this._shadows, isNearSide, this._gameState, sessionId));
-    }
+    // private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
+    //     const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
+    //     this._physicsEngine.setEnemy(new Enemy(this._scene, enemyAssets, this._shadows, isNearSide, this._gameState, sessionId));
+    // }
 
-    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
-        let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
+
+    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<CharacterAssets> {
+        const assets = await ImportMeshAsync("/media/mii.glb", this._scene);
         const body = assets.meshes[0];        
 
         if (isPlayer) {
@@ -385,7 +253,7 @@ export class App {
         }
 
         body.position = position;
-        let bodymtl = new StandardMaterial("red", this._scene);
+        const bodymtl = new StandardMaterial("red", this._scene);
         bodymtl.diffuseColor = Color3.Red();
         body.material = bodymtl;
         body.isPickable = false;
@@ -394,9 +262,9 @@ export class App {
         const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.8});
         hand.material = bodymtl;
 
-        let racketmtl = new StandardMaterial("white", this._scene);
+        const racketmtl = new StandardMaterial("white", this._scene);
         racketmtl.diffuseColor = new Color3(0.4,0.2,0);
-        let stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.4, height: 1.2});
+        const stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.4, height: 1.2});
         stick.position._y = 0.8;
         stick.material = racketmtl;
         const racket = MeshBuilder.CreateCylinder("racket", {diameter: 2, height: 0.4});
@@ -404,7 +272,7 @@ export class App {
         racket.position._y = 1.2;
         racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
         
-        let racketRoot = new TransformNode("racketRoot", this._scene);
+        const racketRoot = new TransformNode("racketRoot", this._scene);
 
         racket.parent = stick;
         stick.parent = hand;
@@ -459,14 +327,6 @@ export class App {
         return this._clock.tick;
     }
 
-    // public getPlayerRacketHistory() : RacketHistory {
-    //     return this._player.racketHistory;
-    // }
-
-    // public getPlayerImpactSnapshots() : SnapshotBuffer {
-    //     return this._player.impactSnapshots;
-    // }
-
     public getPlayer() : Player {
         return this._player;
     }
@@ -475,16 +335,7 @@ export class App {
         this._ball.recentImpact = true;
     }
 
-    // public getIsResimming() : boolean {
-    //     return this._ball.isResimming;
-    // }
-
     public getEngine() : Engine {
         return this._engine;
     }
-
-    // public updateSnapshot(snapshot : BallSnapshot) {
-    //     this._ball.snapshots.clearAfterTickIncluded(this._clock.tick);
-    //     this._ball.snapshots.saveSnapshot(snapshot.tick, snapshot.position, snapshot.velocity);
-    // }
 }

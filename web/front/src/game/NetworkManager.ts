@@ -11,7 +11,6 @@ import { SynchronizedClock } from "./SynchronizedClock";
 export class NetworkManager extends EventEmitter {
     private _room : Room<MyRoomState>;
     private _callback : StateCallbackStrategy<MyRoomState>;
-    private _client : Client;
     private _gameState : GameState;
     private _clock : SynchronizedClock;
     public onUnauthorized?: () => void;
@@ -38,7 +37,7 @@ export class NetworkManager extends EventEmitter {
         this._callback.listen("roomStatus", () => {
             this.emit('onGameStatusChange', this._room.state.roomStatus);
             this._gameState.gameStatus = this._room.state.roomStatus;
-            console.log(this._room.state.roomStatus);
+            console.log("in network manager:", this._room.state.roomStatus);
         });
         this._callback.onChange(this._room.state.score, () => {
             this.emit('onScoreChange', this._room.state.score.teamNear, this._room.state.score.teamFar)
@@ -51,11 +50,6 @@ export class NetworkManager extends EventEmitter {
 
         this._setupClock();
 
-        // return new Promise((resolve) => {
-        //     this._room.onStateChange.once(() => {
-        //         this.emit("onReady");
-        //         resolve();
-        //     });
         this.emit("onReady");
     }
 
@@ -147,7 +141,7 @@ export class NetworkManager extends EventEmitter {
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
             const newVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
-            this._gameState.ballPos = newPos;
+            this._gameState.ballPos = newPos;STARTED
             this._gameState.ballVel = newVel;
             this._gameState.ballTickStamp = this._room.state.ball.tickStamp;
             this.emit('onServerPatch');
@@ -195,7 +189,7 @@ export class NetworkManager extends EventEmitter {
                 const playerPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 const racketPos = new Vector3(player.rackPos.x, player.rackPos.y, player.rackPos.z);
                 const racketRot = new Quaternion(player.rackRot.x, player.rackRot.y, player.rackRot.z, player.rackRot.w);
-                this._gameState.players.set(sessionId, {pos: playerPos,
+                this._gameState.players.set(sessionId, {isPlayer: true, pos: playerPos,
                     rackPos: racketPos, rackRot: racketRot,
                     sideNear: player.sideNear, connected: player.connected});
                 this.emit("onPlayerJoined", sessionId, playerPos, player.sideNear)
@@ -205,7 +199,7 @@ export class NetworkManager extends EventEmitter {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
                 const racketPos = new Vector3(player.rackPos.x, player.rackPos.y, player.rackPos.z);
                 const racketRot = new Quaternion(player.rackRot.x, player.rackRot.y, player.rackRot.z, player.rackRot.w);
-                this._gameState.players.set(sessionId, {pos: enemyPos,
+                this._gameState.players.set(sessionId, {isPlayer: false, pos: enemyPos,
                     rackPos: racketPos, rackRot: racketRot,
                     sideNear: player.sideNear, connected: player.connected});
                 this.emit("onEnemyJoined", sessionId, enemyPos, player.sideNear);

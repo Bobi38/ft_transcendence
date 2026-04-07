@@ -176,15 +176,17 @@ export class MyRoom extends Room {
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = true;
     }
-    if (this.state.roomStatus === RoomStatus.STARTED || this.state.roomStatus === RoomStatus.WAITING)
+    if (this.state.roomStatus === RoomStatus.STARTED)
       this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
     console.log("room status:", this.state.roomStatus);
-    this.allowReconnection(client, 5).catch(() => {
-      if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
-        this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
-        this._timeEnd = Date.now();
-      }
-    });
+    if (this.state.players.size == 2) {
+      this.allowReconnection(client, 5).catch(() => {
+        if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+          this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+          this._timeEnd = Date.now();
+        }
+      });
+    }
   }
 
   onReconnect(client: Client) {

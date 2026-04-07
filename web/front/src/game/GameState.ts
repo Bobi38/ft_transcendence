@@ -1,7 +1,8 @@
 import { Quaternion, Vector3 } from "@babylonjs/core";
 import { RoomStatus } from "./App"
 
-export interface IPlayerState {
+export interface PlayerState {
+    isPlayer: boolean;
     pos: Vector3;
     rackPos: Vector3;
     rackRot: Quaternion;
@@ -16,7 +17,7 @@ export class GameState {
     public gameStatus: RoomStatus = RoomStatus.WAITING;
     public teamNear: number = 0;
     public teamFar: number = 0;
-    public players: Map<string, IPlayerState> = new Map();
+    public players: Map<string, PlayerState> = new Map();
 
     constructor () {}
 }

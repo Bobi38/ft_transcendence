@@ -1,15 +1,16 @@
-import { Matrix, Mesh, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Matrix, Mesh, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
 import { PlayerInput } from "./PlayerInput";
 import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
 import { RacketHistory } from "./RacketHistory";
 import { NetworkManager } from "./NetworkManager";
+import { CharacterAssets } from "./App";
 
 export class Player extends TransformNode {
     PLAYER_SPEED: number;
     public camera : UniversalCamera;
     public scene: Scene;
     private _input : PlayerInput;
-    public mesh: Mesh;
+    public mesh: AbstractMesh;
     public racket: TransformNode;
     public hand_node: TransformNode;
     public sessionId: string;
@@ -21,7 +22,7 @@ export class Player extends TransformNode {
     // public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
     // public racketHistory : RacketHistory = new RacketHistory();
 
-    constructor(camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[], network: NetworkManager) {
+    constructor(camera: UniversalCamera, sessionId: string, assets: CharacterAssets, scene: Scene, shadows: ShadowGenerator[], network: NetworkManager) {
         super("player", scene);
         this.camera = camera;
         this._network = network;

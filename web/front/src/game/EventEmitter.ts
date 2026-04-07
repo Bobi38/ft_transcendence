@@ -15,7 +15,7 @@ export class EventEmitter {
         this._events[event] = this._events[event].filter(cb => cb !== callback);
     }
 
-    public emit(event: string, ...args: any[]): void {
+    public emit(event: string, ...args: unknown[]): void {
         if (!this._events[event]) return;
         this._events[event].forEach(callback => callback(...args));
     }

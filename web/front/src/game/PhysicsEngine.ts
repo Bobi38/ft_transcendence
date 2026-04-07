@@ -52,35 +52,19 @@ export class PhysicsEngine {
             return ;
         const preRollbackPos = this._ball.getPhysicsBodyPosition();
         this.resimulatePhysicTicks(this._pendingImpact);
-        // const ticksToResimulate = this._clock.tick - this._pendingImpact.tick;
-        // console.log("impactTick:", this._pendingImpact.tick, "ticks to resim:", ticksToResimulate);
-        // const preRollbackPos = this._ball.getPhysicsBodyPosition();
-        // this._ball.setPhysicsBodyPosition(this._pendingImpact.position);
-        // this._ball.setVelocity(this._pendingImpact.velocity);
-        // this._ball.snapshots.clearAfterTickIncluded(this._pendingImpact.tick);
-        // this._ball.snapshots.saveSnapshot({tick: this._pendingImpact.tick, position: this._pendingImpact.position, velocity: this._pendingImpact.velocity});
-        // this._isResimming = true;
-        // for (let i = 1; i < ticksToResimulate; i++) {
-        //     const simulatingTick = this._pendingImpact.tick + i;
-        //     this._executeStep();
-        //     const impactSnapshot = this._impactSnapshots.getSnapshotAtTick(simulatingTick);
-        //     if (impactSnapshot)
-        //         this._checkRacketCollision(impactSnapshot.snapshot);
-        //     this._checkWallCollision();
-        //     this._ball.snapshots.saveSnapshot({tick: simulatingTick, position: this._ball.getPhysicsBodyPosition(), velocity: this._ball.getVelocity()});
-        // }
         const postRollbackPos = this._ball.getPhysicsBodyPosition();
         const teleportDelta = preRollbackPos.subtract(postRollbackPos);
         this._ball.visualOffset.addInPlace(teleportDelta);
         console.log("Other player hit the ball");
-        // this._isResimming = false;
         this._pendingImpact = null;
     }
 
     private _updatePlayerAndEnemy() {
         if (this._player) {
             this._player.updateBody();
-            this._racketHistory.record(this._player.updateRacket());
+            const racketMove = this._player.updateRacket();
+            if (racketMove)
+                this._racketHistory.record(racketMove);
             this._camera.updateCamera(this._player.getPlayerPosition());
         }
         if (this._enemy) {

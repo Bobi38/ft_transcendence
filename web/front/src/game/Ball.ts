@@ -1,4 +1,4 @@
-import { Color3, Engine, Material, Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
+import { Color3, Engine, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
 import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
 import { SynchronizedClock } from "./SynchronizedClock";
 import { PhysicsEngine } from "./PhysicsEngine";
@@ -21,7 +21,6 @@ export class Ball {
     public recentImpact : boolean = false;
     public ignoreServerAfter : number = null;
     public ignoreServerUntil : number = 0;
-    //public  isResimming : boolean = false;
     
 
     constructor(position: Vector3, velocity: Vector3, diameter: number, shadows: ShadowGenerator[], scene: Scene, clock: SynchronizedClock, engine: Engine, physicsEngine: PhysicsEngine) {
