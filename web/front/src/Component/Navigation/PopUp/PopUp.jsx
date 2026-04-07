@@ -13,7 +13,20 @@ import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 export default function PopUp() {
 
     
-    const {showLog} = useAuth();
+    const {showLog, setShowLog} = useAuth();
+
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/clearcookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
+    }
 
     return (
 
@@ -24,7 +37,7 @@ export default function PopUp() {
             {showLog === AUTH.LOGIN && <Login/>}
             {showLog === AUTH.MAILA2F && <MailA2F/>}
             {showLog === AUTH.REGISTER && <Register/>}
-            {showLog === AUTH.PASSFORGET && <PasswordForget/>}
+            {showLog === AUTH.PASSFORGET && <PasswordForget login_mode={login_mode}/>}
 
 
         </div>
