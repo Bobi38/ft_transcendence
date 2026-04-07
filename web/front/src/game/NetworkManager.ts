@@ -13,6 +13,7 @@ export class NetworkManager extends EventEmitter {
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _gameState : GameState;
     private _clock : SynchronizedClock;
+    private _interval: number | null = null;
     public onUnauthorized?: () => void;
 
     constructor(gameState: GameState, clock: SynchronizedClock) {
@@ -73,11 +74,11 @@ export class NetworkManager extends EventEmitter {
         console.log("Network session cleaned up.");
     }
 
-    public async drop(): Promise<void> {
-        if (this._room) {
-            await this._room.leave(false);
-        }
-    }
+    // public async drop(): Promise<void> {
+    //     if (this._room) {
+    //         await this._room.leave(false);
+    //     }
+    // }
 
 
     private async _waitForStateOnce(room: Room<MyRoomState>): Promise<void> {
@@ -141,7 +142,7 @@ export class NetworkManager extends EventEmitter {
         this._callback.onChange(this._room.state.ball.position, () => {
             const newPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
             const newVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
-            this._gameState.ballPos = newPos;STARTED
+            this._gameState.ballPos = newPos;
             this._gameState.ballVel = newVel;
             this._gameState.ballTickStamp = this._room.state.ball.tickStamp;
             this.emit('onServerPatch');
@@ -176,10 +177,10 @@ export class NetworkManager extends EventEmitter {
             this._clock.updateAccumulatorSlew(serverTick)
         });
         this._room.send("initialTick");
-        setInterval(() => {
-                const t0 = Date.now();
-                this._room.send("synchronizeTick", t0);
-            }, 250);
+        this._interval = setInterval(() => {
+            const t0 = Date.now();
+            this._room.send("synchronizeTick", t0);
+        }, 250) as unknown as number;
     }
 
     private _setupPlayerJoinedRoom() {
@@ -216,5 +217,12 @@ export class NetworkManager extends EventEmitter {
                 });
             }
         });
+    }
+
+    public dispose() {
+        if (this._room) {
+            this._room.leave(false);
+        }
+        clearInterval(this._interval);
     }
 }

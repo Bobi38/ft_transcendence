@@ -49,32 +49,28 @@ export class App {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
 
-        if (this._isMobileDevice()) {
-            this._showMobileLockout();
-            return;
-        }
-
         this._engine = new Engine(this._canvas, true, {adaptToDeviceRatio: true});
         this._scene = new Scene(this._engine);
 
-        // hide/show the Inspector
-        window.addEventListener("keydown", (ev) => {
-            // Shift+Ctrl+Alt+I
-            if (ev.shiftKey && ev.ctrlKey && ev.altKey && (ev.key === "I" || ev.key === "i")) {
-                if (this._scene.debugLayer.isVisible()) {
-                    this._scene.debugLayer.hide();
-                } else {
-                    this._scene.debugLayer.show();
-                }
-            }
-        });
+        window.addEventListener("keydown", this._showInspector)
 
         this._main();
     }
     
-    private async _main(): Promise<void> {
-        this._engine.displayLoadingUI();
+    private _showInspector(e: KeyboardEvent) {
+        // Shift+Ctrl+Alt+I
+        if (e.shiftKey && e.ctrlKey && e.altKey && (e.key === "I" || e.key === "i")) {
+            if (this._scene.debugLayer.isVisible()) {
+                this._scene.debugLayer.hide();
+            } else {
+                this._scene.debugLayer.show();
+            }
+        }
+    }
         
+
+    private async _main(): Promise<void> {
+        this._engine.displayLoadingUI();        
         await this._network.initialize();
 
         await this._setupGameAssets();
@@ -87,9 +83,12 @@ export class App {
         this._engine.runRenderLoop(() => {
             this._updatePhysicsAndRender();
         });
-        window.addEventListener('resize', () => {
-            this._engine.resize();
-        });
+        window.addEventListener('resize', this._resizeWindow.bind(this));    
+    }
+
+    private _resizeWindow() {
+        console.log(this._engine);
+        this._engine.resize();
     }
 
     private _updatePhysicsAndRender() {
@@ -209,7 +208,7 @@ export class App {
             const serverVel = this._gameState.ballVel;
             this._ball.serverPatch = {tick: this._gameState.ballTickStamp, position: serverPos, velocity: serverVel};
         });
-    }
+    }_gameOverUI
 
     private async _setupCharacters(isPlayer: boolean, sessionId: string, position: Vector3, isNearSide: boolean) {
         const assets = await this._loadCharacterAssets(position, isPlayer, isNearSide);
@@ -224,17 +223,6 @@ export class App {
             this._physicsEngine.setEnemy(new Enemy(this._scene, assets, this._shadows, isNearSide, this._gameState, sessionId));
         }
     }
-
-    // private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
-    //     const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
-        
-    // }
-
-    // private async _setupEnemy(sessionId : string, position: Vector3, isNearSide: boolean) {
-    //     const enemyAssets = await this._loadCharacterAssets(position, false, isNearSide);
-    //     this._physicsEngine.setEnemy(new Enemy(this._scene, enemyAssets, this._shadows, isNearSide, this._gameState, sessionId));
-    // }
-
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<CharacterAssets> {
         const assets = await ImportMeshAsync("/media/mii.glb", this._scene);
@@ -283,44 +271,12 @@ export class App {
     }
 
     public dispose() {
-        this._network.drop();
+        this._network.dispose();
+        this._ui.dispose();
         this._scene.dispose();
+        window.removeEventListener('resize', this._resizeWindow);
         this._engine.dispose();
-    }
-
-    private _isMobileDevice(): boolean {
-        const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-        const hasTouchPoints = navigator.maxTouchPoints > 0;
-        const hasTouchEvents = 'ontouchstart' in window;
-        return hasCoarsePointer || hasTouchPoints || hasTouchEvents;
-    }
-
-    private _showMobileLockout() {
-        this._canvas.style.display = "none";
-        const overlay = document.createElement("div");
-        
-        overlay.style.position = "fixed";
-        overlay.style.top = "0";
-        overlay.style.left = "0";
-        overlay.style.width = "100vw";
-        overlay.style.height = "100vh";
-        overlay.style.backgroundColor = "#1a1a1a";
-        overlay.style.color = "#ffffff";
-        overlay.style.display = "flex";
-        overlay.style.flexDirection = "column";
-        overlay.style.justifyContent = "center";
-        overlay.style.alignItems = "center";
-        overlay.style.fontFamily = "sans-serif";
-        overlay.style.zIndex = "9999";
-
-        overlay.innerHTML = `
-            <h1 style="font-size: 2rem; margin-bottom: 1rem; color: #ff4757;">Desktop Required</h1>
-            <p style="font-size: 1.2rem; text-align: center; max-width: 80%; line-height: 1.5;">
-                Sorry! This game requires a keyboard and mouse to play. <br><br>
-                Please visit us on a computer to join the match.
-            </p>
-        `;
-        document.body.appendChild(overlay);
+        window.removeEventListener("keydown", this._showInspector);
     }
 
     public getTick() : number {
