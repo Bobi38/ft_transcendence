@@ -1,5 +1,5 @@
-import { Color3, MeshBuilder, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, Quaternion, Scene, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
-import { Env } from "/app/media/media.js";
+import { Color3, MeshBuilder, Quaternion, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
+import { Env } from "/app/src/game/shared/media.js";
 
 
 function ToVec3(input) : Vector3 {
@@ -15,8 +15,8 @@ function ToQuat(input) : Quaternion {
 export class Environment {
     private _scene: Scene;
     //public bodies: PhysicsBody[] = [];
-    public wallMin: Vector3;
-    public wallMax: Vector3;
+    public wallMin: Vector3 = Vector3.Zero();
+    public wallMax: Vector3 = Vector3.Zero();
 
     constructor(scene: Scene) {
         this._scene = scene;
@@ -24,59 +24,6 @@ export class Environment {
 
     public async load() {
         const env = JSON.parse(Env);
-        // let wallRightShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
-        // let wallLeftShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.wallDimensions), this._scene);
-        // let groundShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
-        // // let elevanShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
-        // let ceilingShape = new PhysicsShapeBox(Vector3.Zero(), Quaternion.Identity(), ToVec3(env.groundDimensions), this._scene);
-        // let wallRightNode = new TransformNode("wallRightNode", this._scene);
-        // let wallLeftNode = new TransformNode("wallLeftNode", this._scene);
-        // let groundNode = new TransformNode("groundNode", this._scene);
-        // let ceilingNode = new TransformNode("ceilingNode", this._scene);
-        // // let elevanNode = new TransformNode("elevanNode", this._scene);
-        // wallRightNode.position = ToVec3(env.wallRightPos);
-        // wallLeftNode.position = ToVec3(env.wallLeftPos);
-        // ceilingNode.position = ToVec3(env.ceilingPos);
-        // // elevanNode.position = ToVec3(env.elevanPos);
-        // wallRightNode.rotationQuaternion = ToQuat(env.wallQuaternion);
-        // wallLeftNode.rotationQuaternion = ToQuat(env.wallQuaternion);
-        // // elevanNode.rotationQuaternion = ToQuat(env.elevanQuaternion);
-        // let wallRightBody = new PhysicsBody(wallRightNode, PhysicsMotionType.STATIC, false, this._scene);
-        // let wallLeftBody = new PhysicsBody(wallLeftNode, PhysicsMotionType.STATIC, false, this._scene);
-        // let groundBody = new PhysicsBody(groundNode, PhysicsMotionType.STATIC, false, this._scene);
-        // let ceilingBody = new PhysicsBody(ceilingNode, PhysicsMotionType.STATIC, false, this._scene);
-        // // let elevan = new PhysicsBody(elevanNode, PhysicsMotionType.STATIC, false, this._scene);
-        // wallRightBody.shape = wallRightShape;
-        // wallLeftBody.shape = wallLeftShape;
-        // groundBody.shape = groundShape;
-        // ceilingBody.shape = ceilingShape;
-        // // // elevan.shape = elevanShape;
-        // const wallmaterial = {friction: 0, restitution: 1};
-        // wallRightShape.material = wallmaterial;
-        // wallLeftShape.material = wallmaterial;
-        // groundShape.material = wallmaterial;
-        // ceilingShape.material = wallmaterial;
-        // // elevanShape.material = wallmaterial;
-        // wallRightBody.setMassProperties({mass: 1});
-        // wallLeftBody.setMassProperties({mass: 1});
-        // groundBody.setMassProperties({mass: 1});
-        // ceilingBody.setMassProperties({mass: 1});
-        // // elevan.setMassProperties({mass: 1});
-        // wallRightBody.setLinearDamping(0);
-        // wallLeftBody.setLinearDamping(0);
-        // groundBody.setLinearDamping(0);
-        // ceilingBody.setLinearDamping(0);
-        // // elevan.setLinearDamping(0);
-        // wallRightBody.setAngularDamping(0);
-        // wallLeftBody.setAngularDamping(0);
-        // groundBody.setAngularDamping(0);
-        // ceilingBody.setAngularDamping(0);
-        // // elevan.setAngularDamping(0);
-        // this.bodies.push(wallLeftBody);
-        // this.bodies.push(wallRightBody);
-        // this.bodies.push(groundBody);
-        // this.bodies.push(ceilingBody);
-        // // this.bodies.push(elevan);
         const groundDim = ToVec3(env.groundDimensions);
         const wallDim = ToVec3(env.wallDimensions);
         const wallRightPos = ToVec3(env.wallRightPos);
@@ -112,19 +59,19 @@ export class Environment {
         wall_right.rotationQuaternion = rotationQuaternion;
 
         let ceiling_mat = new StandardMaterial("ceilingmat", this._scene);
-        const ceiling_texture = new Texture("/app/media/ceiling.png");
+        const ceiling_texture = new Texture("media/ceiling.png");
         ceiling_texture.wAng = - Math.PI / 2;
         ceiling_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         ceiling_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         ceiling_texture.uScale = 6;
         ceiling_texture.vScale = 2;
-        const ceiling_n_texture = new Texture("/app/media/ceiling_n.png");
+        const ceiling_n_texture = new Texture("media/ceiling_n.png");
         ceiling_n_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         ceiling_n_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         ceiling_n_texture.uScale = 6.0;
         ceiling_n_texture.vScale = 2.0;
         ceiling_n_texture.wAng = - Math.PI / 2;
-        const ceiling_ao_texture = new Texture("/app/media/ceiling_ao.png");
+        const ceiling_ao_texture = new Texture("media/ceiling_ao.png");
         ceiling_ao_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         ceiling_ao_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         ceiling_ao_texture.uScale = 6.0;
@@ -137,23 +84,23 @@ export class Environment {
         let wall_mat = new StandardMaterial("wallmat", this._scene);
         let ground_mat = new StandardMaterial("groundmat", this._scene);
         ground_mat.specularColor = new Color3(0.1, 0.1, 0.1);
-        const ground_texture = new Texture("/app/media/court.png");
+        const ground_texture = new Texture("media/court.png");
         ground_texture.wAng = Math.PI / 2;
         ground_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         ground_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         ground_texture.uScale = 15.0;
         ground_texture.vScale = 15.0;
-        const wall_texture = new Texture("/app/media/wall.png");
+        const wall_texture = new Texture("media/wall.png");
         wall_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         wall_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         wall_texture.uScale = 9.0;
         wall_texture.vScale = 3.0;
-        const wall_n_texture = new Texture("/app/media/wall_normal.png");
+        const wall_n_texture = new Texture("media/wall_normal.png");
         wall_n_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         wall_n_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         wall_n_texture.uScale = 9.0;
         wall_n_texture.vScale = 3.0;
-        const wall_ao_texture = new Texture("/app/media/wall_ambient.png");
+        const wall_ao_texture = new Texture("media/wall_ambient.png");
         wall_ao_texture.wrapU = Texture.WRAP_ADDRESSMODE;
         wall_ao_texture.wrapV = Texture.WRAP_ADDRESSMODE;
         wall_ao_texture.uScale = 9.0;
@@ -176,4 +123,6 @@ export class Environment {
         this.wallMin = new Vector3(wallLeftPos.x + horizontalThickness, verticalThickness, -(groundDim.z / 2));
         this.wallMax = new Vector3(wallRightPos.x - horizontalThickness, ceilingPos.y - verticalThickness, (groundDim.z / 2));
     }
+
+    
 }

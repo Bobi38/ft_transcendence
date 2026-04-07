@@ -1,9 +1,10 @@
-import { Axis, Mesh, Quaternion, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Axis, Mesh, Quaternion, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
 import { NetworkManager } from "./NetworkManager";
 import { GameState } from "./GameState";
+import { CharacterAssets } from "./App";
 
 export class Enemy extends TransformNode {
-    private _mesh : Mesh;
+    private _mesh : AbstractMesh;
     private _racketNode : TransformNode;
     // private _newPos : Vector3;
     // private _newRackPos : Vector3;
@@ -11,7 +12,7 @@ export class Enemy extends TransformNode {
     private _gameState: GameState;
     private _sessionId: string;
     
-    constructor(scene: Scene, assets, shadows: ShadowGenerator[], isNearSide: boolean, gameState: GameState, sessionId: string) {
+    constructor(scene: Scene, assets: CharacterAssets, shadows: ShadowGenerator[], isNearSide: boolean, gameState: GameState, sessionId: string) {
         super("enemy", scene);
         this._gameState = gameState;
         this._sessionId = sessionId;

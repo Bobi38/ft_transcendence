@@ -1,32 +1,31 @@
-import { Matrix, Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
-import { PlayerInput } from "./playerInput";
-import { Room } from "@colyseus/sdk";
-import { App } from "./app";
-import { BallSnapshot, SnapshotBuffer } from "./snapshots";
+import { AbstractMesh, Matrix, Mesh, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { PlayerInput } from "./PlayerInput";
+import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
 import { RacketHistory } from "./RacketHistory";
+import { NetworkManager } from "./NetworkManager";
+import { CharacterAssets } from "./App";
 
 export class Player extends TransformNode {
     PLAYER_SPEED: number;
     public camera : UniversalCamera;
     public scene: Scene;
-    public room: Room;
     private _input : PlayerInput;
-    public mesh: Mesh;
+    public mesh: AbstractMesh;
     public racket: TransformNode;
     public hand_node: TransformNode;
     public sessionId: string;
-    private _app : App;
     private _controlsEnabled : boolean = false;
     public racketDimensions: Vector3;
     public racketOffset: Vector3;
+    private _network: NetworkManager;
 
-    public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
-    public racketHistory : RacketHistory = new RacketHistory();
+    // public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
+    // public racketHistory : RacketHistory = new RacketHistory();
 
-    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[]) {
+    constructor(camera: UniversalCamera, sessionId: string, assets: CharacterAssets, scene: Scene, shadows: ShadowGenerator[], network: NetworkManager) {
         super("player", scene);
         this.camera = camera;
-        this._app = app;
+        this._network = network;
         this.sessionId = sessionId;
         this.scene = scene;
         this.mesh = assets.mesh;
@@ -76,17 +75,20 @@ export class Player extends TransformNode {
 
         const playerPos = this.getPlayerPosition();
         //console.log(playerPos);
-        this.room.send("bodyMoved", {position: playerPos.asArray()});
+        this._network.sendUpdateBody(playerPos);
+        //this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
-    public updateRacket(tick: number) {
+    public updateRacket() : {tick: number, position: Vector3, rotation: Quaternion} {
         if (!this._controlsEnabled)
             return ;
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
-        this.room.send("racketMoved", {position: this.racket.position.asArray(),
-            rotation: this.racket.rotationQuaternion.asArray()});
-        this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
+        this._network.sendUpdateRacket(this.racket.position, this.racket.rotationQuaternion);
+        // this.room.send("racketMoved", {position: this.racket.position.asArray(),
+        //     rotation: this.racket.rotationQuaternion.asArray()});
+        //this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
+        return {tick: 0, position: this.racket.position, rotation: this.racket.rotationQuaternion}
     }
 
     public getPlayerPosition() : Vector3 {

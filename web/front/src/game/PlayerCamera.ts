@@ -3,6 +3,7 @@ import { Scene, UniversalCamera, Vector3 } from "@babylonjs/core";
 export class PlayerCamera {
     private _camera : UniversalCamera;
     private _rootPos : Vector3;
+    private _isNearSide : boolean;
 
     constructor(isNearSide: boolean, scene: Scene) {
         if (isNearSide) {
@@ -15,12 +16,13 @@ export class PlayerCamera {
             this._camera.rotation = new Vector3(0, Math.PI, 0);
         }
         this._camera.fov = 0.47;
+        this._isNearSide = isNearSide;
         scene.activeCamera = this._camera;
     }
 
-    public updateCamera(isNearSide: boolean, playerPos: Vector3) {
-        let cameraOffset;
-        if (isNearSide)
+    public updateCamera(playerPos: Vector3) {
+        let cameraOffset: Vector3;
+        if (this._isNearSide)
             cameraOffset = new Vector3(0,3,-23);
         else
             cameraOffset = new Vector3(0,3,23);
