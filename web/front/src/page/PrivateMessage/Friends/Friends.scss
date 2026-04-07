@@ -5,6 +5,10 @@
 		gap: 0.5rem
 	}
 
+	.no-friend {
+		text-align: center;
+	}
+
     .one-friend{
         @include mix.fullw;
         background-color: rgba(0, 0, 0, 0.1);

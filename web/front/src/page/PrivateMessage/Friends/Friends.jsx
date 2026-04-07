@@ -82,7 +82,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
 			<hr />
 			<div className="content">
 
-	            {responseFriendArray && responseFriendArray.map((msg, index) => (
+	            {responseFriendArray?.length !== 0 ? (responseFriendArray.map((msg, index) => (
 	                <div key={index} className="one-friend border-1">
 	                    <h2>{msg.login}</h2>
 
@@ -91,8 +91,12 @@ export default function Friends({setGoToAction, setGoToConv}) {
 	                        <button onClick={() => {handleDelete({login: msg.login })}}>Remove</button>
 	                    </div>
 	                </div>
-	            ))}
-	            {!responseFriendArray && <p>Nothing here...</p> }
+	            ))):(
+					<div className="no-friend">
+						<p>No friend...</p>
+						<p>Go play Pong3D or Morpion to find some friends !</p>
+					</div>
+				)}
 			</div>
         </div>
     )
