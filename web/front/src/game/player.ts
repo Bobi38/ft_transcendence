@@ -13,7 +13,6 @@ export class Player extends TransformNode {
     private _input : PlayerInput;
     public mesh: Mesh;
     public racket: TransformNode;
-    // public racketBody: PhysicsBody;
     public hand_node: TransformNode;
     public sessionId: string;
     private _app : App;
@@ -24,13 +23,12 @@ export class Player extends TransformNode {
     public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
     public racketHistory : RacketHistory = new RacketHistory();
 
-    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[], room: Room) {
+    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[]) {
         super("player", scene);
         this.camera = camera;
         this._app = app;
         this.sessionId = sessionId;
         this.scene = scene;
-        this.room = room;
         this.mesh = assets.mesh;
         this.mesh.parent = this;
 

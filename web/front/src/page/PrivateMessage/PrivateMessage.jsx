@@ -112,7 +112,6 @@ export default function PrivateMessage() {
 							</div>
 						))}
 					</div>
-
 				</div>
 
 				<div className={`display-screen border-2`}>
