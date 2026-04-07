@@ -57,7 +57,7 @@ export default function Register({login_mode}) {
 
                 <h1>Register</h1>
                 
-                <form id={`register`} className={``} onSubmit={register_submit}>
+                <form id={`register`} onSubmit={(e) => {register_submit(e)}}>
 
 
                     <label htmlFor={`name`}>Nickname</label>
@@ -83,13 +83,8 @@ export default function Register({login_mode}) {
                         </label>
                     </div>
 
-                    <div className={`button-container`}>
-
-                        <button type={`submit`} className={``}>Register</button>
-                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-
-                    </div>
-
+                    <button type={`submit`}>Register</button>
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
                 </form>
 
             </div>
