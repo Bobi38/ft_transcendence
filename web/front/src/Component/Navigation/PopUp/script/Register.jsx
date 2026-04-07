@@ -55,9 +55,6 @@ export default function Register({login_mode}) {
 				<label htmlFor={`name`}>Nickname</label>
 				<input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
 
-                <label htmlFor={`name`}>Nickname</label>
-                <input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
-
                 <label htmlFor={`email`}>Email</label>
                 <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
 
@@ -79,9 +76,9 @@ export default function Register({login_mode}) {
                 </div>
 
                 <button type={`submit`}>Register</button>
-                <button type={`button`} onClick={login_mode}>Connexion</button>
             </form>
-
+			<hr />
+			<button type={`button`} onClick={login_mode}>Connexion</button>
         </div>
     );
 }

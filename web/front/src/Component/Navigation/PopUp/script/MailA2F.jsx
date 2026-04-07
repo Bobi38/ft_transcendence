@@ -46,7 +46,6 @@ export default function MailA2F({login_mode}) {
             code: formData.get("code"),
             host:  window.location.host
         }
-        const code = formData.get("code");
 
         const url = `/api/secu/maila2f_check_code`;
         console.log(`${url}`)

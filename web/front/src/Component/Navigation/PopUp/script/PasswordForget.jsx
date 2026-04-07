@@ -1,5 +1,6 @@
 /* extern */
 import { useEffect, useState }      from    "react";
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
 import "../PopUp.scss";
@@ -53,12 +54,13 @@ export default function PasswordForget({login_mode}) {
 
     async function check_code(e) {
         e.preventDefault();
-
         const formData = new FormData(e.target);
         const data = {
             code: formData.get("code"),
             host:  window.location.host
         }
+		console.log(data);
+
         const url = `/api/secu/recupPswd_check_code`;
         console.log(`${url}`)
 
@@ -68,7 +70,8 @@ export default function PasswordForget({login_mode}) {
             credential: "include",
             body: JSON.stringify(data),
         }, null, null, true)
-        if (repjson.status < 500 && repjson.status >= 400){
+
+        if (repjson && repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
@@ -96,23 +99,22 @@ export default function PasswordForget({login_mode}) {
             return;
         }
 
-        let url = `/api/profile/majPass`;
-        url = `/api/secu/majPswd`;
+        const url = `/api/secu/majPswd`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PUT",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({new_psd: password})
         });
-        if (repjson.status < 500 && repjson.status >= 400){
+        if (repjson && repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
+            console.log(repjson?.message)
             return ;
         }
         sessionStorage.clear()
@@ -127,12 +129,11 @@ export default function PasswordForget({login_mode}) {
             {showMode === "send_code" && (
                 <>
                     <form onSubmit={(e) => {send_code(e)}}>
-
                         <label htmlFor={`email`}>Email</label>
                         <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
                         <button type={`submit`} >Send mail verification</button>
-
                     </form>
+					<hr />
                     <button type={`button`} onClick={login_mode}>Connexion</button>
                 </>
             )}
@@ -155,8 +156,8 @@ export default function PasswordForget({login_mode}) {
                         <button type={`submit`} >Send mail verification</button>
 
                     </form>
+					<hr />
                     <button type={`button`} onClick={login_mode}>Connexion</button>
-
                 </>
             )}
 
@@ -191,6 +192,7 @@ export default function PasswordForget({login_mode}) {
                         <button type={`submit`}>Modifier mon mot de passe</button>
 
                     </form>
+					<hr />
                     <button type={`button`} onClick={login_mode}>Connexion</button>
                 </>
             )}

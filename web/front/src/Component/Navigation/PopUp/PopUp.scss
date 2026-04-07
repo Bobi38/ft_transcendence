@@ -17,11 +17,13 @@
     .script-in-root {
         display: flex;
         flex-direction: column;
+		align-items: center;
         gap: 1rem;
 
-        form{
+        form {
             display: flex;
             flex-direction: column;
+			align-items: center;
             gap: 0.5rem;
 
             .input-wrapper {
