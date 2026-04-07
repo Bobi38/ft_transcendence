@@ -1,5 +1,5 @@
 import { PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
-import { Env } from "./media.js"
+import { Env } from "./shared/media.js"
 
 function ToVec3(input: any) : Vector3 {
     const ret = new Vector3(input.x, input.y, input.z);

@@ -1,5 +1,5 @@
 import { Color3, MeshBuilder, Quaternion, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
-import { Env } from "/app/media/media.js";
+import { Env } from "../game/shared/media.js";
 
 
 function ToVec3(input) : Vector3 {
