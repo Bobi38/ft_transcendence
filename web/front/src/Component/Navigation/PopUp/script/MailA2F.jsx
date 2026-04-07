@@ -24,7 +24,7 @@ export default function MailA2F({login_mode}) {
 
         const url = `/api/secu/send_mail`;
         const repjson = await useFetch(`${url}`, {
-            method: "GET",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         }, null, null, true);
@@ -67,6 +67,19 @@ export default function MailA2F({login_mode}) {
         }
         SocketM.sendd('friend', {type: 'co'});
         setShowLog(AUTH.NONE);
+    }
+
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/cookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
     }
 
     return (

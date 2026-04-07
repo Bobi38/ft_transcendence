@@ -45,6 +45,20 @@ export default function Register({login_mode}) {
         setShowLog(AUTH.LOGIN);
     }
 
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/cookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
+    }
+
+
     return (
         <>
             <div className={`script-in-root`}>

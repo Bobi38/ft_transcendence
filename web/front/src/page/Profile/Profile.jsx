@@ -33,12 +33,12 @@ export default function Profile() {
             return;
         }
 
-        const url = `/api/profile/majPass`;
+        const url = `/api/profile/password`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PATCH",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({Pass: password})
@@ -62,12 +62,12 @@ export default function Profile() {
             return;
         }
 
-        const url = `/api/profile/updateProfil`;
+        const url = `/api/profile`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(user)
@@ -93,7 +93,7 @@ export default function Profile() {
     };
 
     async function fetch_user_data(){
-        const url = `/api/profile/profile`;
+        const url = `/api/profile`;
 
         console.log(`${url}`)
 

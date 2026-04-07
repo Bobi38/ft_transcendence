@@ -22,7 +22,7 @@ router.get('/checkco', async(req, res) =>{
     }
 })
 
-router.get('/send_mail', async (req, res) => {
+router.post('/send_mail', async (req, res) => {
     try{
         console.log("API /api/secu/send_mail");
         const token = req.cookies.token;
@@ -54,7 +54,7 @@ router.get('/send_mail', async (req, res) => {
     }
 })
 
-router.post('/recupPswd', async (req, res) => {
+router.post('/recovery/password', async (req, res) => {
     try{
         const {mail} = req.body;
         console.log("API /api/secu/recupPswd " + mail);
@@ -150,7 +150,7 @@ router.post('/recupPswd_check_code' , async (req, res) => {
     }
 })
 
-router.post('/majPswd', async(req,res) => {
+router.put('/majPswd', async(req,res) => {
     try{
         const new_psd = req.body.new_psd;
         const token = req.cookies.ChgPSWD;
@@ -176,7 +176,7 @@ router.post('/majPswd', async(req,res) => {
     }
 })
 
-router.get('/clearcookie', async(req, res) => {
+router.delete('/cookie', async(req, res) => {
     try{
         if (!req.cookies.ChgPSWD)
             return res.status(400).json({success: false, message: "token invalid"});

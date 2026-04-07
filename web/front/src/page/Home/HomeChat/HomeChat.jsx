@@ -19,7 +19,7 @@ export default function HomeChat() {
 
     async function fetch_global_message(){
 
-        const url = `/api/chatG/get_chat_global`;
+        const url = `/api/chatG`;
 
         console.log(`${url}`)
 
@@ -36,7 +36,7 @@ export default function HomeChat() {
     async function add_message_global(time){
         if (!time) return
 
-        const url = `/api/chatG/add_message_global`;
+        const url = `/api/chatG`;
 
         console.log(`${url}`)
 

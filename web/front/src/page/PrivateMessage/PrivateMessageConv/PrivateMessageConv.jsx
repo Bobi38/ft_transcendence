@@ -43,7 +43,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         if (!login)
             return;
 
-        const url = `/api/friend/is_friend?name=${login}`;
+        const url = `/api/friend/${login}/status`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "GET",

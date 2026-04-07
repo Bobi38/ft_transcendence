@@ -11,9 +11,10 @@ import Hr                       from    "FRONT/Component/Hr/Hr.jsx";
 
 export default function AddFriends() {
     const fetch_type = {
-        method: "GET",
+        method: "POST",
         headers: {'Content-Type': 'application/json'},
         credentials: "include",
+        body: JSON.stringify({})
     }
 
     const [responseFriendArray, setResponseFriendArray] = useState({
@@ -25,11 +26,16 @@ export default function AddFriends() {
         if (!name)
             return;
 
-        const url = `/api/friend/add_friend?name=${name}`;
+        const url = `/api/friend`;
 
         console.log(`${url}`)
 
-        const repjson = await useFetch(`${url}`, fetch_type, null , function(repjson) {
+        const repjson = await useFetch(`${url}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+                body: JSON.stringify({name: name})
+            }, null , function(repjson) {
             if (repjson.message === undefined) {
                 console.log("add_friend callbackfail(info) people not exist");
             } else if (repjson.message === name) {
@@ -47,7 +53,7 @@ export default function AddFriends() {
 
 
     async function fetch_all_request_friend(){
-        const url = `/api/friend/all_request_friend`;
+        const url = `/api/friend/requests`;
 
         console.log(`${url}`)
 
@@ -88,12 +94,12 @@ export default function AddFriends() {
     const handel_response = async (arg) => {
         console.log("requestfriend finish", arg)
 
-        const url = `/api/friend/response_friend`;
+        const url = `/api/friend/response`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {'Content-Type': 'application/json'},
         credentials: "include",
         body: JSON.stringify(arg)
