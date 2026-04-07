@@ -84,11 +84,7 @@ export class App {
         
         await this._network.initialize();
 
-        // await Promise.all([
-        //     this._setupClock(),
-        //     this._waitForStateOnce(this._room)
-        // ]);
-        await this._setupGameAssets()
+        await this._setupGameAssets();
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
@@ -163,7 +159,6 @@ export class App {
                 this._ball.snapshots.saveSnapshot(this._clock.tick, this._ball.getPhysicsBodyPosition(), this._ball.getVelocity());
                 this._clock.tick++;
                 this._clock.setbackAccumulator();
-                //console.log("Adding supplementary physics step, tick now:", this._clock.tick);
             }
             this._ball.smoothPosition();
         }
@@ -299,12 +294,27 @@ export class App {
     private _setupUI() {
         this._ui = new GUI(this._network);
 
-        //this._isNear = this._room.state.players.get(this._player.sessionId).sideNear;
         this._isNear = this._gameState.players.get(this._player.sessionId).sideNear;
-        this._network.on('onGameStatusChange', (status: RoomStatus) => {
-        //this._callback.listen("roomStatus", () => {
-            //const status = this._room.state.roomStatus;
-            console.log(status);
+        this._gameStatusStateMachine(this._gameState.gameStatus);
+        this._network.on('onGameStatusChange', (status: RoomStatus) => this._gameStatusStateMachine(status));
+        this._network.on('onScoreChange', (scoreNear: number, scoreFar: number) => {
+            this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
+        });
+        this._network.on('onDrop', (code: number, reason: string) => {
+            this._player.lockControls();
+            this._ui.showAwaitingReconnectionUI();
+        });
+        this._network.on('onReconnect', () => {
+            this._player.unlockControls();
+            this._ui.showNoUI();
+        });
+        this._network.on('onLeave', () => {
+            this._ui.showFailedReconnectionUI();
+        });
+    }
+
+     private _gameStatusStateMachine(status: RoomStatus) {
+        console.log(status);
             switch (status) {
                 case RoomStatus.WAITING:
                     this._ui.showWaitingUI();
@@ -329,25 +339,6 @@ export class App {
                     this._ui.showAwaitingReconnectionUI();
                     break;
             }
-        });
-        this._network.on('onScoreChange', (scoreNear: number, scoreFar: number) => {
-        //this._callback.onChange(this._room.state.score, () => {
-            this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
-        });
-        this._network.on('onDrop', (code: number, reason: string) => {
-        //this._room.onDrop((code, reason) => {
-            this._player.lockControls();
-            this._ui.showAwaitingReconnectionUI();
-        });
-        this._network.on('onReconnect', () => {
-        //this._room.onReconnect(() => {
-            this._player.unlockControls();
-            this._ui.showNoUI();
-        });
-        this._network.on('onLeave', () => {
-        //this._room.onLeave(() => {
-            this._ui.showFailedReconnectionUI();
-        });
     }
 
     // private async _setupClock() {
@@ -370,6 +361,8 @@ export class App {
         await this._environment.load();
         this._initLightAndBall(this._scene);
 
+        this._gameState.players.forEach((player, id) =>
+            this._setupPlayer(id, player.pos, player.sideNear));
         this._network.on("onPlayerJoined", (sessionId: string, playerPos: Vector3, sideNear: boolean) => 
             this._setupPlayer(sessionId, playerPos, sideNear));
         this._network.on('onEnemyJoined', (sessionId: string, enemyPos: Vector3, sideNear: boolean) => 
@@ -426,7 +419,7 @@ export class App {
     private async _setupPlayer(sessionId: string, position: Vector3, isNearSide: boolean) {
         const playerAssets = await this._loadCharacterAssets(position, true, isNearSide);
         this._camera = new PlayerCamera(isNearSide, this._scene);
-        this._player = new Player(this, this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadows);
+        this._player = new Player(this._camera.getUniversalCamera(), sessionId, playerAssets, this._scene, this._shadows, this._network);
         this._player.setPlayerInput(
             new PlayerInput(this._scene, this._camera, this._player.getHandNode(), this._player.getRacketNode()));
     }
@@ -459,7 +452,7 @@ export class App {
     }
 
     private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<{mesh: AbstractMesh, handNode: TransformNode, racketNode: TransformNode}> {
-        let assets = await ImportMeshAsync("/app/media/mii.glb", this._scene);
+        let assets = await ImportMeshAsync("/media/mii.glb", this._scene);
         const body = assets.meshes[0];        
 
         if (isPlayer) {

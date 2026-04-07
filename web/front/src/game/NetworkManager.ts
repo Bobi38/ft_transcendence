@@ -19,13 +19,17 @@ export class NetworkManager extends EventEmitter {
     constructor(gameState: GameState, clock: SynchronizedClock) {
         super();
         this._gameState = gameState;
+        this._clock = clock;
     }
 
-    
+
     public async initialize(): Promise<void> {
         this._room = await this._connectOrReconnectToRoom();
         const callback = Callbacks.get(this._room);
         this._callback = callback;
+
+        await this._waitForStateOnce(this._room);
+        this._initGameState();
 
         this._setupPhysicsMessages();
 
@@ -34,9 +38,10 @@ export class NetworkManager extends EventEmitter {
         this._callback.listen("roomStatus", () => {
             this.emit('onGameStatusChange', this._room.state.roomStatus);
             this._gameState.gameStatus = this._room.state.roomStatus;
+            console.log(this._room.state.roomStatus);
         });
         this._callback.onChange(this._room.state.score, () => {
-            this.emit('onScoreChange', this._room.state.score.teamNear, this._room.score.teamFar)
+            this.emit('onScoreChange', this._room.state.score.teamNear, this._room.state.score.teamFar)
             this._gameState.teamNear = this._room.state.score.teamNear;
             this._gameState.teamFar = this._room.state.score.teamFar;
         });
@@ -46,16 +51,24 @@ export class NetworkManager extends EventEmitter {
 
         this._setupClock();
 
-        return new Promise((resolve) => {
-            this._room.onStateChange.once(() => {
-                this.emit("onReady");
-                resolve();
-            });
-        });
+        // return new Promise((resolve) => {
+        //     this._room.onStateChange.once(() => {
+        //         this.emit("onReady");
+        //         resolve();
+        //     });
+        this.emit("onReady");
     }
 
     public sendRacketImpact(ballState: BallSnapshot) {
         this._room.send("racketImpact", {tick: ballState.tick, position: ballState.position.asArray(), velocity: ballState.velocity.asArray()});
+    }
+
+    public sendUpdateBody(pos: Vector3) {
+        this._room.send("bodyMoved", {position: pos.asArray()});
+    }
+
+    public sendUpdateRacket(rackPos: Vector3, rackRot: Quaternion) {
+        this._room.send("racketMoved", {position: rackPos.asArray(), rotation: rackRot.asArray()});
     }
 
     public async leave(): Promise<void> {
@@ -72,11 +85,33 @@ export class NetworkManager extends EventEmitter {
         }
     }
 
-    private async _connectOrReconnectToRoom() {
+
+    private async _waitForStateOnce(room: Room<MyRoomState>): Promise<void> {
+        return new Promise((resolve) => {
+            room.onStateChange.once(() => {
+                resolve();
+            });
+        });
+    }
+    
+    private _initGameState() {
+        this._gameState.ballPos = new Vector3(this._room.state.ball.position.x, this._room.state.ball.position.y, this._room.state.ball.position.z);
+        this._gameState.ballVel = new Vector3(this._room.state.ball.velocity.x, this._room.state.ball.velocity.y, this._room.state.ball.velocity.z);
+        this._gameState.teamFar = this._room.state.score.teamFar;
+        this._gameState.teamNear = this._room.state.score.teamNear;
+        this._gameState.gameStatus = this._room.state.roomStatus;
+    }
+
+    private async _connectOrReconnectToRoom() : Promise<Room> {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
+        const port = window.location.port;
         console.log("iciiiiiiii====   " , `${protocol}//${hostname}/api/pong3d`);
-        let colyseusSDK : Client = new Client(`${protocol}//${hostname}:9443/api/pong3d`);
+        let colyseusSDK : Client;
+        if (protocol === "https")
+            colyseusSDK = new Client(`${protocol}//${hostname}:${port}/api/pong3d`);
+        else
+            colyseusSDK = new Client(`ws://${hostname}:2567`);
         const token = sessionStorage.getItem("token");
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
@@ -104,8 +139,8 @@ export class NetworkManager extends EventEmitter {
             }
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
-
         console.log("Joined room " + room.roomId);
+        return room;
     }
 
     private _syncWithColyseus() {
@@ -117,7 +152,6 @@ export class NetworkManager extends EventEmitter {
             this._gameState.ballTickStamp = this._room.state.ball.tickStamp;
             this.emit('onServerPatch');
         });
-        this._callback.onChange
     }
 
     private _setupPhysicsMessages() {
@@ -132,7 +166,7 @@ export class NetworkManager extends EventEmitter {
             console.log("Connection dropped attempting to reconnect...");
             console.log("code:", code, "reason:", reason);
             this.emit('onDrop')});
-        this._room.onReconnect((code: number, reason: string) => {
+        this._room.onReconnect(() => {
             console.log("successfully reconnected to the room!");
             this.emit('onReconnect')});
         this._room.onLeave((code: number, reason: string) => {
@@ -155,12 +189,12 @@ export class NetworkManager extends EventEmitter {
     }
 
     private _setupPlayerJoinedRoom() {
-        this._callback.onAdd("players", (player, sessionId) => {
+        this._callback.onAdd("players", (player, sessionId: string) => {
             console.log("Player joined:", sessionId);
             if (sessionId === this._room.sessionId) {
                 const playerPos = new Vector3(player.position.x, player.position.y, player.position.z);
-                const racketPos = new Vector3(player.position.x, player.position.y, player.position.z);
-                const racketRot = new Vector3(player.position.x, player.position.y, player.position.z);
+                const racketPos = new Vector3(player.rackPos.x, player.rackPos.y, player.rackPos.z);
+                const racketRot = new Quaternion(player.rackRot.x, player.rackRot.y, player.rackRot.z, player.rackRot.w);
                 this._gameState.players.set(sessionId, {pos: playerPos,
                     rackPos: racketPos, rackRot: racketRot,
                     sideNear: player.sideNear, connected: player.connected});
@@ -169,8 +203,8 @@ export class NetworkManager extends EventEmitter {
             }
             else {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
-                const racketPos = new Vector3(player.position.x, player.position.y, player.position.z);
-                const racketRot = new Vector3(player.position.x, player.position.y, player.position.z);
+                const racketPos = new Vector3(player.rackPos.x, player.rackPos.y, player.rackPos.z);
+                const racketRot = new Quaternion(player.rackRot.x, player.rackRot.y, player.rackRot.z, player.rackRot.w);
                 this._gameState.players.set(sessionId, {pos: enemyPos,
                     rackPos: racketPos, rackRot: racketRot,
                     sideNear: player.sideNear, connected: player.connected});
@@ -178,13 +212,13 @@ export class NetworkManager extends EventEmitter {
 
                 this._callback.onChange(this._room.state.players.get(sessionId).position, () => {
                     const newPos = this._room.state.players.get(sessionId).position;
-                    this._gameState.players.get(sessionId).pos = newPos;
+                    this._gameState.players.get(sessionId).pos = new Vector3(newPos.x, newPos.y, newPos.z);
                 });
                 this._callback.onChange(this._room.state.players.get(sessionId).rackPos, () => {
                     const newPos = this._room.state.players.get(sessionId).rackPos;
                     const newRot = this._room.state.players.get(sessionId).rackRot;
-                    this._gameState.players.get(sessionId).rackPos = newPos;
-                    this._gameState.players.get(sessionId).rackRot = newRot;
+                    this._gameState.players.get(sessionId).rackPos = new Vector3(newPos.x, newPos.y, newPos.z);
+                    this._gameState.players.get(sessionId).rackRot =  new Quaternion(newRot.x, newRot.y, newRot.z, newRot.w);
                 });
             }
         });

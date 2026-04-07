@@ -146,6 +146,7 @@ export class MyRoom extends Room {
     activePlayers.add(auth.id);
     console.log("auth.id:", auth.id);
     console.log(client.sessionId, "joined room", this.roomId);
+    console.log("current room status:", this.state.roomStatus);
     this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
     const player = new Player();
     player.position.x = 0;
