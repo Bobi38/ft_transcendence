@@ -12,8 +12,30 @@ import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
 
 export default function PopUp() {
 
-    
-    const {showLog} = useAuth();
+    const {showLog, setShowLog} = useAuth();
+
+    async function login_mode() {
+        sessionStorage.clear();
+        const url = `/api/secu/clearcookie`;
+        console.log(`${url}`)
+
+        const repjson = await useFetch(`${url}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
+    }
+
+    const password_forget_mode = () => {
+        sessionStorage.clear();
+        setShowLog(AUTH.PASSFORGET);
+    };
+
+    const register_mode = () => {
+        sessionStorage.clear();
+        setShowLog(AUTH.REGISTER);
+    }
 
     return (
 
@@ -21,10 +43,10 @@ export default function PopUp() {
 
             <div id={`alert-container`}></div>
 
-            {showLog === AUTH.LOGIN && <Login/>}
-            {showLog === AUTH.MAILA2F && <MailA2F/>}
-            {showLog === AUTH.REGISTER && <Register/>}
-            {showLog === AUTH.PASSFORGET && <PasswordForget/>}
+            {showLog === AUTH.LOGIN && <Login password_forget_mode={password_forget_mode} register_mode={register_mode}/>}
+            {showLog === AUTH.MAILA2F && <MailA2F login_mode={login_mode}/>}
+            {showLog === AUTH.REGISTER && <Register login_mode={login_mode}/>}
+            {showLog === AUTH.PASSFORGET && <PasswordForget login_mode={login_mode}/>}
 
 
         </div>
