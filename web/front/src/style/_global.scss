@@ -94,20 +94,6 @@ button, input[type="submit"]
 	}
 }
 
-.send-btn {
-	padding: 0.5rem 1rem;
-	border-radius: 50px;
-	border: solid 4px $grey;
-	transition: all 0.2s;
-	background-color: white;
-
-	&:hover {
-		background-color: white;
-		border-color: $active;
-		scale: 1.05;
-	}
-}
-
 .scanlines {
 	@include mix.scanlines();
 }

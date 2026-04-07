@@ -1,3 +1,6 @@
+/* extern */
+import { useNavigate }      from    "react-router-dom";
+
 /* Css */
 import "./NavBar.scss";
 
@@ -10,9 +13,10 @@ import Button 				from	"COMP/Button/Button.jsx";
 export default function NavBar() {
 
     const { setShowLog } = useAuth();
+    const navigate = useNavigate();
 
 	function logout() {
-		
+
 	   console.log("logout(1) called")
 	   fetch('/api/auth/logout', {
 	       method: 'GET',
@@ -30,7 +34,7 @@ export default function NavBar() {
 	        	SocketM.disconnect('morp');
 	        	SocketM.disconnect('priv');
 	        	SocketM.disconnect('chat');
-				window.location.href = '/'
+				navigate('/')
 	       } else {
 	           console.error("logout(2) failed");
 	       }

@@ -15,8 +15,8 @@ export default function MailA2F({login_mode}) {
     const {setShowLog} = useAuth();
 
     const [showMode, setShowMode] = useState("send_code"); // send_code => check_code => new_password
-	//?? to remove ??
-    async function maila2f_send_code(e)
+
+	async function maila2f_send_code(e)
     {
         const btn = e.currentTarget;
 

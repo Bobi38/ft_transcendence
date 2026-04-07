@@ -37,6 +37,7 @@ export default function App() {
 
     useEffect(() => {
         const init = async () => {
+			console.log("YOOOOOOOOOOOOO");
 
             const repco = await checkCo();
 
@@ -81,8 +82,11 @@ export default function App() {
             }
             SocketM.on("friend", handle_friend_co, "un");
             SocketM.on("priv", handle_msg_notif, "deux")
+			console.log("NOOOOOOOOOOOOOOO");
         }
+
         init();
+		
         return () => {
           SocketM.off("friend", "un");
           SocketM.off("priv", "deux");

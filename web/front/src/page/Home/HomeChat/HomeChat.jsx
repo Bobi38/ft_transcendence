@@ -89,7 +89,7 @@ export default function HomeChat() {
         if (input === "") return;
         if (input.length > 511) {
             setInput("");
-            showAlert("Message trop long (511 caractères max)", "danger");
+            showAlert("Message Too Long", "danger");
             return;
         }
 
@@ -110,7 +110,6 @@ export default function HomeChat() {
 			<div className={`message-container`}>
 
 				{displayedMessages && displayedMessages.map((msg, index) => (
-
 					<div key={index} className={`message ${msg.monMsg ? "me" : "other"}`}>
 						{msg.monMsg ? (
 							<p className="time">{msg.timer}</p>
@@ -123,12 +122,16 @@ export default function HomeChat() {
 			</div>
 
 			<form onSubmit={handle_submit}>
-				<input required
-					type="text"
-					value={input}
-					onChange={(e) => setInput(e.target.value)}
-					/>
-				<button type="submit" className="send-btn">Send</button>
+				<p id={`alert-container`}></p>
+
+				<div>
+					<input required
+						type="text"
+						value={input}
+						onChange={(e) => setInput(e.target.value)}
+						/>
+					<button type="submit" className="send-btn">Send</button>
+				</div>
 			</form>
 		</section>
     )

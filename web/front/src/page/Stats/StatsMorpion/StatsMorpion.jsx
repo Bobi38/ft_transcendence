@@ -12,6 +12,8 @@ import StatsMorpionHistoryCard      from "./StatsMorpionHistoryCard/StatsMorpion
 
 function cal_percentage(value, max)
 {
+	if (max === 0)
+		return 0
 	return (Math.round(value / max * 100))
 }
 
@@ -78,7 +80,7 @@ export default function StatsMorpion({ username, setUsername }) {
 			win_abort: win_abort,
 			lose_abort: lose_abort,
 
-			winrate_total: cal_percentage(all_win_without_abort, all_lose_without_abort),
+			winrate_total: cal_percentage(all_win_without_abort, (all_win_without_abort + all_lose_without_abort)),
 			winrate_X: cal_percentage(type_X_win, (type_X_lose + type_X_win)),
 			winrate_O: cal_percentage(type_O_win, (type_O_lose + type_O_win)),
 			winrate_horizontal: cal_percentage(win_horizontal, all_win_without_abort),
@@ -118,9 +120,6 @@ export default function StatsMorpion({ username, setUsername }) {
         fetch_history(currentPage - 1);
     }, [username, currentPage]);
 
-    /* form */
-    const [inputValue, setInputValue] = useState("");
-
     return (
         <section className={`StatsMorpion-root border-base`}>
 
@@ -138,9 +137,11 @@ export default function StatsMorpion({ username, setUsername }) {
 
             <aside>
 
-				<form onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1); setInputValue("")}}>
-					<input type={`text`} id="name" value={inputValue} onChange={(e) => {setInputValue(e.target.value);}}
-						placeholder="Someone name"/>
+				<form onSubmit={(e) => {e.preventDefault();
+					console.log(e.target.name.value)
+					if (e.target.name.value.lenght === 0) return
+					setUsername(e.target.name.value); setNewPage(1);}}>
+					<input type={`text`} id="name" name="name" placeholder="Someone name" required/>
 					<input type={`submit`} value={`search`}/>
 				</form>
 

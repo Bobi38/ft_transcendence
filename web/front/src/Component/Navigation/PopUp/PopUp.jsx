@@ -17,7 +17,7 @@ export default function PopUp() {
     async function login_mode() {
 
         sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
+        const url = `/api/secu/cookie`;
         console.log(`${url}`)
 
         await useFetch(`${url}`, {

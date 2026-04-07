@@ -26,7 +26,7 @@ export default function ContactUs() {
 
 			<hr />
 
-			<section className="cardContainer">
+			<section className="card-container">
 				{teamMembers.map((member, index) => (
 					<ContactCard key={index} {...member} />
 				))}
