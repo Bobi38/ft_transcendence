@@ -22,12 +22,12 @@ export default function Profile() {
         const confirmePassword = e.target.confirmePassword.value;
 
         if (!password || !confirmePassword) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("Fill all input", "danger");
             return;
         }
 
         if (password !== confirmePassword) {
-            showAlert("Les mots de passe ne correspondent pas", "danger");
+            showAlert("Passwords dont match", "danger");
             return;
         }
 
@@ -43,7 +43,7 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        showAlert("Mot de passe mis à jour avec succès", "success");
+        showAlert("Password update with success", "success");
 
     }
 
@@ -51,12 +51,12 @@ export default function Profile() {
         e.preventDefault();
 
         if (!user.login || !user.tel) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("Fill all input", "danger");
             return;
         }
 
         if (user.tel[0] !== '+' || user.tel[1] !== '3' || user.tel[2] !== '3' || user.tel.length < 10) {
-            showAlert("Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
+            showAlert("Use international notation (ex: +33612345678)", "danger");
             return;
         }
 
@@ -87,10 +87,9 @@ export default function Profile() {
             SocketM.sendd('morp', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
         }
 
-        showAlert("Profil mis à jour avec succès", "success");
+        showAlert("Success update profile", "success");
     };
 
-    
     async function fetch_user_data(){
         const url = `/api/profile`;
 
@@ -103,8 +102,10 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
+		console.log("repjson",repjson)
         setUser(repjson.message)
     }
+
     useEffect(() => {
         fetch_user_data();
     }, []);
@@ -113,7 +114,7 @@ export default function Profile() {
     return (
         <section className={`Profile-root`}>
 
-            <h1>Mon Profil</h1>
+            <h1>My profile</h1>
 
             <p id={`alert-container`}></p>
 
@@ -138,14 +139,14 @@ export default function Profile() {
                             disabled/>
 
 
-                    <label htmlFor={`tel`}>Téléphone</label>
+                    <label htmlFor={`tel`}>Phone</label>
                     <input  type={`tel`}
                             id={`tel`} name={`tel`}
                             value={user.tel ?? ""}
                             onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                             />
 
-                    <button type={`submit`}>Modifier mes informations</button>
+                    <button type={`submit`}>Update my informations</button>
                 </form>
 
 				<hr />
@@ -153,33 +154,33 @@ export default function Profile() {
                 <div>
                     <form className="password-form" onSubmit={handle_pass}>
 
-                        <label htmlFor="password">Nouveau Mot de passe</label>
+                        <label htmlFor="password">New password</label>
                         <div className="input-wrapper">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 id="password" name="password"
                                 className="password-field"
-                                placeholder="Votre nouveau mot de passe"
+                                placeholder="Password"
                             />
                             <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <label htmlFor="confirmePassword">Confirmer Mot de passe</label>
+                        <label htmlFor="confirmePassword">Confirm password</label>
                         <div className="input-wrapper">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 id="confirmePassword" name="confirmePassword"
                                 className="password-field"
-                                placeholder="Confirmation du nouveau mot de passe"
+                                placeholder="Password"
                             />
                             <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <button type="submit" className="submit-btn">Modifier mon mot de passe</button>
+                        <button type="submit" className="submit-btn">Update password</button>
 
                     </form>
 
@@ -188,11 +189,11 @@ export default function Profile() {
 
             <div className={`Navbar-policy`}>
                 <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                Politique de confidentialité
+                Privacy policy
                 </a>
 
                 <a href="/terms" target="_blank" rel="noopener noreferrer">
-                Conditions d'utilisation
+                Terms of Use
                 </a>
             </div>
         </section>

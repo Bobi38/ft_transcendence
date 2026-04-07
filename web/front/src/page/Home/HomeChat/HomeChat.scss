@@ -29,8 +29,8 @@ $bg_color: rgb(196, 230, 236);
 
         .message {
 			padding: 0.5rem;
-            border-radius: 0.5rem;
-            background-color: rgb(255, 255, 255);
+            border-radius: 15px;
+            background-color: white;
 
             p {
                 overflow-wrap: anywhere;
@@ -81,7 +81,7 @@ $bg_color: rgb(196, 230, 236);
 			padding: 0.5rem 1rem;
 			border-radius: 50px;
 			border-width: 2px;
-			border: solid 4px $grey;
+			border: solid 3px $grey-dark;
 			transition: all 0.2s;
 
 			&:hover {

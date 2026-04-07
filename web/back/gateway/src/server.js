@@ -85,7 +85,7 @@ app.use('/api/morpion', createProxyMiddleware({
 }))
 
 
-app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
+app.use((req, res) => { res.status(404).json({ error: "Api Not found" }); });
 
 
 (async () => {
