@@ -117,7 +117,7 @@ export default function Profile() {
 
             <h1>Mon Profil</h1>
 
-            <div id={`alert-container`}></div>
+            <p id={`alert-container`}></p>
 
             <div className={`form-container`}>
 

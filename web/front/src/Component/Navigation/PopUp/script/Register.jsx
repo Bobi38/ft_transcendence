@@ -61,15 +61,15 @@ export default function Register({login_mode}) {
                 <label htmlFor={`password`}>Password</label>
                 <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
-                <div style={{ marginTop: "10px" }}>
+                <div>
                     <input type="checkbox" id="legal" name="legal" required />
-                    <label htmlFor="legal" style={{ marginLeft: "5px" }}>
+                    <label htmlFor="legal">
                     J'accepte les{" "}
-                    <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
+                    <a href="/terms" target="_blank" rel="noopener noreferrer">
                     Conditions d'utilisation
                     </a>{" "}
                     et la{" "}
-                    <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer">
                     Politique de confidentialité
                     </a>
                     </label>

@@ -111,7 +111,6 @@ export default function App() {
                     {notif.message}
                 </div>
             )}
-            {/* <div id={`alert-container`}></div> */}
             <BrowserRouter>
                 <Routes>
 

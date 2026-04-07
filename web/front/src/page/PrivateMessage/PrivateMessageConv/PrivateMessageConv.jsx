@@ -93,7 +93,7 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 			<hr />
 
 			<div className="content">
-                <div id={`alert-container`}></div>
+                <p id={`alert-container`}></p>
 
 				<div className="message border-1">
                     {displayedMessages && displayedMessages.map((msg, index) => { return (

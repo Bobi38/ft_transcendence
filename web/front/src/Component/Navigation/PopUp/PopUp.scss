@@ -18,13 +18,25 @@
         display: flex;
         flex-direction: column;
 		align-items: center;
-        gap: 1rem;
+        gap: 1.5rem;
 
         form {
             display: flex;
             flex-direction: column;
 			align-items: center;
             gap: 0.5rem;
+
+			input[type="checkbox"] {
+				margin-right: 1.5rem;
+			}
+
+			a {
+				text-decoration: underline solid;
+				transition: all 0.2s;
+				&:hover {
+					color: $active-dark;
+				}
+			}
 
             .input-wrapper {
                 position: relative;

@@ -112,7 +112,7 @@ export default function HomeChat() {
 
 			<h3>Global Chat</h3>
 
-            <div id={`alert-container`}></div>
+            <p id={`alert-container`}></p>
 
 			<div className={`message-container`}>
 
