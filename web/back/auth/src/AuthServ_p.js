@@ -7,9 +7,9 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
 //router
-import authroute from './routes/auth_p.js'
-import oauth2route from './routes/Oauth2_p.js'
-import securoute from './routes/secu_p.js'
+import authroute from './routes/auth/auth.controller.js'
+import oauth2route from './routes/Oauth/Oauth2.controller.js'
+import securoute from './routes/secu/secu.controller.js'
 
 dotenv.config();
 
@@ -44,10 +44,7 @@ app.use('/', securoute);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
     });
   } catch (err) {
-    console.error("Erreur lors de l'initialisation du serveur :", err);
+    console.error("Error while initializing server :", err);
     process.exit(1);
   }
 })();
-
-
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY4MjIzMzQ5LCJleHAiOjE3NjgyNjY1NDl9.f1a8N3asudEaMpCbr0hgYuLiaZC5xliCQ0AZNbK-sSk

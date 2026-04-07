@@ -1,60 +1,86 @@
 @use "STYLE/_mixin" as mix;
+@use "STYLE/_variable" as *;
 
-.MorpionDisplay-root{
+.MorpionDisplay-root {
 	@include mix.page;
+	@include mix.full;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
 
-    display: flex;
-    padding: 0.5rem;
-    .MorpionDisplay-actual-game{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        // height: 100%;
-        width: 35%;
-        padding: 1rem;
-        border-radius: 30px;
-        padding-right: 1rem;
-        background-color: rgba(255, 255, 255, 0.700);
-        .MorpionDisplay-spec-game{
-            padding: 0 2rem ;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            .Board-root{
-                padding: 1rem;
-                height: 100%;
-                width: 100%;
-                .square {
-                    font-size: 1rem;
-                }
-            }
-        }
+	padding: 1rem;
 
-        .MorpionDisplay-spec-info{
-        border-top-left-radius: 30px;
-        border-bottom-left-radius: 30px;
-            // border-radius: 30px;
-            overflow: hidden auto;
-            flex: 1;
-            width: 100%;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-    }
-    .MorpionDisplay-game{
-        flex: 1;
-        padding: 1rem;
-    }
+	> div {
+		@include mix.full;
+		display: flex;
+		align-items: center;
+		.Board-root {
+			min-height: 150px;
+		}
+	}
 
-    button{
-        @include mix.default_card;
-        padding: 0.3rem;
-        box-shadow: 0px 0px 7px 5px #8da8c6;
-    }
+	.MorpionDisplay-content {
+		overflow: hidden;
+		flex-direction: row-reverse;
+
+		.Board-root {
+			padding: 2%;
+		}
+
+		aside {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			height: 100%;
+			width: 30%;
+			max-width: 400px;
+
+			h2 {
+				text-align: center;
+			}
+
+			ul {
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+				padding: 0 1rem;
+				height: 0;
+				flex: 1;
+
+				li button {
+					width: 100%;
+					overflow:hidden;
+					transition: all 0.2s;
+
+					white-space: nowrap;
+					text-overflow: ellipsis;
+
+					background-color: $grey-light;
+					border-radius: 50px;
+					padding: 0.4rem 0.8rem;
+
+					&:hover {
+						scale: 1.05;
+					}
+				}
+			}
+		}
+
+		@media (width <= $tablet)
+		{
+			flex-direction: column;
+			gap: 0.5rem;
+			aside {
+				width: 100%;
+				max-width: unset;
+				overflow-y: hidden;
+
+				ul {
+					padding: 0 1.5rem;
+				}
+			}
+		}
+	}
 }

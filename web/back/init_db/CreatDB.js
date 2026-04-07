@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import { encrypt } from './routes/crypt.js';
 
 import sequelize from './models/index.js';
-//model
 import User from './models/user.js';
 import Friend from './models/friend.js';
 import PrivChat from './models/privchat.js';
@@ -18,8 +17,7 @@ import StatPong3D from './models/StatPong3D.js';
 import PswEmail from './models/PssWrdEmail.js';
 
 // creatdb
-import { CreatGameMorp } from './morpion/seedmorp.js';
-
+//import { CreatGameMorp } from './morpion/seedmorp.js';
 
 async function majDb(retry = 5) {
     while (retry > 0) {
@@ -27,7 +25,6 @@ async function majDb(retry = 5) {
             await sequelize.authenticate();
             // console.log('Connection good.');
             await sequelize.sync({ alter: true });
-            // await sequelize.sync({ alert: true }); A REMETTRE POUR LA PROD
             console.log('la table a ete mise a jour avec succes.');
             break;
         } catch (error) {

@@ -17,7 +17,7 @@
     }
 }
 
-@mixin cursor($type)
+@mixin cursor($type: null)
 {
 	@if $type == "pointer" {
 		cursor: url("MEDIA/wii_pointer.png") 5 5, pointer;
@@ -33,7 +33,6 @@
 	}
 }
 
-
 @mixin default_card {
     transition: all 0.2s;
     padding: 0.6rem;
@@ -45,7 +44,7 @@
     border-radius: 25px;
 	@include cursor("pointer");
 
-    &:hover, &:focus {
+    &:hover {
         outline: none;
 
         border-radius: 30px;

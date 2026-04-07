@@ -1,6 +1,6 @@
 /* extern */
 import { useState, useEffect } from "react";
-import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 
 /*back*/
 import { showAlert } from "TOOL/fonction_usefull.js";
@@ -14,19 +14,11 @@ import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
 import useFetch from "HOOKS/useFetch.jsx";
 
 export default function Profile() {
-    
-    const [showFormPassword, setShowFormPassword] = useState(false);
+
     const [showPassword, setShowPassword] = useState(false);
-    const [isReadOnly, setIsReadOnly] = useState(true);
     const { showLog, setShowLog } = useAuth();
 
-    const [user, setUser] = useState({
-        login: "",
-        login42: "",
-        email: "",
-        tel: "",
-        location: ""
-    });
+    const [user, setUser] = useState({ login: "", tel: "", });
 
     const handle_pass = async (e) => {
         e.preventDefault();
@@ -43,13 +35,12 @@ export default function Profile() {
             return;
         }
 
-
-        const url = `/api/profile/majPass`;
+        const url = `/api/profile/password`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PATCH",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({Pass: password})
@@ -57,13 +48,13 @@ export default function Profile() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         showAlert("Mot de passe mis à jour avec succès", "success");
-        
+
     }
 
     const handle_submit = async (e) => {
         e.preventDefault();
 
-        if (!user.login || !user.login42 || !user.tel || !user.email || !user.tel) {
+        if (!user.login || !user.tel) {
             showAlert("Veuillez remplir tous les champs", "danger");
             return;
         }
@@ -73,17 +64,17 @@ export default function Profile() {
             return;
         }
 
-        const url = `/api/profile/updateProfil`;
+        const url = `/api/profile`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(user)
         });
-        console.log(repjson.status + " " + repjson.success)        
+        console.log(repjson.status + " " + repjson.success)
         if (repjson && !repjson.success && repjson.status < 500 && repjson.status >= 400){
             showAlert(repjson.message, "danger");
             return;
@@ -104,7 +95,7 @@ export default function Profile() {
     };
 
     async function fetch_user_data(){
-        const url = `/api/profile/profile`;
+        const url = `/api/profile`;
 
         console.log(`${url}`)
 
@@ -121,19 +112,12 @@ export default function Profile() {
     useEffect(() => {
         fetch_user_data();
     }, []);
-    
+
 
     return (
         <section className={`Profile-root`}>
 
-
             <h3>Mon Profil</h3>
-
-
-            <div className={`edit`} onClick={() => setIsReadOnly(!isReadOnly)}>{/* isReadOnly default true*/}
-                    <VscEdit />{isReadOnly ? " Edit " : " Editing "}<VscEdit />  
-            </div>
-
 
             <div id={`alert-container`}></div>
 
@@ -147,18 +131,9 @@ export default function Profile() {
                             id={`login`}
                             name={`login`}
                             value={user.login ?? ""}
-                            readOnly={isReadOnly}
                             onChange={(e) => setUser({ ...user, login: e.target.value }) }
-                            /> 
+                        />
 
-                    <label htmlFor={`login42`}>Login-42</label>
-                    <input  type={`text`}
-                            id={`login42`}
-                            name={`login42`}
-                            value={user.login42 ?? ""}
-                            readOnly={isReadOnly}
-                            onChange={(e) => setUser({ ...user, login42: e.target.value }) }
-                            /> 
 
                     <label htmlFor={`email`} className={``}>Email</label>
                     <input  type={`email`}
@@ -166,30 +141,24 @@ export default function Profile() {
                             name={`email`}
                             title={`Can't be changed`}
                             value={user.email}
-                            readOnly={true}
                             onChange={(e) => setUser({ ...user, email: e.target.value }) }
-                            disabled/> 
+                            disabled/>
 
 
-                    <label htmlFor={`tel`}>Téléphone</label> 
+                    <label htmlFor={`tel`}>Téléphone</label>
                     <input  type={`tel`}
                             id={`tel`}
                             name={`tel`}
                             value={user.tel ?? ""}
-                            readOnly={isReadOnly}
                             onChange={(e) => setUser({ ...user, tel: e.target.value }) }
-                            /> 
+                            />
 
                     <button type={`submit`}>Modifier mes informations</button>
                 </form>
 
 				<hr />
 
-                <button className={`change-password`} onClick={() => setShowFormPassword(!showFormPassword)}>
-                    Changer de mot de passe
-                </button>
-
-                <div className={showFormPassword ? "visible" : "hidden"}>
+                <div>
 
                     <form className="password-form" onSubmit={handle_pass}>
 
@@ -222,7 +191,7 @@ export default function Profile() {
                         </div>
 
                         <button type="submit" className="submit-btn">Modifier mon mot de passe</button>
-                    
+
                     </form>
 
                 </div>
@@ -238,8 +207,6 @@ export default function Profile() {
 					</a>
 				</div>
 			)}
-
-
         </section>
     )
 }

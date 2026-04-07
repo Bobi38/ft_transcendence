@@ -1,19 +1,19 @@
 import { manager_room } from './ManagRoom.js';
 
 const msgs = {
-    welcome: "welcome",
-    recherche: "search",
-    wait: "wait wait",
-    my_turn: "it s your turn",
-    other_turn : "wait opposant",
-    w_abort: "Abort - you win",
-    l_abort: "Abort - you lose",
-    w_msg: "you win",
-    l_msg: "you lose",
-    draw: "draw",
-    second: "second player selected",
-    first: "first player seleted",
-    reboot: "server rebooted", // tres utile !!
+    welcome: "Welcome to Morpion!",
+    recherche: "Searching for a game...",
+    wait: "It's not your turn",
+    my_turn: "It's your turn",
+    other_turn : "Waiting for opponent",
+    w_abort: "Other player aborted - you win",
+    l_abort: "You aborted the game - you lose",
+    w_msg: "Congratulations, you won!",
+    l_msg: "You'll beat them next time! You lost",
+    draw: "It's a draw!",
+    second: "You are playing second",
+    first: "You are playing first",
+    reboot: "Server has rebooted", // tres utile !!
     badMove: "Move alert",
 }
 
@@ -76,20 +76,20 @@ function move(player, move){
         }
 
         game.switchTurn();
-        console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
-        console.log("mess4");
+        // console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
+        // console.log("mess4");
         if (game.isState("play"))
             game.notifyTurn(
                 {message: msgs.my_turn, turn: true},
                 {message: msgs.other_turn, turn: false}
             )
         if (game.isState("end")) {
-            console.log(`le jeu est terminer`);
+            // console.log(`le jeu est terminer`);
             return true;
         }
-        console.log("mess5");
+        // console.log("mess5");
         game.startTurnTimer();
-        console.log("mess6");
+        // console.log("mess6");
         return false;
     }
 }

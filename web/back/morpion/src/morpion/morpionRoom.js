@@ -151,6 +151,7 @@ class MorpionRoom extends Room {
             this._how_win = 'abort';
         else if (ending === 'draw')
             this._how_win = 'draw';
+        // this._how_win = ending;
 
         this.majdb(winnerId).catch(err =>
             console.error("Erreur sauvegarde DB:", err)
@@ -158,7 +159,7 @@ class MorpionRoom extends Room {
     }
 
     checkVictory() {
-        console.log(`start chekc victory`);
+        // console.log(`start chekc victory`);
         let i = 0;
         for (let [a, b, c] of this._lines) {
             let char = this._board[a];
@@ -169,16 +170,14 @@ class MorpionRoom extends Room {
             ) {
 
                 this.notifyTurn(
-                    { message: "gagne", board: this._board, turn: false },
-                    { message: "perdu", board: this._board, turn: false });
+                    { message: m.msgs.w_msg, board: this._board, turn: false },
+                    { message: m.msgs.l_msg, board: this._board, turn: false });
                     
                 console.log(`victoire avec ligne ${i}`);
                 this._how_win = ["horizontal","vertical","diagonal_lr"][Math.floor (i / 3)];
                 if (i === 7)
                     this._how_win = "diagonal_rl";
                 this.handleEndGame("win", this._turn);
-                // this._turn = null;
-                // console.log(`avant envoie TRUE`);
                 return true;
             }
             i++
@@ -186,7 +185,7 @@ class MorpionRoom extends Room {
 
         if (!this._board.includes(" ")) {
             console.log(`draw : ${this}`);
-            this.sendAll({message: "egalite", board: this._board, turn: false} );
+            this.sendAll({message: m.msgs.draw, board: this._board, turn: false} );
             this.handleEndGame("draw");
             return true;
         }
@@ -204,7 +203,7 @@ class MorpionRoom extends Room {
             board: this._board
             })
         };
-        console.log(`mess16`);
+        // console.log(`mess16`);
 
         p.startTurnTimer(action, 5000);
     }
@@ -247,8 +246,6 @@ class MorpionRoom extends Room {
         
         await GameMorp.create({
             how_win: this._how_win,
-            // date_game: this._date_Game, ?? undefine
-            // ending: this._ending, //inutile
 
             player_1, 
             player_2,
@@ -260,7 +257,7 @@ class MorpionRoom extends Room {
             nb_turn_player_2,
 
             map: this.serializeBoard(),
-            winner: winner.getId(),
+            winner: winner?.getId(),
             loser
         });
 

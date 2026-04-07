@@ -17,6 +17,39 @@ const router = express.Router();
 export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 router.use(cookieParser());
 
+export function format_all_friend(relation) {
+    const  tableau = [];
+    
+    for(let i = 0; i < relation.FriendOf.length; i++){
+        const login = relation.FriendOf[i].name;
+        tableau.push({login: login});
+    }
+
+    for(let i = 0; i < relation.Friends.length; i++){
+        const login = relation.Friends[i].name;
+        tableau.push({login: login});
+    }
+
+    return tableau;
+};
+
+export function errorHandler(message, code, res) {
+  return res.status(code).json({ success: false, message: message });
+}
+
+export async function get_user_from_token(token) {
+  try {
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    if (!result) {
+      return { success: false, message: 'User not found' };
+    }
+    return { success: true, user: result };
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+}
+
 export {
     User,
     Friend,

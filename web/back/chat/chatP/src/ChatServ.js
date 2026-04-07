@@ -11,7 +11,7 @@ import { initWebSChat } from './WsSChatP.js';
 
 
 //router
-import chatProute from './routes/ChatP.js'
+import chatProute from './routes/ChatP.controller.js'
 
 
 dotenv.config();

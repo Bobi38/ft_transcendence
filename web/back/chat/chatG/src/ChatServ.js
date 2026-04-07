@@ -11,7 +11,7 @@ import { initWebSChat } from './WsSChatG.js';
 
 
 //router
-import chatGroute from './routes/ChatG.js'
+import chatGroute from './routes/ChatG.controller.js';
 
 
 dotenv.config();
@@ -49,10 +49,7 @@ app.use('/', chatGroute);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
     });
   } catch (err) {
-    console.error("Erreur lors de l'initialisation du serveur :", err);
+    console.error("Error while initializing server:", err);
     process.exit(1);
   }
 })();
-
-
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY4MjIzMzQ5LCJleHAiOjE3NjgyNjY1NDl9.f1a8N3asudEaMpCbr0hgYuLiaZC5xliCQ0AZNbK-sSk

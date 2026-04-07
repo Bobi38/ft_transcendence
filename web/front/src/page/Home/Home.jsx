@@ -13,13 +13,13 @@ import HomeCardWeather from "./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 
 const cards_content = [
 	{ text:"Pas ouf Intra", path: "/https://profile.intra.42.fr" },
-	{ text:"Private Message", path: "/PrivateMessage" },
-	{ text:"Morpion", path: "/Morpion" },
+	{ text:"Friends", path: "/PrivateMessage" },
 	{ text:"Pong3D vs Player", path: "/Pong3D" },
 	{ text:"Pong3D vs IA", path: "/Pong3DIa" },
-	{ text:"Contact Us", path: "/ContactUs" },
+	{ text:"Morpion", path: "/Morpion" },
+	{ text:"Spec.", path: "/SpecMorpion" },
 	{ text:"Stats", path: "/Stats" },
-	{ text:"Nothing", path: "/Nothing" },
+	{ text:"Contact Us", path: "/ContactUs" },
 ]
 
 export default function Home() {
@@ -37,8 +37,6 @@ export default function Home() {
 				</div>
                 <HomeChat/>
 			</div>
-            
 		</div>
 	)
 }
-

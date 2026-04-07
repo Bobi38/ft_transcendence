@@ -16,7 +16,7 @@ export class Ball {
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
         this.radius = diameter / 2;
         const ballMaterial = new StandardMaterial("ballTexture", scene);
-        ballMaterial.diffuseTexture = new Texture("/media/ballTexture.jpg", this._scene);
+        ballMaterial.diffuseTexture = new Texture("/app/media/ballTexture.jpg", this._scene);
         ballMaterial.specularColor = new Color3(0.3, 0.3, 0.2);
         ballMaterial.specularPower = 10;
         this._mesh.material = ballMaterial;

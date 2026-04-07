@@ -25,6 +25,13 @@ p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label, strong {
 	font-weight: 700;
 	letter-spacing: 0.75px;
 	color: $second-dark;
+
+	@media (width <= $tablet) {
+		font-size: 1.6rem;
+	}
+	@media (width <= $phone) {
+		font-size: 2rem;
+	}
 }
 
 a {
@@ -39,14 +46,18 @@ input, textarea {
 }
 
 input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
-	color: red;
 	border-radius: 50px;
 	border: solid 2px $grey-dark;
-	padding: 3px 7px;
+	padding: 0.5rem 1rem;
 	transition: all 0.3s;
 	&:focus {
 		outline: none;
 		border-color: $active;
+	}
+
+	&:disabled {
+		background-color: $grey-light;
+		@include mix.cursor;
 	}
 }
 
@@ -58,6 +69,28 @@ hr {
 
 button, label, select, option, li, input[type="submit"] {
 	@include mix.cursor("pointer");
+}
+
+li {
+	list-style-type: none;
+}
+
+button {
+	border: none;
+	background: none;
+}
+
+.send-btn {
+	padding: 0.5rem 1rem;
+	border-radius: 50px;
+	border: solid 4px $grey;
+	transition: all 0.2s;
+	background-color: white;
+
+	&:hover {
+		border-color: $active;
+		scale: 1.05;
+	}
 }
 
 .scanlines {

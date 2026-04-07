@@ -117,7 +117,7 @@ export class Player {
             }
         }
         console.log(`add socket player are ${this._sockets.size} sockets`)
-        this.send();
+        this.sendGame();
     }
 
     isInactived(){
@@ -198,7 +198,7 @@ export class Player {
         const all = JSON.stringify({
             list: structuredClone(this.list),
         });
-        console.log(`list recu`, all);
+        // console.log(`list recu`, all);
 
         for (const socket of this._sockets.values()){
             try {
@@ -224,11 +224,11 @@ export class Player {
     }
 
     send(data) {
-        console.log(`${this.getName()} doit recevoir data :${JSON.stringify(data)}`);
+        // console.log(`${this.getName()} doit recevoir data :${JSON.stringify(data)}`);
         if (data === undefined){
             console.log(`data indefini`);
-            this.sendObs();
-            return ; //plus tard je referais cette partie
+            return ;
+            // this.sendObs();
         }
         
         const new_message =
@@ -239,6 +239,7 @@ export class Player {
         if (new_message !== undefined) {
             this._last_message = new_message;
         }
+
         const all = JSON.stringify({
                 ...data,
                 message: this._last_message,
@@ -253,7 +254,6 @@ export class Player {
                 console.error("WebSocket player.send error:", err);
             }
         }
-        // console.log(all);
     }
 
     disconnect(message, game_id = null) {
@@ -263,11 +263,11 @@ export class Player {
         }
         if (this._game && game_id !== this._game.getId()) return;
 
-        if (message)
-            this.send(message);
+        this.sendMessage(message);
 
         this.clearTurnTimer();
         this._chrono = null;
+        this._last_message = "";
         this._nb_turn = 0;
         this._play_time = 0;
         this._game = null;
