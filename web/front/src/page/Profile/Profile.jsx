@@ -94,6 +94,7 @@ export default function Profile() {
         showAlert("Profil mis à jour avec succès", "success");
     };
 
+    
     async function fetch_user_data(){
         const url = `/api/profile/profile`;
 
@@ -108,7 +109,6 @@ export default function Profile() {
             return;
         setUser(repjson.message)
     }
-
     useEffect(() => {
         fetch_user_data();
     }, []);

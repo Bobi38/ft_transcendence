@@ -1,15 +1,16 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
 import { Room } from "@colyseus/sdk";
+import { NetworkManager } from "./NetworkManager";
 
 export class GUI {
-    private _room : Room;
+    private _network : NetworkManager;
     private _ui: AdvancedDynamicTexture = null;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
     private _playerDisconnected : AdvancedDynamicTexture = null;
 
-    constructor (room: Room) {
-        this._room = room;
+    constructor (network: NetworkManager) {
+        this._network = network;
     }
 
     private _setAndDispose(newUi : AdvancedDynamicTexture) {
