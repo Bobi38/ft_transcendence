@@ -38,7 +38,7 @@ export default function Pong3D() {
         return () => {
             gameApp?.dispose?.();
         };
-    }, [canvasRef]);
+    }, [canvasRef.current]);
 
     return (
         <main className={`Pong3D-root`}>

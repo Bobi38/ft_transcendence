@@ -9,12 +9,10 @@ import "./Profile.scss";
 import { showAlert }                from    "TOOL/fonction_usefull.js";
 import SocketM                      from    "TOOL/SocketManag.js";
 import useFetch                     from    "TOOL/useFetch.jsx";
-import { AUTH, useAuth }            from    "HOOKS/useAuth.jsx"
 
 export default function Profile() {
 
     const [showPassword, setShowPassword] = useState(false);
-    const { showLog } = useAuth();
 
     const [user, setUser] = useState({ login: "", tel: "", });
 
