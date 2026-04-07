@@ -18,8 +18,7 @@ export default function PrivateMessage() {
     const [goToAction, setGoToAction] = useState(2)
     const [goToConv, setGoToConv] = useState(null)
     const { showFriend, setShowFriend } = useFriend();
-    
-    
+
     const [displayedInfoConv, setDisplayedInfoConv] = useState([]);
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
@@ -65,7 +64,7 @@ export default function PrivateMessage() {
 	useEffect(() => {
         const handle_private_message = async (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.type === "updateName_good"){             
+            if (data.type === "updateName_good"){
                 if (data.old_name === goToConv){
                     setGoToConv(data.new_name);
                     fetch_go_to_conv_private();
@@ -113,7 +112,6 @@ export default function PrivateMessage() {
 							</div>
 						))}
 					</div>
-
 				</div>
 
 				<div className={`display-screen border-2`}>
