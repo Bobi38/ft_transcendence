@@ -28,7 +28,7 @@ export default function MailA2F() {
 
         const url = `/api/secu/send_mail`;
         const repjson = await useFetch(`${url}`, {
-            method: "GET",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         }, null, null, true);
@@ -78,7 +78,7 @@ export default function MailA2F() {
 
     async function login_mode() {
         sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
+        const url = `/api/secu/cookie`;
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {

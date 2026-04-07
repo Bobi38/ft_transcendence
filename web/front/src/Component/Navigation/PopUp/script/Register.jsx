@@ -56,7 +56,7 @@ export default function Register() {
 
     async function login_mode() {
         sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
+        const url = `/api/secu/cookie`;
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {

@@ -40,7 +40,7 @@ export default function PasswordForget() {
         // return
         if (!mail)
             return;
-        const url = `/api/secu/recupPswd`;
+        const url = `/api/secu/recovery/password`;
 
         console.log(`${url}`)
 
@@ -120,7 +120,7 @@ export default function PasswordForget() {
 
     async function login_mode() {
         sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
+        const url = `/api/secu/cookie`;
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {

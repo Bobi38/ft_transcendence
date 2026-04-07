@@ -20,7 +20,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
 
     async function all_friend(){
-        const url = `/api/friend/all_friend`;
+        const url = `/api/friend`;
 
         console.log(`${url}`)
 
@@ -40,10 +40,10 @@ export default function Friends({setGoToAction, setGoToConv}) {
         if (!name)
             return;
 
-        const url = `/api/friend/dlt_friend?name=${name}`;
+        const url = `/api/friend/${name}`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
-                method: "GET",
+                method: "DELETE",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
             }, null , function(repjson) {

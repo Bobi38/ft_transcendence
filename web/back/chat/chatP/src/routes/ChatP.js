@@ -4,7 +4,7 @@ import {User, PrivChat, PrivMess} from './index.js';
 
 const router = express.Router();
 
-router.post('/add_message_private', async (req, res) => {
+router.post('/', async (req, res) => {
   try{
     const data = req.body;
     if (!data.message || !data.time) {
@@ -31,7 +31,7 @@ router.post('/add_message_private', async (req, res) => {
   }
 });
 
-router.get('/get_chat_private', async (req, res) => {
+router.get('/:name', async (req, res) => {
     try{
         
         const token = req.query.name;
@@ -57,7 +57,7 @@ router.get('/get_chat_private', async (req, res) => {
     }
 })
 
-router.get('/fetch_conv', async (req, res) => {
+router.get('/', async (req, res) => {
     console.log("API fetch_conv called")
     try{
         const token = req.cookies.token;
