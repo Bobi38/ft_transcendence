@@ -1,15 +1,12 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
-/* back */
-import SocketM from "TOOL/SocketManag";
 /* Css */
 import "./Friends.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
-
-
+import SocketM                  from    "TOOL/SocketManag";
+import useFetch                 from    "TOOL/useFetch.jsx";
     
 export default function Friends({setGoToAction, setGoToConv}) {
 

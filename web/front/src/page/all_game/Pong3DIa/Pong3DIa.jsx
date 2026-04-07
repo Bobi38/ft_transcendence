@@ -1,17 +1,13 @@
 /* extern */
-import { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-/* back */
-import checkCo from "TOOL/fonction_usefull.js"
+import { useRef, useEffect }    from "react";
+import { useNavigate }          from "react-router-dom";
 
 /* Css */
 import "./Pong3DIa.scss";
 
 /* Components */
-import { App as GameApp } from "FRONT/gameVsIa/app.ts";
-import Button from "FRONT/Component/Button/Button.jsx"
-import useFetch from "HOOKS/useFetch.jsx";
+import checkCo                  from "TOOL/fonction_usefull.js"
+import { App as GameApp }        from "FRONT/gameVsIa/app.ts";
 
 export default function Pong3DIa() {
 

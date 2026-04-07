@@ -1,16 +1,14 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM  from "TOOL/SocketManag.js";
-import {useAuth, AUTH} from "TOOL/AuthContext.jsx"
+import { useEffect, useState }      from    "react";
 
 /* Css */
 import "./HomeChat.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch";
+import { showAlert }                from    "TOOL/fonction_usefull.js";
+import SocketM                      from    "TOOL/SocketManag.js";
+import useFetch                     from    "TOOL/useFetch";
+import {useAuth, AUTH}              from    "HOOKS/useAuth.jsx"
 
 export default function HomeChat() {
 

@@ -1,14 +1,12 @@
 /* extern */
-import { useState, useEffect } from "react";
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
+import { useState, useEffect }  from "react";
 
 /* Css */
 import './Morpion.scss';
 
 /* Components */
-import Board from "./Board/Board.jsx";
+import SocketM                  from "TOOL/SocketManag.js";
+import Board                    from "./Board/Board.jsx";
 
 function NewPartie() {
     function sendMessage(s_message){

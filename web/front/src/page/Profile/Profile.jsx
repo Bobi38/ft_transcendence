@@ -1,22 +1,20 @@
 /* extern */
-import { useState, useEffect } from "react";
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
-
-/*back*/
-import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM from "TOOL/SocketManag.js";
+import { useState, useEffect }      from    "react";
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
 import "./Profile.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
-import useFetch from "HOOKS/useFetch.jsx";
+import { showAlert }                from    "TOOL/fonction_usefull.js";
+import SocketM                      from    "TOOL/SocketManag.js";
+import useFetch                     from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }            from    "HOOKS/useAuth.jsx"
 
 export default function Profile() {
 
     const [showPassword, setShowPassword] = useState(false);
-    const { showLog, setShowLog } = useAuth();
+    const { showLog } = useAuth();
 
     const [user, setUser] = useState({ login: "", tel: "", });
 

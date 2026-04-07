@@ -1,15 +1,15 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }      from "react";
 
 /* back */
 /* Css */
 import "./StatsMorpion.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";   
-import Graph from "COMP/Graph/Graph.jsx"; 
-import Paging from "COMP/Paging/Paging.jsx"; 
-import StatsMorpionHistoryCard from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
+import useFetch                     from "TOOL/useFetch.jsx";   
+import Graph                        from "COMP/Graph/Graph.jsx"; 
+import Paging                       from "COMP/Paging/Paging.jsx"; 
+import StatsMorpionHistoryCard      from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
 
 export default function StatsMorpion({ username, setUsername }) {
 

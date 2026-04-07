@@ -1,21 +1,18 @@
 /* extern */
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
-import { useEffect, useState } from "react";
-import SocketM from "TOOL/SocketManag";
-import {showAlert} from "TOOL/fonction_usefull"
-
-/* back */
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
+import { useEffect, useState }      from    "react";
 
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-import useFetch from "HOOKS/useFetch.jsx";
+import {showAlert}                  from    "TOOL/fonction_usefull"
+import useFetch                     from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }            from    "HOOKS/useAuth.jsx";
 
 export default function PasswordForget({login_mode}) {
 
-    const {setShowLog, showLog} = useAuth();
+    const {setShowLog} = useAuth();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showMode, setShowMode] = useState("send_code"); // send_code => check_code => new_password

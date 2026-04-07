@@ -1,14 +1,13 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
 /* Css */
 import "./AddFriends.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
-import Hr from    "FRONT/Component/Hr/Hr.jsx";
+import SocketM                  from    "TOOL/SocketManag.js";
+import useFetch                 from    "TOOL/useFetch.jsx";
+import Hr                       from    "FRONT/Component/Hr/Hr.jsx";
 
 export default function AddFriends() {
     const fetch_type = {

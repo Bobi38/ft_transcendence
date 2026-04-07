@@ -1,14 +1,11 @@
-/* extern */
-
-/* back */
-
 /* Css */
 import "./ContactUs.scss";
 
 /* Components */
-import ContactCard from "./ContactCard/ContactCard";
+import ContactCard          from    "./ContactCard/ContactCard";
 
 const teamMembers = [
+    
     { name: "Membre 0" },
     {
         name: "Florent Cretin",

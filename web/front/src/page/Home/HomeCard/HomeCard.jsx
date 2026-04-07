@@ -1,13 +1,8 @@
+/* extern */
 import { Link } from "react-router-dom";
-
-
-/* back */
 
 /* Css */
 import "./HomeCard.scss";
-
-/* Components */
-
 
 export default function HomeCard({children, path}) {
 

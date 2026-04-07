@@ -1,15 +1,13 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
+import { useEffect, useState }  from "react";
 
 /* Css */
 import "./MorpionDisplay.scss";
 
 /* Components */
-import Morpion from "./Morpion/Morpion";
-import Board from "./Morpion/Board/Board.jsx";
+import SocketM                  from "TOOL/SocketManag.js";
+import Morpion                  from "./Morpion/Morpion";
+import Board                    from "./Morpion/Board/Board.jsx";
 
 function SpecButton({ player_1, player_2, id }) {
     const handleClick = () => {

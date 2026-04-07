@@ -1,14 +1,4 @@
-/* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-
-/* Css */
 import "./Graph.scss";
-
-/* Components */
-
-
     
 export default function Graph({ v1, v2, v3, v4 }) {
     const total = v1 + v2 + v3 + v4;

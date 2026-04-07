@@ -1,17 +1,11 @@
-/* extern */
-import { useState } from "react";
-import { FaGithub } from "react-icons/fa";
-
-/* back */
-import { showAlert } from "TOOL/fonction_usefull.js";
-
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
+import { showAlert }        from    "TOOL/fonction_usefull.js";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 
-import useFetch from "HOOKS/useFetch.jsx";
 
 
 export default function Register({login_mode}) {

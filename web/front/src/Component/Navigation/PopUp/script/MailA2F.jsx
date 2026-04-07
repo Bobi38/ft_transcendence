@@ -1,16 +1,14 @@
 /* extern */
-import { useState } from "react";
-import SocketM from "TOOL/SocketManag";
-import showAlert from 'TOOL/fonction_usefull'
-
-/* back */
+import { useState }         from    "react";
 
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-import useFetch from "HOOKS/useFetch.jsx";
+import SocketM              from    "TOOL/SocketManag";
+import showAlert            from    "TOOL/fonction_usefull";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 
 export default function MailA2F({login_mode}) {
 

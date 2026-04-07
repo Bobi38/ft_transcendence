@@ -2,16 +2,14 @@
 import "./NavBar.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
-import Button from "FRONT/Component/Button/Button.jsx"
-import useClock from "FRONT/hooks/useClock.jsx";
-import  SocketM  from "TOOL/SocketManag.js"
+import SocketM  			from	"TOOL/SocketManag.js";
+import { AUTH, useAuth } 	from	"HOOKS/useAuth.jsx";
+import useClock 			from	"HOOKS/useClock.jsx";
+import Button 				from	"COMP/Button/Button.jsx";
 
 export default function NavBar() {
 
-    const { showLog, setShowLog } = useAuth();
-
-	const state = showLog;
+    const { setShowLog } = useAuth();
 	function logout() {
 	   console.log("logout(1) called")
 	   fetch('/api/auth/logout', {

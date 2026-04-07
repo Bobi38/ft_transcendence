@@ -1,18 +1,17 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
-import { useFriend, FRIEND } from "TOOL/FriendContext.jsx";
 /* Css */
 import "./PrivateMessage.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch";
-import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
-import AddFriends from "./AddFriends/AddFriends.jsx"
-import Friends from "./Friends/Friends.jsx"
-import Hr from    "FRONT/Component/Hr/Hr.jsx";
+import SocketM                  from    "TOOL/SocketManag.js";
+import { useFriend, FRIEND }    from    "TOOL/FriendContext.jsx";
+import useFetch                 from    "TOOL/useFetch";
+import Hr                       from    "COMP/Hr/Hr.jsx";
+import PrivateMessageConv       from    "./PrivateMessageConv/PrivateMessageConv.jsx"
+import AddFriends               from    "./AddFriends/AddFriends.jsx"
+import Friends                  from    "./Friends/Friends.jsx"
 
 export default function PrivateMessage() {
 
@@ -21,7 +20,6 @@ export default function PrivateMessage() {
     const { showFriend, setShowFriend } = useFriend();
 
     const [displayedInfoConv, setDisplayedInfoConv] = useState([]);
-    /* {UserId: 1, login: 'tata', isOnline: false, lastMessage: 'e', time: '09:05:07'} */
 
     const [displayedMessages, setDisplayedMessages] = useState([]);
 

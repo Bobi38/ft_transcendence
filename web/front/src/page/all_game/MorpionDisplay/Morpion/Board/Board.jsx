@@ -1,12 +1,8 @@
-/* extern */
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
-
 /* Css */
 import "./Board.scss";
 
 /* Components */
+import  SocketM  from "TOOL/SocketManag.js";
 
 export default function Board({ board , isGame }) {
 

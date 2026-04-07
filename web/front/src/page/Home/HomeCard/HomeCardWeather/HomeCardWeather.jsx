@@ -1,14 +1,11 @@
 /* extern */
 import { useEffect, useState } from "react";
 
-import { useAuth, AUTH } from "TOOL/AuthContext.jsx"
-
-/* back */
-
 /* Css */
 import "./HomeCardWeather.scss";
 
 /* Components */
+import { useAuth, AUTH } from "HOOKS/useAuth.jsx"
 
 export default function HomeCardWeather() {
 

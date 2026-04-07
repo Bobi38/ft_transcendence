@@ -1,18 +1,16 @@
 /* extern */
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-
-/* back */
-import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM from "TOOL/SocketManag";
+import { FaGithub }         from    "react-icons/fa";
+import { FcGoogle }         from    "react-icons/fc";
 
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-import { useGoogleLogin } from '@react-oauth/google';
-import useFetch from "HOOKS/useFetch.jsx";
+import SocketM              from    "TOOL/SocketManag";
+import { showAlert }        from    "TOOL/fonction_usefull.js";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
+import { useGoogleLogin }   from    '@react-oauth/google';
 
 export default function Login({ password_forget_mode, register_mode}) {
 

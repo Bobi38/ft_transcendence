@@ -1,15 +1,13 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
-import {showAlert} from "TOOL/fonction_usefull.js";
+import { useState }             from    "react";
 
 /* Css */
 import "./PrivateMessageConv.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
+import  SocketM                 from    "TOOL/SocketManag.js";
+import {showAlert}              from    "TOOL/fonction_usefull.js";
+import useFetch                 from    "TOOL/useFetch.jsx";
 
 // login lui contient le login user
 export default function PrivateMessageConv({login, displayedMessages, setDisplayedMessages}) {    
