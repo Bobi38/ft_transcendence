@@ -37,7 +37,7 @@ export default function Pong3DIa() {
         return () => {
             gameApp?.dispose?.();
         };
-    }, [canvasRef]);
+    }, [canvasRef.current]);
 
     return (
         <main className={`Pong3DIa-root`}>
