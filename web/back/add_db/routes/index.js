@@ -11,12 +11,12 @@ export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 router.use(cookieParser());
 
 async function checktok(tokenn) {
-  if (!tokenn) {      
+  if (!tokenn) {
     console.log("no token provided");
-    return 1;   
+    return 1;
   }
   try {
-    const decoded = jwt.verify(tokenn, secret); 
+    const decoded = jwt.verify(tokenn, secret);
     const count = await Co.count();
 
     const co = await Co.findAll({ where: { userId: decoded.id } });

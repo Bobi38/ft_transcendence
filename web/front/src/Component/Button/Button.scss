@@ -9,6 +9,7 @@
 	transition: all 0.2s;
 
 	&:hover, &:focus{
+		background-color: $active;
 		outline: none;
 		scale: 1.05;
 		border-color: $active-light;

@@ -8,6 +8,7 @@ export { default as validator } from 'validator';
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 import User  from '../models/user.js';
 import Co  from '../models/connect.js';
@@ -23,7 +24,7 @@ export function tcheck_MPFA(user, host){
     const limit = new Date(now.getTime() - 10 * 60 * 1000);
     let MPFA;
     console.log(limit);
-    if (user.MPFA == false)
+    if (user.MPFA == true)
       MPFA = false
     else if (user.Hostlastco === null && user.Datelastco === null)
       MPFA = true;
@@ -36,6 +37,23 @@ export function tcheck_MPFA(user, host){
     else
       MPFA = true;
     return MPFA;
+}
+
+export function errorHandler(message, code, res) {
+  return res.status(code).json({ success: false, message: message });
+}
+
+export async function get_user_from_token(token) {
+  try {
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    if (!result) {
+      return { success: false, message: 'User not found' };
+    }
+    return { success: true, user: result };
+  } catch (err) {
+    return { success: false, message: "in get_user_from_token " + err.message };
+  }
 }
 
 export {

@@ -32,7 +32,7 @@ export default function AddFriends() {
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-                method: "GET",
+                method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 body: JSON.stringify({name: name})
@@ -48,7 +48,7 @@ export default function AddFriends() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         fetch_all_request_friend();
-        SocketM.send("friend", {type: "req_frd", login: name});
+        SocketM.sendd("friend", {type: "req_frd", login: name});
     }
 
     async function fetch_all_request_friend(){
@@ -56,7 +56,11 @@ export default function AddFriends() {
 
         console.log(`${url}`)
 
-        const repjson = await useFetch(`${url}`, fetch_type)
+        const repjson = await useFetch(`${url}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            }, null , null);
         if (!repjson || (repjson &&  !repjson.success))
             return;
         console.log("all_request_friend", repjson.message)
@@ -104,9 +108,9 @@ export default function AddFriends() {
             return;
         await fetch_all_request_friend()
         if (repjson.accept === true)
-            SocketM.send("friend", {type: "maj_frd", login: repjson.name});
+            SocketM.sendd("friend", {type: "maj_frd", login: repjson.name});
         else
-            SocketM.send("friend", {type: "req_frd", login: repjson.name});
+            SocketM.sendd("friend", {type: "req_frd", login: repjson.name});
     }
 
 
@@ -117,6 +121,7 @@ export default function AddFriends() {
 			<hr />
 			<div className="content">
 				<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
+           			 <p id={`alert-container`}></p>
 					<input  type={`text`} id={`add-friend`} placeholder="Nickname" required/>
 					<button type={`submit`}>Add friend</button>
 				</form>

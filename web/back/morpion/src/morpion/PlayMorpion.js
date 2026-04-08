@@ -1,4 +1,4 @@
-import { manager_room } from './ManagRoom.js';
+import { manager_room as managerRoom } from './ManagRoom.js';
 
 const msgs = {
     welcome: "Welcome to Morpion!",
@@ -18,22 +18,11 @@ const msgs = {
 }
 
 function observator(player, gameId){
-    
-    // console.log(`obs ${gameId}`);
-    if (gameId === 1){
-        const other_board = [" ", " ", " ", "X", " ", " ", "0", " ", " "];
-        const players = {player_1: "martin", player_2:"jackiechan"};
-        player.send({
-            players,
-            other_board,
-        });
-        return ; 
-    }
 
-    const game = manager_room.getRoom(gameId);
+    const game = managerRoom.getRoom(gameId);
 
     if (!game){
-        const list = manager_room.list;
+        const list = managerRoom.list;
         player.send({message: "unknow Game", list});
         return ;
     }
@@ -43,7 +32,6 @@ function observator(player, gameId){
 }
 
 function move(player, move){
-    console.log(`${player.getName()}new move ${move}`);
 
     const game = player.getGame();
 
@@ -54,72 +42,63 @@ function move(player, move){
         player.disconnect("game over", game.getId())
         return false;
     }
-    // console.log("mess1");
+
     if (!game.isTurnPlayer(player) || game.isState("init")){
+        const adverse = game.getOther(player)
+
+        if (!adverse.isInactived()){
+            leave(adverse);
+            return false;
+        }
         player.send({message: msgs.wait, turn: false});
         return false;
     }
-    // console.log("mess2");
+
     if (game.play(player, move)) {
-        // game.notifyObs();
-        // console.log("mess3");
         if(game.checkVictory()){
-            // console.log("mess 3.5");
             game.setEnd();
-            manager_room.refreshList();
+            managerRoom.refreshList();
 
             setTimeout(() => {
-                //  console.log(`party register ${game}`);
-                 manager_room.removeRoom(game);
+                 managerRoom.removeRoom(game);
             }, 10000);
             return true;
         }
 
         game.switchTurn();
-        // console.log(` joueur ${player.getId()} a jouer sur la case ${move}`)
-        // console.log("mess4");
         if (game.isState("play"))
             game.notifyTurn(
                 {message: msgs.my_turn, turn: true},
                 {message: msgs.other_turn, turn: false}
             )
         if (game.isState("end")) {
-            // console.log(`le jeu est terminer`);
             return true;
         }
-        // console.log("mess5");
         game.startTurnTimer();
-        // console.log("mess6");
         return false;
     }
 }
 
 function searchGame(player, players){
-    console.log("ENTRY searchGame");
 
     let game = player.getGame();
     if (game?.isState("play")){
         player.send(`you play ${game.getId()}`);
         return false;
     }
-    // console.log("game existant ?", game);
 
-    game = manager_room.findOnePlace("Morpion", player);
-    // player.send(`new game :  you play ${game.getId()}`);
+    game = managerRoom.findOnePlace("Morpion", player);
+
     if (!game.setLock()) {
-        // console.log(ERREUR DANS searchGame :", e);
-        console.log("premier set _Turn");
         game._turn = player;
         player.send({message: msgs.recherche, turn: false})
         return true;
     }
-    console.log(` step 111111 la partie a deux joueurs`);
+
     game.startGame(player);
-    // console.log(` step 222222 le jeu peut commencer`);
 
-    manager_room.refreshList();
+    managerRoom.refreshList();
 
-    console.log('combien de joueur enregistrer', players.size);
     players.forEach(p => {p.sendList();});
 
     game.notifyTurn(
@@ -127,20 +106,16 @@ function searchGame(player, players){
         {message: msgs.other_turn, turn: false}
     )
 
-    // console.log("step 33333333   liste rafraichi");
-    // console.log("AVANT RETURN TRUE");
     return false;
 }
 
 function reboot(){
-    console.log(msgs.reboot);
-    manager_room.removeAll(msgs.reboot);
-    manager_room.refreshList();
+    managerRoom.removeAll(msgs.reboot);
+    managerRoom.refreshList();
     return;
 }
 
 function playSecond(player){
-    console.log(`call play second`);
     const game = player.getGame();
     if (!game) return;
 
@@ -151,23 +126,23 @@ function playSecond(player){
 }
 
 function leave(player){
-    console.log(`${player} ask to leave`);
+
     const game = player.getGame();
 
     if (!game) return false;
 
     if (game.isState("init")) {
-        manager_room.removeRoom(game);
+        managerRoom.removeRoom(game);
         return false;
     }
 
-    manager_room.abortedRoom(player);
+    managerRoom.abortedRoom(player);
 }
 
 function updateName(player, nickname) {
-    player._nick_name = nickname;
+    player._nickName = nickname;
 
-    manager_room.refreshList();
+    managerRoom.refreshList();
 }
 
 const cooldowns = new Map();

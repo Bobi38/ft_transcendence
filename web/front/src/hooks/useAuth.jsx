@@ -11,7 +11,7 @@ export const AUTH = {
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-    const [showLog, setShowLog] = useState(AUTH.LOGIN);
+    const [showLog, setShowLog] = useState(AUTH.NONE);
 
     return (
         <AuthContext.Provider value={{ showLog, setShowLog }}>

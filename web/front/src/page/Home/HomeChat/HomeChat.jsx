@@ -81,7 +81,7 @@ export default function HomeChat() {
         return () => {
             SocketM.off("chat", "ChatG");
         };
-    }, []);
+    }, [showLog]);
 
     const handle_submit = async (e) => {
         e.preventDefault();

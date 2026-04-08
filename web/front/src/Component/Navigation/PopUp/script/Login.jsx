@@ -27,20 +27,20 @@ export default function Login({ password_forget_mode, register_mode}) {
         };
 
         if (!data.email || !data.password) {
-            showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
+            showAlert("Please fill all input", "danger");
             return;
         }
 
-        const url = `/api/auth/login`;
-        console.log(`${url}`)
+        const api_url = `/api/auth/session`;
+        console.log(`${api_url}`)
 
-        const repjson = await useFetch(`${url}`, {
+        const repjson = await useFetch(`${api_url}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         }, null, null, true);
         if (!repjson){
-            showAlert("Impossible de se connecter pour le moment", "danger");
+            showAlert("Can't establish connection for now", "danger");
             return;
         }
 
@@ -48,6 +48,7 @@ export default function Login({ password_forget_mode, register_mode}) {
             showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
             return ;
         }
+        sessionStorage.setItem('username', repjson.username);
 
         sessionStorage.setItem('username', repjson.username);
 
@@ -63,7 +64,7 @@ export default function Login({ password_forget_mode, register_mode}) {
             SocketM.sendd('friend', {type: 'co_first'});
         };
     };
-
+    
     const handle_git = () => {
         const frontendUrl = window.location.origin;
         const backUrl = window.location.hostname;
@@ -87,7 +88,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                     return;
                 }
                 if (!repjson){
-                    showAlert("Impossible de se connecter pour le moment", "danger");
+                    showAlert("Can't establish connection for now", "danger");
                     return;
                 }
                 setShowLog(AUTH.NONE);
@@ -147,7 +148,6 @@ export default function Login({ password_forget_mode, register_mode}) {
                             onClick={password_forget_mode}>
                             Password forgot ?
                     </button>
-
                 </div>
             </form>
         </div>

@@ -7,7 +7,6 @@ import useFetch             from    "TOOL/useFetch.jsx";
 import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 
 
-
 export default function Register({login_mode}) {
 
     const {setShowLog} = useAuth();
@@ -26,7 +25,7 @@ export default function Register({login_mode}) {
             showAlert("Missing value", 'danger');
             return;
         }
-        const url = `/api/auth/register`;
+        const url = `/api/auth/user`;
         console.log(`${url}`)
         console.log(data.name + " " + data.email + " " + data.password);
 
@@ -64,13 +63,13 @@ export default function Register({login_mode}) {
                 <div>
                     <input type="checkbox" id="legal" name="legal" required />
                     <label htmlFor="legal">
-                    J'accepte les{" "}
-                    <a href="/terms" target="_blank" rel="noopener noreferrer">
-                    Conditions d'utilisation
+                    I accept{" "}
+                    <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
+                    Terms of Service
                     </a>{" "}
-                    et la{" "}
-                    <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                    Politique de confidentialité
+                    and{" "}
+                    <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
+                    Privacy Policy
                     </a>
                     </label>
                 </div>

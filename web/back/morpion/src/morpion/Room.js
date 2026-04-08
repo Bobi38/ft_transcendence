@@ -7,34 +7,34 @@ class Room {
         this._id = id;
         this._players = new Set();
         this._obs = new Set();
-        this._min_players = 1000;
-        this._max_players = null;
-        this._date_game = new Date(); // _date of first player
-        this._start_time = null; // timestamp start game
+        this._minPlayers = 1000;
+        this._maxPlayers = null;
+        this._dateGame = new Date(); // _date of first player
+        this._startTime = null; // timestamp start game
         this._locked = false; // soon unuse
         this._state = "init"; // init, play, end
         this._winner = null;
-        this.out_timer = null; //setTimeout fin
-        this.limit_time = 60 * 1000;
-        this._time_refresh_name = 0  ;
-        this._players_names = {};
+        this.outTimer = null; //setTimeout fin
+        this.limitTime = 12 * 1000;
+        this._timeRefreshName = 0  ;
+        this._playersNames = {};
     }
 
     getPlayers() {
         let time = Date.now()
 
         if (time - 5000 < this._time_refresh)
-            return this._players_names;
+            return this._playersNames;
 
-        this._time_refresh_name = time;
-        this._players_names = {};
+        this._timeRefreshName = time;
+        this._playersNames = {};
 
         let numero = 1;
         this._players.forEach(p => {
-            this._players_names[`player_${numero}`] = p.getName();
+            this._playersNames[`player_${numero}`] = p.getName();
             numero++;
         })
-        return this._players_names;
+        return this._playersNames;
     }
 
     addObs(obs){
@@ -90,9 +90,9 @@ class Room {
     }
 
     isFull() {
-        if (this._max_players === null) return false;
+        if (this._maxPlayers === null) return false;
 
-        return this._players.size >= this._max_players;
+        return this._players.size >= this._maxPlayers;
     }
     
     isInRoom(id){
@@ -113,13 +113,13 @@ class Room {
     }
 
     setLock(){
-        if (this._state === "init" && this._players.size < this._min_players) {
+        if (this._state === "init" && this._players.size < this._minPlayers) {
             console.log(`need more player`);
             return false;
         }
         console.log("etat lock  = play");
         this._state = "play";
-        this._start_time = Date.now();
+        this._startTime = Date.now();
         return true;  
     }
 
@@ -149,16 +149,16 @@ class Room {
     }
 
     clearOutTimer() {
-        if (this.out_timer) {
-            clearTimeout(this.out_timer);
-            this.out_timer = null;
+        if (this.outTimer) {
+            clearTimeout(this.outTimer);
+            this.outTimer = null;
         }
     }
 
-    startOutTimer(Action, millisec) {
+    startOutTimer(action) {
         this.clearOutTimer();
 
-        this.out_timer = setTimeout(() => Action, millisec);
+        this.outTimer = setTimeout(() => action, this.limitTime);
     }
 }
 

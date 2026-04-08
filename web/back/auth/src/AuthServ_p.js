@@ -7,9 +7,9 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
 //router
-import authroute from './routes/auth_p.js'
-import oauth2route from './routes/Oauth2_p.js'
-import securoute from './routes/secu_p.js'
+import authroute from './routes/auth/auth.controller.js'
+import oauth2route from './routes/Oauth/Oauth2.controller.js'
+import securoute from './routes/secu/secu.controller.js'
 
 dotenv.config();
 
@@ -17,13 +17,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 9005;
 const isDev = process.env.NODE_ENV !== 'production';
+const SECSESSION = process.env.SEC_SESSION
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
-  secret:'coucou',
+  secret: SECSESSION,
   resave: false,
   saveUninitialized: true
 }))
@@ -33,9 +34,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', authroute);
-app.use('/', oauth2route);
-app.use('/', securoute);
+app.use('/auth', authroute);
+app.use('/oauth2', oauth2route);
+app.use('/secu', securoute);
 
 (async () => {
   try {

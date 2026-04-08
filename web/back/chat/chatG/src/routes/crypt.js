@@ -30,7 +30,7 @@ export function decrypt(text) {
     let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
 
-    return decrypted; // <-- ne pas oublier de retourner
+    return decrypted;
   } catch(err) {
     console.log("error decrypt:", err);
     return null;

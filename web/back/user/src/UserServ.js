@@ -12,8 +12,8 @@ import { initWebSFriend } from './WsFriend.js';
 
 
 
-import friendroute from './routes/Friends.js'
-import Profileroute from './routes/Profile.js'
+import friendroute from './routes/Friends/Friends.controller.js'
+import Profileroute from './routes/Profile/Profile.controller.js'
 
 dotenv.config();
 
@@ -26,19 +26,15 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({
-  secret:'coucou',
-  resave: false,
-  saveUninitialized: true
-}))
+
 
 app.use((req, res, next) => {
   console.log(`[USER_S SERVICE] ${req.method} ${req.path}`);
   next();
 });
 
-app.use('/', friendroute);
-app.use('/', Profileroute);
+app.use('/friend', friendroute);
+app.use('/profile', Profileroute);
 
 
 
@@ -55,5 +51,4 @@ app.use('/', Profileroute);
     process.exit(1);
   }
 })();
-
 

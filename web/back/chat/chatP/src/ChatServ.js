@@ -11,7 +11,7 @@ import { initWebSChat } from './WsSChatP.js';
 
 
 //router
-import chatProute from './routes/ChatP.js'
+import chatProute from './routes/ChatP.controller.js'
 
 
 dotenv.config();
@@ -25,11 +25,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({
-  secret:'coucou',
-  resave: false,
-  saveUninitialized: true
-}))
 
 app.use((req, res, next) => {
   console.log(`[CHATP SERVICE] ${req.method} ${req.path}`);
