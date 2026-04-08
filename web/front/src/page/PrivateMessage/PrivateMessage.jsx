@@ -1,18 +1,17 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
-import { useFriend, FRIEND } from "TOOL/FriendContext.jsx";
 /* Css */
 import "./PrivateMessage.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch";
-import PrivateMessageConv from "./PrivateMessageConv/PrivateMessageConv.jsx"
-import AddFriends from "./AddFriends/AddFriends.jsx"
-import Friends from "./Friends/Friends.jsx"
-import Hr from    "FRONT/Component/Hr/Hr.jsx";
+import SocketM                  from    "TOOL/SocketManag.js";
+import { useFriend, FRIEND }    from    "TOOL/FriendContext.jsx";
+import useFetch                 from    "TOOL/useFetch";
+import Hr                       from    "COMP/Hr/Hr.jsx";
+import PrivateMessageConv       from    "./PrivateMessageConv/PrivateMessageConv.jsx"
+import AddFriends               from    "./AddFriends/AddFriends.jsx"
+import Friends                  from    "./Friends/Friends.jsx"
 
 export default function PrivateMessage() {
 
@@ -21,13 +20,11 @@ export default function PrivateMessage() {
     const { showFriend, setShowFriend } = useFriend();
 
     const [displayedInfoConv, setDisplayedInfoConv] = useState([]);
-    /* {UserId: 1, login: 'tata', isOnline: false, lastMessage: 'e', time: '09:05:07'} */
-
     const [displayedMessages, setDisplayedMessages] = useState([]);
 
     async function fetch_go_to_conv_private(){
 
-        const repjson = await useFetch('/api/chatP/fetch_conv', {
+        const repjson = await useFetch('/api/chatP', {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
@@ -46,10 +43,9 @@ export default function PrivateMessage() {
 
 
     async function fetch_private_message(goToConv){
-
-        const url = goToConv 
-            ? `/api/chatP/get_chat_private?name=${goToConv}`
-            : `/api/chatP/get_chat_private`;
+        if (!goToConv)
+            return;
+        const url = `/api/chatP/${goToConv}`
 
         console.log(`${url} goToConv: `,goToConv)
 
@@ -68,7 +64,7 @@ export default function PrivateMessage() {
 	useEffect(() => {
         const handle_private_message = async (data) => {
             console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
-            if (data.type === "updateName_good"){             
+            if (data.type === "updateName_good"){
                 if (data.old_name === goToConv){
                     setGoToConv(data.new_name);
                     fetch_go_to_conv_private();
@@ -110,23 +106,23 @@ export default function PrivateMessage() {
 						{displayedInfoConv && displayedInfoConv.map((msg,index) => (
 							<div key={index} className={`bloc-left border-3`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
 								<div className={`header-last-conv border-4`}>
-									<h4>{msg.login}</h4><p>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</p>
+									<h2>{msg.login}</h2><p>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</p>
 								</div>
 								<p className={`truncate`}>{msg.lastMessage}</p>
 							</div>
 						))}
 					</div>
-
 				</div>
 
 				<div className={`display-screen border-2`}>
 					{goToAction === 1 && <AddFriends />}
 					{goToAction === 2 && <Friends setGoToAction={setGoToAction} setGoToConv={setGoToConv}/>}
-					{goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} setDisplayedMessages={setDisplayedMessages} /> }
+					{goToConv && <PrivateMessageConv login={goToConv} displayedMessages={displayedMessages} />}
 
 				</div>
+
 			</Hr>
 		</div>
-    )
+    );
 }
 

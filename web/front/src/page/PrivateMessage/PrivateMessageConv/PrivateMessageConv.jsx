@@ -1,18 +1,15 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
-import {showAlert} from "TOOL/fonction_usefull.js";
+import { useState }             from    "react";
 
 /* Css */
 import "./PrivateMessageConv.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
+import  SocketM                 from    "TOOL/SocketManag.js";
+import {showAlert}              from    "TOOL/fonction_usefull.js";
+import useFetch                 from    "TOOL/useFetch.jsx";
 
-// login lui contient le login user
-export default function PrivateMessageConv({login, displayedMessages, setDisplayedMessages}) {    
+export default function PrivateMessageConv({ login, displayedMessages }) {
 
     const [input, setInput] = useState("");
 
@@ -45,7 +42,7 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         if (!login)
             return;
 
-        const url = `/api/friend/is_friend?name=${login}`;
+        const url = `/api/friend/${login}/status`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "GET",
@@ -58,7 +55,6 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
         });
         if (!repjson || (repjson &&  !repjson.success))
             return false;
-        console.log("good");
         return true;
     }
 
@@ -96,38 +92,31 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 			<h1>{login}</h1>
 			<hr />
 
-            
 			<div className="content">
+                <p id={`alert-container`}></p>
 
-                <div id={`alert-container`}></div>
-                
 				<div className="message border-1">
-						{displayedMessages && displayedMessages.map((msg, index) => { return (
+                    {displayedMessages && displayedMessages.map((msg, index) => { return (
 
-							<div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
+                        <div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
 
-								{/* {index != 0 && <hr/>} */}
-								{msg.monMsg ? (
-									<div>
-										<div><span>{msg.timer}</span></div>
-										<p>{msg.message}</p>
-									</div>
-								) : (
-									<div >
-										<div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
-										<p>{msg.message}</p>
-									</div>
-								)}
-								{/* <h3>{msg.login}</h3>
-								<p>{msg.message}</p> */}
-
-							</div>
-
-						);})}
-
-
+                            {msg.monMsg ? (
+                                <div>
+                                    <div><span>{msg.timer}</span></div>
+                                    <p>{msg.message}</p>
+                                </div>
+                            ) : (
+                                <div>
+                                    <div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
+                                    <p>{msg.message}</p>
+                                </div>
+                            )}
+                        </div>
+                    );})}
 				</div>
+
 				<hr />
+
 				<form onSubmit={handler_submit}>
 					<input type="text"
 					value = {input}
@@ -135,8 +124,8 @@ export default function PrivateMessageConv({login, displayedMessages, setDisplay
 					/>
 					<button className="button" type="submit">Send</button>
 				</form>
+
 			</div>
 		</div>
-    )
+    );
 }
-

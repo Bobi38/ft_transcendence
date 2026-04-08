@@ -11,7 +11,11 @@
 		gap: 2rem;
 
 		.button {
+			padding: 0.5rem 0.75rem;
 			color: white;
+			&:hover {
+				background-color: $active;
+			}
 		}
 		input {
 			height: fit-content;

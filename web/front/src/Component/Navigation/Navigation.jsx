@@ -1,17 +1,15 @@
 /* extern */
-import { useNavigate, useLocation} from "react-router-dom";
-import { useEffect, useRef } from "react";
-
-/* back */
-import checkCo from "TOOL/fonction_usefull.js"
+import { useNavigate, useLocation}      from    "react-router-dom";
+import { useEffect, useRef }            from    "react";
 
 /* Css */
 import "./Navigation.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
-import PopUp from "./PopUp/PopUp.jsx"
-import NavBar from "FRONT/Component/NavBar/NavBar.jsx";
+import checkCo                          from    "TOOL/fonction_usefull.js";
+import { AUTH, useAuth }                from    "HOOKS/useAuth.jsx";
+import NavBar                           from    "COMP/NavBar/NavBar.jsx";
+import PopUp                            from    "./PopUp/PopUp.jsx";
 
 export default function Navigation({ children }) {
 
@@ -89,9 +87,6 @@ export default function Navigation({ children }) {
 
         connection_handler();
 
-        // refNavigationRoot.current.addEventListener("click", connection_handler);
-        // return () => refNavigationRoot.current.removeEventListener("click", connection_handler);
-
     }, [showLogRef, refNavigationRoot.current]);
 
     return (
@@ -108,7 +103,6 @@ export default function Navigation({ children }) {
 			</div>
 
 			<NavBar/>
-
 		</main>
     );
 }

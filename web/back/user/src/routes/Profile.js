@@ -5,25 +5,25 @@ const router = express.Router();
 
 const key = process.env.API_KEY_WEATHER
 
-router.get('/profile', async(req, res) =>{
+router.get('/', async(req, res) =>{
   try{
     const token = req.cookies.token;
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
-    const data ={
+    const data = {
       login: result.name,
       login42: result.Log42,
       email: result.mail,
       tel: result.phoneNumber,
       location: result.adress
     }
-    res.status(201).json({success: true, message: data});
+    res.status(200).json({success: true, message: data});
   }catch(err){
     res.status(501).json({success: false, message: 'Err mysql getname' , err});
   }
 });
 
-router.post('/updateProfil', async(req, res) => {
+router.put('/', async(req, res) => {
   try{
     const user = req.body
     if (!user.login || !user.email || !user.tel){
@@ -50,7 +50,7 @@ router.post('/updateProfil', async(req, res) => {
   }
 });
 
-router.post('/majPass', async(req,res) => {
+router.patch('/password', async(req,res) => {
   try{
     const data = req.body;
     const token = req.cookies.token;
@@ -92,7 +92,7 @@ function cacheWeather(duration = 3600000) {
         // console.log(`pas d appel a l'API Weather : ${loc} deja connu`);
         return res.status(200).json({ success: true, message: cached.data });
       }
-      
+
       req.cacheKey = loc;
       // console.log("API /cacheWeather next()", req.cacheKey);
       next();

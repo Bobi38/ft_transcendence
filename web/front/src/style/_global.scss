@@ -35,7 +35,6 @@ p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label, strong {
 }
 
 a {
-	color: inherit;
 	text-decoration: none;
 	@include mix.cursor("pointer");
 }
@@ -63,7 +62,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="tel
 
 hr {
 	@include mix.fullw;
-	border: 4px solid $grey-dark;
+	border: 4px solid $grey;
 	border-radius: 50px;
 }
 
@@ -80,16 +79,18 @@ button {
 	background: none;
 }
 
-.send-btn {
+button, input[type="submit"]
+{
+	width: fit-content;
+	background-color: $grey-light;
+	border: none;
+	border-radius: 0.5rem;
 	padding: 0.5rem 1rem;
-	border-radius: 50px;
-	border: solid 4px $grey;
+	font-size: 1.15rem;
 	transition: all 0.2s;
-	background-color: white;
 
-	&:hover {
-		border-color: $active;
-		scale: 1.05;
+	&:hover{
+		background-color: $grey;
 	}
 }
 

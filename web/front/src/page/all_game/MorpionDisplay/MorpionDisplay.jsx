@@ -1,17 +1,16 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
+import { useEffect, useState }  from "react";
 
 /* Css */
 import "./MorpionDisplay.scss";
 
 /* Components */
-import Morpion from "./Morpion/Morpion";
-import Board from "./Morpion/Board/Board.jsx";
+import SocketM                  from "TOOL/SocketManag.js";
+import Morpion                  from "./Morpion/Morpion";
+import Board                    from "./Morpion/Board/Board.jsx";
 
 function SpecButton({ player_1, player_2, id }) {
+
     const handleClick = () => {
         SocketM.sendd("morp", {
             type: "spec",
@@ -24,6 +23,7 @@ function SpecButton({ player_1, player_2, id }) {
             <button>{player_1} (X) vs {player_2 ?? "nobody"} (O)</button>
         </li>
     );
+
 }
 
 export default function MorpionDisplay({isGame}) { // mode  spec or game
@@ -61,7 +61,7 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 
 		SocketM.sendd("morp", {});
         const handleSpec = (data) => {
-            console.log("Morpion component handleSpec data:", data)
+            // console.log("Morpion component handleSpec data:", data)
             if (data?.other_board){
                 setSpecSelect(data.other_board)
             }
@@ -117,5 +117,5 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 				</>
 			}
         </div>
-    )
+    );
 }

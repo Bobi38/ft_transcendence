@@ -1,74 +1,66 @@
 /* extern */
-import { VscEdit, VscEye, VscEyeClosed } from "react-icons/vsc";
-import { FaGithub } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import SocketM from "TOOL/SocketManag";
-import {showAlert} from "TOOL/fonction_usefull"
-
-/* back */
+import { useEffect, useState }      from    "react";
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-import useFetch from "HOOKS/useFetch.jsx";
+import {showAlert}                  from    "TOOL/fonction_usefull"
+import useFetch                     from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }            from    "HOOKS/useAuth.jsx";
 
-export default function PasswordForget() {
+export default function PasswordForget({login_mode}) {
 
-    const {setShowLog, showLog} = useAuth();
+    const {setShowLog} = useAuth();
 
-    const [showPassword, setShowPassword] = useState("");
-    const [showPasswordConfirm, setShowPasswordConfirm] = useState("");
-    const [showCodeInput, setShowCodeInput] = useState(false);
-    const [changePassword, setChangePassword] = useState(false);
-    const [mail, setmail] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showMode, setShowMode] = useState("send_code"); // send_code => check_code => new_password
 
     useEffect(() =>{
         if (sessionStorage.getItem("CodeInput") == "true")
-            setShowCodeInput(true);
+            setShowMode("check_code");
         else if (sessionStorage.getItem("chgPsswrd") == "true")
-            setChangePassword(true);
+            setShowMode("new_password");
         else
             sessionStorage.setItem("CodeInput", "false");
-        console.log("in use " + sessionStorage.getItem("CodeInput"));
+        // console.log("in use " + sessionStorage.getItem("CodeInput"));
     }, [])
 
-    async function send_code() {
+    async function send_code(e) {
+        e.preventDefault();
+        const email = e.target.email.value;
+        console.log("email",email)
 
-        // setShowCodeInput(true);
-        // return
-        if (!mail)
+        if (email === "")
             return;
-        const url = `/api/secu/recupPswd`;
+        const url = `/api/secu/recovery/password`;
 
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({mail: mail}),
+            body: JSON.stringify({mail: email}),
         }, null, null, true);
+        console.log("recupPswd repjson",repjson)
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;
         }
-        setShowCodeInput(true);
+        setShowMode("check_code");
         sessionStorage.setItem("CodeInput", "true");
-
     }
-
-
 
     async function check_code(e) {
         e.preventDefault();
-
         const formData = new FormData(e.target);
         const data = {
             code: formData.get("code"),
             host:  window.location.host
         }
-        setmail("");
+		console.log(data);
+
         const url = `/api/secu/recupPswd_check_code`;
         console.log(`${url}`)
 
@@ -78,7 +70,8 @@ export default function PasswordForget() {
             credential: "include",
             body: JSON.stringify(data),
         }, null, null, true)
-        if (repjson.status < 500 && repjson.status >= 400){
+
+        if (repjson && repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
@@ -86,129 +79,124 @@ export default function PasswordForget() {
             console.log(repjson.message)
             return ;
         }
-        setShowCodeInput(false)
-        setChangePassword(true)
+        setShowMode("new_password");
         sessionStorage.setItem("CodeInput", "false");
         sessionStorage.setItem("chgPsswrd", "true");
     }
 
-    async function handle_modify_password() {
-        if (showPassword != showPasswordConfirm){
-            return ;
+    const handle_pass = async (e) => {
+        e.preventDefault();
+        const password = e.target.password.value;
+        const confirmePassword = e.target.confirmePassword.value;
+
+        if (!password || !confirmePassword) {
+            showAlert("Veuillez remplir tous les champs", "danger");
+            return;
         }
+
+        if (password !== confirmePassword) {
+            showAlert("Les mots de passe ne correspondent pas", "danger");
+            return;
+        }
+
         const url = `/api/secu/majPswd`;
+
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({new_psd: showPassword}),
-        }, null, null, true)
-        if (repjson.status < 500 && repjson.status >= 400){
+            method: "PUT",
+            headers : { "Content-Type" : "application/json" },
+            credentials: "include",
+            body: JSON.stringify({new_psd: password})
+        });
+        if (repjson && repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
+            console.log(repjson?.message)
             return ;
         }
-        setShowPassword("");
-        setShowPasswordConfirm("")
         sessionStorage.clear()
         setShowLog(AUTH.LOGIN)
     }
 
-    async function login_mode() {
-        sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credential: "include",
-        }, null, null, true)
-        setShowLog(AUTH.LOGIN);
-    }
-
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>Password Forget</h1>
+            <h1>Password Forget</h1>
 
-                {!showCodeInput && (
-                    <div>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" value={mail} onChange={(e) => setmail(e.target.value)}/>
-                        <div className={`button-container`}>
-
-                            <button type={`button`} id={`mailverif`} className={``} onClick={send_code}>
-                                Send mail verification
-                            </button>
-                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-                        </div>
-                    </div>
-                )}
-
-                {showCodeInput && (
-
-                    <form id={`forgetPassword`} className={``} onSubmit={check_code}>
-
-                        <div className={`button-container`}>
-                            <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
-                            <button type={`submit`} className={``}>Valider</button>
-                            <label htmlFor="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="you@example.com" value={mail} onChange={(e) => setmail(e.target.value)}/>
-                            <button type={`button`} className={``} onClick={send_code}>Send a new mail verification</button>
-                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-                        </div>
+            {showMode === "send_code" && (
+                <>
+                    <form onSubmit={(e) => {send_code(e)}}>
+                        <label htmlFor={`email`}>Email</label>
+                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
+                        <button type={`submit`} >Send mail verification</button>
                     </form>
+					<hr />
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
+                </>
+            )}
 
-                )}
-                {changePassword && (
+            {showMode === "check_code" && (
+                <>
+                    <form onSubmit={(e) => {check_code(e)}}>
 
-                    <form id={`changePassword`} className={``} 
-                    // onSubmit={send_new_password}
-                    >
+						<input type={`text`}
+								id={`code`} name={`code`}
+								placeholder={`Entrez Code`}/>
+						<button type={`submit`}>Valider</button>
 
-                        <label htmlFor="password">Nouveau Mot de passe</label>
-                        <div className="input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
-                                className="password-field"
-                                placeholder="Votre nouveau mot de passe"
-                                value={showPassword}
-                                onChange={(e) => setShowPassword(e.target.value)}
-                            />
-                            <span className="toggle-icon" onClick={() => setShowPassword(showPassword)}>
+                    </form>
+                    <hr/>
+                    <form onSubmit={(e) => {send_code(e)}}>
+
+                        <label htmlFor={`email`}>Email</label>
+                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
+                        <button type={`submit`} >Send mail verification</button>
+
+                    </form>
+					<hr />
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
+                </>
+            )}
+
+            {showMode === "new_password" && (
+                <>
+                    <form onSubmit={(e) => {handle_pass(e)}}>
+
+                        <label htmlFor={`password`}>Nouveau Mot de passe</label>
+                        <div className={`input-wrapper`}>
+                            <input type={showPassword ? "text" : "password"}
+                                id={`password`} name={`password`}
+                                className={`password-field`}
+                                placeholder={`Votre nouveau mot de passe`}
+                                />
+                            <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <label htmlFor="confirmepassword">Confirmer Mot de passe</label>
-                        <div className="input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="confirmepassword"
-                                name="confirmepassword"
-                                className="password-field"
-                                placeholder="Confirmation du nouveau mot de passe"
-                                value={showPasswordConfirm}
-                                onChange={(e) => setShowPasswordConfirm(e.target.value)}
-                            />
-                            <span className="toggle-icon" onClick={() => setShowPasswordConfirm(showPasswordConfirm)}>
+                        <label htmlFor={`confirmePassword`}>Confirmer Mot de passe</label>
+                        <div className={`input-wrapper`}>
+                            <input type={showPassword ? "text" : "password"}
+                                id={`confirmePassword`} name={`confirmePassword`}
+                                className={`password-field`}
+                                placeholder={`Confirmation du nouveau mot de passe`}
+                                />
+                            <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <div className={`button-container`}>
-                            <button type={`button`} className={``} onClick={handle_modify_password}>Modifier mon mot de passe</button>
-                        </div>
-                    </form>
-                )}
+                        <button type={`submit`}>Modifier mon mot de passe</button>
 
-            </div>
-      </>
-  );
+                    </form>
+					<hr />
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
+                </>
+            )}
+
+        </div>
+    );
 }

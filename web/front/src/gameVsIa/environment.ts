@@ -1,5 +1,5 @@
 import { Color3, MeshBuilder, Quaternion, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
-import { Env } from "/app/media/media.js";
+import { Env } from "../game/shared/media.js";
 
 
 function ToVec3(input) : Vector3 {
@@ -14,8 +14,8 @@ function ToQuat(input) : Quaternion {
 
 export class Environment {
     private _scene: Scene;
-    public wallMin: Vector3;
-    public wallMax: Vector3;
+    public wallMin: Vector3 = Vector3.Zero();
+    public wallMax: Vector3 = Vector3.Zero();
 
     constructor(scene: Scene) {
         this._scene = scene;

@@ -1,11 +1,9 @@
 /* extern */
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-
+import { useState, useRef, useEffect, useCallback }     from    "react";
 
 /* Css */
 import "./Hr.scss";
 
-/* Components */
 
 export default function Hr({ children, mode = 'row', min1 = 100, min2 = 100, initial = 200, thickness = 4 }) {
     const rootRef = useRef(null);

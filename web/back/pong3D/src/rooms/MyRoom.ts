@@ -75,7 +75,6 @@ export class MyRoom extends Room {
       return ;
     const ballPos = toSend.position;
     const ballVel = toSend.velocity;
-    // console.log("tick:", this._tick,  "pos:", ballPos, "vel:", ballVel);
     state.ball.position.x = ballPos.x;
     state.ball.position.y = ballPos.y;
     state.ball.position.z = ballPos.z;
@@ -146,6 +145,7 @@ export class MyRoom extends Room {
     activePlayers.add(auth.id);
     console.log("auth.id:", auth.id);
     console.log(client.sessionId, "joined room", this.roomId);
+    console.log("current room status:", this.state.roomStatus);
     this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
     const player = new Player();
     player.position.x = 0;
@@ -175,15 +175,17 @@ export class MyRoom extends Room {
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = true;
     }
-    if (this.state.roomStatus === RoomStatus.STARTED || this.state.roomStatus === RoomStatus.WAITING)
+    if (this.state.roomStatus === RoomStatus.STARTED)
       this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
     console.log("room status:", this.state.roomStatus);
-    this.allowReconnection(client, 5).catch(() => {
-      if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
-        this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
-        this._timeEnd = Date.now();
-      }
-    });
+    if (this.state.players.size == 2) {
+      this.allowReconnection(client, 5).catch(() => {
+        if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+          this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+          this._timeEnd = Date.now();
+        }
+      });
+    }
   }
 
   onReconnect(client: Client) {

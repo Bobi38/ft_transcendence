@@ -1,34 +1,30 @@
 /* extern */
-import { FaGithub } from "react-icons/fa";
-import { useState } from "react";
-import SocketM from "TOOL/SocketManag";
-import showAlert from 'TOOL/fonction_usefull'
-
-/* back */
+import { useState }         from    "react";
 
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-import useFetch from "HOOKS/useFetch.jsx";
+import SocketM              from    "TOOL/SocketManag";
+import showAlert            from    "TOOL/fonction_usefull";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 
-export default function MailA2F() {
+export default function MailA2F({login_mode}) {
 
-    const {setShowLog, showLog} = useAuth();
+    const {setShowLog} = useAuth();
 
-    const [showCodeInput, setShowCodeInput] = useState(false);
+    const [showMode, setShowMode] = useState("send_code"); // send_code => check_code => new_password
 
-
-    async function maila2f_send_code(e) 
+	async function maila2f_send_code(e)
     {
-        const btn = e.currentTarget; 
-        
-        if (btn) btn.disabled = true; 
+        const btn = e.currentTarget;
+
+        if (btn) btn.disabled = true;
 
         const url = `/api/secu/send_mail`;
         const repjson = await useFetch(`${url}`, {
-            method: "GET",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
         }, null, null, true);
@@ -39,11 +35,8 @@ export default function MailA2F() {
             console.log(repjson.message);
             return;
         }
-        
-        setShowCodeInput(true);
+        setShowMode("check_code")
     }
-
-
 
     async function maila2f_check_code(e) {
         e.preventDefault();
@@ -53,7 +46,6 @@ export default function MailA2F() {
             code: formData.get("code"),
             host:  window.location.host
         }
-        const code = formData.get("code");
 
         const url = `/api/secu/maila2f_check_code`;
         console.log(`${url}`)
@@ -76,53 +68,31 @@ export default function MailA2F() {
         setShowLog(AUTH.NONE);
     }
 
-    async function login_mode() {
-        sessionStorage.clear();
-        const url = `/api/secu/clearcookie`;
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credential: "include",
-        }, null, null, true)
-        setShowLog(AUTH.LOGIN);
-    }
 
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>MailA2F</h1>
+            <h1>MailA2F</h1>
 
-                {!showCodeInput && (
-                    <>
-                        <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
-                            Send mail verification
-                        </button>
-                        <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-                    </>
-                )}
+            {showMode === "send_code" && (
+                <>
+                    <button type={`button`} id={`mailverif`} onClick={(e) => {maila2f_send_code(e);}}>Send mail verification</button>
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
+                </>
+            )}
 
-                {showCodeInput && (
-
-                    <form id={`maila2f`} className={``} onSubmit={maila2f_check_code}>
-
+            {showMode === "check_code" && (
+                <>
+                    <form id={`maila2f`} onSubmit={(e) => {maila2f_check_code(e)}}>
                         <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
-
-                        <div className={`button-container`}>
-                            <button type={`submit`} className={``}>Valider</button>
-
-                            <button type={`button`} id={`mailverif`} className={``} onClick={(e) => {maila2f_send_code(e);}}>
-                                Send mail verification
-                            </button>
-                            <button type={`button`} className={``} onClick={login_mode}>Connexion</button>
-                        </div>
+                        <button type={`submit`} >Valider</button>
                     </form>
+                    <hr/>
+                    <button type={`button`} id={`mailverif`} onClick={(e) => {maila2f_send_code(e);}}>Send mail verification</button>
+                    <button type={`button`} onClick={login_mode}>Connexion</button>
 
-                )}
-
-            </div>
-      </>
-  );
+                </>
+            )}
+        </div>
+    );
 }
