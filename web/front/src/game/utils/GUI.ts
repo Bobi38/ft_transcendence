@@ -1,5 +1,4 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
-import { NetworkSessionManager } from "../sessions/NetworkSessionManager";
 import { GameSession } from "../sessions/GameSession";
 
 export class GUI {
@@ -10,9 +9,13 @@ export class GUI {
     private _playerDisconnected : AdvancedDynamicTexture | null = null;
     private _disposing : boolean = false;
     private _interval: number | null = null;
+    private _onReturnToMenu?: () => void;
+    private _onReload?: () => void;
 
-    constructor (session: GameSession) {
+    constructor (session: GameSession, onReturnToMenu?: () => void, onReload?: () => void) {
         this._session = session;
+        this._onReload = onReload;
+        this._onReturnToMenu = onReturnToMenu;
     }
 
     private _setAndDispose(newUi : AdvancedDynamicTexture | null) {
@@ -61,9 +64,15 @@ export class GUI {
         newGameBtn.background = "#4CAF50";
 
         newGameBtn.onPointerClickObservable.add(() => {
-            this._session.leave();
             localStorage.removeItem("reconnectionGameToken");
-            window.location.reload();
+            if (this._onReload) {
+                this._session.setVoluntaryLeave();
+                this._onReload();
+                }
+            else {
+                this._session.leave();
+                window.location.reload();
+            }
             console.log("New Game clicked");
         });
 
@@ -77,7 +86,10 @@ export class GUI {
         menuBtn.background = "#f44336";
 
         menuBtn.onPointerClickObservable.add(() => {
-            window.location.href = "/";
+            if (this._onReturnToMenu)
+                this._onReturnToMenu();
+            else
+                window.location.href = "/";
             console.log("Return to menu clicked");
         });
         panel.addControl(menuBtn);

@@ -43,8 +43,12 @@ export default function Pong3D() {
             }
 
             if (canvasRef.current) {
-                gameApp = new GameApp(canvasRef.current, true);
+                gameApp = new GameApp(canvasRef.current, true, () => { navigate('/') });
             }
+            gameApp.onUnauthorized = () => showAlert("You already are playing Pong3D", "danger");
+            // gameApp.onReturnToMenu = () => {
+            //     navigate('/');
+            // };
         };
 
         init();

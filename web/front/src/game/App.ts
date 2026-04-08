@@ -47,16 +47,20 @@ export class App {
     private _environment: Environment;
     //private _network : NetworkManager = new NetworkManager(this._gameState, this._clock);
     private _physicsEngine : PhysicsEngine;
+    public onReturnToMenu?: () => void;
+    public onReload?: () => void;
 
 
-    constructor(canvas: HTMLCanvasElement, isOffline: boolean) {
+    constructor(canvas: HTMLCanvasElement, isOffline: boolean, onReturnToMenu?: () => void) {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
+        this.onReturnToMenu = onReturnToMenu;
 
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
-            this._session = new NetworkSessionManager(this._gameState, this._clock);
+            console.log("there", this.onReturnToMenu);
+            this._session = new NetworkSessionManager(this._gameState, this._clock, this.onReturnToMenu);
         }
         this._physicsEngine = new PhysicsEngine(this._clock, this._session, isOffline);
 
@@ -98,7 +102,6 @@ export class App {
     }
 
     private _resizeWindow() {
-        console.log(this._engine);
         this._engine.resize();
     }
 
@@ -116,7 +119,7 @@ export class App {
     }
 
     private _setupUI() {
-        this._ui = new GUI(this._session);
+        this._ui = new GUI(this._session, this.onReturnToMenu, this.onReload);
 
         this._isNear = this._gameState.players.get(this._player.sessionId).sideNear;
         this._gameStatusStateMachine(this._gameState.gameStatus);
@@ -130,10 +133,6 @@ export class App {
             this._ui.showAwaitingReconnectionUI();
         });
         this._session.on('onReconnect', () => {
-            console.log("lmao");
-            // this._player.unlockControls();
-            // this._ui.showNoUI();
-            console.log(this._gameState.gameStatus);
             this._gameStatusStateMachine(this._gameState.gameStatus);
         });
         this._session.on('onLeave', () => {
@@ -217,12 +216,30 @@ export class App {
         }
     }
 
-    public dispose() {
-        this._session.dispose();
-        this._ui.dispose();
-        this._scene.dispose();
+    // public onReload() {
+    //     this._session.leave();
+    //     this._gameState = new GameState();
+    //     this._clock = new SynchronizedClock();
+    //     if (this._session instanceof NetworkSessionManager) {
+    //         this._session = new NetworkSessionManager(this._gameState, this._clock);
+    //     }
+    //     else {
+    //         this._session = new LocalSessionManager(this._gameState, this._clock);
+    //     }
+    //     this._session.initialize();
+    // }
+
+    public async dispose() {
+        console.log("disposing");
+        if (this._session)
+            await this._session.dispose();
+        if (this._ui)
+            this._ui.dispose();
+        if (this._scene)
+            this._scene.dispose();
         window.removeEventListener('resize', this._resizeWindow);
-        this._engine.dispose();
+        if (this._engine)
+            this._engine.dispose();
         window.removeEventListener("keydown", this._showInspector);
     }
 

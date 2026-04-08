@@ -19,4 +19,8 @@ export class EventEmitter {
         if (!this._events[event]) return;
         this._events[event].forEach(callback => callback(...args));
     }
+
+    public clear() {
+        this._events = null;
+    }
 }
