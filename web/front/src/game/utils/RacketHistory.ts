@@ -23,4 +23,8 @@ export class RacketHistory {
     public get(tick: number): RacketState | undefined {
         return this._states.get(tick);
     }
+
+    public dispose() {
+        this._states = null;
+    }
 }
