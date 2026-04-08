@@ -35,7 +35,9 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         const callback = Callbacks.get(this._room);
         this._callback = callback;
 
+        console.log("got my room");
         await this._waitForStateOnce(this._room);
+        console.log("got the state");
         this._initGameState();
 
         this._setupPhysicsMessages();
@@ -224,21 +226,29 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         this._voluntaryLeave = true;
     }
 
-    public async dispose() {
+    public async dispose() : Promise<void> {
         console.log("disposing network");
         if (this._room) {
             console.log("am i leaving voluntarily:", this._voluntaryLeave);
-            if (!this._voluntaryLeave) {
-                this._room.send("suspendSession");
-            }
             this._room.removeAllListeners();
             this._room.onStateChange.clear();
             this._room.onDrop.clear();
             this._room.onReconnect.clear();
             this._room.onLeave.clear();
             this._room.onError.clear();
+            if (!this._voluntaryLeave) {
+                this._room.send("suspendSession", true);
+                //this._room.reconnection.enabled = false;
+                this._room.reconnection.maxRetries = 0;
+                await this._room.leave(false);
+            } else {
+                //this._room.send("suspendSession", false)
+                
+                await this._room.leave(true);
+            }
+            // const roomAny = this._room as any;
+            // roomAny.connection.transport.ws.close();
             console.log("leaving room")
-            await this._room.leave(true);
             this._room = null;
         }
         clearInterval(this._interval);

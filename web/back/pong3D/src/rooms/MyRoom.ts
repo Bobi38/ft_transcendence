@@ -79,10 +79,12 @@ export class MyRoom extends Room {
       racketRot.z = data.rotation[2];
       racketRot.w = data.rotation[3];
     },
-    "suspendSession": (client: Client) => {
+    "suspendSession": (client: Client, suspending: boolean) => {
         const userData = client.userData as RoomUserData;
-        if (userData)
-          userData.suspended = true;
+        if (userData) {
+          if (suspending) userData.suspended = true;
+          else userData.suspended = false;
+        }
         console.log(userData);
         console.log("set suspended");
     }
@@ -228,13 +230,14 @@ export class MyRoom extends Room {
         await this.allowReconnection(client, 5);
         
         console.log(`${client.sessionId} reconnected successfully!`);
-        if (userData) userData.suspended = false;
+        //if (userData) userData.suspended = false;
         if (player) player.connected = true;
 
         if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
             this.state.roomStatus = RoomStatus.STARTED;
         }
-        
+        console.log("reached end of reco");
+
     } catch (e) {
         console.log(`${client.sessionId} failed to return. Finalizing exit.`);
         this._finalizeDisconnection(client.sessionId);

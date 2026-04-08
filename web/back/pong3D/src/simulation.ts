@@ -195,6 +195,8 @@ export class Simulation {
     }
 }
 
+
+
 private _resetBallAfterGoal(ballPos: Vector3) {
     this._ball.setVelocity(Vector3.Zero());
     this._state.ball.velocity.x = 0;
@@ -202,6 +204,7 @@ private _resetBallAfterGoal(ballPos: Vector3) {
     this._state.ball.velocity.z = 0;
     this._state.ball.position.x = 0;
     this._state.ball.position.y = 3;
+
 
     if (!this._served) {
         ballPos = new Vector3(0, 3, -12);
@@ -216,6 +219,8 @@ private _resetBallAfterGoal(ballPos: Vector3) {
     
     this._room.broadcast('Goal!', { tick: this._tick, position: ballPos.asArray() }, { afterNextPatch: true });
 }
+
+
 
   public dispose() {
     this._ball.dispose();

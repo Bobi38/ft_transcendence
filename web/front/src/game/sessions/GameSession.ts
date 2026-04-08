@@ -14,5 +14,5 @@ export interface GameSession extends EventEmitter {
     setVoluntaryLeave() : void;
     update(): void;
     leave(): Promise<void>;
-    dispose() : void;
+    dispose() : Promise<void>;
 }
