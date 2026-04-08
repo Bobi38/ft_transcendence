@@ -1,15 +1,15 @@
 import { Vector3 } from "@babylonjs/core";
 import { Ball } from "./Ball";
-import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
-import { SynchronizedClock } from "./SynchronizedClock";
-import { NetworkSessionManager } from "./NetworkSessionManager";
-import { Player } from "./Player";
+import { BallSnapshot, SnapshotBuffer } from "../utils/Snapshots";
+import { SynchronizedClock } from "../utils/SynchronizedClock";
+import { NetworkSessionManager } from "../sessions/NetworkSessionManager";
+import { Player } from "../characters/Player";
 import { Environment } from "./Environment";
-import { Enemy } from "./Enemy";
-import { PlayerCamera } from "./PlayerCamera";
-import { RacketHistory } from "./RacketHistory";
-import { GameSession } from "./GameSession";
-import { Character } from "./Character";
+import { Enemy } from "../characters/Enemy";
+import { PlayerCamera } from "../characters/PlayerCamera";
+import { RacketHistory } from "../utils/RacketHistory";
+import { GameSession } from "../sessions/GameSession";
+import { Character } from "../characters/Character";
 
 const TIMESTEP = 1/60;
 
@@ -33,7 +33,7 @@ export class PhysicsEngine {
         this._session = session;
         this._isOffline = isOffline;
     }
-    
+
     
     public stepPhysics(deltaTime: number) {
         this._clock.updateAccumulator(deltaTime);

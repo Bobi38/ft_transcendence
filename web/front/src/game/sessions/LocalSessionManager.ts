@@ -1,12 +1,12 @@
 import { EventEmitter } from "./EventEmitter";
 import { GameSession} from "./GameSession"
-import { SynchronizedClock} from "./SynchronizedClock"
-import { RoomStatus } from "./App"
+import { SynchronizedClock} from "../utils/SynchronizedClock"
+import { RoomStatus } from "../App"
 import { GameState } from "./GameState";
 import { AbstractMesh, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
 import { Bot } from "./Bot";
-import { Ball } from "./Ball";
-import { Environment } from "./Environment";
+import { Ball } from "../physics/Ball";
+import { Environment } from "../physics/Environment";
 
 const farBallStart = new Vector3(0,3,34.5);
 const nearBallStart = new Vector3(0,3,-12);

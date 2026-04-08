@@ -1,6 +1,6 @@
 import { AbstractMesh, Matrix, Quaternion, Scene, ShadowGenerator, TransformNode, Vector3 } from "@babylonjs/core";
-import { GameState } from "./GameState";
-import { CharacterAssets } from "./App";
+import { GameState } from "../sessions/GameState";
+import { CharacterAssets } from "../App";
 import { Character } from "./Character";
 
 export class Enemy extends TransformNode implements Character {

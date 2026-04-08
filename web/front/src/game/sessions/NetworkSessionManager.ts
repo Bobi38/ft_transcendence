@@ -1,14 +1,14 @@
 import { EventEmitter } from "./EventEmitter";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { StateCallbackStrategy } from "@colyseus/schema";
-import { MyRoomState } from "./schema/MyRoomState";
-import { BallSnapshot } from "./Snapshots";
+import { MyRoomState } from "../schema/MyRoomState";
+import { BallSnapshot } from "../utils/Snapshots";
 import { GameState } from "./GameState";
 import { AbstractMesh, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
-import { SynchronizedClock } from "./SynchronizedClock";
+import { SynchronizedClock } from "../utils/SynchronizedClock";
 import { GameSession } from "./GameSession";
-import { Ball } from "./Ball";
-import { Environment } from "./Environment";
+import { Ball } from "../physics/Ball";
+import { Environment } from "../physics/Environment";
 
 
 

@@ -1,6 +1,6 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
-import { NetworkSessionManager } from "./NetworkSessionManager";
-import { GameSession } from "./GameSession";
+import { NetworkSessionManager } from "../sessions/NetworkSessionManager";
+import { GameSession } from "../sessions/GameSession";
 
 export class GUI {
     private _session : GameSession;

@@ -1,8 +1,8 @@
 import { Vector3, Quaternion, TransformNode, Scene, AbstractMesh } from "@babylonjs/core";
 import { EventEmitter } from "./EventEmitter";
-import { BallSnapshot } from "./Snapshots";
-import { Ball } from "./Ball";
-import { Environment } from "./Environment";
+import { BallSnapshot } from "../utils/Snapshots";
+import { Ball } from "../physics/Ball";
+import { Environment } from "../physics/Environment";
 
 export interface GameSession extends EventEmitter {
     initialize() : Promise<void>;

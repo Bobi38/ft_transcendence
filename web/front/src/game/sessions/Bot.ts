@@ -1,5 +1,6 @@
-import { AbstractEngine, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
-import { Ball } from "./ball";
+import { AbstractEngine, AbstractMesh, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
+import { Ball } from "../physics/Ball";
+import { Environment } from "../physics/Environment";
 
 enum SwingState {
     IDLE,
@@ -17,6 +18,7 @@ export class Bot {
 
     private _engine : AbstractEngine;
     private _ball : Ball;
+    private _body: AbstractMesh;
     private _handNode : TransformNode;
     private _racket : TransformNode;
     private _movingTarget : Vector3;
@@ -25,12 +27,20 @@ export class Bot {
     private _swingState: SwingState = SwingState.IDLE;
     private _swingTimer: number = 0;
     private _swingDirection: Vector3 = Vector3.Zero();
+    private _wallMin: Vector3;
+    private _wallMax: Vector3;
 
-    constructor(scene: Scene, ball: Ball, handNode: TransformNode, racket: TransformNode) {
+    constructor() {}
+
+    public initializeBot(scene: Scene, ball: Ball, body: AbstractMesh, handNode: TransformNode, racketNode: TransformNode, env: Environment) {
         this._engine = scene.getEngine();
+        this._body = body;
         this._ball = ball;
         this._handNode = handNode;
-        this._racket = racket;
+        this._racket = racketNode;
+        this._wallMin = env.wallMin;
+        this._wallMax = env.wallMax;
+
         scene.onBeforeRenderObservable.add(() => {
             this._predictBallTarget();
             this._swingRacketTarget();
@@ -162,8 +172,14 @@ export class Bot {
         }
     }
 
-    public getMoveDirection() {
-        return this._moveDirection.clone();
+    public getNewMeshPos() {
+        const newPos = this._moveDirection.clone().add(this._body.position);
+        const bodySize : number = 1.;
+        if (newPos.x - bodySize < this._wallMin.x)
+            newPos.x = this._wallMin.x + bodySize;
+        if (newPos.x + bodySize > this._wallMax.x)
+            newPos.x = this._wallMax.x - bodySize;
+        return newPos;
     }
 
     public getNewRacketPos() : Vector3 {

@@ -3,19 +3,19 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
-import { Environment } from "./Environment";
-import { PlayerInput } from "./PlayerInput";
-import { Player } from "./Player";
-import { Ball } from "./Ball";
-import { GUI } from "./GUI";
-import { PlayerCamera } from "./PlayerCamera";
-import { Enemy } from "./Enemy";
-import { SynchronizedClock } from "./SynchronizedClock";
-import { NetworkSessionManager } from "./NetworkSessionManager";
-import { GameState } from "./GameState"
-import { PhysicsEngine } from "./PhysicsEngine";
-import { GameSession } from "./GameSession";
-import { LocalSessionManager } from "./LocalSessionManager"
+import { Environment } from "./physics/Environment";
+import { PlayerInput } from "./characters/PlayerInput";
+import { Player } from "./characters/Player";
+import { Ball } from "./physics/Ball";
+import { GUI } from "./utils/GUI";
+import { PlayerCamera } from "./characters/PlayerCamera";
+import { Enemy } from "./characters/Enemy";
+import { SynchronizedClock } from "./utils/SynchronizedClock";
+import { NetworkSessionManager } from "./sessions/NetworkSessionManager";
+import { GameState } from "./sessions/GameState"
+import { PhysicsEngine } from "./physics/PhysicsEngine";
+import { GameSession } from "./sessions/GameSession";
+import { LocalSessionManager } from "./sessions/LocalSessionManager"
 
 export interface CharacterAssets {
     mesh: AbstractMesh,

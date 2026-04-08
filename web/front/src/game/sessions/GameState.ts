@@ -1,5 +1,5 @@
 import { Quaternion, Vector3 } from "@babylonjs/core";
-import { RoomStatus } from "./App"
+import { RoomStatus } from "../App"
 
 export interface PlayerState {
     isPlayer: boolean;
