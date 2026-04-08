@@ -173,14 +173,12 @@ export class Bot {
     }
 
     public getNewMeshPos() {
-        console.log(this._moveDirection);
         const newPos = this._moveDirection.clone().add(this._body.position);
         const bodySize : number = 1.;
         if (newPos.x - bodySize < this._wallMin.x)
             newPos.x = this._wallMin.x + bodySize;
         if (newPos.x + bodySize > this._wallMax.x)
             newPos.x = this._wallMax.x - bodySize;
-        console.log('in bot:', newPos);
         return newPos;
     }
 

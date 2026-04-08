@@ -31,7 +31,6 @@ export class Enemy extends TransformNode implements Character {
 
     public updateBody() {
         const newPos = this._gameState.players.get(this._sessionId).pos;
-        console.log('in enemy:', newPos);
         //const oldPos = this._mesh.position.clone();
         //const moveDirection = newPos.subtract(oldPos);
         //this._mesh.moveWithCollisions(moveDirection);

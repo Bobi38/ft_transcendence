@@ -61,7 +61,11 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
           ballPos = farBallStart;
           this._served = false;
         }
-        this.emit('onGoalScored', { tick: this._clock.tick, ballPos});
+        this.emit('onGoalScored', { tick: this._clock.tick, position: ballPos.asArray()});
+        if (this._gameState.teamFar >= 3 || this._gameState.teamNear >= 3) {
+            this._gameState.gameStatus = RoomStatus.WON;
+            this.emit('onGameStatusChange', this._gameState.gameStatus);
+        }
     }
 
     public setupEnemy(scene: Scene, ball: Ball, body: AbstractMesh, handNode: TransformNode, racketNode: TransformNode, env: Environment) {

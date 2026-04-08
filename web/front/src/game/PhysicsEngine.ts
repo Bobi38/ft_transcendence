@@ -33,7 +33,7 @@ export class PhysicsEngine {
         this._session = session;
         this._isOffline = isOffline;
     }
-
+    
     
     public stepPhysics(deltaTime: number) {
         this._clock.updateAccumulator(deltaTime);
@@ -47,6 +47,7 @@ export class PhysicsEngine {
                 this._ball.snapshots.saveSnapshot({tick: this._clock.tick, position: this._ball.getPhysicsBodyPosition(), velocity: this._ball.getVelocity()});
                 this._clock.tick++;
                 this._clock.setbackAccumulator();
+                this._checkIfPointWon();
             }
             this._ball.smoothPosition();
     }
@@ -175,6 +176,16 @@ export class PhysicsEngine {
             this._ball.snapshots.saveSnapshot({tick: simulatingTick, position: this._ball.getPhysicsBodyPosition(), velocity: this._ball.getVelocity()});
         }
         this._isResimming = false;
+    }
+
+    private _checkIfPointWon() {
+        let ballPos = this._ball.getPhysicsBodyPosition();
+        if (ballPos.z < -33) {
+            this._session.emitGoalScored(false);
+        }
+        else if (ballPos.z > 50) {
+            this._session.emitGoalScored(true);
+        }
     }
 
     public updatePhysicsOnGoalScored(goalData: any) {
