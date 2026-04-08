@@ -3,7 +3,7 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
-import { Environment } from "./physics/Environment";
+import { Environment, loadCharacterAssets, loadLights } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";
 import { Ball } from "./physics/Ball";
@@ -186,25 +186,7 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        //let light1 = new SpotLight('Light1', new Vector3(0,6,-10), new Vector3(0,-0.5,1), Math.PI/4, 40, scene);
-        let light1 = new PointLight('light1', new Vector3(0,6,-10), this._scene);
-        light1.diffuse = new Color3(1,1,1);
-        light1.intensity = 0.4;
-        let shadow1 = new ShadowGenerator(2048, light1);
-        shadow1.darkness = 0.1;
-        this._shadows.push(shadow1);
-        let light2 = new PointLight('light2', new Vector3(0,6,30), this._scene);
-        //let light2 = new SpotLight('Light1', new Vector3(0,6,30), new Vector3(0,-0.5,-1), Math.PI/4, 40, scene);
-        //let light2 = new DirectionalLight('Light2', new Vector3(0.4,-0.6,-1), scene);
-        light2.diffuse = new Color3(1,1,1);
-        light2.intensity = 0.5;
-        let light3 = new HemisphericLight("Light3", new Vector3(0,1,0), scene);
-        light3.intensity = 0.6;
-        light3.groundColor = new Color3(0.5, 0.5, 0.5);
-        let shadow2 = new ShadowGenerator(2048, light2);
-        shadow2.darkness = 0.1;
-        this._shadows.push(shadow2);
-
+        this._shadows = loadLights(scene);
         let ballPos = this._gameState.ballPos;
         let ballVel = this._gameState.ballVel;
         this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this._clock, this._engine, this._physicsEngine);
@@ -221,7 +203,7 @@ export class App {
     }
 
     private async _setupCharacters(isPlayer: boolean, sessionId: string, position: Vector3, isNearSide: boolean) {
-        const assets = await this._loadCharacterAssets(position, isPlayer, isNearSide);
+        const assets = await loadCharacterAssets(this._scene, position, isPlayer, isNearSide);
         if (isPlayer) {
             const camera = new PlayerCamera(isNearSide, this._scene);
             this._player = new Player(camera.getUniversalCamera(), sessionId, assets, this._scene, this._shadows, this._session);
@@ -233,51 +215,6 @@ export class App {
             this._physicsEngine.setEnemy(new Enemy(this._scene, assets, this._shadows, isNearSide, this._gameState, sessionId));
             this._session.setupEnemy(this._scene, this._ball, assets.mesh, assets.handNode, assets.racketNode, this._environment);
         }
-    }
-
-    private async _loadCharacterAssets(position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<CharacterAssets> {
-        const assets = await ImportMeshAsync("/media/mii.glb", this._scene);
-        const body = assets.meshes[0];  
-        if (isPlayer) {
-            assets.meshes.forEach((m) => {
-                m.isVisible = false;
-            });
-        }
-        if (isPlayer && !isNearSide) {
-            body.rotate(new Vector3(0,1,0), Math.PI);
-        }
-        if (!isPlayer && !isNearSide) {
-            body.rotate(new Vector3(0,1,0), Math.PI);
-        }
-
-        body.position = position;
-        const bodymtl = new StandardMaterial("red", this._scene);
-        bodymtl.diffuseColor = Color3.Red();
-        body.material = bodymtl;
-        body.isPickable = false;
-        const hand_node = new TransformNode("hand_node", this._scene)
-        hand_node.position = new Vector3(0.4, 2, 0);
-        const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.8});
-        hand.material = bodymtl;
-
-        const racketmtl = new StandardMaterial("white", this._scene);
-        racketmtl.diffuseColor = new Color3(0.4,0.2,0);
-        const stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.4, height: 1.2});
-        stick.position._y = 0.8;
-        stick.material = racketmtl;
-        const racket = MeshBuilder.CreateCylinder("racket", {diameter: 2, height: 0.4});
-        racket.material = racketmtl;
-        racket.position._y = 1.2;
-        racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
-        
-        const racketRoot = new TransformNode("racketRoot", this._scene);
-
-        racket.parent = stick;
-        stick.parent = hand;
-        hand.parent = racketRoot;
-        racketRoot.parent = hand_node;
-        hand_node.parent = body;
-        return { mesh: body, handNode: hand_node, racketNode: racketRoot};
     }
 
     public dispose() {
