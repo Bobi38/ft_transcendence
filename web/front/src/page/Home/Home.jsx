@@ -8,7 +8,7 @@ import HomeCardWeather 		from	"./HomeCard/HomeCardWeather/HomeCardWeather.jsx";
 
 
 const cards_content = [
-	{ text:"Terms and orivacy", path: "/TermsAndPrivacy" },
+	{ text:"Terms and privacy", path: "/TermsAndPrivacy" },
 	{ text:"Friends", path: "/PrivateMessage" },
 	{ text:"Pong3D vs Player", path: "/Pong3D" },
 	{ text:"Pong3D vs IA", path: "/Pong3DIa" },

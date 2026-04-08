@@ -35,7 +35,7 @@ class ProfileService {
             // console.log("API /updateProfil dans update profil", user);
             const name = await User.findAll({where :{name: result.name}})
             if ((name.length != 0) && (name[0].id != result.id))
-                return ({success: false, message: 'Le login ' + data.login + " est deja utilise", code: 409})
+                return ({success: false, message: 'The login ' + data.login + " already used", code: 409})
             await result.update({ name: data.login, mail: data.email, phoneNumber: data.tel })
             return ({success: true, message: "data in username", username: user.login, oldname: oldname, code: 201});
         }catch(err){
