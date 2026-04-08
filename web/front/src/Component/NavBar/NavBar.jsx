@@ -18,8 +18,8 @@ export default function NavBar() {
 	function logout() {
 
 	   console.log("logout(1) called")
-	   fetch('/api/auth/logout', {
-	       method: 'GET',
+	   fetch('/api/auth/session', {
+	       method: 'DELETE',
 	       headers: { 'Content-Type': 'application/json' },
 	       credentials: "include"
 	   })

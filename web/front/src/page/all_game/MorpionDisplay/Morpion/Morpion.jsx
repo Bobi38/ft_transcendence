@@ -9,7 +9,6 @@ import SocketM                  from    "TOOL/SocketManag.js";
 import Board                    from    "./Board/Board.jsx";
 
 function NewPartie() {
-
     function sendMessage(s_message){
         SocketM.sendd('morp',{
                 type: "play",

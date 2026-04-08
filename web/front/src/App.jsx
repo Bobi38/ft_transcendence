@@ -20,8 +20,7 @@ import ErrorRedir                       from    "FRONT/page/ErrorRedir/ErrorRedi
 import PrivateMessage                   from    "FRONT/page/PrivateMessage/PrivateMessage.jsx";
 import Profile                          from    "FRONT/page/Profile/Profile.jsx";
 import Stats                            from    "FRONT/page/Stats/Stats.jsx";
-import PrivacyPolicy                    from    "COMP/PP&ToS/Privacy_Policy.jsx";
-import TermsOfService                   from    "COMP/PP&ToS/Terme_Security.jsx";
+import TermsAndPrivacy                  from    "COMP/TermsAndPrivacy/TermsAndPrivacy.jsx";
 
 // ./src/page/all_game
 import Pong3D                           from    "FRONT/page/all_game/Pong3D/Pong3D.jsx";
@@ -119,17 +118,16 @@ export default function App() {
                 <Routes>
 
                     {/* Home */}
-                    <Route path={`/`}               element={<Navigation> <Home />          </Navigation>} />
-                    <Route path={`/ContactUs`}      element={<Navigation> <ContactUs/>      </Navigation>}/>
-                    <Route path={`/PrivateMessage`} element={<Navigation> <PrivateMessage/> </Navigation>}/>
-                    <Route path={`/Profile`}        element={<Navigation> <Profile/>        </Navigation>}/>
-                    <Route path={`/Stats`}          element={<Navigation> <Stats/>          </Navigation>}/>
-                    <Route path={`/Morpion`}        element={<Navigation> <MorpionDisplay isGame={true}/> </Navigation>}/>
-                    <Route path={`/SpecMorpion`}    element={<Navigation> <MorpionDisplay isGame={false}/> </Navigation>}/>
-                    <Route path={`/Pong3D`}         element={<Pong3D/>}/>
-                    <Route path={`/Pong3DIa`}       element={<Pong3DIa/>}/>
-                    <Route path={`/terms`}          element={<TermsOfService/>}/>
-                    <Route path={`/privacy`}        element={<PrivacyPolicy/>}/>
+                    <Route path={`/`}               	element={<Navigation> <Home />          </Navigation>} />
+                    <Route path={`/ContactUs`}      	element={<Navigation> <ContactUs/>      </Navigation>}/>
+                    <Route path={`/PrivateMessage`} 	element={<Navigation> <PrivateMessage/> </Navigation>}/>
+                    <Route path={`/Profile`}        	element={<Navigation> <Profile/>        </Navigation>}/>
+                    <Route path={`/Stats`}          	element={<Navigation> <Stats/>          </Navigation>}/>
+                    <Route path={`/Morpion`}        	element={<Navigation> <MorpionDisplay isGame={true}/> </Navigation>}/>
+                    <Route path={`/SpecMorpion`}    	element={<Navigation> <MorpionDisplay isGame={false}/> </Navigation>}/>
+                    <Route path={`/TermsAndPrivacy`}	element={<Navigation> <TermsAndPrivacy/> </Navigation>}/>
+                    <Route path={`/Pong3D`}         	element={<Pong3D/>}/>
+                    <Route path={`/Pong3DIa`}       	element={<Pong3DIa/>}/>
 
                     {/* bad path */}
                     <Route path={`/*`}              element={<Navigation> <ErrorRedir/>     </Navigation>} />

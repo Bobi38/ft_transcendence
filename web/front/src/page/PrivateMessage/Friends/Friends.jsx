@@ -73,7 +73,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
     const handleDelete = async (friend) => {
         await dlt_friend(friend.login);
         await all_friend();
-        SocketM.send("friend", {type: "maj_frd", login: friend});
+        SocketM.sendd("friend", {type: "maj_frd", login: friend});
     }
 
     return (

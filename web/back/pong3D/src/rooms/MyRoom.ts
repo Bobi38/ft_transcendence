@@ -175,7 +175,7 @@ export class MyRoom extends Room {
       player.connected = false;
       this._tokens.get(client.sessionId).hasDisconnected = true;
     }
-    if (this.state.roomStatus === RoomStatus.STARTED)
+    if (this.state.roomStatus === RoomStatus.STARTED || this.state.roomStatus === RoomStatus.WAITING)
       this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
     console.log("room status:", this.state.roomStatus);
     if (this.state.players.size == 2) {

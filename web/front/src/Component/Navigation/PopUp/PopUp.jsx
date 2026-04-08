@@ -21,12 +21,11 @@ export default function PopUp() {
         console.log(`${url}`)
 
         await useFetch(`${url}`, {
-            method: "GET",
+            method: "DELETE",
             headers: { "Content-Type": "application/json" },
             credential: "include",
         }, null, null, true)
         setShowLog(AUTH.LOGIN);
-
     }
 
     const password_forget_mode = () => {

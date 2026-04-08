@@ -11,7 +11,7 @@ import { initWebSMopr } from './WsSMopr.js';
 
 
 //router
-import Morpionroute from './routes/Morpion.js'
+import Morpionroute from './routes/Morpion.controller.js'
 
 
 dotenv.config();
@@ -25,11 +25,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({
-  secret:'coucou',
-  resave: false,
-  saveUninitialized: true
-}))
+
 
 app.use((req, res, next) => {
   console.log(`[MORP SERVICE] ${req.method} ${req.path}`);
