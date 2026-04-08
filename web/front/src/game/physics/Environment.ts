@@ -1,5 +1,6 @@
-import { Color3, MeshBuilder, Quaternion, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
+import { Color3, HemisphericLight, ImportMeshAsync, MeshBuilder, PointLight, Quaternion, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
 import { Env } from "/app/src/game/shared/media.js";
+import { CharacterAssets } from "../App";
 
 
 function ToVec3(input) : Vector3 {
@@ -123,6 +124,70 @@ export class Environment {
         this.wallMin = new Vector3(wallLeftPos.x + horizontalThickness, verticalThickness, -(groundDim.z / 2));
         this.wallMax = new Vector3(wallRightPos.x - horizontalThickness, ceilingPos.y - verticalThickness, (groundDim.z / 2));
     }
-
-    
 }
+
+export async function loadCharacterAssets(scene: Scene, position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<CharacterAssets> {
+    const assets = await ImportMeshAsync("/media/mii.glb", scene);
+    const body = assets.meshes[0];  
+    if (isPlayer) {
+        assets.meshes.forEach((m) => {
+            m.isVisible = false;
+        });
+    }
+    if (isPlayer && !isNearSide) {
+        body.rotate(new Vector3(0,1,0), Math.PI);
+    }
+    if (!isPlayer && !isNearSide) {
+        body.rotate(new Vector3(0,1,0), Math.PI);
+    }
+
+    body.position = position;
+    const bodymtl = new StandardMaterial("red", scene);
+    bodymtl.diffuseColor = Color3.Red();
+    body.material = bodymtl;
+    body.isPickable = false;
+    const hand_node = new TransformNode("hand_node", scene)
+    hand_node.position = new Vector3(0.4, 2, 0);
+    const hand = MeshBuilder.CreateSphere("hand", {diameter: 0.8});
+    hand.material = bodymtl;
+
+    const racketmtl = new StandardMaterial("white", scene);
+    racketmtl.diffuseColor = new Color3(0.4,0.2,0);
+    const stick = MeshBuilder.CreateCylinder("stick", {diameter: 0.4, height: 1.2});
+    stick.position._y = 0.8;
+    stick.material = racketmtl;
+    const racket = MeshBuilder.CreateCylinder("racket", {diameter: 2, height: 0.4});
+    racket.material = racketmtl;
+    racket.position._y = 1.2;
+    racket.rotationQuaternion = Quaternion.FromEulerAngles(Math.PI / 2, 0, 0);
+    
+    const racketRoot = new TransformNode("racketRoot", scene);
+
+    racket.parent = stick;
+    stick.parent = hand;
+    hand.parent = racketRoot;
+    racketRoot.parent = hand_node;
+    hand_node.parent = body;
+    return { mesh: body, handNode: hand_node, racketNode: racketRoot};
+}
+
+export function loadLights(scene: Scene) : ShadowGenerator[] {
+    const shadows : ShadowGenerator[] = [];
+    let light1 = new PointLight('light1', new Vector3(0,6,-10), scene);
+    light1.diffuse = new Color3(1,1,1);
+    light1.intensity = 0.4;
+    let shadow1 = new ShadowGenerator(2048, light1);
+    shadow1.darkness = 0.1;
+    shadows.push(shadow1);
+    let light2 = new PointLight('light2', new Vector3(0,6,30), scene);
+    light2.diffuse = new Color3(1,1,1);
+    light2.intensity = 0.5;
+    let light3 = new HemisphericLight("Light3", new Vector3(0,1,0), scene);
+    light3.intensity = 0.6;
+    light3.groundColor = new Color3(0.5, 0.5, 0.5);
+    let shadow2 = new ShadowGenerator(2048, light2);
+    shadow2.darkness = 0.1;
+    shadows.push(shadow2);
+    return shadows;
+}
+

@@ -1,14 +1,18 @@
 import { EventEmitter } from "./EventEmitter";
 import { Callbacks, Client, Room } from "@colyseus/sdk";
 import { StateCallbackStrategy } from "@colyseus/schema";
-import { MyRoomState } from "./schema/MyRoomState";
-import { BallSnapshot } from "./Snapshots";
+import { MyRoomState } from "../schema/MyRoomState";
+import { BallSnapshot } from "../utils/Snapshots";
 import { GameState } from "./GameState";
-import { Quaternion, Vector3 } from "@babylonjs/core";
-import { SynchronizedClock } from "./SynchronizedClock";
+import { AbstractMesh, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
+import { SynchronizedClock } from "../utils/SynchronizedClock";
+import { GameSession } from "./GameSession";
+import { Ball } from "../physics/Ball";
+import { Environment } from "../physics/Environment";
 
 
-export class NetworkManager extends EventEmitter {
+
+export class NetworkSessionManager extends EventEmitter implements GameSession {
     private _room : Room<MyRoomState>;
     private _callback : StateCallbackStrategy<MyRoomState>;
     private _gameState : GameState;
@@ -24,6 +28,7 @@ export class NetworkManager extends EventEmitter {
 
 
     public async initialize(): Promise<void> {
+        console.log("HEEEEEEEEEEEEE");
         this._room = await this._connectOrReconnectToRoom();
         const callback = Callbacks.get(this._room);
         this._callback = callback;
@@ -46,6 +51,7 @@ export class NetworkManager extends EventEmitter {
             this._gameState.teamFar = this._room.state.score.teamFar;
         });
         this._syncWithColyseus();
+        console.log(this._room.state);
 
         this._setupPlayerJoinedRoom();
 
@@ -225,4 +231,8 @@ export class NetworkManager extends EventEmitter {
         }
         clearInterval(this._interval);
     }
+
+    public emitGoalScored(teamNearScored: boolean): void {}
+    public update() {}
+    public setupEnemy(scene: Scene, ball: Ball, body: AbstractMesh, handNode: TransformNode, racketNode: TransformNode, env: Environment) {}
 }
