@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Color4, ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
 import { Environment, loadCharacterAssets, loadLights } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";
@@ -45,7 +45,6 @@ export class App {
     private _gameState : GameState = new GameState();
     private _session : GameSession;
     private _environment: Environment;
-    //private _network : NetworkManager = new NetworkManager(this._gameState, this._clock);
     private _physicsEngine : PhysicsEngine;
 
 
@@ -125,15 +124,10 @@ export class App {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
         this._session.on('onDrop', (code: number, reason: string) => {
-            console.log('onDrop');
             this._player.lockControls();
             this._ui.showAwaitingReconnectionUI();
         });
         this._session.on('onReconnect', () => {
-            console.log("lmao");
-            // this._player.unlockControls();
-            // this._ui.showNoUI();
-            console.log(this._gameState.gameStatus);
             this._gameStatusStateMachine(this._gameState.gameStatus);
         });
         this._session.on('onLeave', () => {
