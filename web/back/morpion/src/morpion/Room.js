@@ -7,8 +7,8 @@ class Room {
         this._id = id;
         this._players = new Set();
         this._obs = new Set();
-        this._min_players = 1000;
-        this._max_players = null;
+        this._minPlayers = 1000;
+        this._maxPlayers = null;
         this._date_game = new Date(); // _date of first player
         this._start_time = null; // timestamp start game
         this._locked = false; // soon unuse
@@ -90,9 +90,9 @@ class Room {
     }
 
     isFull() {
-        if (this._max_players === null) return false;
+        if (this._maxPlayers === null) return false;
 
-        return this._players.size >= this._max_players;
+        return this._players.size >= this._maxPlayers;
     }
     
     isInRoom(id){
@@ -113,7 +113,7 @@ class Room {
     }
 
     setLock(){
-        if (this._state === "init" && this._players.size < this._min_players) {
+        if (this._state === "init" && this._players.size < this._minPlayers) {
             console.log(`need more player`);
             return false;
         }

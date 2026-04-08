@@ -3,20 +3,20 @@ import StatMorp from "../models/StatMorp.js";
 
 export class Player {
     constructor(socket) {
-        this._nick_name = null;
-        this._turn_timer = null;
-        this._nb_turn = 0;
-        this._play_time = 0;
+        this._nickName = null;
+        this._turnTimer = null;
+        this._nbTurn = 0;
+        this._playTime = 0;
         this._game = null;
-        this._obs_game = null;
+        this._obsGame = null;
         this._sockets = new Map([[socket.id, socket]]);
         this._id = socket.userId;
-        this._prev_data = {};
-        this._last_message = "";
+        this._prevData = {};
+        this._lastMessage = "";
         this._chrono = null;
-        this.first_alert = 0;
-        this._time_refresh_name = 0;
-        this._time_last_active = 0;
+        this.firstAlert = 0;
+        this._timeRefreshName = 0;
+        this._timeLastActive = 0;
         this.list = null;
     }
 
@@ -24,7 +24,7 @@ export class Player {
         let payload = {}
 
         if (data !== undefined) {
-            payload.message = this._last_message;
+            payload.message = this._lastMessage;
         }
         else if (typeof data === "string") {
             this.message = data;
@@ -38,9 +38,9 @@ export class Player {
             payload.board = structuredClone(this._game._board);
         }
 
-        if (this._obs_game) {
-            payload.other_board = structuredClone(this._obs_game._board);
-            payload.players = this._obs_game.getPlayers();
+        if (this._obsGame) {
+            payload.other_board = structuredClone(this._obsGame._board);
+            payload.players = this._obsGame.getPlayers();
         }
 
         const json = JSON.stringify(payload);
@@ -54,12 +54,12 @@ export class Player {
 
     sendMessage(msg) {
         if (msg !== undefined) {
-            this._last_message = msg;
+            this._lastMessage = msg;
         }
 
         const payload = {
             type: "message",
-            message: this._last_message
+            message: this._lastMessage
         };
 
         const json = JSON.stringify(payload);
@@ -86,8 +86,8 @@ export class Player {
             payload = { ...data };
         }
 
-        if (!payload.message && this._last_message) {
-            payload.message = this._last_message;
+        if (!payload.message && this._lastMessage) {
+            payload.message = this._lastMessage;
         }
 
         if (this.list) {
@@ -98,9 +98,9 @@ export class Player {
             payload.board = structuredClone(this._game._board);
         }
 
-        if (this._obs_game) {
-            payload.other_board = structuredClone(this._obs_game._board);
-            payload.players = this._obs_game.players;
+        if (this._obsGame) {
+            payload.other_board = structuredClone(this._obsGame._board);
+            payload.players = this._obsGame.players;
         }
 
         return payload;
@@ -108,23 +108,19 @@ export class Player {
 
     addSocket(socket){
         this._sockets.set(socket.id, socket);
-        this._time_last_active = Date.now();
+        this._timeLastActive = Date.now();
 
-        console.log(`player are ${this._sockets.size} sockets`)
         for (const [id, s] of this._sockets) {
             if (!s.isAlive){
                 this._sockets.delete(id);
             }
         }
-        console.log(`add socket player are ${this._sockets.size} sockets`)
         this.sendGame();
     }
 
     isInactived(){
-        console.log(`pour verif timeOOOut player`);
-        if (this._time_last_active + 30000 < Date.now())
+        if (this._timeLastActive + 30000 < Date.now())
             return false;
-        console.log("time out 30s for eval");
 
         return true;
     }
@@ -136,69 +132,64 @@ export class Player {
         this.clearTurnTimer();
         this._game = game;
         this._chrono = null;
-        this._nb_turn = 0;
-        this._play_time = 0;
-        this.first_alert = 0;
+        this._nbTurn = 0;
+        this._playTime = 0;
+        this.firstAlert = 0;
     }
 
     setObs(game){
-        if (this._obs_game === game) return;
+        if (this._obsGame === game) return;
         
         this.removeObs();
 
-        this._obs_game = game;
+        this._obsGame = game;
 
         this.sendObs();
     }
 
     removeObs(){
         setTimeout(() => {
-                if (this._obs_game) return ;
+                if (this._obsGame) return ;
                 this.send({
                     players: null,
                     other_board: Array(9).fill(" ")
                 });
             }, 5000)
 
-        if (!this._obs_game) return ;
+        if (!this._obsGame) return ;
 
-        const obs_game = this._obs_game;
-        this._obs_game = null;
+        const obs_game = this._obsGame;
+        this._obsGame = null;
 
         obs_game?.removeObs(this);        
     }
 
     sendObs() {
-        console.log("observation de ", this.getName());
-        if (!this._obs_game) {
+        if (!this._obsGame) {
             return ;
         }
 
         
         const all = JSON.stringify({
-                players: this._obs_game.getPlayers(),
-                other_board: this._obs_game._board,
+                players: this._obsGame.getPlayers(),
+                other_board: this._obsGame._board,
             });
 
-        console.log(all)
 
         for (const socket of this._sockets.values()){
             try {
-                // console.log(`ready state = ${socket?.readyState}`);
                 if (socket?.readyState === 1)
                     socket.send(all);
             } catch (err) {
                 console.error("WebSocket player.send error:", err);
             }
         }
-        // console.log(all);
     }
 
     sendList() {
         const all = JSON.stringify({
             list: structuredClone(this.list),
         });
-        // console.log(`list recu`, all);
 
         for (const socket of this._sockets.values()){
             try {
@@ -220,15 +211,12 @@ export class Player {
             typeof data === "string"
                 ? { message: data }
                 : data;
-        Object.assign(this._prev_data, payload);
+        Object.assign(this._prevData, payload);
     }
 
     send(data) {
-        // console.log(`${this.getName()} doit recevoir data :${JSON.stringify(data)}`);
         if (data === undefined){
-            console.log(`data indefini`);
             return ;
-            // this.sendObs();
         }
         
         const new_message =
@@ -237,12 +225,12 @@ export class Player {
                 : data?.message;
 
         if (new_message !== undefined) {
-            this._last_message = new_message;
+            this._lastMessage = new_message;
         }
 
         const all = JSON.stringify({
                 ...data,
-                message: this._last_message,
+                message: this._lastMessage,
         });
 
         for (const socket of this._sockets.values()){
@@ -257,7 +245,7 @@ export class Player {
     }
 
     disconnect(message, game_id = null) {
-        if (this._obs_game && game_id === this._obs_game.getId()) {
+        if (this._obsGame && game_id === this._obsGame.getId()) {
             this.removeObs();
             return ;
         }
@@ -267,16 +255,16 @@ export class Player {
 
         this.clearTurnTimer();
         this._chrono = null;
-        this._last_message = "";
-        this._nb_turn = 0;
-        this._play_time = 0;
+        this._lastMessage = "";
+        this._nbTurn = 0;
+        this._playTime = 0;
         this._game = null;
-        this.first_alert = 0;
+        this.firstAlert = 0;
         this.removeObs();
     }
 
     toString(){
-        return `${this._nick_name} play ${this._game?.getId()}`;
+        return `${this._nickName} play ${this._game?.getId()}`;
     }
 
     getId(){
@@ -284,9 +272,9 @@ export class Player {
     }
 
     clearTurnTimer() {
-        if (this._turn_timer) {
-            clearTimeout(this._turn_timer);
-            this._turn_timer = null;
+        if (this._turnTimer) {
+            clearTimeout(this._turnTimer);
+            this._turnTimer = null;
         }
     }
 
@@ -304,7 +292,7 @@ export class Player {
 
     startTurnTimer(alertAction, millisec) {
         this.clearTurnTimer();
-        this._turn_timer = setTimeout(alertAction, millisec);
+        this._turnTimer = setTimeout(alertAction, millisec);
     }
 
     firstAlert() {
@@ -320,20 +308,20 @@ export class Player {
 
     setPlayTime(millisec){
         if (millisec > 0){
-            this._play_time += millisec;
-            this._nb_turn++;
+            this._playTime += millisec;
+            this._nbTurn++;
         }
     }
 
     getPlayTime(){
-        return this._play_time;
+        return this._playTime;
     }
 
     getData(){
         return ({
             id: this._id,
-            time: this._play_time,
-            nb_turn: this._nb_turn
+            time: this._playTime,
+            nb_turn: this._nbTurn
          });
     }
 
@@ -342,27 +330,27 @@ export class Player {
         const time = Date.now()
         
         player.refreshName(time);
-        player._time_last_active = time;
+        player._timeLastActive = time;
 
         return player;
     }
 
     async refreshName(time){
         const ll = await User.findByPk(this._id);
-        this._time_refresh_name = time;
-        this._nick_name = ll.name        
+        this._timeRefreshName = time;
+        this._nickName = ll.name        
     }
 
     getName(){
-        return this._nick_name;
+        return this._nickName;
         const time = Date.now();
 
-        if (this._nick_name && time - 5000 < this._time_refresh_name)
-            return this._nick_name;
+        if (this._nickName && time - 5000 < this._timeRefreshName)
+            return this._nickName;
 
         this.refreshName(time);
 
-        return this._nick_name;
+        return this._nickName;
     }
 
     async majdb(game_id, how_win, type_player , type_winner = null) {
@@ -377,7 +365,7 @@ export class Player {
             throw new Error("Invalid params");
         }
 
-        const data = {total_game: 1, time_played: this._play_time, nb_turn_played: this._nb_turn};
+        const data = {total_game: 1, time_played: this._playTime, nb_turn_played: this._nbTurn};
 
         if (how_win === 'draw'){
             data[`type_${type_player}_draw`] = 1;

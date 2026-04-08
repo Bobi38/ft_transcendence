@@ -17,14 +17,14 @@ class ManagerRoom {
 
     createRoom(type = "default") {
         const RoomClass = roomTypes[type] || roomTypes.default;
-        const new_room = new RoomClass(this.newRoomId());
+        const newRoom = new RoomClass(this.newRoomId());
 
-        this._rooms.set(new_room.getId(), new_room);
-        return new_room;
+        this._rooms.set(newRoom.getId(), newRoom);
+        return newRoom;
     }
 
-    dltRoomInlist(room_id) {
-        delete this.list[room_id];
+    dltRoomInlist(roomId) {
+        delete this.list[roomId];
     }
 
     refreshList() {
