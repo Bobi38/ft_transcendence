@@ -48,7 +48,7 @@ export default function AddFriends() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         fetch_all_request_friend();
-        SocketM.send("friend", {type: "req_frd", login: name});
+        SocketM.sendd("friend", {type: "req_frd", login: name});
     }
 
     async function fetch_all_request_friend(){
@@ -108,9 +108,9 @@ export default function AddFriends() {
             return;
         await fetch_all_request_friend()
         if (repjson.accept === true)
-            SocketM.send("friend", {type: "maj_frd", login: repjson.name});
+            SocketM.sendd("friend", {type: "maj_frd", login: repjson.name});
         else
-            SocketM.send("friend", {type: "req_frd", login: repjson.name});
+            SocketM.sendd("friend", {type: "req_frd", login: repjson.name});
     }
 
 

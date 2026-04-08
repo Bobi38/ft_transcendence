@@ -1,5 +1,5 @@
 import {decrypt, encrypt} from './crypt.js';
-import { maj_conv, Op} from './index.js';
+import { maj_conv, Op, get_user_from_token} from './index.js';
 import {User, PrivChat, PrivMess} from './index.js';
 
 class ChatPService {

@@ -36,6 +36,23 @@ export function maj_conv(id, conv, namelst){
     return tableau;
 };
 
+export function errorHandler(message, code, res) {
+  return res.status(code).json({ success: false, message: message });
+}
+
+export async function get_user_from_token(token) {
+  try {
+    const decoded = jwt.verify(token, secret);
+    const result = await User.findOne({ where: { id: decoded.id } });
+    if (!result) {
+      return { success: false, message: 'User not found' };
+    }
+    return { success: true, user: result };
+  } catch (err) {
+    return { success: false, message: "in get_user_from_token: " + err.message };
+  }
+}
+
 export {
     User,
     PrivMess,

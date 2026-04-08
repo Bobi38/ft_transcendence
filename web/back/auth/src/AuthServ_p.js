@@ -17,13 +17,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 9005;
 const isDev = process.env.NODE_ENV !== 'production';
+const SECSESSION = process.env.SEC_SESSION
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
-  secret:'coucou',
+  secret: SECSESSION,
   resave: false,
   saveUninitialized: true
 }))
