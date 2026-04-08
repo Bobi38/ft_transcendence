@@ -23,7 +23,6 @@ async function majDb(retry = 5) {
     while (retry > 0) {
         try {
             await sequelize.authenticate();
-            // console.log('Connection good.');
             await sequelize.sync({ alter: true });
             console.log('la table a ete mise a jour avec succes.');
             break;
@@ -34,9 +33,5 @@ async function majDb(retry = 5) {
         }
     }
 }
-
-
-
-
 
 export {majDb};

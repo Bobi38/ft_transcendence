@@ -1,41 +1,21 @@
 
 import express from 'express';
-import session from "express-session";
-import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-
 
 //router
 import { authMiddleware } from './routes/index.js';
 
 dotenv.config();
-const host = process.env.VITE_DEV_HOST;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 9000;
 const isDev = process.env.NODE_ENV !== 'production';
 
 const app = express();
 
-// app.use(express.json());
 app.use(cookieParser());
-
-app.use((err, req, res, next) => {
-  if (err.type === "entity.too.large") {
-    return res.status(413).json({
-      error: "Payload too large",
-    });
-  }
-});
-
 app.use(authMiddleware);
-
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 app.use('/api/auth', createProxyMiddleware({
   target: 'http://auth:9005',
@@ -87,7 +67,6 @@ app.use('/api/chatP', createProxyMiddleware({
   changeOrigin: true
 }))
 
-
 const pong3dProxy = createProxyMiddleware({
   target: 'http://pong3d:2567',
   changeOrigin: true,
@@ -106,7 +85,6 @@ app.use('/api/morpion', createProxyMiddleware({
 
 
 app.use((req, res) => { res.status(404).json({ error: "Api Not found" }); });
-
 
 (async () => {
   try {
