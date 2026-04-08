@@ -3,9 +3,9 @@ import
 {
   User,
   Co,
-}from '../index_p.js'
+}from '../web/back/auth/src/routes/index_p.js'
 
-import { bcrypt, jwt, express, validator, secret, tcheck_MPFA} from '../index_p.js';
+import { bcrypt, jwt, express, validator, secret, tcheck_MPFA} from '../web/back/auth/src/routes/index_p.js';
 
 const router = express.Router();
 

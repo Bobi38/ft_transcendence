@@ -1,6 +1,6 @@
 class ChatGDTO {
   static validateGetChatG(data) {
-    const token = data.token;
+    const token = data.cookies.token;
     if (!token) {
       return { valid: false, message: 'Missing token', code : 400 };
     }

@@ -33,8 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/aut', authroute);
-app.use('/Oauth', oauth2route);
+app.use('/auth', authroute);
+app.use('/oauth2', oauth2route);
 app.use('/secu', securoute);
 
 (async () => {

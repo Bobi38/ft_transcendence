@@ -6,7 +6,7 @@ class ChatPService {
 
     static async getChatP(token, Name) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: Name}});
             if (!user.success || !id2)
                 return ({success: false, message: "error user not found", code: 400})
@@ -27,7 +27,7 @@ class ChatPService {
 
     static async postChatP(data, token) {
         try {
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: data.id}});
             if (!user.success || !id2)
                 return ({success: false, message: "error user not found", code: 400})
@@ -52,7 +52,7 @@ class ChatPService {
 
     static async getAllChatP(token) {
         try {
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return ({success: false, message: user.message, code: user.code})
             const result = user.user;

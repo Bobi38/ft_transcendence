@@ -8,7 +8,7 @@ class ProfileService {
 
     static async getProfile(token) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message, code: user.code };
             const result = user.user;
@@ -26,7 +26,7 @@ class ProfileService {
 
     static async updateProfile(token, data) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message, code: user.code };
             const result = user.user;
@@ -44,7 +44,7 @@ class ProfileService {
 
     static async updatePassword(token, password) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message, code: user.code };
             const result = user.user;

@@ -1,6 +1,6 @@
-import {encrypt} from './crypt.js';
-import {express, maj_conv, secret, jwt} from './index.js';
-import {User, ChatG} from './index.js';
+import {encrypt} from '../web/back/chat/chatG/src/routes/crypt.js';
+import {express, maj_conv, secret, jwt} from '../web/back/chat/chatG/src/routes/index.js';
+import {User, ChatG} from '../web/back/chat/chatG/src/routes/index.js';
 
 const router = express.Router();
 

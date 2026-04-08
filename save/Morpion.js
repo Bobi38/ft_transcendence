@@ -8,7 +8,7 @@ import
   secret,
   express,
   Op
-}from './index.js';
+}from '../web/back/morpion/src/routes/index.js';
 
 
 const router = express.Router();

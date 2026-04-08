@@ -1,8 +1,10 @@
 import { validator } from '../index_p.js';
 
 class SecuDTO {
-  static validateRecoveryPassword(data) {
-    const { mail } = data.mail;
+  static validateRecoveryPassword(mail) {
+    if (!mail) {
+      return { valid: false, message: 'Missing fields', code : 400 };
+    }
     if (!validator.isEmail(mail)) {
       return { valid: false, message: 'Invalid email format', code : 400 };
     }
@@ -18,7 +20,7 @@ class SecuDTO {
   }
 
   static validateMaj_Password(data) {
-    const token = data.coockies.ChgPSWD;
+    const token = data.cookies.ChgPSWD;
     const new_psd = data.body.new_psd;
     if (!token || !new_psd) {
       return { valid: false, message: 'Missing fields', code : 400 };

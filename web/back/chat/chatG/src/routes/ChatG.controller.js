@@ -7,12 +7,14 @@ import ChatGService from './ChatG.service.js'
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+    console.log("API /api/ChatG GET controller");
     const valid = ChatGDTO.validateGetChatG(req)
     if (!valid.valid)
         return errorHandler(valid.message, valid.code, res);
     try {
         const token = req.cookies.token;
         const result = await ChatGService.getChatG(token);
+        console.log("API /api/ChatG GET controller result " + result.success + " " + result.message);
         if (!result.success)
             return errorHandler(result.message, result.code, res)
         return res.status(result.code).json({success: true, message: result.message})   
@@ -22,12 +24,13 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+    console.log("API /api/ChatG POST controller");
     const valid = ChatGDTO.validatePostChatG(req.body)
     if (!valid.valid)
         return errorHandler(valid.message, valid.code, res);
     try{
         const chat = req.body;
-        const result = await ChatGService.postChatG(chat)
+        const result = await ChatGService.postChatG(chat, req.cookies.token);
         if (!result.success)
             return errorHandler(result.message, result.code, res)
         return res.status(result.code).json({success: true});

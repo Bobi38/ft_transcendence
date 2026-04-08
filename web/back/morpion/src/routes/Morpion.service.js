@@ -18,7 +18,7 @@ class MorpionService {
                 return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
             } else {
             // console.log("API/morp get_stat(2.info.2)");
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return ({ success: false, message: user.message, code: 401 });
             const decoded = user.user;
@@ -45,14 +45,14 @@ class MorpionService {
                 return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
             } else {
             // console.log("API/morp get_stat(2.info.2)");
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return ({ success: false, message: user.message, code: 401 });
             const decoded = user.user;
             to_search = await User.findOne({where: {id: decoded.id}})
             console.log("API/morp get_history(2.info.2) to_search:",to_search)
             if (to_search === null)
-                return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404}););
+                return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
             }
             const offsetpage = limit * page 
             const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [

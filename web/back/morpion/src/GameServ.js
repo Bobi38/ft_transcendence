@@ -11,7 +11,7 @@ import { initWebSMopr } from './WsSMopr.js';
 
 
 //router
-import Morpionroute from './routes/Morpion.js'
+import Morpionroute from './routes/Morpion.controller.js'
 
 
 dotenv.config();

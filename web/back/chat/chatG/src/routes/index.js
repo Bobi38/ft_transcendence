@@ -2,6 +2,7 @@ export {default as express}  from 'express';
 export { default as bcrypt } from 'bcrypt';
 export { default as jwt } from 'jsonwebtoken';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
 
 import express from 'express';
 
@@ -22,7 +23,8 @@ export function maj_conv(id, conv, namelst){
 
     for (let i = conv.length - 1; i >= 0; i--) {
         let name;
-        let monMs;
+        let monMs
+        console.log("conv[i].SenderId ", conv[i].SenderId);
         if (conv[i].SenderId == id){
             name = "me";
             monMs = true;
@@ -52,7 +54,7 @@ export async function get_user_from_token(token) {
     }
     return { success: true, user: result };
   } catch (err) {
-    return { success: false, message: err.message };
+    return { success: false, message: "in get_user_from_token: " + err.message };
   }
 }
 

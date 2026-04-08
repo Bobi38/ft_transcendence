@@ -32,7 +32,7 @@ export default function AddFriends() {
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-                method: "GET",
+                method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 body: JSON.stringify({name: name})
@@ -58,7 +58,11 @@ export default function AddFriends() {
 
         console.log(`${url}`)
 
-        const repjson = await useFetch(`${url}`, fetch_type)
+        const repjson = await useFetch(`${url}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            }, null , null);
         if (!repjson || (repjson &&  !repjson.success))
             return;
         console.log("all_request_friend", repjson.message)

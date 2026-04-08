@@ -8,6 +8,7 @@ export { Op };
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 
 import User  from '../models/user.js';
@@ -46,7 +47,8 @@ export async function get_user_from_token(token) {
     }
     return { success: true, user: result };
   } catch (err) {
-    return { success: false, message: err.message };
+    console.error('Error in get_user_from_token:', err);
+    return { success: false, message: "in get user" +err };
   }
 }
 

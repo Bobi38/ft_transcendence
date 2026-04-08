@@ -6,7 +6,7 @@ class FriendService {
 
     static async getAllFriend(token) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message };
             const decoded = user.user;
@@ -36,14 +36,14 @@ class FriendService {
 
     static async addFriend(name, token) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message };
-            const result = user.user;
+            const decoded = user.user;
             const name_friend = await User.findOne({where: {name: name}});
             if (!name_friend)
                 return ({success: false, message: "new friend doesn't exist", code: 404});
-            const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: result.id}]}})
+            const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
             if (relation.length > 0)
                 return ({success: false, message: "relation already exist", code: 409});
             await Friend.create({Friend1: decoded.id, Friend2: name_friend.id, State: false, WhoAsk: decoded.id});
@@ -55,7 +55,7 @@ class FriendService {
 
     static async deleteFriend(name, token) {
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message };
             const result = user.user;
@@ -73,7 +73,7 @@ class FriendService {
 
     static async request(token){
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message };  
             const result = user.user;
@@ -106,7 +106,7 @@ class FriendService {
     static async response(login, response, token){
         try{
             let acceptt;
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message, code: user.code};  
             const result = user.user;
@@ -130,7 +130,7 @@ class FriendService {
 
     static async isFriend(name, token){
         try{
-            const user = get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return { success: false, message: user.message, code: user.code};  
             const result = user.user;

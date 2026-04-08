@@ -1,6 +1,6 @@
-import {bcrypt, express, jwt, crypto,  nodemailer, validator, secret } from '../index_p.js';
+import {bcrypt, express, jwt, crypto,  nodemailer, validator, secret } from '../web/back/auth/src/routes/index_p.js';
 
-import {User, PswEmail} from '../index_p.js';
+import {User, PswEmail} from '../web/back/auth/src/routes/index_p.js';
 
 const router = express.Router();
 

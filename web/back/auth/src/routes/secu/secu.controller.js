@@ -26,30 +26,35 @@ router.get('/checkco', async(req, res) =>{
 })
 
 router.post('/send_mail', async (req, res) => {
+    console.log("API /api/secu/send_mail");
     const valid = SecuDTO.validateCookie(req, 'token');
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code, res);
     }
     try{
-        const result = await SecuService.send_mail(null, req, 1);
+        console.log("API /api/secu/send_mail try");
+        const result = await SecuService.send_mail(null, req, 1, res);
         if (!result.success) {
            return errorHandler(result.message, result.code, res);
         }
+        console.log("API /api/secu/send_mail success");
         return res.status(201).json({success: true, message: "message sent"});
     }catch(err){
-        errorHandler("error" + err, 500, res);
+        errorHandler("error catch send_mail controller " + err, 500, res);
     }
 })
 
 
-router.post('/recovery/password', async (req, res) => {
-    const valid = SecuDTO.validateRecoveryPassword(req.body);
+router.post('/recovery_password', async (req, res) => {
+    console.log("API /api/secu/recovery_password" + req.body.mail);
+    const valid = SecuDTO.validateRecoveryPassword(req.body.mail);
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code, res);
     }
+    console.log("API /api/secu/recovery_password valid");
     try{
         const {mail} = req.body;
-        const result = await SecuService.send_mail(mail, req, 2);
+        const result = await SecuService.send_mail(mail, req, 2, res);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
@@ -66,7 +71,7 @@ router.post('/maila2f_check_code' , async (req, res) => {
     }
     const {code, host} = req.body;
     try{
-        const result = SecuService.check_code(code, 'token', 1, host);
+        const result = await SecuService.check_code(code, 'token', 1, host, req);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
@@ -77,22 +82,30 @@ router.post('/maila2f_check_code' , async (req, res) => {
 })
 
 router.post('/recoverypassword_check_code' , async (req, res) => {
+    console.log("API /api/secu/recoverypassword_check_code controller");
     const valid = SecuDTO.validateMail2FA_CheckCode(req.body);
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code, res);
     }
+    console.log("API /api/secu/recoverypassword_check_code controller valid");
     const {code, host} = req.body;
     try{
-        const result = await SecuService.check_code(code, 'ChgPSWD', 2, host);
+        console.log("code " + code + " host " + host);
+        const result = await SecuService.check_code(code, 'ChgPSWD', 2, host, req);
+        console.log("API /api/secu/recoverypassword_check_code controller result " + result.success + " " + result.message);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
+        return res.status(201).json({success: true, message: "good"});
     }catch(err){
         return errorHandler("back check_code" + err, 500, res); 
     }
 })
 
 router.put('/majPswd', async(req,res) => {
+    console.log("API /api/secu/majPswd controller");
+    console.log("body " + req.body.new_psd);
+    console.log("cookies " + req.cookies.ChgPSWD);
     const valid = SecuDTO.validateMaj_Password(req)
     if (!valid.valid){
         return errorHandler(valid.message, valid.code, res);
@@ -100,7 +113,7 @@ router.put('/majPswd', async(req,res) => {
     try{
         const new_psd = req.body.new_psd;
         const token = req.cookies.ChgPSWD;
-        const result = await SecuService.maj_password(new_psd, token);
+        const result = await SecuService.maj_password(new_psd, token, res);
         if (!result.success)
             return errorHandler(result.message, result.code, res)
         return res.status(201).json({success: true, message:"good"});

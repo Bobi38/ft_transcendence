@@ -31,30 +31,45 @@ app.use(session({
 
 app.use(authMiddleware);
 
+
 app.use('/api/auth', createProxyMiddleware({
   target: 'http://auth:9005',
   changeOrigin: true,
-  selfHandleResponse: false,
+  pathRewrite: (path, req) => {
+    return '/auth' + path;
+  },
 }));
 
 app.use('/api/oauth2', createProxyMiddleware({
   target: 'http://auth:9005',
-  changeOrigin: true
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/oauth2' + path;
+  },
 }))
 
 app.use('/api/secu', createProxyMiddleware({
   target: 'http://auth:9005',
-  changeOrigin: true
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/secu' + path;
+  },
 }))
 
 app.use('/api/profile', createProxyMiddleware({
   target: 'http://user_service:9003',
-  changeOrigin: true
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/profile' + path;
+  },
 }))
 
 app.use('/api/friend', createProxyMiddleware({
   target: 'http://user_service:9003',
-  changeOrigin: true
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/friend' + path;
+  },
 }))
 
 app.use('/api/chatG', createProxyMiddleware({
@@ -90,10 +105,6 @@ app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
 
 (async () => {
   try {
-    // console.log("Mise à jour de la DB...");
-    // await majDb();
-    // console.log("DB mise à jour avec succès");
-    // addDb();
     const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
       if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);

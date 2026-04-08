@@ -1,5 +1,5 @@
-import {jwt, secret, express, fs, tcheck_MPFA} from '../index_p.js';
-import {User, Co} from '../index_p.js';
+import {jwt, secret, express, fs, tcheck_MPFA} from '../web/back/auth/src/routes/index_p.js';
+import {User, Co} from '../web/back/auth/src/routes/index_p.js';
 
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 const router = express.Router();

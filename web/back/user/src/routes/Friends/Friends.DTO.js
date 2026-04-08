@@ -18,8 +18,7 @@ class FriendDTO {
         return { success: true, token };
     }
 
-    static validateResponse(body, toekn) {
-		const token = req.cookies.token;
+    static validateResponse(body, token) {
 		const response = body.response;
 		const login = body.login;
 		if (response === undefined)

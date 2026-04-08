@@ -51,7 +51,7 @@ class AuthService {
             console.log("Api /register av");
             const CrypPass = await bcrypt.hash(password, 10);
             const result = await User.create({name: name, password: CrypPass, mail: email, co: false, win: 0, total_part: 0});
-            console.log("Api /register ID", result.insertId);
+            console.log("Api /register ID", result.id);
             return {success: true, message: 'User registered', user_id: result.insertId};
         } catch (err) {
             return {success: false, message: 'MySQL error' + err, code: 500 };
@@ -60,7 +60,7 @@ class AuthService {
 
     static async logout(token) {
         try {
-            const result = get_user_from_token(token);
+            const result = await get_user_from_token(token);
             if (!result.success) {
                 return { success: false, message: result.message, code: 401 };
             }

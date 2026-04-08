@@ -8,6 +8,7 @@ export { default as validator } from 'validator';
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 import User  from '../models/user.js';
 import Co  from '../models/connect.js';
@@ -25,6 +26,8 @@ export function tcheck_MPFA(user, host){
     console.log(limit);
     if (user.MPFA == false)
       MPFA = false
+    else if (user.MPFA == true)
+      MPFA = true;
     else if (user.Hostlastco === null && user.Datelastco === null)
       MPFA = true;
     else if (user.Hostlastco != host)
@@ -51,7 +54,7 @@ export async function get_user_from_token(token) {
     }
     return { success: true, user: result };
   } catch (err) {
-    return { success: false, message: err.message };
+    return { success: false, message: "in get_user_from_token " + err.message };
   }
 }
 

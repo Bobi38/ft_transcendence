@@ -37,7 +37,7 @@ export default function PasswordForget({login_mode}) {
 
         if (email === "")
             return;
-        const url = `/api/secu/recovery/password`;
+        const url = `/api/secu/recovery_password`;
 
         console.log(`${url}`)
 
@@ -65,7 +65,7 @@ export default function PasswordForget({login_mode}) {
             code: formData.get("code"),
             host:  window.location.host
         }
-        const url = `/api/secu/recupPswd_check_code`;
+        const url = `/api/secu/recoverypassword_check_code`;
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
@@ -108,7 +108,7 @@ export default function PasswordForget({login_mode}) {
         console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
-            method: "POST",
+            method: "PUT",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({new_psd: password})

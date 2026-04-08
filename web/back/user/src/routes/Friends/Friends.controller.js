@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
+    console.log("in ADD FRIEND CONTROLLER"  );
     const valid = FriendDTO.validateName_Cookies(req.body.name, req);
     if (!valid.success)
         return res.status(400).json({success: false, message: valid.message});
@@ -28,6 +29,7 @@ router.post('/', async (req, res) => {
         const name = req.body.name;
         const token = req.cookies.token;
         const result = await FriendService.addFriend(name, token);
+        console.log("result add friend", result);
         if (!result.success)
             return errorHandler(result.message, result.code, res);
         return res.status(result.code).json({success: true, message: result.message});
