@@ -23,18 +23,23 @@ router.get('/', async(req, res) =>{
 });
 
 router.put('/', async(req, res) => {
-    const valid = ProfileDTO.validateData_Cookie(req.body.data, req);
+    const valid = ProfileDTO.validateData_Cookie(req.body, req);
     if (!valid.success)
         return errorHandler(valid.message, 400, res);
     try{
-        const data = req.body.data
+        console.log("API /updateProfil BEFORE router.put", req.body.login);
+        const data = {
+            login: req.body.login,
+            email: req.body.email,
+            tel: req.body.tel
+        };
         const token = req.cookies.token;
         const result = await ProfileService.updateProfile(data, token);
         if (!result.success)
             return errorHandler(result.message, result.code, res);
         return res.status(result.code).json({success: true, message: result.message, username: result.username, oldname: result.oldname});
     }catch(err){
-        res.status(500).json({success: false, message: "error updateProfil " , err});
+        res.status(500).json({success: false, message: "error updateProfil " + err});
     }
 });
     
@@ -45,7 +50,7 @@ router.patch('/password', async(req,res) => {
     try{
         const password = req.body.Pass;
         const token = req.cookies.token;
-        const result = await ProfileService.updatePassword(password, token);
+        const result = await ProfileService.updatePassword(token, password);
         if (!result.success)
             return errorHandler(result.message, result.code, res);
         return res.status(result.code).json({success: true, message: result.message});

@@ -54,10 +54,12 @@ router.delete('/session', async (req, res) => {
   try {
     console.log("Api /logout called");
     if (!req.cookies.token) {
+      return errorHandler("No token found", 400, res);
+    }
+    const result = await AuthService.logout(req.cookies.token);
+    if (!result.success) {
       return errorHandler(result.message, result.code || 500, res);
     }
-    console.log("Api /logout success");
-    res.clearCookie('token');
     return res.status(200).json({ success: true, message: "You have been logged out" });
   }
     catch (err) {

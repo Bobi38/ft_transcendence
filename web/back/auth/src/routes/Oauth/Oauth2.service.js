@@ -1,8 +1,7 @@
-import {jwt, secret, express, fs, tcheck_MPFA} from '../index_p.js';
+import {jwt, secret, tcheck_MPFA} from '../index_p.js';
 import {User, Co} from '../index_p.js';
 
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-const router = express.Router();
 
 const clientiD = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
@@ -21,7 +20,7 @@ class Oauth2Service {
         }
     }
 
-    static async githubCallback(code, frontendUrl) {
+    static async githubCallback(code, frontendUrl, res) {
         try{
             const params = new URLSearchParams();
             params.append("client_id", clientiD);
@@ -78,7 +77,7 @@ class Oauth2Service {
         }
     }
 
-    static async google(access_token, frontendUrl) {
+    static async google(access_token, frontendUrl, res) {
         try {
             console.log("1 google")
             const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -86,7 +85,7 @@ class Oauth2Service {
             });
 
             console.log("2 google")
-            const { sub, name, email, picture } = await response.json();
+            let { sub, name, email, picture } = await response.json();
             const result = await User.findAll({ where: { mail: email } });
             const nam = await User.findAll({where :{name: name}})
             if (nam.length != 0){
@@ -109,9 +108,9 @@ class Oauth2Service {
                 const re = await Co.create({token: token, userId: result[0].id});
             }
             res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-            return res.status(201).json({ success: true, MPFA: MPFA, message: "connected"});
+            return ({ success: true, MPFA: MPFA, message: "connected", code: 200 });
         } catch (err) {
-            return { success: false, message: 'Google authentication failed: ' + err, code: 500 };
+           return ({ success: false, message: 'Google authentication failed: ' + err , code: 500 });
         }
     }
 }

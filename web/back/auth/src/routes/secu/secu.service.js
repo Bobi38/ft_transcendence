@@ -6,6 +6,8 @@ const router = express.Router();
 
 const clientiD = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+const noreplyUser = process.env.NOREPLAY_USER;
+const noreplyPass = process.env.NOREPLAY_PASS;
 
 class SecuService {
 
@@ -39,15 +41,15 @@ class SecuService {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: "noreply.transc@gmail.com",
-                    pass: "ykxu xqcc hokp zkfg"
+                    user: noreplyUser,
+                    pass: noreplyPass
                 }
             });
             await transporter.sendMail({
-                from: "noreply.transc@gmail.com",
+                from: noreplyUser,
                 to: user.mail,
-                subject: "Votre connection code",
-                text: "tototototo",
+                subject: "Your connection code",
+                text: message + code,
             });
             console.log("API /api/secu/send_mail mail sent");
             const CrypPass = await bcrypt.hash(code, 10);

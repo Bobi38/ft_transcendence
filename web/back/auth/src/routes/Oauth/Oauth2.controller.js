@@ -28,7 +28,7 @@ router.post('/github/callback', async (req, res) => {
     }
     const code = req.query.code;
     const frontendUrl = req.session.frontendUrl;
-    const result = await Oauth2Service.githubCallback(code, frontendUrl);
+    const result = await Oauth2Service.githubCallback(code, frontendUrl, res);
     if (!result.success) {
         return errorHandler(result.message, result.code, res);
     }
@@ -43,9 +43,10 @@ router.post('/google', async (req, res) => {
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code || 400, res);
     }
+    console.log("validation google ok")
     const { access_token, frontendUrl } = req.body;
     try{
-        const result = await Oauth2Service.google(access_token, frontendUrl);
+        const result = await Oauth2Service.google(access_token, frontendUrl, res);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }

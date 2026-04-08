@@ -40,6 +40,7 @@ export function errorHandler(message, code, res) {
 
 export async function get_user_from_token(token) {
   try {
+    console.log("Token received in get_user_from_token:", token);
     const decoded = jwt.verify(token, secret);
     const result = await User.findOne({ where: { id: decoded.id } });
     if (!result) {
