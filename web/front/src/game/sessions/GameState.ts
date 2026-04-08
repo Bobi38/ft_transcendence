@@ -1,5 +1,5 @@
 import { Quaternion, Vector3 } from "@babylonjs/core";
-import { RoomStatus } from "./App"
+import { RoomStatus } from "../App"
 
 export interface PlayerState {
     isPlayer: boolean;
@@ -8,6 +8,7 @@ export interface PlayerState {
     rackRot: Quaternion;
     sideNear: boolean;
     connected: boolean;
+    rackSwing?: Vector3;
 }
 
 export class GameState {

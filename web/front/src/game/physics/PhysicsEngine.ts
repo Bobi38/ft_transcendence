@@ -1,19 +1,21 @@
 import { Vector3 } from "@babylonjs/core";
 import { Ball } from "./Ball";
-import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
-import { SynchronizedClock } from "./SynchronizedClock";
-import { NetworkManager } from "./NetworkManager";
-import { Player } from "./Player";
+import { BallSnapshot, SnapshotBuffer } from "../utils/Snapshots";
+import { SynchronizedClock } from "../utils/SynchronizedClock";
+import { NetworkSessionManager } from "../sessions/NetworkSessionManager";
+import { Player } from "../characters/Player";
 import { Environment } from "./Environment";
-import { Enemy } from "./Enemy";
-import { PlayerCamera } from "./PlayerCamera";
-import { RacketHistory } from "./RacketHistory";
+import { Enemy } from "../characters/Enemy";
+import { PlayerCamera } from "../characters/PlayerCamera";
+import { RacketHistory } from "../utils/RacketHistory";
+import { GameSession } from "../sessions/GameSession";
+import { Character } from "../characters/Character";
 
 const TIMESTEP = 1/60;
 
 export class PhysicsEngine {
     private _clock: SynchronizedClock;
-    private _network: NetworkManager;
+    private _session: GameSession;
     private _ball: Ball;
     private _player: Player;
     private _enemy: Enemy;
@@ -23,11 +25,13 @@ export class PhysicsEngine {
     private _impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
     private _racketHistory : RacketHistory = new RacketHistory();
     private _isResimming : boolean = false;
+    private _isOffline : boolean;
 
 
-    constructor(clock: SynchronizedClock, network: NetworkManager) {
+    constructor(clock: SynchronizedClock, session: GameSession, isOffline: boolean) {
         this._clock = clock;
-        this._network = network;
+        this._session = session;
+        this._isOffline = isOffline;
     }
 
     
@@ -43,6 +47,7 @@ export class PhysicsEngine {
                 this._ball.snapshots.saveSnapshot({tick: this._clock.tick, position: this._ball.getPhysicsBodyPosition(), velocity: this._ball.getVelocity()});
                 this._clock.tick++;
                 this._clock.setbackAccumulator();
+                this._checkIfPointWon();
             }
             this._ball.smoothPosition();
     }
@@ -80,9 +85,16 @@ export class PhysicsEngine {
     }
 
     private _checkRacketCollision(impactSnapshot? : BallSnapshot) {
+    this._collideWithRacket(this._player, false, impactSnapshot);
+
+    if (this._isOffline && this._enemy) {
+        this._collideWithRacket(this._enemy, true);
+    }
+}
+
+    private _collideWithRacket(racketHolder: Character, isBot: boolean, impactSnapshot?: BallSnapshot) {
         const ballPos = this._ball.getPhysicsBodyPosition();
-    
-        const racketWorldMatrix = this._player.getRacketWorldMatrix();
+        const racketWorldMatrix = racketHolder.getRacketWorldMatrix();
         const invRacketMatrix = racketWorldMatrix.clone().invert();
         const localBallPos = Vector3.TransformCoordinates(ballPos, invRacketMatrix);
         localBallPos.subtractInPlace(this._player.racketOffset);
@@ -102,22 +114,19 @@ export class PhysicsEngine {
             if (this._isResimming) {
                 newVel = impactSnapshot.velocity;
             } else {
-                newVel = this._player.getRacketHit();
+                newVel = racketHolder.getRacketHit();
             }
             this._ball.setVelocity(newVel);
-            if (!this._isResimming) {
+            if (!this._isResimming && !isBot && !this._isOffline) {
                 const snapshot = {position: ballPos, velocity: newVel, tick: this._clock.tick};
-                this._network.sendRacketImpact(snapshot);
+                this._session.sendRacketImpact(snapshot);
                 this._impactSnapshots.saveSnapshot(snapshot);
-                //this._room.send("racketImpact", {position: ballPos.asArray(), velocity: newVel.asArray(), tick: this._clock.tick});
-                console.log("woah i hit the ball at tick:", this._clock.tick);
-                console.log("new vel:", newVel);
                 this._ball.ignoreServerAfter = this._clock.tick;
             }
         }
     }
 
-    private _checkWallCollision(){
+    private _checkWallCollision() {
         const ballPos = this._ball.getPhysicsBodyPosition();
         const radius = this._ball.radius;
         const min = this._environment.wallMin;
@@ -169,10 +178,19 @@ export class PhysicsEngine {
         this._isResimming = false;
     }
 
+    private _checkIfPointWon() {
+        let ballPos = this._ball.getPhysicsBodyPosition();
+        if (ballPos.z < -33) {
+            this._session.emitGoalScored(false);
+        }
+        else if (ballPos.z > 50) {
+            this._session.emitGoalScored(true);
+        }
+    }
+
     public updatePhysicsOnGoalScored(goalData: any) {
         const tick = goalData.tick;
         const newPos = new Vector3(goalData.position[0], goalData.position[1], goalData.position[2]);
-        console.log("server sent pos:", newPos);
         this._ball.setPhysicsBodyPosition(newPos);
         this._ball.setMeshPosition(Vector3.Zero());
         this._ball.setVelocity(Vector3.Zero());

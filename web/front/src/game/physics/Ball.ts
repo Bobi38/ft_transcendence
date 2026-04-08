@@ -1,6 +1,6 @@
 import { Color3, Engine, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
-import { BallSnapshot, SnapshotBuffer } from "./Snapshots";
-import { SynchronizedClock } from "./SynchronizedClock";
+import { BallSnapshot, SnapshotBuffer } from "../utils/Snapshots";
+import { SynchronizedClock } from "../utils/SynchronizedClock";
 import { PhysicsEngine } from "./PhysicsEngine";
 
 export class Ball {

@@ -46,12 +46,13 @@ export default function checkBestMove(board) {
 
     let len = ids.length;
 
+    if (len === 0) return null;
+    
     if (len >= 8){
         const filtered = ids.filter(v => [0, 2, 6, 8].includes(v))
         return filtered[Math.floor(Math.random() * filtered.length)];
     }
 
-    if (len === 0) return null;
     
     let actif = defineCurrent(board);
     let inactif = actif === "X" ? "O" : "X";
