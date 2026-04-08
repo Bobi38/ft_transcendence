@@ -3,7 +3,7 @@ import { Ball } from "./ball.js";
 import { Environment } from "./environment.js";
 import { MyRoomState, RoomStatus } from "./rooms/schema/MyRoomState.js";
 import { SnapshotBuffer, BallSnapshot } from "./snapshots.js";
-import { MyRoom } from "./rooms/MyRoom.js";
+import { MyRoom, PlayerStats } from "./rooms/MyRoom.js";
 
 const TIMESTEP : number = 1/60;
 
@@ -20,11 +20,13 @@ export class Simulation {
     private _pendingImpact : BallSnapshot = null;
     private _served : boolean = true;
     private _timeEnd: number;
+    private _matchStats = new Map<string, PlayerStats>();
 
 
-    constructor(room: MyRoom, state: MyRoomState) {
+    constructor(room: MyRoom, state: MyRoomState, matchStats: Map<string, PlayerStats>) {
         this._room = room;
         this._state = state;
+        this._matchStats = matchStats;
         const engine = new NullEngine();
         const scene = new Scene(engine);
         const camera = new ArcRotateCamera("Camera", 0, 0.8, 100, Vector3.Zero(), scene); //necessary for scene.render()
@@ -104,51 +106,119 @@ export class Simulation {
     this._pendingImpact = null;
   }
 
+  // private _checkIfPointWon() {
+  //   let ballPos = this._ball.getPhysicsBodyPosition();
+  //     if (ballPos.z < -33) {
+  //       console.log("Team Far won a point");
+  //       this._state.score.teamFar++;
+  //       this._matchStats.get()
+  //       this._room.getTokens().get(this._room.getFar()).score++;
+  //       if (this._state.score.teamFar >= 3) {
+  //         this._state.roomStatus = RoomStatus.WON;
+  //         this._room.getTokens().get(this._room.getFar()).hasWon = true;
+  //         this._timeEnd = Date.now();
+  //       }
+  //     }
+  //     else if (ballPos.z > 50) {
+  //       console.log("Team Near won a point");
+  //       this._state.score.teamNear++;
+  //       this._room.getTokens().get(this._room.getNear()).score++;
+  //       if (this._state.score.teamNear >= 3) {
+  //         this._state.roomStatus = RoomStatus.WON;
+  //         this._room.getTokens().get(this._room.getNear()).hasWon = true;
+  //         this._timeEnd = Date.now();
+  //       }
+  //     }
+  //     if (ballPos.z < -33 || ballPos.z > 50) {
+  //       this._ball.setVelocity(Vector3.Zero());
+  //       //this._ball.setAngularVelocity(Vector3.Zero());
+  //       this._state.ball.velocity.x = 0;
+  //       this._state.ball.velocity.y = 0;
+  //       this._state.ball.velocity.z = 0;
+  //       this._state.ball.position.x = 0;
+  //       this._state.ball.position.y = 3;
+  //       if (!this._served) {
+  //         ballPos = new Vector3(0,3,-12);
+  //         this._ball.setPhysicsBodyPosition(ballPos);
+  //         this._state.ball.position.z = -12;
+  //         this._served = true;
+  //       } else {
+  //         ballPos = new Vector3(0,3,34.5);
+  //         this._ball.setPhysicsBodyPosition(ballPos);
+  //         this._state.ball.position.z = 34.5;
+  //         this._served = false;
+  //       }
+        
+  //       this._room.broadcast('Goal!', {tick: this._tick, position: ballPos.asArray()},{ afterNextPatch: true });
+  //     }
+  // }
+
   private _checkIfPointWon() {
     let ballPos = this._ball.getPhysicsBodyPosition();
-      if (ballPos.z < -33) {
-        console.log("Team Far won a point");
-        this._state.score.teamFar++;
-        this._room.getTokens().get(this._room.getFar()).score++;
-        if (this._state.score.teamFar >= 3) {
-          this._state.roomStatus = RoomStatus.WON;
-          this._room.getTokens().get(this._room.getFar()).hasWon = true;
-          this._timeEnd = Date.now();
+    let pointScored = false;
+    let winningSide: "near" | "far" | null = null;
+
+    if (ballPos.z < -33) {
+        winningSide = "far";
+    } else if (ballPos.z > 50) {
+        winningSide = "near";
+    }
+
+    if (winningSide) {
+        pointScored = true;
+        const winnerStats = Array.from(this._matchStats.values()).find(s => s.side === winningSide);
+
+        if (winnerStats) {
+            winnerStats.score++;
+            console.log(`Team ${winningSide} (${winnerStats.id}) won a point. Score: ${winnerStats.score}`);
+
+            if (winningSide === "far") {
+                this._state.score.teamFar++;
+                if (this._state.score.teamFar >= 3) {
+                    winnerStats.hasWon = true;
+                    this._state.roomStatus = RoomStatus.WON;
+                    this._timeEnd = Date.now();
+                }
+            } else {
+                this._state.score.teamNear++;
+                if (this._state.score.teamNear >= 3) {
+                    winnerStats.hasWon = true;
+                    this._state.roomStatus = RoomStatus.WON;
+                    this._timeEnd = Date.now();
+                }
+            }
         }
-      }
-      else if (ballPos.z > 50) {
-        console.log("Team Near won a point");
-        this._state.score.teamNear++;
-        this._room.getTokens().get(this._room.getNear()).score++;
-        if (this._state.score.teamNear >= 3) {
-          this._state.roomStatus = RoomStatus.WON;
-          this._room.getTokens().get(this._room.getNear()).hasWon = true;
-          this._timeEnd = Date.now();
-        }
-      }
-      if (ballPos.z < -33 || ballPos.z > 50) {
-        this._ball.setVelocity(Vector3.Zero());
-        //this._ball.setAngularVelocity(Vector3.Zero());
-        this._state.ball.velocity.x = 0;
-        this._state.ball.velocity.y = 0;
-        this._state.ball.velocity.z = 0;
-        this._state.ball.position.x = 0;
-        this._state.ball.position.y = 3;
-        if (!this._served) {
-          ballPos = new Vector3(0,3,-12);
-          this._ball.setPhysicsBodyPosition(ballPos);
-          this._state.ball.position.z = -12;
-          this._served = true;
-        } else {
-          ballPos = new Vector3(0,3,34.5);
-          this._ball.setPhysicsBodyPosition(ballPos);
-          this._state.ball.position.z = 34.5;
-          this._served = false;
-        }
-        
-        this._room.broadcast('Goal!', {tick: this._tick, position: ballPos.asArray()},{ afterNextPatch: true });
-      }
-  }
+    }
+
+    if (pointScored) {
+        this._resetBallAfterGoal(ballPos);
+    }
+}
+
+private _resetBallAfterGoal(ballPos: Vector3) {
+    this._ball.setVelocity(Vector3.Zero());
+    this._state.ball.velocity.x = 0;
+    this._state.ball.velocity.y = 0;
+    this._state.ball.velocity.z = 0;
+    this._state.ball.position.x = 0;
+    this._state.ball.position.y = 3;
+
+
+    if (!this._served) {
+        ballPos = new Vector3(0, 3, -12);
+        this._state.ball.position.z = -12;
+        this._served = true;
+    } else {
+        ballPos = new Vector3(0, 3, 34.5);
+        this._state.ball.position.z = 34.5;
+        this._served = false;
+    }
+    this._ball.setPhysicsBodyPosition(ballPos);
+    
+    this._room.broadcast('Goal!', { tick: this._tick, position: ballPos.asArray() }, { afterNextPatch: true });
+}
+
+
 
   public dispose() {
     this._ball.dispose();

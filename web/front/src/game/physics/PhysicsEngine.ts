@@ -2,7 +2,6 @@ import { Vector3 } from "@babylonjs/core";
 import { Ball } from "./Ball";
 import { BallSnapshot, SnapshotBuffer } from "../utils/Snapshots";
 import { SynchronizedClock } from "../utils/SynchronizedClock";
-import { NetworkSessionManager } from "../sessions/NetworkSessionManager";
 import { Player } from "../characters/Player";
 import { Environment } from "./Environment";
 import { Enemy } from "../characters/Enemy";
@@ -60,7 +59,6 @@ export class PhysicsEngine {
         const postRollbackPos = this._ball.getPhysicsBodyPosition();
         const teleportDelta = preRollbackPos.subtract(postRollbackPos);
         this._ball.visualOffset.addInPlace(teleportDelta);
-        console.log("Other player hit the ball");
         this._pendingImpact = null;
     }
 
@@ -194,10 +192,8 @@ export class PhysicsEngine {
         this._ball.setPhysicsBodyPosition(newPos);
         this._ball.setMeshPosition(Vector3.Zero());
         this._ball.setVelocity(Vector3.Zero());
-        //this._ball.setAngularVelocity(Vector3.Zero());
         this._ball.ignoreServerUntil = tick;
         this._ball.snapshots.dispose();
-        console.log("A point has been won at tick:", this._clock.tick, "and server tick:", tick);
     }
 
     public updateBallOnOpponentHit(hitData: any) {
@@ -210,7 +206,25 @@ export class PhysicsEngine {
         this._ball.recentImpact = false;
         this._ball.ignoreServerAfter = null;
         this._ball.ignoreServerUntil = tick;
-        console.log("server acknowledges impact at tick:", tick);
+    }
+
+    public dispose() {
+        this._impactSnapshots?.dispose();
+        this._impactSnapshots = null;
+
+        this._racketHistory?.dispose();
+        this._racketHistory = null;
+
+        this._enemy?.dispose();
+        this._enemy = null;
+
+        this._clock = null;
+        this._ball = null;
+        this._session = null;
+        this._player = null;
+        this._camera = null;
+        this._environment = null;
+
     }
 
     public setBall(ball: Ball) {

@@ -1,8 +1,6 @@
 export class SynchronizedClock {
     public tick : number = 0;
     public tickOffset : number = 0;
-    private _offsets : number[] = [];
-    private _MAX_OFFSETS : number = 20;
 
     private _accumulator : number = 0;
     private _accumulatorSlew : number = 0;

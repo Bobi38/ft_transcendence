@@ -54,4 +54,10 @@ export class Enemy extends TransformNode implements Character {
         this._racketNode.computeWorldMatrix(true);
         return this._racketNode.getWorldMatrix().clone();
     }
+
+    public dispose() {
+        this._mesh = null;
+        this._racketNode = null;
+        this._gameState = null;
+    }
 }

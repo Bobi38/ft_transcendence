@@ -21,4 +21,8 @@ export class GameState {
     public players: Map<string, PlayerState> = new Map();
 
     constructor () {}
+
+    public dispose() {
+        this.players = null;
+    }
 }

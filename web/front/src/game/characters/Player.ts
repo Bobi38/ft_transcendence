@@ -86,6 +86,20 @@ export class Player extends TransformNode implements Character{
         return {tick: 0, position: this.racket.position, rotation: this.racket.rotationQuaternion}
     }
 
+    public dispose() {
+        this.camera?.dispose();
+        this.camera = null;
+
+        this._input?.dispose();
+        this._input = null;
+
+        this.mesh = null;
+        this.racket = null;
+        this.hand_node = null;
+        this._session = null;
+        this._scene = null;
+    }
+
     public getPlayerPosition() : Vector3 {
         return this.mesh.position.clone();
     }

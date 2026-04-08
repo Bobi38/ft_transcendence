@@ -3,7 +3,7 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
 import { Engine, Scene, Vector3, Color4, ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
-import { Environment, loadCharacterAssets, loadLights } from "./physics/Environment";
+import { Environment } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";
 import { Ball } from "./physics/Ball";
@@ -46,16 +46,21 @@ export class App {
     private _session : GameSession;
     private _environment: Environment;
     private _physicsEngine : PhysicsEngine;
+    public onReturnToMenu?: () => void;
+    public onReload?: () => void;
 
 
-    constructor(canvas: HTMLCanvasElement, isOffline: boolean) {
+    constructor(canvas: HTMLCanvasElement, isOffline: boolean, onReturnToMenu?: () => void) {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
+        this.onReturnToMenu = onReturnToMenu;
 
+        console.error("Building app");
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
-            this._session = new NetworkSessionManager(this._gameState, this._clock);
+            console.log("there", this.onReturnToMenu);
+            this._session = new NetworkSessionManager(this._gameState, this._clock, this.onReturnToMenu);
         }
         this._physicsEngine = new PhysicsEngine(this._clock, this._session, isOffline);
 
@@ -97,7 +102,6 @@ export class App {
     }
 
     private _resizeWindow() {
-        console.log(this._engine);
         this._engine.resize();
     }
 
@@ -115,7 +119,7 @@ export class App {
     }
 
     private _setupUI() {
-        this._ui = new GUI(this._session);
+        this._ui = new GUI(this._session, this.onReturnToMenu, this.onReload);
 
         this._isNear = this._gameState.players.get(this._player.sessionId).sideNear;
         this._gameStatusStateMachine(this._gameState.gameStatus);
@@ -180,7 +184,7 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        this._shadows = loadLights(scene);
+        this._shadows = this._environment.loadLights(scene);
         let ballPos = this._gameState.ballPos;
         let ballVel = this._gameState.ballVel;
         this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this._clock, this._engine, this._physicsEngine);
@@ -197,7 +201,7 @@ export class App {
     }
 
     private async _setupCharacters(isPlayer: boolean, sessionId: string, position: Vector3, isNearSide: boolean) {
-        const assets = await loadCharacterAssets(this._scene, position, isPlayer, isNearSide);
+        const assets = await this._environment.loadCharacterAssets(this._scene, position, isPlayer, isNearSide);
         if (isPlayer) {
             const camera = new PlayerCamera(isNearSide, this._scene);
             this._player = new Player(camera.getUniversalCamera(), sessionId, assets, this._scene, this._shadows, this._session);
@@ -211,13 +215,59 @@ export class App {
         }
     }
 
-    public dispose() {
-        this._session.dispose();
-        this._ui.dispose();
-        this._scene.dispose();
+
+    public async dispose() {
+        this._engine?.stopRenderLoop();
+
+        this._session?.dispose();
+        this._session = null;
+
+        this._ui?.dispose();
+        this._ui = null;
+
+        this._scene?.dispose();
+        this._scene = null;
+
+        this._canvas = null;
+
+        this._player?.dispose();
+        this._player = null;
+
+        this._ball?.dispose();
+        this._ball = null;
+
+        this._shadows = null;
+
+        this._clock = null;
+
+        this._gameState?.dispose();
+        this._gameState = null;
+    
+        this._environment?.dispose();
+        this._environment = null;
+
+        this._physicsEngine?.dispose();
+        this._physicsEngine = null;
+
         window.removeEventListener('resize', this._resizeWindow);
-        this._engine.dispose();
+        if (this._engine)
+            this._engine.dispose();
         window.removeEventListener("keydown", this._showInspector);
+
+        if (this._engine) {
+            const gl = this._engine._gl;
+            if (gl) {
+                const ext = gl.getExtension('WEBGL_lose_context');
+                if (ext) {
+                    console.log("Forcing WebGL context loss...");
+                    ext.loseContext();
+                }
+            }
+            this._engine.dispose();
+            this._engine = null;
+    }
+
+        console.log("Pong3D disposal complete");
     }
 
     public getTick() : number {
