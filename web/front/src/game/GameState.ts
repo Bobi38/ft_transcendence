@@ -8,6 +8,7 @@ export interface PlayerState {
     rackRot: Quaternion;
     sideNear: boolean;
     connected: boolean;
+    rackSwing?: Vector3;
 }
 
 export class GameState {

@@ -1,8 +1,9 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
-import { NetworkManager } from "./NetworkManager";
+import { NetworkSessionManager } from "./NetworkSessionManager";
+import { GameSession } from "./GameSession";
 
 export class GUI {
-    private _network : NetworkManager;
+    private _session : GameSession;
     private _ui: AdvancedDynamicTexture | null = null;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
@@ -10,8 +11,8 @@ export class GUI {
     private _disposing : boolean = false;
     private _interval: number | null = null;
 
-    constructor (network: NetworkManager) {
-        this._network = network;
+    constructor (session: GameSession) {
+        this._session = session;
     }
 
     private _setAndDispose(newUi : AdvancedDynamicTexture | null) {
@@ -60,7 +61,7 @@ export class GUI {
         newGameBtn.background = "#4CAF50";
 
         newGameBtn.onPointerClickObservable.add(() => {
-            this._network.leave();
+            this._session.leave();
             localStorage.removeItem("reconnectionGameToken");
             window.location.reload();
             console.log("New Game clicked");
