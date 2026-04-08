@@ -6,21 +6,21 @@ export class Bot {
     static count = 0;
 
     constructor(id) {
-        this._nick_name = `Bot_${id}`;
-        this._turn_timer = null;
-        this._nb_turn = 0;
-        this._play_time = 0;
+        this._nickName = `Bot_${id}`;
+        this._turnTimer = null;
+        this._nbTurn = 0;
+        this._playTime = 0;
         this._game = null;
-        this._obs_game = null;
+        this._obsGame = null;
         this._sockets = null;
         this._id = id * 1024 * 1024;
-        this._prev_data = {};
+        this._prevData = {};
         this._chrono = null;
-        this.first_alert = 0;
-        this._time_refresh_name = 0;
-        this._time_last_active = 0;
+        this.firstAlert = 0;
+        this._timeRefreshName = 0;
+        this._timeLastActive = 0;
         this.list = null;
-        this._play_human = 0;
+        this._playHuman = 0;
     }
 
     static create(){
@@ -28,7 +28,7 @@ export class Bot {
         const bot = new Bot(id);
         const time = Date.now()
         
-        bot._time_last_active = time;
+        bot._timeLastActive = time;
 
         return bot;
     }
@@ -36,17 +36,17 @@ export class Bot {
     getRandomEmptyIndex() {
         const board = this._game.getboard();
 
-        const empty_indexes = [];
+        const emptyIndexes = [];
 
         for (let i = 0; i < board.length; i++) {
             if (board[i] === " ") {
-                empty_indexes.push(i);
+                emptyIndexes.push(i);
             }
         }
 
-        if (empty_indexes.length > 0) {
-            const randomIndex = Math.floor(Math.random() * empty_indexes.length);
-            return empty_indexes[randomIndex];
+        if (emptyIndexes.length > 0) {
+            const randomIndex = Math.floor(Math.random() * emptyIndexes.length);
+            return emptyIndexes[randomIndex];
         }
 
         return null;
@@ -59,18 +59,18 @@ export class Bot {
 
         if (data.message != m.msgs.my_turn && data.message != m.msgs.badMove) return ;
         
-        if (this._play_human === 0) {
-            this._play_human++;
+        if (this._playHuman === 0) {
+            this._playHuman++;
             if(this._game.getOther(this) instanceof Player)
-                this._play_human++;
+                this._playHuman++;
         }
 
-        if (this._play_human === 2)
+        if (this._playHuman === 2)
             return m.move(this, checkBestMove(this._game.getboard()));
 
-        this._nb_turn++;
+        this._nbTurn++;
         
-        const nb = this._nb_turn > 15
+        const nb = this._nbTurn > 15
             ? checkBestMove(this._game.getboard())
             : Math.floor(Math.random() * this._game.getboard().length);
         
@@ -79,13 +79,12 @@ export class Bot {
     }
     
     sendList() {
-        return ;
+    }
+
+    IAmActif(){
     }
 
     isInactived(){
-        if (this._time_last_active + 120000 < Date.now())
-            return false;
-        
         return true;
     }
 
@@ -94,8 +93,8 @@ export class Bot {
     }
     
     disconnect(message , game = null) {
-        if (game === this._obs_game) {
-            this._obs_game
+        if (game === this._obsGame) {
+            this._obsGame
         }
         
         if (game && game !== this._game) return;
@@ -105,15 +104,15 @@ export class Bot {
 
         this.clearTurnTimer();
         this._chrono = null;
-        this._nb_turn = 0;
-        this._play_time = 0;
+        this._nbTurn = 0;
+        this._playTime = 0;
         this._game = null;
-        this.first_alert = 0;
+        this.firstAlert = 0;
     }
 
 
     toString(){
-        return `${this._nick_name} play ${this._game?.getId()}`;
+        return `${this._nickName} play ${this._game?.getId()}`;
     }
 
     setGame(game){
@@ -141,9 +140,9 @@ export class Bot {
     }
 
     clearTurnTimer() {
-        if (this._turn_timer) {
-            clearTimeout(this._turn_timer);
-            this._turn_timer = null;
+        if (this._turnTimer) {
+            clearTimeout(this._turnTimer);
+            this._turnTimer = null;
         }
     }
 
@@ -162,29 +161,29 @@ export class Bot {
 
     setPlayTime(millisec){
         if (millisec > 0){
-            this._play_time += millisec;
-            this._nb_turn++;
+            this._playTime += millisec;
+            this._nbTurn++;
         }
     }
 
     getPlayTime(){
-        return this._play_time;
+        return this._playTime;
     }
 
     getData(){
         return ({
             id: this._id,
-            time: this._play_time,
-            nb_turn: this._nb_turn
+            time: this._playTime,
+            nb_turn: this._nbTurn
          });
     }
 
     refreshName(time){
-        this._time_refresh_name = time;    
+        this._timeRefreshName = time;    
     }
 
     getName(){
-        return this._nick_name;
+        return this._nickName;
     }
 
     async majdb() {

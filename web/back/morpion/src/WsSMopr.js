@@ -22,8 +22,6 @@ async function setupPlayer(socket, user, players) {
 
 export function initWebSMopr(server) {
   return createWSServer(server, '/ws/morp', async (socket, req, user) => {
-    
-    console.log('User connecté:', user.id);
 
     let player = await setupPlayer(socket, user, players)
     
@@ -48,7 +46,6 @@ export function initWebSMopr(server) {
       m.searchGame(bot, socket.players);
 
       setTimeout(() => {
-        console.log("clear ", bot);
         players.delete(bot.getId());
         socket.sendList();
       }, 20 * 60 * 1000);
@@ -57,19 +54,17 @@ export function initWebSMopr(server) {
 
     socket.on('message', (message) => {
       try{
-        console.log(`"socket on dans morpion" ${message}`);
 
+        const player = socket.player;
+
+        player.IAmActif();
         const data = JSON.parse(message);
 
-
-        console.log(`${data.type}`);
         switch (data.type) {
 
           case "updateName":
-            console.log("in update name");
             m.updateName(socket.player, data.new_name);
             socket.sendList();
-            console.log(`update name ${data.new_name}`);
             break;
 
           case "move":
@@ -93,7 +88,6 @@ export function initWebSMopr(server) {
             break;
 
           case "second":
-            console.log();
             m.playSecond(socket.player);
             break ;
 
@@ -108,7 +102,6 @@ export function initWebSMopr(server) {
             break ;
 
           default:
-            console.log(`defaut de wsmorp`);
             socket.sendList();
             socket.player.sendGame();
           }
@@ -132,13 +125,12 @@ export function initWebSMopr(server) {
 
       try{
         const player = socket.player;
-        console.log("morp deco :", player.getName());;
         socket.isAlive = false;
 
-        if (!player.isInactived()) return;
-        
-        m.leave(player)
-        players.delete(player);
+        setTimeout(() => {
+          if (!player.isInactived()) return;
+          m.leave(player)
+          players.delete(player);}, 20 * 1010);
         }
         catch(err){
           console.log("error close in wsMopr ", err);

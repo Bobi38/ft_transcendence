@@ -134,7 +134,7 @@ class MorpionRoom extends Room {
 
         for (const obs of this._obs){
             obs.send({
-                players: this._players_names,
+                players: this._playersNames,
                 other_board: this._board})
         }
         
@@ -199,7 +199,7 @@ class MorpionRoom extends Room {
             })
         };
 
-        p.startTurnTimer(action, 5000);
+        p.startTurnTimer(action, this.limitTime / 3 * 2);
     }
 
     serializeBoard() {

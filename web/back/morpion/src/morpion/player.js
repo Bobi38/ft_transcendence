@@ -118,10 +118,15 @@ export class Player {
         this.sendGame();
     }
 
-    isInactived(){
-        if (this._timeLastActive + 30000 < Date.now())
-            return false;
+    IAmActif(){
+        this._timeLastActive = Date.now();
+    }
 
+    isInactived(){
+        console.log(`check inactif`);
+        if (this._timeLastActive + 13000 < Date.now())
+            return false;
+        console.log(`   --> is actif`);
         return true;
     }
 
@@ -301,7 +306,7 @@ export class Player {
         const delay = Math.max(0, Date.now() + this.firstAlert - this._chrono);
 
         this.startTurnTimer(
-            () => this.send({ message: "dépêche toi" }),
+            () => this.send({ message: "Hurry up and Play  !" }),
             delay
         );
     }

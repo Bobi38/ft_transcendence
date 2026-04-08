@@ -54,7 +54,6 @@ class ManagerRoom {
         }
 
         Object.assign(this.list, newList);
-        console.log(this.list);
     }
 
     getRoom(id) {
@@ -62,7 +61,6 @@ class ManagerRoom {
     }
 
     removeRoom(room, message) {
-        // console.log(`cherche ${id}  - quel  room ? ${room}`)
         if (!room) return ;
 
         room.remove(message);
@@ -73,44 +71,37 @@ class ManagerRoom {
     }
 
     abortedRoom(player){
-        const game = player.getGame();
+        const game = player?.getGame();
 
         if (!game || !game.setEnd()) return ;
-        // if (!game || !game.setLock(false)) return ;
 
-        console.log(`time out     by  time out`);
         this.refreshRoomList();
+
         const loser = player;
         let winner = game.getTurn();
         if (winner === loser){
             winner = game.getOther();
         }
-
-        game.handleEndGame('abort', game.getTurn());
-        winner.send({ message: m.msgs.w_abort, turn: false }); // message: "end"
+        winner.send({ message: m.msgs.w_abort, turn: false });
         loser.send({ message: m.msgs.l_abort, turn: false });
 
+        game.handleEndGame('abort', game.getTurn());
 
-        setTimeout(() => {manager_room.removeRoom(game, null);}, 10000);
-
-        console.log("      game     aborted    TIME OUT");          
+        setTimeout(() => {manager_room.removeRoom(game, null);}, 3000);        
     }
 
     isInRoom(playerId) {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(playerId)) {
-                // console.log("IsInRoom : deja present");
                 return room;
             }
         }
-        // console.log("IsInRoom : joueur inconnu");
 
         return null;
     }
 
     findOnePlace(type = null, player) {
         for (const room of this._rooms.values()) {
-            // console.log("Checking room ->", room.toString());
             if (room.isType(type)
                     && !room.isFull()
                     && room.isState("init")) {
@@ -130,9 +121,7 @@ class ManagerRoom {
         for (const room of this._rooms.values()) {
             if (room.isInRoom(player)) {
                 room.removePlayer(player, message);
-                console.log(`tu vois 0 ? lenght = ${room.length()}`);
                 if (room.length() === 0) {
-                    console.log("oui j ai vu 0");
                     this.removeRoom(room);
                 }
                 return;
