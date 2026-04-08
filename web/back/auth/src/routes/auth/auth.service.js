@@ -70,7 +70,7 @@ class AuthService {
                 return { success: false, message: result.message, code: 401 };
             }
 
-            await result.user.update({co: false, MPFA: true});
+            await result.user.update({co: false});
             await Co.destroy({ where: { userId: result.user.id } });
             return { success: true, message: 'User disconnected' };
         } catch (err) {
