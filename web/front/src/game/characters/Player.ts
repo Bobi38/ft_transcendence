@@ -1,36 +1,30 @@
-import { Matrix, Mesh, PhysicsBody, PhysicsEventType, PhysicsMotionType, PhysicsShapeBox, PhysicsViewer, Plane, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
-import { PlayerInput } from "./playerInput";
-import { Room } from "@colyseus/sdk";
-import { App } from "./app";
-import { BallSnapshot, SnapshotBuffer } from "./snapshots";
-import { RacketHistory } from "./RacketHistory";
+import { AbstractMesh, Matrix, Mesh, Quaternion, Scalar, Scene, ShadowGenerator, TransformNode, UniversalCamera, Vector2, Vector3 } from "@babylonjs/core";
+import { PlayerInput } from "./PlayerInput";
+import { CharacterAssets } from "../App";
+import { GameSession } from "../sessions/GameSession";
+import { Character } from "./Character";
 
-export class Player extends TransformNode {
+export class Player extends TransformNode implements Character{
     PLAYER_SPEED: number;
     public camera : UniversalCamera;
     public scene: Scene;
-    public room: Room;
     private _input : PlayerInput;
-    public mesh: Mesh;
+    public mesh: AbstractMesh;
     public racket: TransformNode;
-    // public racketBody: PhysicsBody;
     public hand_node: TransformNode;
     public sessionId: string;
-    private _app : App;
     private _controlsEnabled : boolean = false;
     public racketDimensions: Vector3;
     public racketOffset: Vector3;
+    private _session: GameSession;
 
-    public impactSnapshots : SnapshotBuffer = new SnapshotBuffer();
-    public racketHistory : RacketHistory = new RacketHistory();
 
-    constructor(app: App, camera: UniversalCamera, sessionId: string, assets, scene: Scene, shadows: ShadowGenerator[], room: Room) {
+    constructor(camera: UniversalCamera, sessionId: string, assets: CharacterAssets, scene: Scene, shadows: ShadowGenerator[], session: GameSession) {
         super("player", scene);
         this.camera = camera;
-        this._app = app;
+        this._session = session;
         this.sessionId = sessionId;
         this.scene = scene;
-        this.room = room;
         this.mesh = assets.mesh;
         this.mesh.parent = this;
 
@@ -62,10 +56,8 @@ export class Player extends TransformNode {
             mouseDirAvg.set(0,0);
         }
         const hitDirection = new Vector3(mouseDirAvg.x, -mouseDirAvg.y, 0).add(hitForward).normalize();
-        console.log(hitDirection);
         const mouseAvgSpeed = this._input.mouseSpeedBuffer.reduce((acc, curr) => acc + curr, 0) / this._input.mouseBufferSize;
         const power = Scalar.SmoothStep(50, 200, mouseAvgSpeed) / 10;
-        console.log(mouseAvgSpeed, power);
         const newVel = hitDirection.scale(power);
 
         return newVel;
@@ -78,17 +70,20 @@ export class Player extends TransformNode {
 
         const playerPos = this.getPlayerPosition();
         //console.log(playerPos);
-        this.room.send("bodyMoved", {position: playerPos.asArray()});
+        this._session.sendUpdateBody(playerPos);
+        //this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
-    public updateRacket(tick: number) {
+    public updateRacket() : {tick: number, position: Vector3, rotation: Quaternion} {
         if (!this._controlsEnabled)
             return ;
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
-        this.room.send("racketMoved", {position: this.racket.position.asArray(),
-            rotation: this.racket.rotationQuaternion.asArray()});
-        this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
+        this._session.sendUpdateRacket(this.racket.position, this.racket.rotationQuaternion);
+        // this.room.send("racketMoved", {position: this.racket.position.asArray(),
+        //     rotation: this.racket.rotationQuaternion.asArray()});
+        //this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
+        return {tick: 0, position: this.racket.position, rotation: this.racket.rotationQuaternion}
     }
 
     public getPlayerPosition() : Vector3 {

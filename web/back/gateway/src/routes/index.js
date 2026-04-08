@@ -27,7 +27,19 @@ async function checktok(tokenn) {
     return 1;
   }
 }
-
+const authRouter = [
+	'/',
+	'/api/secu/recovery/password',
+	'/api/secu/recupPswd_check_code',
+	'/api/secu/majPswd',
+	'/api/secu/cookie',
+	'/api/oauth2/github',
+	'/api/oauth2/github/callback',
+	'/api/oauth2/google',
+	'/api/auth/login',
+	'/api/auth/register',
+	'/api/auth/logout',
+];
 
 
 export const authMiddleware = async (req, res, next) => {
@@ -35,13 +47,13 @@ export const authMiddleware = async (req, res, next) => {
   console.log("Middleware auth for path WHAT:", req.path);
   if ( req.path === '/' || req.path === '/api/auth/session' || req.path === '/api/auth/user' || req.path === '/api/oauth2/github' 
     || req.path === '/api/oauth2/github/callback' || req.path == '/api/oauth2/google' || req.path == '/api/secu/recovery_password' 
-    || req.path == '/api/secu/recoverypassword_check_code' || req.path == '/api/secu/majPswd' || req.path == '/api/secu/clearcookie') {
+    || req.path == '/api/secu/recoverypassword_check_code' || req.path == '/api/secu/majPswd' || req.path == '/api/secu/cookie') {
     console.log("Public route, no auth required");
     return next() ;
   }
   if (!token && req.path !== '/' && req.path !== '/api/auth/session' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' 
     && req.path !== '/api/oauth2/github/callback' && req.path !== '/api/oauth2/google' && req.path !== '/api/secu/recovery_password' 
-    && req.path !== '/api/secu/recoverypassword_check_code' && req.path !== '/api/secu/majPswd' && req.path !== '/api/secu/clearcookie') {
+    && req.path !== '/api/secu/recoverypassword_check_code' && req.path !== '/api/secu/majPswd' && req.path !== '/api/secu/cookie') {
     return res.status(401).json({ success: false, redirect: true});
   }
   const valid = await checktok(token);

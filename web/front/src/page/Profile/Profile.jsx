@@ -1,37 +1,33 @@
 /* extern */
-import { useState, useEffect } from "react";
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
-
-/*back*/
-import { showAlert } from "TOOL/fonction_usefull.js";
-import SocketM from "TOOL/SocketManag.js";
+import { useState, useEffect }      from    "react";
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
 import "./Profile.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
-import useFetch from "HOOKS/useFetch.jsx";
+import { showAlert }                from    "TOOL/fonction_usefull.js";
+import SocketM                      from    "TOOL/SocketManag.js";
+import useFetch                     from    "TOOL/useFetch.jsx";
 
 export default function Profile() {
 
     const [showPassword, setShowPassword] = useState(false);
-    const { showLog, setShowLog } = useAuth();
 
     const [user, setUser] = useState({ login: "", tel: "", });
 
     const handle_pass = async (e) => {
         e.preventDefault();
-        const password = e.target.password.value.trim();
-        const confirmepassword = e.target.confirmepassword.value.trim();
+        const password = e.target.password.value;
+        const confirmePassword = e.target.confirmePassword.value;
 
-        if (!password || !confirmepassword) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+        if (!password || !confirmePassword) {
+            showAlert("Fill all input", "danger");
             return;
         }
 
-        if (password !== confirmepassword) {
-            showAlert("Les mots de passe ne correspondent pas", "danger");
+        if (password !== confirmePassword) {
+            showAlert("Passwords dont match", "danger");
             return;
         }
 
@@ -47,7 +43,7 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        showAlert("Mot de passe mis à jour avec succès", "success");
+        showAlert("Password update with success", "success");
 
     }
 
@@ -55,12 +51,12 @@ export default function Profile() {
         e.preventDefault();
 
         if (!user.login || !user.tel) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("Fill all input", "danger");
             return;
         }
 
         if (user.tel[0] !== '+' || user.tel[1] !== '3' || user.tel[2] !== '3' || user.tel.length < 10) {
-            showAlert("Veuillez entrer un numéro de téléphone valide au format international (ex: +33612345678)", "danger");
+            showAlert("Use international notation (ex: +33612345678)", "danger");
             return;
         }
 
@@ -91,7 +87,7 @@ export default function Profile() {
             SocketM.sendd('morp', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
         }
 
-        showAlert("Profil mis à jour avec succès", "success");
+        showAlert("Success update profile", "success");
     };
 
     async function fetch_user_data(){
@@ -106,6 +102,7 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
+		console.log("repjson",repjson)
         setUser(repjson.message)
     }
 
@@ -117,97 +114,89 @@ export default function Profile() {
     return (
         <section className={`Profile-root`}>
 
-            <h3>Mon Profil</h3>
+            <h1>My profile</h1>
 
-            <div id={`alert-container`}></div>
-
+            <p id={`alert-container`}></p>
 
             <div className={`form-container`}>
 
-                <form className={``} onSubmit={handle_submit}>
+                <form onSubmit={handle_submit}>
 
                     <label htmlFor={`login`}>Login</label>
                     <input  type={`text`}
-                            id={`login`}
-                            name={`login`}
+                            id={`login`} name={`login`}
                             value={user.login ?? ""}
                             onChange={(e) => setUser({ ...user, login: e.target.value }) }
                         />
 
 
-                    <label htmlFor={`email`} className={``}>Email</label>
+                    <label htmlFor={`email`}>Email</label>
                     <input  type={`email`}
-                            id={`email`}
-                            name={`email`}
+                            id={`email`} name={`email`}
                             title={`Can't be changed`}
                             value={user.email}
                             onChange={(e) => setUser({ ...user, email: e.target.value }) }
                             disabled/>
 
 
-                    <label htmlFor={`tel`}>Téléphone</label>
+                    <label htmlFor={`tel`}>Phone</label>
                     <input  type={`tel`}
-                            id={`tel`}
-                            name={`tel`}
+                            id={`tel`} name={`tel`}
                             value={user.tel ?? ""}
                             onChange={(e) => setUser({ ...user, tel: e.target.value }) }
                             />
 
-                    <button type={`submit`}>Modifier mes informations</button>
+                    <button type={`submit`}>Update my informations</button>
                 </form>
 
 				<hr />
 
                 <div>
-
                     <form className="password-form" onSubmit={handle_pass}>
 
-                        <label htmlFor="password">Nouveau Mot de passe</label>
+                        <label htmlFor="password">New password</label>
                         <div className="input-wrapper">
                             <input
                                 type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
+                                id="password" name="password"
                                 className="password-field"
-                                placeholder="Votre nouveau mot de passe"
+                                placeholder="Password"
                             />
                             <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <label htmlFor="confirmepassword">Confirmer Mot de passe</label>
+                        <label htmlFor="confirmePassword">Confirm password</label>
                         <div className="input-wrapper">
                             <input
                                 type={showPassword ? "text" : "password"}
-                                id="confirmepassword"
-                                name="confirmepassword"
+                                id="confirmePassword" name="confirmePassword"
                                 className="password-field"
-                                placeholder="Confirmation du nouveau mot de passe"
+                                placeholder="Password"
                             />
                             <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <button type="submit" className="submit-btn">Modifier mon mot de passe</button>
+                        <button type="submit" className="submit-btn">Update password</button>
 
                     </form>
 
                 </div>
             </div>
-			{showLog === AUTH.NONE && (
-				<div className={`Navbar-policy`}>
-					<a href="/privacy" target="_blank" rel="noopener noreferrer">
-					Politique de confidentialité
-					</a>
 
-					<a href="/terms" target="_blank" rel="noopener noreferrer">
-					Conditions d'utilisation
-					</a>
-				</div>
-			)}
+            <div className={`Navbar-policy`}>
+                <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                Privacy policy
+                </a>
+
+                <a href="/terms" target="_blank" rel="noopener noreferrer">
+                Terms of Use
+                </a>
+            </div>
         </section>
-    )
+    );
 }
 

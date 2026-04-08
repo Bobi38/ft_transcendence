@@ -1,18 +1,13 @@
 .ErrorRedir-root{
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
-    div{
-        width: 100%;
-        height: 100%;
-        div{
-            padding: 0 !important;
-        }
-    }
-}
-.ErrorRedir-root a{
-color: #007bff; text-decoration: none; } .ErrorRedir-root a:hover{ text-decoration: underline;
+
+	p {
+		font-size: 2rem;
+		text-align: center;
+	}
 }

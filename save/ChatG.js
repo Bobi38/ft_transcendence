@@ -29,19 +29,6 @@ router.post('/', async (req, res) => {
     if (!chat.message || !chat.time) {
       return res.status(400).json({ success: false, message: 'Missing fields' });
     }
-    if (chat.send == "")
-      res.status(201)({success: true});
-    const tok = req.cookies.token
-    const id = jwt.verify(tok, secret);
-    console.log (id.id, " " , chat.message);
-    const mess = encrypt(chat.message);
-    console.log("encr ", mess)
-    await ChatG.create({contenu: mess, SenderId: id.id, time: chat.time });
-    console.log("buuuuug");
-    return res.status(201).json({success: true});
-  }catch(err){
-    return res.status(501).json({success: false, message: err});
-  }
 })
 
 export default router;

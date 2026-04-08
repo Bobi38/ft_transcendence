@@ -7,9 +7,9 @@ class MorpionRoom extends Room {
     constructor (id) {
         super(id);
         this._type = "Morpion";
-        this._max_players = 2;
-        this._min_players = 2;
-        this._first_player = false;
+        this._maxPlayers = 2;
+        this._minPlayers = 2;
+        this._firstPlayer = false;
         this._turn = null;
         this._how_win = null;
         this._ending = null;
@@ -33,8 +33,8 @@ class MorpionRoom extends Room {
     setFirstPlayer(){
         if (!this.isState("init")) return null;
 
-        this._first_player = !this._first_player;
-        return this._first_player;
+        this._firstPlayer = !this._firstPlayer;
+        return this._firstPlayer;
     }
 
     isTurnPlayer(player){
@@ -55,8 +55,7 @@ class MorpionRoom extends Room {
             throw new Error("Invalid player");
         }
 
-        if (this._first_player){
-            console.log("je set turn")
+        if (this._firstPlayer){
             this._turn = player;
         }
 
@@ -69,7 +68,7 @@ class MorpionRoom extends Room {
 
     notifyTurn(payloadCurrent = {}, payloadOthers = {}) {
         if (!this._turn) return;
-        // console.log(`tu me vois          ttttttt`);
+
         for (const obs of this._obs) {
             obs.sendObs()
         }
@@ -109,9 +108,8 @@ class MorpionRoom extends Room {
     }
 
     play(currentPlayer, index) {
-        // console.log(String(currentPlayer));
+
         if (this._turn !== currentPlayer) {
-            // console.log("moi pas voir de probleme")
             return false;
         }
 
@@ -136,7 +134,7 @@ class MorpionRoom extends Room {
 
         for (const obs of this._obs){
             obs.send({
-                players: this._players_names,
+                players: this._playersNames,
                 other_board: this._board})
         }
         
@@ -159,7 +157,6 @@ class MorpionRoom extends Room {
     }
 
     checkVictory() {
-        // console.log(`start chekc victory`);
         let i = 0;
         for (let [a, b, c] of this._lines) {
             let char = this._board[a];
@@ -173,7 +170,6 @@ class MorpionRoom extends Room {
                     { message: m.msgs.w_msg, board: this._board, turn: false },
                     { message: m.msgs.l_msg, board: this._board, turn: false });
                     
-                console.log(`victoire avec ligne ${i}`);
                 this._how_win = ["horizontal","vertical","diagonal_lr"][Math.floor (i / 3)];
                 if (i === 7)
                     this._how_win = "diagonal_rl";
@@ -184,7 +180,6 @@ class MorpionRoom extends Room {
         }
 
         if (!this._board.includes(" ")) {
-            console.log(`draw : ${this}`);
             this.sendAll({message: m.msgs.draw, board: this._board, turn: false} );
             this.handleEndGame("draw");
             return true;
@@ -199,13 +194,12 @@ class MorpionRoom extends Room {
         if (!p) return ;
         const action = () => {
             p.send({
-            message: "Dépêche-toi de jouer !",
+            message: "Hurry up and Play",
             board: this._board
             })
         };
-        // console.log(`mess16`);
 
-        p.startTurnTimer(action, 5000);
+        p.startTurnTimer(action, this.limitTime / 3 * 2);
     }
 
     serializeBoard() {
@@ -216,11 +210,10 @@ class MorpionRoom extends Room {
 
     async majdb (winner = null) {
 
-        // console.log(`save DB`);
         for (const p of this._players){
 
             if (!(p instanceof Player)){
-                console.log(`don t save with Bot`);
+
                 for (const pl of this._players)
                     pl.disconnect(null, this._id);
                 return; 

@@ -59,7 +59,7 @@ class ProfileService {
         }
     }
 
-    static async getWeather() {
+    static async getWeather(req) {
         try {
             console.log("API /Homeweather dans Homeweather");
             const loc = "Charbonnieres-les-bains";
@@ -68,6 +68,7 @@ class ProfileService {
             );
             const data = await response.json();
             const cache = new Map();
+            console.log("API /Homeweather data", data);
             if (data) {
             cache.set(req.cacheKey, {
                 data: data,

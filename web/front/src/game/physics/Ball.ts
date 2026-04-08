@@ -1,20 +1,19 @@
-import { Color3, Material, Mesh, MeshBuilder, Observable, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeSphere, PhysicsShapeType, PhysicsViewer, Scalar, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
-import { BallSnapshot, SnapshotBuffer } from "./snapshots";
-import { SynchronizedClock } from "./SynchronizedClock";
-import { App } from "./app";
+import { Color3, Engine, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
+import { BallSnapshot, SnapshotBuffer } from "../utils/Snapshots";
+import { SynchronizedClock } from "../utils/SynchronizedClock";
+import { PhysicsEngine } from "./PhysicsEngine";
 
 export class Ball {
     public _mesh: Mesh;
-    // public _body: PhysicsBody;
     private _velocity: Vector3 = Vector3.Zero();
     private _node: TransformNode;
     public  radius: number;
-    private _maxSpeed: number;
     private _scene: Scene;
     private _shadows: ShadowGenerator[];
     private _physicsObserver;
     private _clock: SynchronizedClock;
-    private _app: App;
+    private _engine: Engine;
+    private _physicsEngine: PhysicsEngine;
     public snapshots : SnapshotBuffer = new SnapshotBuffer();
     public positionError: Vector3 = Vector3.Zero();
     public visualOffset: Vector3 = Vector3.Zero();
@@ -22,19 +21,18 @@ export class Ball {
     public recentImpact : boolean = false;
     public ignoreServerAfter : number = null;
     public ignoreServerUntil : number = 0;
-    public  isResimming : boolean = false;
     
 
-    constructor(position: Vector3, velocity: Vector3, diameter: number, maxSpeed: number, shadows: ShadowGenerator[], scene: Scene, clock: SynchronizedClock, app: App) {
-        this._app = app;
+    constructor(position: Vector3, velocity: Vector3, diameter: number, shadows: ShadowGenerator[], scene: Scene, clock: SynchronizedClock, engine: Engine, physicsEngine: PhysicsEngine) {
         this._scene = scene;
-        this._maxSpeed = maxSpeed;
         this._clock = clock;
+        this._engine = engine;
+        this._physicsEngine = physicsEngine;
 
         this._mesh = MeshBuilder.CreateSphere("ball", {diameter: diameter}, this._scene);
         this.radius = diameter / 2;
         const ballMaterial = new StandardMaterial("ballTexture", scene);
-        ballMaterial.diffuseTexture = new Texture("/app/media/ballTexture.jpg", this._scene);
+        ballMaterial.diffuseTexture = new Texture("media/ballTexture.jpg", this._scene);
         ballMaterial.specularColor = new Color3(0.3, 0.3, 0.2);
         ballMaterial.specularPower = 10;
         this._mesh.material = ballMaterial;
@@ -102,33 +100,33 @@ export class Ball {
     }
 
     private _correctLargeErrors() {
-        const patchTick = this.serverPatch.tick;
-        const ticksToResimulate = this._clock.tick - patchTick;
+        // const patchTick = this.serverPatch.tick;
+        // const ticksToResimulate = this._clock.tick - patchTick;
         const preRollbackPos = this.getPhysicsBodyPosition();
-        this.setPhysicsBodyPosition(this.serverPatch.position);
-        this.setVelocity(this.serverPatch.velocity);
-        this.snapshots.clearAfterTickIncluded(patchTick);
-        this.snapshots.saveSnapshot(patchTick, this.serverPatch.position, this.serverPatch.velocity);
-        this.isResimming = true;
-
-        const racketHistory = this._app.getPlayerRacketHistory();
-        const impactSnapshots = this._app.getPlayerImpactSnapshots();
-        const player = this._app.getPlayer();
-        for (let i = 1; i < ticksToResimulate; i++) {
-            const simulatingTick = patchTick + i;
-            const historicalRacket = racketHistory.get(simulatingTick);
-            if (historicalRacket) {
-                player.setRacketPos(historicalRacket.position);
-                player.setRacketRot(historicalRacket.rotation);
-            }
-            this._app._executeStep();
-            const impactSnapshot = impactSnapshots.getSnapshotAtTick(simulatingTick);
-            if (impactSnapshot)
-                this._app._checkRacketCollision(impactSnapshot.snapshot);
-            this._app._checkWallCollision();
-            this.snapshots.saveSnapshot(simulatingTick, this.getPhysicsBodyPosition(), this.getVelocity());
-        }
-        this.isResimming = false;
+        // this.setPhysicsBodyPosition(this.serverPatch.position);
+        // this.setVelocity(this.serverPatch.velocity);
+        // this.snapshots.clearAfterTickIncluded(patchTick);
+        // this.snapshots.saveSnapshot({tick: patchTick, position: this.serverPatch.position, velocity: this.serverPatch.velocity});
+        // this.isResimming = true;
+        // const racketHistory = this._app.getPlayerRacketHistory();
+        // const impactSnapshots = this._app.getPlayerImpactSnapshots();
+        // //const player = this._app.getPlayer();
+        // for (let i = 1; i < ticksToResimulate; i++) {
+        //     const simulatingTick = patchTick + i;
+        //     const historicalRacket = racketHistory.get(simulatingTick);
+        //     if (historicalRacket) {
+        //         player.setRacketPos(historicalRacket.position);
+        //         player.setRacketRot(historicalRacket.rotation);
+        //     }
+        //     this._app._executeStep();
+        //     const impactSnapshot = impactSnapshots.getSnapshotAtTick(simulatingTick);
+        //     if (impactSnapshot)
+        //         this._app._checkRacketCollision(impactSnapshot.snapshot);
+        //     this._app._checkWallCollision();
+        //     this.snapshots.saveSnapshot({tick: simulatingTick, position: this.getPhysicsBodyPosition(), velocity: this.getVelocity()});
+        // }
+        // this.isResimming = false;
+        this._physicsEngine.resimulatePhysicTicks(this.serverPatch);
         const postRollbackPos = this.getPhysicsBodyPosition();
         const teleportDelta = preRollbackPos.subtract(postRollbackPos);
         this.visualOffset.addInPlace(teleportDelta);
@@ -136,7 +134,7 @@ export class Ball {
 
     public smoothPosition(){
         if (this.visualOffset.lengthSquared() < 0.0001) return;
-        const dt = this._app.getEngine().getDeltaTime() / 1000; 
+        const dt = this._engine.getDeltaTime() / 1000; 
         const smoothingSpeed = 15; // higher = faster snap, lower = looser glide
         const correctionFactor = Math.exp(-smoothingSpeed * dt);
         this.setMeshPosition(this.visualOffset);

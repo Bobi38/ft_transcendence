@@ -228,7 +228,7 @@ services:
       - cle_chat
     volumes:
       - ./web/back/pong3D:/app
-      - ./web/front/media:/app/src/media
+      - ./web/front/src/game/shared:/app/src/shared
       - ./web/back/models:/app/src/models
       - /app/node_modules
     cap_add:
@@ -236,9 +236,9 @@ services:
     restart: always
 
   morpion:
-    build: 
-      context: ./web/back/morpion
-      dockerfile: Dockerfile
+    build:
+      context: ./web/back
+      dockerfile: morpion/Dockerfile
       target: dev
     container_name: morpion
     env_file: 
@@ -254,8 +254,9 @@ services:
       - cle_pswd
       - cle_chat
     volumes:
-      - ./web/back/morpion:/app
+      - ./web/back/morpion/src:/app/src
       - ./web/back/models:/app/src/models
+      - ./web/back/common/ws:/app/common/ws
       - /app/node_modules
     restart: always
 

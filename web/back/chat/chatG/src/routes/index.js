@@ -8,7 +8,7 @@ import express from 'express';
 
 
 import User  from '../models/user.js';
-import ChatG from '../models/test.js';
+import ChatG from '../models/chatG.js';
 import {decrypt} from './crypt.js'
 
 const router = express.Router();

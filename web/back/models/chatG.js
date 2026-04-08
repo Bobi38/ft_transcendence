@@ -14,7 +14,7 @@ const chatG = sequelize.define('chat', {
   },
 }, {
   tableName: 'chat_G',
-  timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas
+  timestamps: false,
 });
 
 User.hasMany(chatG, { foreignKey: 'SenderId', onDelete: 'CASCADE' });

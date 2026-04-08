@@ -1,10 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { AuthProvider } from '../tool/AuthContext.jsx'
-import { FriendProvider } from '../tool/FriendContext.jsx'
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { createRoot }               from 'react-dom/client'
+import { AuthProvider }             from 'HOOKS/useAuth.jsx'
+import { FriendProvider }           from 'TOOL/FriendContext.jsx'
+import { GoogleOAuthProvider }      from '@react-oauth/google'
 
-import App from './App.jsx'
+import App                          from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
     <AuthProvider>

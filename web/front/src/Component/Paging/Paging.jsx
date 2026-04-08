@@ -1,15 +1,9 @@
 /* extern */
-import { useEffect, useState } from "react";
-
-/* back */
+import { useEffect, useState }  from    "react";
 
 /* Css */
 import "./Paging.scss";
 
-/* Components */
-
-
-    
 export default function Paging({ totalPages, currentPage, setNewPage}) {
 
     function default_tab() {
@@ -38,7 +32,6 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                 else if (i - last > 2) {
                     tab_with_dot.push("...");
                 }
-
             }
 
             tab_with_dot.push(i);
@@ -61,15 +54,9 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
         setNewPage(arg)
     }
 
-    // useEffect(() => {
-    //     console.log("tabWithDot: ", tabWithDot)
-    // }, [])
-
     return (
         <div className={`Paging-root`}>
-
-            <ul> 
-
+            <ul>
                 <li className={`onhover`}>
                     <button onClick={(e) => {(currentPage == 1) ? null : change_page(currentPage - 1)}}>
                         &lt;prev {/* "<"prev */}
@@ -106,7 +93,6 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                 </li>
 
             </ul>
-
         </div>
     )
 }

@@ -2,7 +2,26 @@
 @use "STYLE/_mixin" as mix;
 
 .HomeCardWeather {
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	@include mix.cursor();
+
+	gap: 1rem;
+
+	span {
+		z-index: 1;
+	}
+	.background {
+		width: 100%;
+		height: 100%;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		background-size: 65%;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
 }

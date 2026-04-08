@@ -1,18 +1,22 @@
+/* extern */
+import { useNavigate }      from    "react-router-dom";
+
 /* Css */
 import "./NavBar.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx"
-import Button from "FRONT/Component/Button/Button.jsx"
-import useClock from "FRONT/hooks/useClock.jsx";
-import  SocketM  from "TOOL/SocketManag.js"
+import SocketM  			from	"TOOL/SocketManag.js";
+import { AUTH, useAuth } 	from	"HOOKS/useAuth.jsx";
+import useClock 			from	"HOOKS/useClock.jsx";
+import Button 				from	"COMP/Button/Button.jsx";
 
 export default function NavBar() {
 
-    const { showLog, setShowLog } = useAuth();
+    const { setShowLog } = useAuth();
+    const navigate = useNavigate();
 
-	const state = showLog;
 	function logout() {
+
 	   console.log("logout(1) called")
 	   fetch('/api/auth/session', {
 	       method: 'DELETE',
@@ -30,7 +34,7 @@ export default function NavBar() {
 	        	SocketM.disconnect('morp');
 	        	SocketM.disconnect('priv');
 	        	SocketM.disconnect('chat');
-				window.location.href = '/'
+				navigate('/')
 	       } else {
 	           console.error("logout(2) failed");
 	       }
@@ -45,16 +49,15 @@ export default function NavBar() {
 
     return (
 		<nav className={`Navbar-root`}>
-			
+
 			<Button path={`/`}> Home </Button>
 			<div className={`Navbar-center`}>
 				<p>{time}</p>
 
-				
 				<button className={`logout`} onClick={(logout)}>
 					Logout
 				</button>
-				
+
 			</div>
 			<Button path={`/Profile`}>Profile</Button>
 

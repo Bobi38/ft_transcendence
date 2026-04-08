@@ -1,25 +1,31 @@
 import { AdvancedDynamicTexture, Rectangle, Control, StackPanel, TextBlock, Button } from "@babylonjs/gui";
-import { Room } from "@colyseus/sdk";
+import { NetworkSessionManager } from "../sessions/NetworkSessionManager";
+import { GameSession } from "../sessions/GameSession";
 
 export class GUI {
-    private _room : Room;
-    private _ui: AdvancedDynamicTexture = null;
+    private _session : GameSession;
+    private _ui: AdvancedDynamicTexture | null = null;
     private _score : AdvancedDynamicTexture;
     private _scoreText : TextBlock;
-    private _playerDisconnected : AdvancedDynamicTexture = null;
+    private _playerDisconnected : AdvancedDynamicTexture | null = null;
+    private _disposing : boolean = false;
+    private _interval: number | null = null;
 
-    constructor (room: Room) {
-        this._room = room;
+    constructor (session: GameSession) {
+        this._session = session;
     }
 
-    private _setAndDispose(newUi : AdvancedDynamicTexture) {
+    private _setAndDispose(newUi : AdvancedDynamicTexture | null) {
         if (this._ui) {
             this._ui.dispose();
         }
+        clearInterval(this._interval);
         this._ui = newUi;
     }
 
     private _gameOverUI(text: string) {
+        if (this._disposing)
+            return ;
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         this._setAndDispose(ui);
 
@@ -55,7 +61,7 @@ export class GUI {
         newGameBtn.background = "#4CAF50";
 
         newGameBtn.onPointerClickObservable.add(() => {
-            this._room.leave(true);
+            this._session.leave();
             localStorage.removeItem("reconnectionGameToken");
             window.location.reload();
             console.log("New Game clicked");
@@ -78,6 +84,8 @@ export class GUI {
     }
 
     private _waitingUI(text: string) {
+        if (this._disposing)
+            return ;
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         this._setAndDispose(ui);
 
@@ -107,10 +115,11 @@ export class GUI {
         panel.addControl(waitingText);
 
         let dots = 0;
-        setInterval(() => {
+        this._interval = (
+            setInterval(() => {
             dots = (dots + 1) % 4;
             waitingText.text = text + ".".repeat(dots);
-        }, 500);
+        }, 500)) as unknown as number;
     }
 
     public showWaitingUI() {
@@ -122,6 +131,8 @@ export class GUI {
     }
 
     public addScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
+        if (this._disposing)
+            return ;
         this._score = AdvancedDynamicTexture.CreateFullscreenUI("ui");
 
         const scorePanel = new Rectangle();
@@ -181,6 +192,8 @@ export class GUI {
     }
 
     public showPlayerDisconnectedUI() {
+        if (this._disposing)
+            return ;
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         this._setAndDispose(ui);
 
@@ -210,10 +223,10 @@ export class GUI {
         panel.addControl(waitingText);
 
         let dots = 0;
-        setInterval(() => {
+        this._interval = setInterval(() => {
             dots = (dots + 1) % 4;
             waitingText.text = "Player has disconnected. Standby" + ".".repeat(dots);
-        }, 500);
+        }, 500) as unknown as number;
     }
 
     public getIsPlayerDisconnectedUIShown() : boolean {
@@ -230,7 +243,12 @@ export class GUI {
 
     public showNoUI() {
         if (this._ui) {
-            this._ui.dispose();
+            this._setAndDispose(null);
         }
+    }
+
+    public dispose() {
+        this._setAndDispose(null);
+        this._disposing = true;
     }
 }

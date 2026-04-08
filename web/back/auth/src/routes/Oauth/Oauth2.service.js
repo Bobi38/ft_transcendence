@@ -5,6 +5,7 @@ const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 
 
 const clientiD = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+const status = process.env.STATUS
 
 class Oauth2Service {
 
@@ -70,7 +71,10 @@ class Oauth2Service {
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: result[0].id});
             }
-            res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+            if (status === 'PROD')
+                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+            else
+                res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
             return { success: true, message: 'GitHub authentication successful',  frontendUrl: session };
         } catch (err) {
             return { success: false, message: 'GitHub authentication failed: ' + err, code: 500 };
@@ -107,7 +111,10 @@ class Oauth2Service {
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: result[0].id});
             }
-            res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+            if (status === 'PROD')
+                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+            else
+                res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
             return ({ success: true, MPFA: MPFA, message: "connected", code: 200 });
         } catch (err) {
            return ({ success: false, message: 'Google authentication failed: ' + err , code: 500 });

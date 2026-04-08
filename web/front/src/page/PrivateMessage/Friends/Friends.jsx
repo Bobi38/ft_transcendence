@@ -1,23 +1,16 @@
 /* extern */
-import { useEffect, useState } from "react";
+import { useEffect, useState }  from    "react";
 
-/* back */
-import SocketM from "TOOL/SocketManag";
 /* Css */
 import "./Friends.scss";
 
 /* Components */
-import useFetch from "HOOKS/useFetch.jsx";
+import SocketM                  from    "TOOL/SocketManag";
+import useFetch                 from    "TOOL/useFetch.jsx";
 
-
-    
 export default function Friends({setGoToAction, setGoToConv}) {
 
-
-    console.log("Friends Components called")
-
     const [responseFriendArray, setResponseFriendArray] = useState([]);
-
 
     async function all_friend(){
         const url = `/api/friend`;
@@ -60,7 +53,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
         console.log("good");
     }
 
-
     useEffect(() => {
         all_friend();
 
@@ -82,9 +74,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
         await dlt_friend(friend.login);
         await all_friend();
         SocketM.send("friend", {type: "maj_frd", login: friend});
-
     }
-
 
     return (
         <div className={`Friends-root border-0`}>
@@ -92,17 +82,21 @@ export default function Friends({setGoToAction, setGoToConv}) {
 			<hr />
 			<div className="content">
 
-	            {responseFriendArray && responseFriendArray.map((msg, index) => (
+	            {responseFriendArray?.length !== 0 ? (responseFriendArray.map((msg, index) => (
 	                <div key={index} className="one-friend border-1">
-	                    <h5>{msg.login}</h5>
+	                    <h2>{msg.login}</h2>
 
 	                    <div className="div-btn">
 	                        <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>Message</button>
 	                        <button onClick={() => {handleDelete({login: msg.login })}}>Remove</button>
 	                    </div>
 	                </div>
-	            ))}
-	            {!responseFriendArray && <p>Nothing here...</p> }
+	            ))):(
+					<div className="no-friend">
+						<p>No friend...</p>
+						<p>Go play Pong3D or Morpion to find some friends !</p>
+					</div>
+				)}
 			</div>
         </div>
     )

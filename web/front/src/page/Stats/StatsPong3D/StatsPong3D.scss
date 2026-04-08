@@ -13,17 +13,16 @@ $width_game_winrate: 100% - $width_history;
         display: flex;
         flex-direction: column;
         gap: 5px;
-        
     }
-    
+
     .history-container {
         width: $width_history;
         padding-right: 0;
-        
+
         scrollbar-width: thin;
         display: flex;
         flex-direction: column;
-        
+
         .history-card-container{
             height: calc(100% - 58px);
             overflow-y: auto;
@@ -31,15 +30,19 @@ $width_game_winrate: 100% - $width_history;
             flex-direction: column;
             gap: 0.5rem;
         }
-        
     }
-    .aside{
-        
+
+	.aside{
+
         display: flex;
         flex-direction: column;
         width: $width_game_winrate;
         height: 100%;
         padding-bottom: 0.5rem;
+		.game-winrate {
+			overflow: hidden auto;
+			width: 100%;
+		}
         .search {
             display: flex;
             flex-direction: column;
@@ -49,35 +52,6 @@ $width_game_winrate: 100% - $width_history;
                     width: 100%;
                 }
             }
-        }
-        .game-winrate {
-            overflow: hidden auto;
-            width: 100%;
-            
-            .wl-graph, .wl-o-x, .wl-horizontal,
-            .wl-diagonal, .wl-vertical {
-                padding: 0.5rem;
-            }
-            
-            // .wl-graph{
-                
-            // }
-            
-            // .wl-o-x{
-                
-            // }
-            
-            // .wl-horizontal{
-                
-            // }
-            
-            // .wl-diagonal{
-                
-            // }
-            
-            // .wl-vertical{
-                
-            // }
         }
     }
 }

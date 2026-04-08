@@ -13,10 +13,38 @@ router.post('/session', async (req, res) => {
   console.log("je suis dans la nouvelle route login")
   const { email, password, host } = req.body;
 
-  try {
-    console.log("Api /login called");
-    if (!email || !password || !host) {
-      return res.status(400).json({ success: false, message: 'Missing fields' });
+    try {
+        console.log("Api /login called");
+        if (!email || !password || !host) {
+            return res.status(400).json({ success: false, message: 'Missing fields' });
+        }
+        if (!validator.isEmail(email)){
+            console.log("Api /login called Invalid email format",email);
+            return res.status(400).json({ success: false, message: 'Invalid email format' });
+        }
+        const result = await User.findAll({ where: { mail: email } });
+        console.log("Api auth/login", result);
+        if (result.length === 0)
+            return res.status(401).json({success: false, message: 'Email not found'});
+        const DecrypPass = await bcrypt.compare(password, result[0].password);
+        if (!DecrypPass)
+            return res.status(401).json({success: false, message: 'Password not valid'});
+        const iid = await Co.findAll({where: { userId: result[0].id}})
+          console.log("Api /login " + result[0].id," avant token");
+        const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
+        if (iid.length === 0)
+            await Co.create({token: token, userId: result[0].id});
+        console.log(result[0].Hostlastco + " " + host)
+        console.log(result[0].Datelastco)
+        let MPFA;
+        MPFA = tcheck_MPFA(result[0], host);
+        console.log("MPFA " + MPFA);
+        await result[0].update({MPFA: MPFA});
+        await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
+        res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+        res.status(201).json({  success : true , message: 'User connected', token: token, username: result[0].name, MPFA: MPFA });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'MySQL error', err});
     }
     if (!validator.isEmail(email)){
       console.log("Api /login called Invalid email format",email);

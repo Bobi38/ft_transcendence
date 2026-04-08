@@ -5,6 +5,8 @@ import
   Co,
 }from '../index_p.js'
 
+const status = process.env.STATUS
+
 class AuthService {
 
   static async login({ email, password, host, res }) {
@@ -29,7 +31,10 @@ class AuthService {
         console.log("MPFA " + MPFA);
         await result[0].update({MPFA: MPFA});
         await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
-        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+        if (status === 'PROD')
+            res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+        else
+            res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
         return { success : true , message: 'User connected', token: token, username: result[0].name, MPFA: MPFA };
         } catch (err) {
         return { success: false, message: 'MySQL error' + err, code: 500 };

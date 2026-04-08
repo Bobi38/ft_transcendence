@@ -1,14 +1,12 @@
 /* extern */
-import { useState, useEffect } from "react";
-
-/* back */
-import  SocketM  from "TOOL/SocketManag.js";
+import { useState, useEffect }  from    "react";
 
 /* Css */
 import './Morpion.scss';
 
 /* Components */
-import Board from "./Board/Board.jsx";
+import SocketM                  from    "TOOL/SocketManag.js";
+import Board                    from    "./Board/Board.jsx";
 
 function NewPartie() {
     function sendMessage(s_message){
@@ -17,14 +15,14 @@ function NewPartie() {
                 message: s_message,
             })
     }
+
     return (
-        <button className="send-btn"
+        <button
             onClick={() => { sendMessage("player"); }}
             onContextMenu={(e) => {
 				e.preventDefault();
 				sendMessage('bot');
-			}}
-			>
+			}}>
             Search Game
         </button>
     );
@@ -84,59 +82,3 @@ export default function Morpion() {
         </div>
     );
 }
-
-
-//function RebootTruc() {
-//    function sendType(s_type){
-//        SocketM.sendd('morp',{
-//                type: s_type,
-//            })
-//    }
-
-//    return (
-//        <button
-//            onClick={() =>{sendType("bot")}}
-//            onContextMenu={(e) => {
-//                e.preventDefault();
-//                sendType('reboot');
-//            }}
-//            style={{ cursor: 'add bot' }}
-//            >
-//                add Bot
-//        </button>
-//    );
-
-//}
-
-//function GoOut(){
-//    function sendType(s_type){
-//        SocketM.sendd('morp',{
-//                type: s_type,
-//            })
-//    }
-
-//    return (
-//        <button
-//            onClick={() =>{sendType("leave")}}
-//            onContextMenu={(e) => {
-//                e.preventDefault();
-//                sendType('bot');
-//            }}
-//            style={{ cursor: 'add bot' }}
-//            >
-//                je veux partir
-//        </button>
-//    );
-//}
-
-//function SelectSecondPlayer(){
-//    return (
-//        <button onClick={() => {
-//            SocketM.sendd('morp',{
-//                type: "second",
-//            })
-//        }}>
-//            second / first
-//        </button>
-//    );
-//}

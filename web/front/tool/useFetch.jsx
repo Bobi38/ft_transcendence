@@ -1,7 +1,3 @@
-// import {AUTH, useAuth} from "TOOL/AuthContext.jsx";
-
-
-
 export default async function useFetch(url, type_request, callbacksucces = null, callbackfail = null){
     // const tab = {
     // "/api/auth/login": true,
@@ -30,7 +26,7 @@ export default async function useFetch(url, type_request, callbacksucces = null,
             console.log("useFetch(3) response.status >= 500", repjson.message)
             return repjson;
         }
-        
+
         repjson.status = response.status
         if (response.username)
             repjson.username = response.username
@@ -42,7 +38,7 @@ export default async function useFetch(url, type_request, callbacksucces = null,
             }
             console.log("useFetch(4) success repjson:", repjson);
             return repjson;
-            
+
         } else {
             if (callbackfail){
                 callbackfail(repjson);
@@ -56,34 +52,3 @@ export default async function useFetch(url, type_request, callbacksucces = null,
         return null;
     }
 }
-
-// FRONT/src/tool/fetchApi.js
-
-// const serviceMap = {
-//   auth: 'auth',
-//   oauth2: 'auth',
-//   secu: 'auth',
-// //   profile: 'http://user_service:9003',
-// //   friend: 'http://user_service:9003',
-// //   chatG: 'http://chatg_service:9001',
-// //   chatP: 'http://chatp_service:9002',
-// //   pong3d: 'http://pong3d:2567',
-// //   morpion: 'http://morpion:9004',
-// };
-
-// export async function fetchApi(path, options = {}) {
-//   const gatewayUrl = `/api${path}`;
-//   try {
-//     const res = await fetch(gatewayUrl, options);
-//     if (!res.ok) throw new Error(`Gateway responded with status ${res.status}`);
-//     return await res.json();
-//   } catch (err) {
-//     console.warn('Gateway down, fallback direct:', err);
-//     const key = path.split('/')[1];
-//     const serviceUrl = serviceMap[key];
-//     if (!serviceUrl) throw new Error(`No fallback service defined for path: ${path}`);
-//     const directRes = await fetch(`${serviceUrl}${path}`, options);
-//     if (!directRes.ok) throw new Error(`Direct service responded with status ${directRes.status}`);
-//     return await directRes.json();
-//   }
-// }

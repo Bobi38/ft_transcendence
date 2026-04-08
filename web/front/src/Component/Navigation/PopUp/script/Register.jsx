@@ -1,17 +1,10 @@
-/* extern */
-import { useState } from "react";
-import { FaGithub } from "react-icons/fa";
-
-/* back */
-import { showAlert } from "TOOL/fonction_usefull.js";
-
 /* Css */
 import "../PopUp.scss";
 
 /* Components */
-import { AUTH, useAuth } from "TOOL/AuthContext.jsx";
-
-import useFetch from "HOOKS/useFetch.jsx";
+import { showAlert }        from    "TOOL/fonction_usefull.js";
+import useFetch             from    "TOOL/useFetch.jsx";
+import { AUTH, useAuth }    from    "HOOKS/useAuth.jsx";
 
 
 export default function Register({login_mode}) {
@@ -51,57 +44,40 @@ export default function Register({login_mode}) {
         setShowLog(AUTH.LOGIN);
     }
 
-    async function login_mode() {
-        sessionStorage.clear();
-        const url = `/api/secu/cookie`;
-        console.log(`${url}`)
-
-        const repjson = await useFetch(`${url}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credential: "include",
-        }, null, null, true)
-        setShowLog(AUTH.LOGIN);
-    }
-
-
     return (
-        <>
-            <div className={`script-in-root`}>
+        <div className={`script-in-root`}>
 
-                <h1>Register</h1>
-                
-                <form id={`register`} onSubmit={(e) => {register_submit(e)}}>
+            <h1>Register</h1>
 
+            <form id={`register`} onSubmit={(e) => {register_submit(e)}}>
 
-                    <label htmlFor={`name`}>Nickname</label>
-                    <input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
+				<label htmlFor={`name`}>Nickname</label>
+				<input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
 
-                    <label htmlFor={`email`}>Email</label>
-                    <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
+                <label htmlFor={`email`}>Email</label>
+                <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
 
-                    <label htmlFor={`password`}>Password</label>
-                    <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
+                <label htmlFor={`password`}>Password</label>
+                <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
 
-                    <div style={{ marginTop: "10px" }}>
-                        <input type="checkbox" id="legal" name="legal" required />
-                        <label htmlFor="legal" style={{ marginLeft: "5px" }}>
-                        J'accepte les{" "}
-                        <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid"  }}>
-                        Conditions d'utilisation
-                        </a>{" "}
-                        et la{" "}
-                        <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration:"underline",textDecorationColor:"red", textDecorationStyle:"solid" }}>
-                        Politique de confidentialité
-                        </a>
-                        </label>
-                    </div>
+                <div>
+                    <input type="checkbox" id="legal" name="legal" required />
+                    <label htmlFor="legal">
+                    J'accepte les{" "}
+                    <a href="/terms" target="_blank" rel="noopener noreferrer">
+                    Conditions d'utilisation
+                    </a>{" "}
+                    et la{" "}
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                    Politique de confidentialité
+                    </a>
+                    </label>
+                </div>
 
-                    <button type={`submit`}>Register</button>
-                    <button type={`button`} onClick={login_mode}>Connexion</button>
-                </form>
-
-            </div>
-        </>
-    )
+                <button type={`submit`}>Register</button>
+            </form>
+			<hr />
+			<button type={`button`} onClick={login_mode}>Connexion</button>
+        </div>
+    );
 }

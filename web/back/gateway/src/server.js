@@ -100,7 +100,7 @@ app.use('/api/morpion', createProxyMiddleware({
 }))
 
 
-app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
+app.use((req, res) => { res.status(404).json({ error: "Api Not found" }); });
 
 
 (async () => {
@@ -119,6 +119,3 @@ app.use((req, res) => { res.status(404).json({ error: "Not found" }); });
     process.exit(1);
   }
 })();
-
-
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY4MjIzMzQ5LCJleHAiOjE3NjgyNjY1NDl9.f1a8N3asudEaMpCbr0hgYuLiaZC5xliCQ0AZNbK-sSk
