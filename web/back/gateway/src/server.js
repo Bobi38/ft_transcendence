@@ -23,11 +23,14 @@ const app = express();
 
 // app.use(express.json());
 app.use(cookieParser());
-app.use(session({
-  secret:'coucou',
-  resave: false,
-  saveUninitialized: true
-}))
+
+app.use((err, req, res, next) => {
+  if (err.type === "entity.too.large") {
+    return res.status(413).json({
+      error: "Payload too large",
+    });
+  }
+});
 
 app.use(authMiddleware);
 

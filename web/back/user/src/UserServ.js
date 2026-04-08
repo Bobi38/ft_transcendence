@@ -26,11 +26,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({
-  secret:'coucou',
-  resave: false,
-  saveUninitialized: true
-}))
+
 
 app.use((req, res, next) => {
   console.log(`[USER_S SERVICE] ${req.method} ${req.path}`);
