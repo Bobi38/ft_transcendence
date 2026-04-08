@@ -224,7 +224,8 @@ export class Environment {
         this.nodes.forEach((node: TransformNode) => node.dispose());
         this.nodes = null;
 
-        this.meshes.forEach((mesh: AbstractMesh) => mesh.dispose());
+        this.meshes.forEach((mesh: AbstractMesh) => mesh.dispose(false, true));
+        this.meshes = null;
     }
 }
 

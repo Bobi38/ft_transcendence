@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Color4,  ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
 import { Environment } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";

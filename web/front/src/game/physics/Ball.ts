@@ -144,7 +144,7 @@ export class Ball {
         this._shadows[1]?.removeShadowCaster(this._mesh);
         this._shadows = null;
 
-        this._scene?.onBeforePhysicsObservable.remove(this._physicsObserver);
+        this._scene?.onBeforePhysicsObservable?.remove(this._physicsObserver);
 
         this._node?.dispose();
         this._node = null;

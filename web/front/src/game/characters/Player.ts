@@ -87,10 +87,10 @@ export class Player extends TransformNode implements Character{
     }
 
     public dispose() {
-        this.camera.dispose();
+        this.camera?.dispose();
         this.camera = null;
 
-        this._input.dispose();
+        this._input?.dispose();
         this._input = null;
 
         this.mesh = null;
