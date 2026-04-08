@@ -27,7 +27,7 @@ export default function Login({ password_forget_mode, register_mode}) {
         };
 
         if (!data.email || !data.password) {
-            showAlert("login_submit(1) Veuillez remplir tous les champs", "danger");
+            showAlert("Please fill all input", "danger");
             return;
         }
 
@@ -40,7 +40,7 @@ export default function Login({ password_forget_mode, register_mode}) {
             body: JSON.stringify(data)
         }, null, null, true);
         if (!repjson){
-            showAlert("Impossible de se connecter pour le moment", "danger");
+            showAlert("Can't establish connection for now", "danger");
             return;
         }
 
@@ -88,7 +88,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                     return;
                 }
                 if (!repjson){
-                    showAlert("Impossible de se connecter pour le moment", "danger");
+                    showAlert("Can't establish connection for now", "danger");
                     return;
                 }
                 setShowLog(AUTH.NONE);
@@ -148,7 +148,6 @@ export default function Login({ password_forget_mode, register_mode}) {
                             onClick={password_forget_mode}>
                             Password forgot ?
                     </button>
-
                 </div>
             </form>
         </div>

@@ -88,12 +88,12 @@ export default function PasswordForget({login_mode}) {
         const confirmePassword = e.target.confirmePassword.value;
 
         if (!password || !confirmePassword) {
-            showAlert("Veuillez remplir tous les champs", "danger");
+            showAlert("Fill all input", "danger");
             return;
         }
 
         if (password !== confirmePassword) {
-            showAlert("Les mots de passe ne correspondent pas", "danger");
+            showAlert("Passwords didnt match", "danger");
             return;
         }
 
@@ -129,7 +129,7 @@ export default function PasswordForget({login_mode}) {
                     <form onSubmit={(e) => {send_code(e)}}>
                         <label htmlFor={`email`}>Email</label>
                         <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
-                        <button type={`submit`} >Send mail verification</button>
+                        <button type={`submit`}>Send mail verification</button>
                     </form>
 					<hr />
                     <button type={`button`} onClick={login_mode}>Connexion</button>
@@ -143,7 +143,7 @@ export default function PasswordForget({login_mode}) {
 						<input type={`text`}
 								id={`code`} name={`code`}
 								placeholder={`Entrez Code`}/>
-						<button type={`submit`}>Valider</button>
+						<button type={`submit`}>Valid</button>
 
                     </form>
                     <hr/>
@@ -151,7 +151,7 @@ export default function PasswordForget({login_mode}) {
 
                         <label htmlFor={`email`}>Email</label>
                         <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
-                        <button type={`submit`} >Send mail verification</button>
+                        <button type={`submit`}>Send mail verification</button>
 
                     </form>
 					<hr />

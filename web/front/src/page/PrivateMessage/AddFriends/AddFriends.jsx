@@ -121,6 +121,7 @@ export default function AddFriends() {
 			<hr />
 			<div className="content">
 				<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
+           			 <p id={`alert-container`}></p>
 					<input  type={`text`} id={`add-friend`} placeholder="Nickname" required/>
 					<button type={`submit`}>Add friend</button>
 				</form>

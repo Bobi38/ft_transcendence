@@ -85,7 +85,7 @@ export default function MailA2F({login_mode}) {
                 <>
                     <form id={`maila2f`} onSubmit={(e) => {maila2f_check_code(e)}}>
                         <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
-                        <button type={`submit`} >Valider</button>
+                        <button type={`submit`}>Valid</button>
                     </form>
                     <hr/>
                     <button type={`button`} id={`mailverif`} onClick={(e) => {maila2f_send_code(e);}}>Send mail verification</button>
