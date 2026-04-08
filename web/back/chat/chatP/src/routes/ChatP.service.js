@@ -35,7 +35,6 @@ class ChatPService {
             let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
             if (!findchat)
                 findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-            console.log("dATA ", data.message, id1.id, findchat.id, data.time);
             const crypt = encrypt(data.message);
             if (crypt.length > 511) {
                 return ({ success: false, message: "Message too long", code: 400 });

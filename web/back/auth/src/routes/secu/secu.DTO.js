@@ -5,6 +5,9 @@ class SecuDTO {
     if (!mail) {
       return { valid: false, message: 'Missing fields', code : 400 };
     }
+    if (mail.length > 128) {
+      return { valid: false, message: 'Email too long', code: 400 };
+    }
     if (!validator.isEmail(mail)) {
       return { valid: false, message: 'Invalid email format', code : 400 };
     }
@@ -24,6 +27,9 @@ class SecuDTO {
     const new_psd = data.body.new_psd;
     if (!token || !new_psd) {
       return { valid: false, message: 'Missing fields', code : 400 };
+    }
+    if (new_psd.length > 128) {
+      return { valid: false, message: 'Password too long', code: 400 };
     }
     return { valid: true };
   }
