@@ -79,15 +79,6 @@ export class MyRoom extends Room {
       racketRot.z = data.rotation[2];
       racketRot.w = data.rotation[3];
     },
-    "suspendSession": (client: Client, suspending: boolean) => {
-        const userData = client.userData as RoomUserData;
-        if (userData) {
-          if (suspending) userData.suspended = true;
-          else userData.suspended = false;
-        }
-        console.log(userData);
-        console.log("set suspended");
-    }
   }
 
   onBeforePatch(state: MyRoomState) {

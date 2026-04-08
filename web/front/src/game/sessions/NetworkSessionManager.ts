@@ -228,6 +228,8 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
 
     public async dispose() : Promise<void> {
         console.log("disposing network");
+        this._callback = null;
+
         if (this._room) {
             console.log("am i leaving voluntarily:", this._voluntaryLeave);
             this._room.removeAllListeners();
@@ -237,21 +239,15 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
             this._room.onLeave.clear();
             this._room.onError.clear();
             if (!this._voluntaryLeave) {
-                this._room.send("suspendSession", true);
-                //this._room.reconnection.enabled = false;
                 this._room.reconnection.maxRetries = 0;
                 await this._room.leave(false);
-            } else {
-                //this._room.send("suspendSession", false)
-                
-                await this._room.leave(true);
-            }
-            // const roomAny = this._room as any;
-            // roomAny.connection.transport.ws.close();
+            } else await this._room.leave(true);
             console.log("leaving room")
             this._room = null;
         }
+        
         clearInterval(this._interval);
+        this.clear();
     }
 
     public emitGoalScored(teamNearScored: boolean): void {}

@@ -262,5 +262,15 @@ export class GUI {
     public dispose() {
         this._setAndDispose(null);
         this._disposing = true;
+
+        this._session = null;
+        this._score?.dispose();
+        this._score = null;
+
+        this._playerDisconnected?.dispose();
+        this._playerDisconnected = null;
+
+        this._scoreText?.dispose();
+        this._scoreText = null;
     }
 }

@@ -58,6 +58,7 @@ export default function Pong3D() {
         init();
         return async () => {
             gameApp?.dispose?.();
+            gameApp = null;
         };
     }, [canvasRef.current, gameKey]);
 

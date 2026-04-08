@@ -73,14 +73,10 @@ export class Ball {
 
         const positionError = this.serverPatch.position.subtract(pastSnapshot.snapshot.position);
         const velocityError = this.serverPatch.velocity.subtract(pastSnapshot.snapshot.velocity);
-        console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
         if (positionError.lengthSquared() < 1e-10 && velocityError.lengthSquared() < 1e-10) {
             this.serverPatch = null;
             return;
         }
-        console.log("tick:", this._clock.tick, "server tick:", this.serverPatch.tick,"pos error:", positionError.lengthSquared(), "vel error:", velocityError.lengthSquared());
-        console.log("server vel:", this.serverPatch.velocity, "past vel:", pastSnapshot.snapshot.velocity);
-        console.log("server pos:", this.serverPatch.position, "past pos:", pastSnapshot.snapshot.position);
         if (positionError.lengthSquared() < 0.05 && velocityError.lengthSquared() < 0.01) {
             this._correctSmallErrors(positionError, velocityError, pastSnapshot);
             this.serverPatch = null; 
@@ -100,32 +96,7 @@ export class Ball {
     }
 
     private _correctLargeErrors() {
-        // const patchTick = this.serverPatch.tick;
-        // const ticksToResimulate = this._clock.tick - patchTick;
         const preRollbackPos = this.getPhysicsBodyPosition();
-        // this.setPhysicsBodyPosition(this.serverPatch.position);
-        // this.setVelocity(this.serverPatch.velocity);
-        // this.snapshots.clearAfterTickIncluded(patchTick);
-        // this.snapshots.saveSnapshot({tick: patchTick, position: this.serverPatch.position, velocity: this.serverPatch.velocity});
-        // this.isResimming = true;
-        // const racketHistory = this._app.getPlayerRacketHistory();
-        // const impactSnapshots = this._app.getPlayerImpactSnapshots();
-        // //const player = this._app.getPlayer();
-        // for (let i = 1; i < ticksToResimulate; i++) {
-        //     const simulatingTick = patchTick + i;
-        //     const historicalRacket = racketHistory.get(simulatingTick);
-        //     if (historicalRacket) {
-        //         player.setRacketPos(historicalRacket.position);
-        //         player.setRacketRot(historicalRacket.rotation);
-        //     }
-        //     this._app._executeStep();
-        //     const impactSnapshot = impactSnapshots.getSnapshotAtTick(simulatingTick);
-        //     if (impactSnapshot)
-        //         this._app._checkRacketCollision(impactSnapshot.snapshot);
-        //     this._app._checkWallCollision();
-        //     this.snapshots.saveSnapshot({tick: simulatingTick, position: this.getPhysicsBodyPosition(), velocity: this.getVelocity()});
-        // }
-        // this.isResimming = false;
         this._physicsEngine.resimulatePhysicTicks(this.serverPatch);
         const postRollbackPos = this.getPhysicsBodyPosition();
         const teleportDelta = preRollbackPos.subtract(postRollbackPos);
@@ -144,10 +115,6 @@ export class Ball {
     public setVelocity(velocity : Vector3) {
         this._velocity = velocity.clone();
     }
-
-    // public setAngularVelocity(velocity : Vector3) {
-    //     this._body.setAngularVelocity(velocity);
-    // }
 
     public setPhysicsBodyPosition(position: Vector3) {
         this._node.position = position.clone();
@@ -170,14 +137,26 @@ export class Ball {
     }
 
     public dispose() {
-        this._shadows[0].removeShadowCaster(this._mesh);
-        this._shadows[1].removeShadowCaster(this._mesh);
-        this._scene.onBeforePhysicsObservable.remove(this._physicsObserver);
-        this._node.dispose();
+        this.snapshots?.dispose();
+        this.snapshots = null;
+
+        this._shadows[0]?.removeShadowCaster(this._mesh);
+        this._shadows[1]?.removeShadowCaster(this._mesh);
+        this._shadows = null;
+
+        this._scene?.onBeforePhysicsObservable.remove(this._physicsObserver);
+
+        this._node?.dispose();
         this._node = null;
-        this._mesh.dispose();
-        this._physicsObserver = null;
+
+        this._mesh?.dispose();
         this._mesh = null;
+
+        this._physicsObserver = null;
         this._scene = null;
+
+        this._clock = null;
+        this._physicsEngine = null;
+        this.serverPatch = null;
     }
 }

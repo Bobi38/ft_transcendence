@@ -55,6 +55,7 @@ export default function Pong3D() {
 
         return () => {
             gameApp?.dispose?.();
+            gameApp = null;
         };
     }, [canvasRef.current]);
 

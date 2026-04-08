@@ -92,5 +92,12 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
     public setVoluntaryLeave(): void {}
     
     public async leave(): Promise<void> {}
-    public async dispose() : Promise<void> {}
+
+    public async dispose() {
+        this.clear();
+        this._gameState = null;
+        this._clock = null;
+        this._bot?.dispose();
+        this._bot = null;
+    }
 }

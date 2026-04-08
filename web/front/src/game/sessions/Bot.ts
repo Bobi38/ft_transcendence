@@ -193,4 +193,12 @@ export class Bot {
     public getSwingDirection() : Vector3 {
         return this._swingDirection.clone();
     }
+
+    public dispose() {
+        this._engine = null;
+        this._ball = null;
+        this._body = null;
+        this._handNode = null;
+        this._racket = null;
+    }
 }

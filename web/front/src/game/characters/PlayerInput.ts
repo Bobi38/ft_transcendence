@@ -125,6 +125,14 @@ export class PlayerInput {
         }
     }
 
+    public dispose() {
+        this._inputMap = null;
+        this._scene = null;
+        this._camera = null;
+        this._handNode = null;
+        this._racket = null;
+    }
+
     public getMoveDirection() : Vector3 {
         return this._moveDirection.clone();
     }
@@ -135,5 +143,5 @@ export class PlayerInput {
 
     public getNewRacketRot() : Quaternion {
         return this._newRacketRot.clone();
-    } 
+    }
 }

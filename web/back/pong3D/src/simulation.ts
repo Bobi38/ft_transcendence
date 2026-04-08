@@ -195,8 +195,6 @@ export class Simulation {
     }
 }
 
-
-
 private _resetBallAfterGoal(ballPos: Vector3) {
     this._ball.setVelocity(Vector3.Zero());
     this._state.ball.velocity.x = 0;
