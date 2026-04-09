@@ -52,18 +52,19 @@ export class Bot {
     private _predictBallTarget() {
         const ballPos = this._ball.getPhysicsBodyPosition();
         const ballVel = this._ball.getVelocity();
+        const zStrikePlane = this._handNode.absolutePosition._z - 3;
         
-        this._timeToImpact = (this._handNode.absolutePosition.z - ballPos.z) / ballVel.z;
+        this._timeToImpact = (zStrikePlane - ballPos.z) / ballVel.z;
 
         let predictedX = ballPos.x + (ballVel.x * this._timeToImpact);
         let predictedY = ballPos.y + (ballVel.y * this._timeToImpact);
+
         if (ballVel.z == 0) {
             predictedX = ballPos.x;
             predictedY = ballPos.y;
         }
 
-        this._predictedBallPos = new Vector3(predictedX, predictedY, this._handNode.position.z);
-        //console.log(this._predictedBallPos);
+        this._predictedBallPos = new Vector3(predictedX, predictedY, zStrikePlane);
     }
 
     private _swingRacketTarget() {
@@ -91,27 +92,25 @@ export class Bot {
                 this._movingTarget = this._predictedBallPos;
                 break;
             case SwingState.WIND_UP:
-                if (this._swingTimer >= 1) { // Wind-up lasts 0.4 seconds
+                if (this._swingTimer >= 0.4) {
                     this._swingState = SwingState.STRIKE;
                 } else {
-                    const offset = this._swingDirection.scale(-10);
-                    //offset.y -= 1.5; 
+                    const offset = this._swingDirection.scale(-4);
                     this._movingTarget = this._predictedBallPos.add(offset);
                 }
                 break;
             case SwingState.STRIKE:
-                if (this._swingTimer > 1.2) { // Strike lasts 0.2 seconds (0.4 to 0.6)
+                if (this._swingTimer > 0.6) {
                     this._swingState = SwingState.FOLLOW_THROUGH;
                 } else {
                     this._movingTarget = this._predictedBallPos;
                 }
                 break;
             case SwingState.FOLLOW_THROUGH:
-                if (this._swingTimer > 2) { // Follow-through ends at 1.0 seconds
+                if (this._swingTimer > 1) {
                     this._swingState = SwingState.IDLE;
                 } else {
-                    const offset = this._swingDirection.scale(10);
-                    //offset.y += 2; 
+                    const offset = this._swingDirection.scale(4);
                     this._movingTarget = this._predictedBallPos.add(offset);
                 }
                 break;
@@ -123,26 +122,25 @@ export class Bot {
         const deadzone = 1;
 
         if (this._predictedBallPos.x > this._handNode.absolutePosition.x + deadzone) {
-            horizontal = Vector3.Lerp(horizontal, new Vector3(1, 0, 0), 0.2);
+            horizontal = Vector3.Lerp(horizontal, new Vector3(1, 0, 0), 0.4);
         } 
         else if (this._predictedBallPos.x < this._handNode.absolutePosition.x - deadzone) {
-            horizontal = Vector3.Lerp(horizontal, new Vector3(-1, 0, 0), 0.2);
+            horizontal = Vector3.Lerp(horizontal, new Vector3(-1, 0, 0), 0.4);
         } else {
             horizontal = Vector3.Zero();
         }
-        this._moveDirection = horizontal;//.normalize();
+        this._moveDirection = horizontal;
     }
 
     private _movementRacket() {
         const invertedWorldMatrix = this._handNode.computeWorldMatrix(true).clone().invert();
-        const localTargetPos = Vector3.TransformCoordinates(this._movingTarget, invertedWorldMatrix);
-        const relativePos = localTargetPos.subtract(this._handNode.position);
+        const relativePos = Vector3.TransformCoordinates(this._movingTarget, invertedWorldMatrix);
 
         const maxRadius : number = 5; 
         relativePos.normalize().scaleInPlace(maxRadius);
 
         const oldPos = this._racket.position;
-        this._newRacketPos = Vector3.Lerp(oldPos, relativePos, 0.15);// relativePos;
+        this._newRacketPos = Vector3.Lerp(oldPos, relativePos, 0.15);
 
         const localAxisY = relativePos.clone().normalize(); 
         let movementDir = relativePos.subtract(oldPos);

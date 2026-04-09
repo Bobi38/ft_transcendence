@@ -133,7 +133,7 @@ export default function App() {
                     {/* Home */}
                     <Route path={`/`}               	element={<Navigation> <Home />          </Navigation>} />
                     <Route path={`/ContactUs`}      	element={<Navigation> <ContactUs/>      </Navigation>}/>
-                    <Route path={`/PrivateMessage`} 	element={<Navigation> <PrivateMessage/> </Navigation>}/>
+                    <Route path={`/Friends`} 	element={<Navigation> <PrivateMessage/> </Navigation>}/>
                     <Route path={`/Profile`}        	element={<Navigation> <Profile/>        </Navigation>}/>
                     <Route path={`/Stats`}          	element={<Navigation> <Stats/>          </Navigation>}/>
                     <Route path={`/Morpion`}        	element={<Navigation> <MorpionDisplay isGame={true}/> </Navigation>}/>

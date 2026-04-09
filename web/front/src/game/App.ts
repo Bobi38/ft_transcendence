@@ -16,6 +16,10 @@ import { GameState } from "./sessions/GameState"
 import { PhysicsEngine } from "./physics/PhysicsEngine";
 import { GameSession } from "./sessions/GameSession";
 import { LocalSessionManager } from "./sessions/LocalSessionManager"
+import { Config } from "/app/src/game/shared/gameConfig.js";
+
+
+const config = JSON.parse(Config);
 
 export interface CharacterAssets {
     mesh: AbstractMesh,
@@ -49,7 +53,6 @@ export class App {
     private _ui : GUI;
     public  _clock : SynchronizedClock = new SynchronizedClock();
     private _isNear : boolean = true;
-    //public onUnauthorized?: () => void;
     private _gameState : GameState = new GameState();
     private _session : GameSession;
     private _environment: Environment;
@@ -75,7 +78,6 @@ export class App {
 
         window.addEventListener("keydown", this._showInspector)
 
-        console.log("exiting constructor");
         this._main();
     }
     
@@ -91,7 +93,6 @@ export class App {
     }
 
     private async _main(): Promise<void> {
-        console.log("exiting main");
         this._engine.displayLoadingUI();
         try {
             await this._session.initialize();
@@ -202,7 +203,7 @@ export class App {
         this._shadows = this._environment.loadLights(scene);
         let ballPos = this._gameState.ballPos;
         let ballVel = this._gameState.ballVel;
-        this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this._clock, this._engine, this._physicsEngine);
+        this._ball = new Ball(ballPos, ballVel, config.ballDiameter, this._shadows, this._scene, this._clock, this._engine, this._physicsEngine);
         this._physicsEngine.setBall(this._ball);
         this._setupBallUpdates();
     }
