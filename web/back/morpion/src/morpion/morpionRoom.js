@@ -44,6 +44,7 @@ class MorpionRoom extends Room {
     switchTurn() {
         const [p1, p2] = [...this._players];
         this._turn = this._turn === p1 ? p2 : p1;
+        this._turn.IAmActif();
     }
 
     getTurn() {
@@ -188,19 +189,27 @@ class MorpionRoom extends Room {
         return false;
     }
 
+    turnMessage(player, alertMessage){
+        player.send({
+            message: alertMessage,
+            board: this._board
+        })
+    }
+
     startTurnTimer() {
         const p = this._turn;
+        const o = this.getOther(p)
 
-        if (!p) return ;
-        const action = () => {
-            p.send({
-            message: "Hurry up and Play",
-            board: this._board
-            })
-        };
+        if (!p || !o) return ;
 
-        p.startTurnTimer(action, this.limitTime / 3 * 2);
+        p.startTurnTimer(
+            () => this.turnMessage(p, "Time is running out"),
+            this.limitTime / 3 * 2);
+        o.startTurnTimer(
+            () => this.turnMessage(o, "Wait… or win. Your move."),
+            this.limitTime);
     }
+        
 
     serializeBoard() {
         return this._board

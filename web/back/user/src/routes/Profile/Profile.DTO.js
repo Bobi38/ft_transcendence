@@ -17,7 +17,7 @@ class ProfileDTO {
     if (!token)
       return { success: false, message: "no token" };
 
-    return { success: true, name, token };  
+    return { success: true, name, token };
   }
 
     static validateToken(req) {

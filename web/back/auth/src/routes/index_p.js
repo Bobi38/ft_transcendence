@@ -18,6 +18,7 @@ import PswEmail from '../models/PssWrdEmail.js';
 const router = express.Router();
 export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 router.use(cookieParser());
+const status = process.env.STATUS
 
 export function tcheck_MPFA(user, host){
     const now = new Date();
@@ -55,6 +56,21 @@ export async function get_user_from_token(token) {
     return { success: false, message: "in get_user_from_token " + err.message };
   }
 }
+
+export function generateToken(MPFA, token, res) {
+  if (MPFA) {
+    if (status === "prod")
+      return res.cookie('temp', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+    else
+      return res.cookie('temp', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+  }else{
+    if (status === "prod")
+      return res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
+    else
+      return res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+  }
+}
+
 
 export {
     User,

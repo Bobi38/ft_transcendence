@@ -43,6 +43,8 @@ class FriendService {
             const name_friend = await User.findOne({where: {name: name}});
             if (!name_friend)
                 return ({success: false, message: "new friend doesn't exist", code: 404});
+            if (name_friend.id === decoded.id)
+                return ({success: false, message: "you can't add yourself as a friend", code: 400});
             const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
             if (relation.length > 0)
                 return ({success: false, message: "relation already exist", code: 409});
