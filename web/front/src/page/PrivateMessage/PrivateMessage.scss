@@ -17,6 +17,10 @@
 		margin-bottom: 1rem
 	}
 
+	input[type="text"] {
+		width: 100%;
+	}
+
 	.display-screen{
 	    @include mix.full;
 		padding-top: 0.5rem;

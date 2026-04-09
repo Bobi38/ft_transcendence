@@ -29,7 +29,7 @@ export default function NavBar() {
 	       if (data.success) {
 				sessionStorage.clear();
 	        	setShowLog(AUTH.LOGIN);
-	           // SocketM.sendd('friend', {type: "logout"});
+	           SocketM.sendd('friend', {type: "logout"});
 	        	SocketM.disconnect('friend');
 	        	SocketM.disconnect('morp');
 	        	SocketM.disconnect('priv');
