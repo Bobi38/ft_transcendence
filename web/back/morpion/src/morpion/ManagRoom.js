@@ -31,7 +31,7 @@ class ManagerRoom {
         const currentIds = new Set(Object.keys(this.list));
 
         for (const [id, room] of this._rooms) {
-                        // if (room.getLock()){
+
             if (room.isState("play")){
                 this.list[id] = room.getPlayers();
                 currentIds.delete(String(id));
@@ -41,7 +41,8 @@ class ManagerRoom {
         for (const id of currentIds) {
             delete this.list[id];
         }
-        console.log(this.list);
+        
+        this.sendList();
     }
 
     refreshRoomList() {
@@ -80,8 +81,9 @@ class ManagerRoom {
         const loser = player;
         let winner = game.getTurn();
         if (winner === loser){
-            winner = game.getOther();
+            winner = game.getOther(player);
         }
+
         winner.send({ message: m.msgs.w_abort, turn: false });
         loser.send({ message: m.msgs.l_abort, turn: false });
 

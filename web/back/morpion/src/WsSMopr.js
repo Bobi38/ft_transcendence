@@ -26,14 +26,13 @@ export function initWebSMopr(server) {
     let player = await setupPlayer(socket, user, players)
     
     if (!player) return ;
+
+    player.list = manager_room.list;
+    player.sendList();
     
     socket.players = players;
     
     socket.send(JSON.stringify({type: "auth_good"}));
-    
-    manager_room.sendList = () => {
-       players.forEach(p => {p.sendList();});
-    }
 
     socket.sendList = () => {
       players.forEach(p => {p.sendList();});

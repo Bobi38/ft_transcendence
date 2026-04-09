@@ -6,7 +6,7 @@ import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 import "../PopUp.scss";
 
 /* Components */
-import {showAlert}                  from    "TOOL/fonction_usefull"
+import { showAlert }                from    "TOOL/fonction_usefull"
 import useFetch                     from    "TOOL/useFetch.jsx";
 import { AUTH, useAuth }            from    "HOOKS/useAuth.jsx";
 
