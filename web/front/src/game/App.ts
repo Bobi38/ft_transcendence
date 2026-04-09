@@ -56,7 +56,6 @@ export class App {
         this._canvas = canvas;
         this.onReturnToMenu = onReturnToMenu;
 
-        console.error("Building app");
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
@@ -129,7 +128,6 @@ export class App {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
         this._session.on('onDrop', (code: number, reason: string) => {
-            console.log('onDrop');
             this._player.lockControls();
             this._ui.showAwaitingReconnectionUI();
         });

@@ -35,9 +35,7 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         const callback = Callbacks.get(this._room);
         this._callback = callback;
 
-        console.log("got my room");
         await this._waitForStateOnce(this._room);
-        console.log("got the state");
         this._initGameState();
 
         this._setupPhysicsMessages();
@@ -104,7 +102,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
         const port = window.location.port;
-        console.log("iciiiiiiii====   " , `${protocol}//${hostname}/api/pong3d`);
         let colyseusSDK : Client;
         if (protocol === "https")
             colyseusSDK = new Client(`${protocol}//${hostname}:${port}/api/pong3d`);
@@ -197,7 +194,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
                     rackPos: racketPos, rackRot: racketRot,
                     sideNear: player.sideNear, connected: player.connected});
                 this.emit("onPlayerJoined", sessionId, playerPos, player.sideNear)
-                //this._setupPlayer(sessionId, playerPos, player.sideNear);
             }
             else {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
@@ -227,11 +223,9 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
     }
 
     public async dispose() : Promise<void> {
-        console.log("disposing network");
         this._callback = null;
 
         if (this._room) {
-            console.log("am i leaving voluntarily:", this._voluntaryLeave);
             this._room.removeAllListeners();
             this._room.onStateChange.clear();
             this._room.onDrop.clear();
@@ -242,7 +236,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
                 this._room.reconnection.maxRetries = 0;
                 await this._room.leave(false);
             } else await this._room.leave(true);
-            console.log("leaving room")
             this._room = null;
         }
         
