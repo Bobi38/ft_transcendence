@@ -55,7 +55,6 @@ export class App {
         this._canvas = canvas;
         this.onReturnToMenu = onReturnToMenu;
 
-        console.error("Building app");
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
