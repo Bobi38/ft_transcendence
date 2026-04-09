@@ -37,7 +37,7 @@ router.get('/get_history/:page', async (req, res) => {
         return errorHandler(validation.message, validation.code, res);
     }
     try{
-        const result = await MorpionService.get_history(validation.page, validation.token);
+        const result = await MorpionService.get_history(validation.name, validation.page,validation.limit, validation.token);
         if (!result.success)
           return errorHandler(result.message, result.code, res);
         return res.status(result.code).json({success: true, history_user: result.history_user, name: validation.name ? validation.name : "current user"});
