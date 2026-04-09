@@ -11,13 +11,27 @@ import { Simulation } from "../simulation.js";
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 const activePlayers = new Set<string>();
 
+export interface PlayerStats {
+    id: string;
+    score: number;
+    hasWon: boolean;
+    hasDisconnected: boolean;
+    side: "near" | "far";
+}
+
+interface RoomUserData {
+    stats: PlayerStats;
+    suspended?: boolean;
+}
+
 export class MyRoom extends Room {
   private _simulation: Simulation;
   private _nextPlayerIndex: number = 0;
-  private _tokens : Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>
-    = new Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>();
-  private _near : string;
-  private _far: string;
+  // private _tokens : Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>
+  //   = new Map<string, {auth: string, score: number, hasWon: boolean, hasDisconnected: boolean}>();
+  private _matchStats = new Map<string, PlayerStats>();
+  // private _near : string;
+  // private _far: string;
   private _timeStart: number;
   private _timeEnd: number;
 
@@ -64,7 +78,7 @@ export class MyRoom extends Room {
       racketRot.y = data.rotation[1];
       racketRot.z = data.rotation[2];
       racketRot.w = data.rotation[3];
-    }
+    },
   }
 
   onBeforePatch(state: MyRoomState) {
@@ -94,7 +108,7 @@ export class MyRoom extends Room {
     this.state.ball.velocity.y = 0;
     this.state.ball.velocity.z = 0;
     console.log("room", this.roomId, "created and starting physics simulation");
-    this._simulation = new Simulation(this, this.state);
+    this._simulation = new Simulation(this, this.state, this._matchStats);
   }
 
   static async onAuth (token: string, options: any, context: AuthContext) {
@@ -134,7 +148,6 @@ export class MyRoom extends Room {
             console.log(`Blocked duplicate login for: ${result.id}`);
             throw new ServerError(401, "Account is already logged in elsewhere!");
         }
-
       return result;
   }
 
@@ -143,24 +156,38 @@ export class MyRoom extends Room {
      * Called when a client joins the room.
      */
     activePlayers.add(auth.id);
+
+    const isNear = this._nextPlayerIndex % 2 === 0;
+    const playerStats: PlayerStats = {
+            id: auth.id,
+            score: 0,
+            hasWon: false,
+            hasDisconnected: false,
+            side: isNear ? "near" : "far"
+        };
+    this._matchStats.set(client.sessionId, playerStats);
+    client.userData = { 
+        stats: this._matchStats.get(client.sessionId), 
+        suspended: false 
+    } as RoomUserData;
+    console.log("creating user data:", client.userData);
+
     console.log("auth.id:", auth.id);
     console.log(client.sessionId, "joined room", this.roomId);
     console.log("current room status:", this.state.roomStatus);
-    this._tokens.set(client.sessionId, {auth: auth.id, score: 0, hasWon: false, hasDisconnected: false});
+
     const player = new Player();
+      if (!isNear) player.sideNear = false;
     player.position.x = 0;
     player.position.y = 0.5;
-    if (this._nextPlayerIndex % 2 == 0) {
+    if (player.sideNear)
       player.position.z = -20;
-      this._near = client.sessionId;
-    }
-    else {
-      player.position.z = 40;
-      player.sideNear = false;
-      this._far = client.sessionId;
-    }
+    else 
+      player.position.z = 40
+
     this.state.players.set(client.sessionId, player);
     this._nextPlayerIndex++;
+
     if (this.state.players.size == 2 && this.state.roomStatus == RoomStatus.WAITING) {
       console.log("Game starting");
       this.state.roomStatus = RoomStatus.STARTED;
@@ -168,125 +195,277 @@ export class MyRoom extends Room {
     }
   }
 
-  onDrop(client: Client, code: number) {
-    console.log(`Client ${client.sessionId} dropped (code: ${code})`);
-    const player = this.state.players.get(client.sessionId);
-    if (player && this.state.roomStatus === RoomStatus.STARTED) {
-      player.connected = false;
-      this._tokens.get(client.sessionId).hasDisconnected = true;
+  async onLeave(client: Client, code: number) {
+    const userData = client.userData as RoomUserData;
+    const isSuspended = userData?.suspended;
+    
+    const consented = (code === 4000);
+    console.log(code, isSuspended);
+
+    if (consented && !isSuspended) {
+        console.log(`${client.sessionId} left permanently (Code: ${code})`);
+        this._finalizeDisconnection(client.sessionId);
+        return;
     }
-    if (this.state.roomStatus === RoomStatus.STARTED || this.state.roomStatus === RoomStatus.WAITING)
-      this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
-    console.log("room status:", this.state.roomStatus);
-    if (this.state.players.size == 2) {
-      this.allowReconnection(client, 5).catch(() => {
+
+    console.log(`${client.sessionId} disconnected (Code: ${code}). Awaiting reconnection...`);
+    
+    const player = this.state.players.get(client.sessionId);
+    if (player) player.connected = false;
+    
+    if (this.state.roomStatus === RoomStatus.STARTED) {
+        this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
+    }
+
+    try {
+        await this.allowReconnection(client, 5);
+        
+        console.log(`${client.sessionId} reconnected successfully!`);
+        //if (userData) userData.suspended = false;
+        if (player) player.connected = true;
+
         if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
-          this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
-          this._timeEnd = Date.now();
+            this.state.roomStatus = RoomStatus.STARTED;
         }
-      });
-    }
-  }
+        console.log("reached end of reco");
 
-  onReconnect(client: Client) {
-    console.log(`Client ${client.sessionId} reconnected!`);
+    } catch (e) {
+        console.log(`${client.sessionId} failed to return. Finalizing exit.`);
+        this._finalizeDisconnection(client.sessionId);
+    }
+}
+
+  // async onLeave(client: Client, consented: boolean) {
+  //       const userData = client.userData as RoomUserData;
+  //       const isSuspended = userData?.suspended;
+        
+  //       if (consented && !isSuspended) {
+  //           console.log(`${client.sessionId} left permanently.`);
+  //           this._finalizeDisconnection(client.sessionId);
+  //           return;
+  //       }
+
+  //       console.log(`${client.sessionId} disconnected. Awaiting reconnection...`);
+  //       const player = this.state.players.get(client.sessionId);
+  //       if (player) 
+  //         player.connected = false;
+        
+  //       if (this.state.roomStatus === RoomStatus.STARTED) {
+  //           this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
+  //       }
+
+  //       try {
+  //           await this.allowReconnection(client, 5);
+      
+  //           console.log(`${client.sessionId} reconnected successfully!`);
+  //           if (userData) 
+  //             userData.suspended = false;
+  //           if (player) 
+  //             player.connected = true;
+
+  //           if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+  //               this.state.roomStatus = RoomStatus.STARTED;
+  //           }
+            
+  //       } catch (e) {
+  //           console.log(`${client.sessionId} failed to return in time.`);
+  //           this._finalizeDisconnection(client.sessionId);
+  //       }
+  //   }
+
+    private _finalizeDisconnection(sessionId: string) {
+        const stats = this._matchStats.get(sessionId);
+        if (stats) {
+            stats.hasDisconnected = true;
+            activePlayers.delete(stats.id);
+        }
+
+        if (this.state.roomStatus !== RoomStatus.PLAYER_DISCONNECTED) {
+            this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+            this._timeEnd = this._timeEnd || Date.now();
+            this._simulation?.getEngine()?.stopRenderLoop();
+            this.lock();
+        }
+    }
+
+  // onDrop(client: Client, code: number) {
+  //   console.log(`Client ${client.sessionId} dropped (code: ${code})`);
+  //   const player = this.state.players.get(client.sessionId);
+  //   if (player && this.state.roomStatus === RoomStatus.STARTED) {
+  //     player.connected = false;
+  //     this._tokens.get(client.sessionId).hasDisconnected = true;
+  //   }
+  //   if (this.state.roomStatus === RoomStatus.STARTED)
+  //     this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
+  //   console.log("room status:", this.state.roomStatus);
+  //   if (this.state.players.size == 2) {
+  //     this.allowReconnection(client, 5).catch(() => {
+  //       if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+  //         this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+  //         this._timeEnd = Date.now();
+  //       }
+  //     });
+  //   }
+  // }
+
+  // onReconnect(client: Client) {
+  //   console.log(`Client ${client.sessionId} reconnected!`);
  
-    const player = this.state.players.get(client.sessionId);
-    if (player && this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
-      this.state.roomStatus = RoomStatus.STARTED;
-      player.connected = false;
-      this._tokens.get(client.sessionId).hasDisconnected = false;
-    }
+  //   const player = this.state.players.get(client.sessionId);
+  //   if (player && this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
+  //     this.state.roomStatus = RoomStatus.STARTED;
+  //     player.connected = false;
+  //     this._tokens.get(client.sessionId).hasDisconnected = false;
+  //   }
+  //   if (client.userData?.suspended) {
+  //     client.userData = null;
+  //   }
+  //   const token = this._tokens.get(client.sessionId); 
+  //   if (token) {
+  //       activePlayers.delete(token.auth);
+  //   }
+  // }
 
-    const token = this._tokens.get(client.sessionId); 
-    if (token) {
-        activePlayers.delete(token.auth);
-    }
-  }
+  // onLeave (client: Client, code: CloseCode) {
+  //   /**
+  //    * Called when a client leaves the room.
+  //    */
+  //   if (client.userData?.suspended) {
+  //       console.log(`Seat reserved for ${client.sessionId}`);
+  //       this.allowReconnection(client, 5);
+  //   }
+  //   if (code == CloseCode.FAILED_TO_RECONNECT) {
+  //     console.log(client.sessionId, "failed to reconnect to room", this.roomId);
+  //   }
+  //   else
+  //     console.log(client.sessionId, "left room", this.roomId, "with code", code);
+  //   if (this.state.roomStatus != RoomStatus.PLAYER_DISCONNECTED)
+  //     this._timeEnd = this._simulation.getTimeEnd();
+  //   this._simulation.getEngine().stopRenderLoop();
+  //   this.lock();
+  //   activePlayers.delete(this._tokens.get(client.sessionId).auth);
+  //   this.state.players.delete(client.sessionId);
+  // }
 
-  onLeave (client: Client, code: CloseCode) {
-    /**
-     * Called when a client leaves the room.
-     */
-    if (code == CloseCode.FAILED_TO_RECONNECT) {
-      console.log(client.sessionId, "failed to reconnect to room", this.roomId);
+  async _sendGameDataToDatabase() {
+        const players = Array.from(this._matchStats.values());
+        if (players.length < 2)
+          return;
+
+        const p1 = players[0];
+        const p2 = players[1];
+        const timePlayed = this._timeEnd - this._timeStart;
+        const isAbort = this.state.roomStatus === RoomStatus.PLAYER_DISCONNECTED;
+
+        let loserStats = p1.hasDisconnected ? p1 : (p2.hasDisconnected ? p2 : (p1.hasWon ? p2 : p1));
+        let winnerStats = (loserStats === p1) ? p2 : p1;
+
+        try {
+            await GamePong3D.create({
+                id_player_1: p1.id,
+                id_player_2: p2.id,
+                score_1: p1.score,
+                score_2: p2.score,
+                time: timePlayed,
+                date_game_start: this._timeStart,
+                date_game_end: this._timeEnd,
+                // If it's an abort, use the abort fields. Otherwise use normal fields.
+                ...(isAbort 
+                    ? { abortwinner: winnerStats.id, abortloser: loserStats.id }
+                    : { winner: winnerStats.id, loser: loserStats.id }
+                )
+            });
+
+            // Update individual player records
+            await this._updateDbPlayer(winnerStats.id, true, timePlayed);
+            await this._updateDbPlayer(loserStats.id, false, timePlayed);
+
+        } catch (e) {
+            console.error("Failed to store game results in database", e);
+        }
     }
-    else
-      console.log(client.sessionId, "left room", this.roomId, "with code", code);
-    if (this.state.roomStatus != RoomStatus.PLAYER_DISCONNECTED)
-      this._timeEnd = this._simulation.getTimeEnd();
-    this._simulation.getEngine().stopRenderLoop();
-    this.lock();
-    activePlayers.delete(this._tokens.get(client.sessionId).auth);
-    this.state.players.delete(client.sessionId);
-  }
 
   async _updateDbPlayer(playerId: string, won: boolean, timePlayed: number){
     const userData = await StatPong3D.findOne({where: {idUser: playerId}});
     await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
   }
 
-  async _sendGameDataToDatabase() {
-    const iterator = this._tokens.entries();
-    const firstPlayer = iterator.next().value;
-    const secondPlayer = iterator.next().value;
-    const player1id = firstPlayer[1].auth;
-    const player2id = secondPlayer[1].auth;
-    const score1 = firstPlayer[1].score;
-    const score2 = secondPlayer[1].score;
-    console.log(player1id);
-    let whowin, wholose;
-    if (this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED) {
-      if (firstPlayer[1].hasDisconnected) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player2id;}
-      try {
-        GamePong3D.create({id_player_1: player1id, id_player_2: player2id, abortwinner: whowin, abortloser: wholose,
-          score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
-        this._updateDbPlayer(player1id, firstPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
-        this._updateDbPlayer(player2id, secondPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
-      } catch (e) {
-        console.log("Failed to store results in database", e);
-      }
-    }
-    else {
-      if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
-      try {
-        await GamePong3D.create({id_player_1: player1id, id_player_2: player2id, winner: whowin, loser: wholose,
-          score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
-        this._updateDbPlayer(player1id, firstPlayer[1].hasWon, this._timeEnd - this._timeStart);
-        this._updateDbPlayer(player2id, secondPlayer[1].hasWon, this._timeEnd - this._timeStart);
-      } catch (e) {
-        console.log("Failed to store results in database", e);
-      }
-    }
-  }
+  // async _sendGameDataToDatabase() {
+  //   const iterator = this._tokens.entries();
+  //   const firstPlayer = iterator.next().value;
+  //   const secondPlayer = iterator.next().value;
+  //   const player1id = firstPlayer[1].auth;
+  //   const player2id = secondPlayer[1].auth;
+  //   const score1 = firstPlayer[1].score;
+  //   const score2 = secondPlayer[1].score;
+  //   console.log(player1id);
+  //   let whowin, wholose;
+  //   if (this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED) {
+  //     if (firstPlayer[1].hasDisconnected) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player2id;}
+  //     try {
+  //       GamePong3D.create({id_player_1: player1id, id_player_2: player2id, abortwinner: whowin, abortloser: wholose,
+  //         score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
+  //       this._updateDbPlayer(player1id, firstPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
+  //       this._updateDbPlayer(player2id, secondPlayer[1].hasDisconnected, this._timeEnd - this._timeStart);
+  //     } catch (e) {
+  //       console.log("Failed to store results in database", e);
+  //     }
+  //   }
+  //   else {
+  //     if (firstPlayer[1].hasWon) {whowin = player1id; wholose = player2id;} else {whowin = player2id; wholose = player1id;}
+  //     try {
+  //       await GamePong3D.create({id_player_1: player1id, id_player_2: player2id, winner: whowin, loser: wholose,
+  //         score_1: score1, score_2: score2, date_game_start: this._timeStart, date_game_end: this._timeEnd, time: this._timeEnd - this._timeStart});
+  //       this._updateDbPlayer(player1id, firstPlayer[1].hasWon, this._timeEnd - this._timeStart);
+  //       this._updateDbPlayer(player2id, secondPlayer[1].hasWon, this._timeEnd - this._timeStart);
+  //     } catch (e) {
+  //       console.log("Failed to store results in database", e);
+  //     }
+  //   }
+  // }
 
-  onDispose() {
-    /**
-     * Called when the room is disposed.
-     */
-    console.log(this.state.roomStatus);
-    if (this.state.roomStatus != RoomStatus.WAITING)
+onDispose() {
+  console.log(`Room ${this.roomId} disposing...`);
+  
+  if (this.state.roomStatus !== RoomStatus.WAITING) {
+      this._timeEnd = this._timeEnd || Date.now(); 
       this._sendGameDataToDatabase();
-
-    for (let token of this._tokens.values()) {
-      activePlayers.delete(token.auth);
-    }
-
-    this._tokens = null;
-    this._simulation.dispose();
-
-    console.log("room", this.roomId, "disposing and ending simulation");
   }
 
-  public getTokens() {
-    return this._tokens;
+  for (let stats of this._matchStats.values()) {
+      activePlayers.delete(stats.id);
   }
 
-  public getFar() : string {
-    return this._far;
-  }
+  this._simulation?.dispose();
+}
 
-  public getNear() : string {
-    return this._near;
-  }
+  // onDispose() {
+  //   /**
+  //    * Called when the room is disposed.
+  //    */
+  //   console.log(this.state.roomStatus);
+  //   if (this.state.roomStatus != RoomStatus.WAITING)
+  //     this._sendGameDataToDatabase();
+
+  //   for (let token of this._tokens.values()) {
+  //     activePlayers.delete(token.auth);
+  //   }
+
+  //   this._tokens = null;
+  //   this._simulation.dispose();
+
+  //   console.log("room", this.roomId, "disposing and ending simulation");
+  // }
+
+  // public getTokens() {
+  //   return this._tokens;
+  // }
+
+//   public getFar() : string {
+//     return this._far;
+//   }
+
+//   public getNear() : string {
+//     return this._near;
+//   }
 }

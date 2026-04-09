@@ -18,11 +18,12 @@ function isMobileDevice() {
     return hasCoarsePointer || hasTouchPoints || hasTouchEvents;
 }
 
-export default function Pong3D() {
+export default function Pong3D({type}) {
 
     const navigate = useNavigate();
     const canvasRef = useRef(null);
     const [isMobile,setIsMobile] = useState(false);
+    const [gameKey, setGameKey] = useState(0);
 
     useEffect(() => {
         if (canvasRef.current == null)
@@ -43,18 +44,17 @@ export default function Pong3D() {
                 return;
             }
 
-            if (canvasRef.current) {
-                gameApp = new GameApp(canvasRef.current, false);
-                gameApp.onUnauthorized = () => showAlert("Tu as deja une page ouverte sur Pong3D", "danger");
-            }
+                gameApp = new GameApp(canvasRef.current, type, () => { navigate('/') });
+                gameApp.onUnauthorized = () => showAlert("You already are playing Pong3D", "danger");
+                gameApp.onReload = () => setGameKey(prev => prev + 1);
         };
 
         init();
-
-        return () => {
+        return async () => {
             gameApp?.dispose?.();
+            gameApp = null;
         };
-    }, [canvasRef.current]);
+    }, [canvasRef.current, gameKey]);
 
     return (
         <main className={`Pong3D-root`}>

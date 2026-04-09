@@ -108,7 +108,6 @@ export function initWebSChat(server) {
             if (session.socket.readyState === ws.OPEN && session.userId !== nono)
               session.socket.send(JSON.stringify({type: 'updateName_good', old_name: data.old_name, new_name: data.new_name}));
           }
-          
         }
       }catch (err){
         console.log("err serv ws= " + err);
@@ -124,7 +123,7 @@ export function initWebSChat(server) {
     });
     socket.on('close', () => {
       try{
-        if (socket.cleanedUp) return; // déjà traité
+        if (socket.cleanedUp) return; // already handle
         socket.cleanedUp = true;
 
         const id = socket.userId;

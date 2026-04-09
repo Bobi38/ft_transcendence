@@ -1,4 +1,4 @@
-import 
+import
 {
   User,
   StatMorp,
@@ -15,7 +15,7 @@ class MorpionService {
             to_search = await User.findOne({where: {name: to_search}})
             console.log("API/morp get_stat(2.info.1) to_search:",to_search)
             if (to_search === null)
-                return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
+                return ({success: false, message: `Hmmm no user with this name..`, code: 404});
             } else {
             // console.log("API/morp get_stat(2.info.2)");
             const user = await get_user_from_token(token);
@@ -25,7 +25,7 @@ class MorpionService {
             to_search = await User.findOne({where: {id: decoded.id}})
             console.log("API/morp get_stat(2.info.2) to_search:",to_search)
             if (to_search === null)
-                return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
+                return ({success: false, message: `Hmmm no user with this name..`, code: 404});
             }
             console.log("API/morp get_stat(3)");
             const result_stats = await StatMorp.findOne({where: {idUser: to_search.id}});
@@ -38,29 +38,29 @@ class MorpionService {
     static async get_history(to_search, page, limit, token) {
         try{
             if (to_search !== undefined){
-            // console.log("API/morp get_stat(2.info.1)");
-            to_search = await User.findOne({where: {name: to_search}})
-            console.log("API/morp get_stat(2.info.1) to_search:",to_search)
-            if (to_search === null)
-                return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
+                // console.log("API/morp get_stat(2.info.1)");
+                to_search = await User.findOne({where: {name: to_search}})
+                console.log("API/morp get_stat(2.info.1) to_search:",to_search)
+                if (to_search === null)
+                    return ({success: false, message: `no user with this name..`, code: 404});
             } else {
-            // console.log("API/morp get_stat(2.info.2)");
-            const user = await get_user_from_token(token);
-            if (!user.success)
-                return ({ success: false, message: user.message, code: 401 });
-            const decoded = user.user;
-            to_search = await User.findOne({where: {id: decoded.id}})
-            console.log("API/morp get_history(2.info.2) to_search:",to_search)
-            if (to_search === null)
-                return ({success: false, message: `Hmmm il n'y a pas de user de ce nom..`, code: 404});
+                // console.log("API/morp get_stat(2.info.2)");
+                const user = await get_user_from_token(token);
+                if (!user.success)
+                    return ({ success: false, message: user.message, code: 401 });
+                const decoded = user.user;
+                to_search = await User.findOne({where: {id: decoded.id}})
+                console.log("API/morp get_history(2.info.2) to_search:",to_search)
+                if (to_search === null)
+                    return ({success: false, message: `no user with this name..`, code: 404});
             }
-            const offsetpage = limit * page 
+            const offsetpage = limit * page
             const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
                                     { model: User, as: 'player1', attributes: ['name'] },
                                     { model: User, as: 'player2', attributes: ['name'] },
                                     { model: User, as: 'winnerUser', attributes: ['name'] },
                                     { model: User, as: 'loserUser', attributes: ['name'] },
-                                ]});   
+                                ]});
             console.log("API/morp get_history(4) result_history", result_history);
 
             if (!result_history.length)

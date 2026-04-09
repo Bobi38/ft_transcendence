@@ -1,5 +1,5 @@
 import {decrypt, encrypt} from './crypt.js';
-import { maj_conv, Op} from './index.js';
+import { maj_conv, Op, get_user_from_token} from './index.js';
 import {User, PrivChat, PrivMess} from './index.js';
 
 class ChatPService {
@@ -35,7 +35,6 @@ class ChatPService {
             let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
             if (!findchat)
                 findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-            console.log("dATA ", data.message, id1.id, findchat.id, data.time);
             const crypt = encrypt(data.message);
             if (crypt.length > 511) {
                 return ({ success: false, message: "Message too long", code: 400 });
@@ -54,7 +53,7 @@ class ChatPService {
         try {
             const user = await get_user_from_token(token);
             if (!user.success)
-                return ({success: false, message: user.message, code: user.code})
+                return ({success: false, message: user.message, code: 404})
             const result = user.user;
             const chats = await PrivChat.findAll({
                         where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },
