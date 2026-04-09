@@ -90,6 +90,8 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
     public sendUpdateBody(pos: any) {}
     public sendUpdateRacket(rackPos: any, rackRot: any) {}
     public setVoluntaryLeave(): void {}
+    public refreshGameState(): void {}
+    public setGameState(state: RoomStatus): void {}
     
     public async leave(): Promise<void> {}
 

@@ -86,8 +86,10 @@ export class GUI {
         menuBtn.background = "#f44336";
 
         menuBtn.onPointerClickObservable.add(() => {
-            if (this._onReturnToMenu)
+            if (this._onReturnToMenu) {
+                this._session.setVoluntaryLeave();
                 this._onReturnToMenu();
+            }
             else
                 window.location.href = "/";
             console.log("Return to menu clicked");
@@ -272,5 +274,8 @@ export class GUI {
 
         this._scoreText?.dispose();
         this._scoreText = null;
+
+        this._onReturnToMenu = null;
+        this._onReload = null;
     }
 }

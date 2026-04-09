@@ -103,4 +103,8 @@ export class SnapshotBuffer {
     public dispose() {
         this._snapshots = null;
     }
+
+    public empty() {
+        this._snapshots = [];
+    }
 }

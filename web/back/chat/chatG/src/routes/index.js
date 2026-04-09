@@ -25,7 +25,7 @@ export function maj_conv(id, conv, namelst){
         let name;
         let monMs
         console.log("conv[i].SenderId ", conv[i].SenderId);
-        if (conv[i].SenderId == id){
+        if (conv[i].SenderId === id){
             name = "me";
             monMs = true;
         } else {

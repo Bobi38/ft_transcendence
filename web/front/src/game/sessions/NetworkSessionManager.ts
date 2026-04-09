@@ -9,6 +9,7 @@ import { SynchronizedClock } from "../utils/SynchronizedClock";
 import { GameSession } from "./GameSession";
 import { Ball } from "../physics/Ball";
 import { Environment } from "../physics/Environment";
+import { RoomStatus } from "../App";
 
 
 
@@ -18,26 +19,26 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
     private _gameState : GameState;
     private _clock : SynchronizedClock;
     private _interval: number | null = null;
-    public onUnauthorized?: () => void;
-    public onReturnToMenu?: () => void;
+    public  onUnauthorized: () => void;
+    public  onReturnToMenu: () => void;
     private _voluntaryLeave : boolean = false;
 
-    constructor(gameState: GameState, clock: SynchronizedClock, onReturnToMenu?: () => void) {
+    constructor(gameState: GameState, clock: SynchronizedClock, onReturnToMenu: () => void, onUnauthorized: () => void) {
         super();
         this._gameState = gameState;
         this._clock = clock;
         this.onReturnToMenu = onReturnToMenu;
+        this.onUnauthorized = onUnauthorized;
     }
 
 
-    public async initialize(): Promise<void> {
+    public async initialize(): Promise<void | null> {
         this._room = await this._connectOrReconnectToRoom();
+
         const callback = Callbacks.get(this._room);
         this._callback = callback;
 
-        console.log("got my room");
         await this._waitForStateOnce(this._room);
-        console.log("got the state");
         this._initGameState();
 
         this._setupPhysicsMessages();
@@ -47,7 +48,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         this._callback.listen("roomStatus", () => {
             this.emit('onGameStatusChange', this._room.state.roomStatus);
             this._gameState.gameStatus = this._room.state.roomStatus;
-            console.log("in network manager:", this._room.state.roomStatus);
         });
         this._callback.onChange(this._room.state.score, () => {
             this.emit('onScoreChange', this._room.state.score.teamNear, this._room.state.score.teamFar)
@@ -55,7 +55,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
             this._gameState.teamFar = this._room.state.score.teamFar;
         });
         this._syncWithColyseus();
-        console.log(this._room.state);
 
         this._setupPlayerJoinedRoom();
 
@@ -104,7 +103,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
         const port = window.location.port;
-        console.log("iciiiiiiii====   " , `${protocol}//${hostname}/api/pong3d`);
         let colyseusSDK : Client;
         if (protocol === "https")
             colyseusSDK = new Client(`${protocol}//${hostname}:${port}/api/pong3d`);
@@ -128,12 +126,15 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
             try {
                 room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
             } catch (newRoomError) {
-                console.log(newRoomError);
+                console.log(newRoomError, newRoomError.code);
                 if (newRoomError.code == 401) {
-                    this.onUnauthorized?.();
+                    console.log("going to use onUnauthorized", this.onUnauthorized);
+                    this.onUnauthorized();
+                    throw Error("Failed to connect");
                 }
                 this.onReturnToMenu();
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
+                throw Error("Failed to connect");
             }
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);
@@ -197,7 +198,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
                     rackPos: racketPos, rackRot: racketRot,
                     sideNear: player.sideNear, connected: player.connected});
                 this.emit("onPlayerJoined", sessionId, playerPos, player.sideNear)
-                //this._setupPlayer(sessionId, playerPos, player.sideNear);
             }
             else {
                 const enemyPos = new Vector3(player.position.x, player.position.y, player.position.z);
@@ -222,16 +222,26 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         });
     }
 
+    public refreshGameState() {
+        this._gameState.gameStatus = this._room.state.roomStatus;
+        this.emit('onGameStatusChange', this._room.state.roomStatus);
+    }
+
+    public setGameState(state: RoomStatus) {
+        this._gameState.gameStatus = state;
+        this.emit('onGameStatusChange', state);
+    }
+
     public setVoluntaryLeave() {
         this._voluntaryLeave = true;
     }
 
     public async dispose() : Promise<void> {
-        console.log("disposing network");
+        this.onUnauthorized = null;
+        this.onReturnToMenu = null;
         this._callback = null;
 
         if (this._room) {
-            console.log("am i leaving voluntarily:", this._voluntaryLeave);
             this._room.removeAllListeners();
             this._room.onStateChange.clear();
             this._room.onDrop.clear();
@@ -242,7 +252,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
                 this._room.reconnection.maxRetries = 0;
                 await this._room.leave(false);
             } else await this._room.leave(true);
-            console.log("leaving room")
             this._room = null;
         }
         

@@ -38,21 +38,21 @@ class MorpionService {
     static async get_history(to_search, page, limit, token) {
         try{
             if (to_search !== undefined){
-            // console.log("API/morp get_stat(2.info.1)");
-            to_search = await User.findOne({where: {name: to_search}})
-            console.log("API/morp get_stat(2.info.1) to_search:",to_search)
-            if (to_search === null)
-                return ({success: false, message: `no user with this name..`, code: 404});
+                // console.log("API/morp get_stat(2.info.1)");
+                to_search = await User.findOne({where: {name: to_search}})
+                console.log("API/morp get_stat(2.info.1) to_search:",to_search)
+                if (to_search === null)
+                    return ({success: false, message: `no user with this name..`, code: 404});
             } else {
-            // console.log("API/morp get_stat(2.info.2)");
-            const user = await get_user_from_token(token);
-            if (!user.success)
-                return ({ success: false, message: user.message, code: 401 });
-            const decoded = user.user;
-            to_search = await User.findOne({where: {id: decoded.id}})
-            console.log("API/morp get_history(2.info.2) to_search:",to_search)
-            if (to_search === null)
-                return ({success: false, message: `no user with this name..`, code: 404});
+                // console.log("API/morp get_stat(2.info.2)");
+                const user = await get_user_from_token(token);
+                if (!user.success)
+                    return ({ success: false, message: user.message, code: 401 });
+                const decoded = user.user;
+                to_search = await User.findOne({where: {id: decoded.id}})
+                console.log("API/morp get_history(2.info.2) to_search:",to_search)
+                if (to_search === null)
+                    return ({success: false, message: `no user with this name..`, code: 404});
             }
             const offsetpage = limit * page
             const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
