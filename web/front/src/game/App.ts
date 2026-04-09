@@ -136,18 +136,17 @@ export class App {
         this._ui = new GUI(this._session, this.onReturnToMenu, this.onReload);
 
         this._isNear = this._gameState.players.get(this._player.sessionId).sideNear;
+        this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
+
         this._gameStatusStateMachine(this._gameState.gameStatus);
         this._session.on('onGameStatusChange', (status: RoomStatus) => this._gameStatusStateMachine(status));
         this._session.on('onScoreChange', (scoreNear: number, scoreFar: number) => {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
         this._session.on('onDrop', (code: number, reason: string) => {
-            console.log('onDrop');
             this._session.setGameState(RoomStatus.AWAITING_RECONNECTION);
-            //this._gameState.gameStatus = RoomStatus.AWAITING_RECONNECTION;
         });
         this._session.on('onReconnect', () => {
-            console.log('onReconnect');
             this._session.refreshGameState();
         });
         this._session.on('onLeave', () => {
@@ -165,7 +164,6 @@ export class App {
                 console.log("Game has started");
                 this._player.unlockControls();
                 this._ui.showNoUI();
-                this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
                 break;
             case RoomStatus.WON:
                 this._player.lockControls();
