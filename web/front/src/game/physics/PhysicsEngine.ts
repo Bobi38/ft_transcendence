@@ -9,8 +9,10 @@ import { PlayerCamera } from "../characters/PlayerCamera";
 import { RacketHistory } from "../utils/RacketHistory";
 import { GameSession } from "../sessions/GameSession";
 import { Character } from "../characters/Character";
+import { Config } from "/app/src/game/shared/gameConfig.js";
 
-const TIMESTEP = 1/60;
+const config = JSON.parse(Config);
+const TIMESTEP = config.timestep;
 
 export class PhysicsEngine {
     private _clock: SynchronizedClock;
@@ -178,10 +180,10 @@ export class PhysicsEngine {
 
     private _checkIfPointWon() {
         let ballPos = this._ball.getPhysicsBodyPosition();
-        if (ballPos.z < -33) {
+        if (ballPos.z < config.nearSideLimit) {
             this._session.emitGoalScored(false);
         }
-        else if (ballPos.z > 50) {
+        else if (ballPos.z > config.farSideLimit) {
             this._session.emitGoalScored(true);
         }
     }
