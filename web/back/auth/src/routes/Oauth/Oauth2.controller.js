@@ -7,6 +7,7 @@ import Oauth2DTO from './Oauth2.DTO.js';
 import Oauth2Service from   './Oauth2.service.js';
 
 router.get('/github', async (req, res) => {
+    console.log("dans github")
     const valid = Oauth2DTO.validateGit(req);
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code || 400, res);
@@ -17,11 +18,13 @@ router.get('/github', async (req, res) => {
     if (!url.success) {
         return errorHandler(url.message, url.code, res);
     }
+    console.log("url github", url.url);
     res.redirect(url.url);
 });
 
 
-router.post('/github/callback', async (req, res) => {
+router.get('/github/callback', async (req, res) => {
+    console.log("dans github callback")
     const valid = Oauth2DTO.validateGitCallback(req);
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code || 400, res);

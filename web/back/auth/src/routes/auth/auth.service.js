@@ -1,4 +1,4 @@
-import { bcrypt, get_user_from_token, jwt, tcheck_MPFA, secret } from '../index_p.js';
+import { bcrypt, get_user_from_token, jwt, tcheck_MPFA, secret, generateToken } from '../index_p.js';
 import 
 {
   User,
@@ -11,7 +11,6 @@ class AuthService {
 
   static async login({ email, password, host, res }) {
       try {
-        console.log("Api /login called");
         const result = await User.findAll({ where: { mail: email } });
         if (result.length === 0)
             return {success: false, message: 'Email not found', code: 401};
@@ -21,20 +20,15 @@ class AuthService {
         const iid = await Co.findAll({where: { userId: result[0].id}})
           console.log("Api /login " + result[0].id," avant token");
         const token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
-        console.log("Api /login apres token");
         if (iid.length === 0)
           await Co.create({token: token, userId: result[0].id});
         console.log(result[0].Hostlastco + " " + host)
         console.log(result[0].Datelastco)
         let MPFA;
         MPFA = tcheck_MPFA(result[0], host);
-        console.log("MPFA " + MPFA);
         await result[0].update({MPFA: MPFA});
         await result[0].update({co: true,Hostlastco: host, Datelastco: new Date()});
-        if (status === 'PROD')
-            res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
-        else
-            res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+        generateToken(MPFA, token, res);
         return { success : true , message: 'User connected', token: token, username: result[0].name, MPFA: MPFA };
         } catch (err) {
         return { success: false, message: 'MySQL error' + err, code: 500 };
@@ -69,7 +63,6 @@ class AuthService {
             if (!result.success) {
                 return { success: false, message: result.message, code: 401 };
             }
-
             await result.user.update({co: false});
             await Co.destroy({ where: { userId: result.user.id } });
             return { success: true, message: 'User disconnected' };

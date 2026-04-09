@@ -38,7 +38,7 @@ export default function MailA2F({login_mode}) {
         setShowMode("check_code")
     }
 
-    async function maila2f_check_code(e) {
+    const maila2f_check_code = async (e) => {
         e.preventDefault();
 
         const formData = new FormData(e.target);
@@ -57,6 +57,7 @@ export default function MailA2F({login_mode}) {
             body: JSON.stringify(data),
         }, null, null, true);
         if (repjson.status < 500 && repjson.status >= 400){
+            console.log("where is showalert" + repjson.message);
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
