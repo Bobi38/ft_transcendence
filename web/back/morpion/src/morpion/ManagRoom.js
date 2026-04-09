@@ -82,6 +82,9 @@ class ManagerRoom {
         if (winner === loser){
             winner = game.getOther();
         }
+
+        console.log(` en avant les amis   ********: \nwinner ${winner} looser ${loser}\n*********************`);
+
         winner.send({ message: m.msgs.w_abort, turn: false });
         loser.send({ message: m.msgs.l_abort, turn: false });
 
