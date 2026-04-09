@@ -18,20 +18,22 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
     private _gameState : GameState;
     private _clock : SynchronizedClock;
     private _interval: number | null = null;
-    public onUnauthorized?: () => void;
-    public onReturnToMenu?: () => void;
+    public  onUnauthorized: () => void;
+    public  onReturnToMenu: () => void;
     private _voluntaryLeave : boolean = false;
 
-    constructor(gameState: GameState, clock: SynchronizedClock, onReturnToMenu?: () => void) {
+    constructor(gameState: GameState, clock: SynchronizedClock, onReturnToMenu: () => void, onUnauthorized: () => void) {
         super();
         this._gameState = gameState;
         this._clock = clock;
         this.onReturnToMenu = onReturnToMenu;
+        this.onUnauthorized = onUnauthorized;
     }
 
 
-    public async initialize(): Promise<void> {
+    public async initialize(): Promise<void | null> {
         this._room = await this._connectOrReconnectToRoom();
+
         const callback = Callbacks.get(this._room);
         this._callback = callback;
 
@@ -45,7 +47,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         this._callback.listen("roomStatus", () => {
             this.emit('onGameStatusChange', this._room.state.roomStatus);
             this._gameState.gameStatus = this._room.state.roomStatus;
-            console.log("in network manager:", this._room.state.roomStatus);
         });
         this._callback.onChange(this._room.state.score, () => {
             this.emit('onScoreChange', this._room.state.score.teamNear, this._room.state.score.teamFar)
@@ -53,7 +54,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
             this._gameState.teamFar = this._room.state.score.teamFar;
         });
         this._syncWithColyseus();
-        console.log(this._room.state);
 
         this._setupPlayerJoinedRoom();
 
@@ -125,12 +125,15 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
             try {
                 room = await colyseusSDK.joinOrCreate<MyRoomState>("my_room", {token: token});
             } catch (newRoomError) {
-                console.log(newRoomError);
+                console.log(newRoomError, newRoomError.code);
                 if (newRoomError.code == 401) {
-                    this.onUnauthorized?.();
+                    console.log("going to use onUnauthorized", this.onUnauthorized);
+                    this.onUnauthorized();
+                    throw Error("Failed to connect");
                 }
                 this.onReturnToMenu();
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
+                throw Error("Failed to connect");
             }
         }
         localStorage.setItem("reconnectionGameToken", room.reconnectionToken);

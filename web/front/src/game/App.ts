@@ -31,6 +31,14 @@ export enum RoomStatus {
   AWAITING_RECONNECTION = 4
 }
 
+interface AppProps {
+    canvas: HTMLCanvasElement,
+    isOffline: boolean,
+    onReturnToMenu: () => void,
+    onReload: () => void,
+    onUnauthorized: () => void
+}
+
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
@@ -46,19 +54,19 @@ export class App {
     private _session : GameSession;
     private _environment: Environment;
     private _physicsEngine : PhysicsEngine;
-    public onReturnToMenu?: () => void;
-    public onReload?: () => void;
+    public onReturnToMenu: () => void;
+    public onReload: () => void;
 
-
-    constructor(canvas: HTMLCanvasElement, isOffline: boolean, onReturnToMenu?: () => void) {
+    constructor({canvas, isOffline, onReturnToMenu, onReload, onUnauthorized}: AppProps) {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
         this.onReturnToMenu = onReturnToMenu;
+        this.onReload = onReload;
 
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
-            this._session = new NetworkSessionManager(this._gameState, this._clock, this.onReturnToMenu);
+            this._session = new NetworkSessionManager(this._gameState, this._clock, this.onReturnToMenu, onUnauthorized);
         }
         this._physicsEngine = new PhysicsEngine(this._clock, this._session, isOffline);
 
@@ -84,25 +92,23 @@ export class App {
 
     private async _main(): Promise<void> {
         console.log("exiting main");
-        this._engine.displayLoadingUI();        
-        await this._session.initialize();
-        console.log("initialized session");
-
-
+        this._engine.displayLoadingUI();
+        try {
+            await this._session.initialize();
+        } catch (error) {
+            this._engine.hideLoadingUI();
+            return ;
+        }    
+        
         await this._setupGameAssets();
-        console.log("setup assets");
         
         await this._scene.whenReadyAsync();
-        console.log("scene ready");
         this._engine.hideLoadingUI();
 
         this._setupUI();
         this._setupPhysicsMessagesListener();
-        console.log("seteup ui and physics listeners");
-
         
         this._engine.runRenderLoop(() => {
-            console.log("rendering");
             this._session.update();
             this._updatePhysicsAndRender();
         });

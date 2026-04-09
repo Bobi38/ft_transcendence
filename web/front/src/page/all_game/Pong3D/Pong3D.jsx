@@ -44,9 +44,16 @@ export default function Pong3D({type}) {
                 return;
             }
 
-            gameApp = new GameApp(canvasRef.current, type, () => { navigate('/') });
-            gameApp.onUnauthorized = () => showAlert("You already are playing Pong3D", "danger");
-            gameApp.onReload = () => setGameKey(prev => prev + 1);
+            const showPlayingTwiceAlert = () => showAlert("You already are playing Pong3D", "danger");
+            const navigateHome = () => navigate('/');
+            const reloading = () =>  setGameKey(prev => prev + 1);
+            console.log("ref: ", canvasRef.current)
+            gameApp = new GameApp({
+                canvas: canvasRef.current, 
+                isOffline: type, 
+                onReturnToMenu: navigateHome,
+                onReload: reloading,
+                onUnauthorized: showPlayingTwiceAlert});
         };
 
         init();
@@ -59,6 +66,7 @@ export default function Pong3D({type}) {
     return (
         <main className={`Pong3D-root`}>
             <Button path="/">Home</Button>
+            <p id={`alert-container`}></p>
 			{/* <a href="/" className="button">Home</a> */}
             {isMobile && (
                 <div className="error-game">
