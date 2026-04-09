@@ -5,11 +5,14 @@ import fs from "fs";
 import User from "../models/user.js";
 import StatPong3D from "../models/StatPong3D.js"
 import GamePong3D from "../models/GamePong3D.js"
+import { Config } from "../shared/gameConfig.js"
 import jwt from "jsonwebtoken"
 import { Simulation } from "../simulation.js";
 
 const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 const activePlayers = new Set<string>();
+const config = JSON.parse(Config);
+
 
 export interface PlayerStats {
     id: string;
@@ -53,8 +56,6 @@ export class MyRoom extends Room {
       const ballPos = new Vector3(data.position[0], data.position[1], data.position[2]);
       const ballVel = new Vector3(data.velocity[0], data.velocity[1], data.velocity[2]);
       this._simulation.setPendingImpact({tick: data.tick, position: ballPos, velocity: ballVel});
-      //this._ball.setLinearVelocity(ballVel);
-      console.log(client.sessionId,  "hit the ball: ", data, "at server tick:", this._simulation.getTick());
       this.broadcast("racketImpact", data, { except: client });
       client.send("impactResponse", this._simulation.getTick());
     },
@@ -112,7 +113,6 @@ export class MyRoom extends Room {
        * This is a good place to validate the client's auth token.
        */
       const ourToken : string = options.token;
-      console.log(ourToken);
       if (!ourToken) {
         console.log("Failed to send authorization token");
         return false;
@@ -172,12 +172,11 @@ export class MyRoom extends Room {
 
     const player = new Player();
       if (!isNear) player.sideNear = false;
-    player.position.x = 0;
-    player.position.y = 0.5;
-    if (player.sideNear)
-      player.position.z = -20;
-    else 
-      player.position.z = 40
+    
+    const configPlayerStart = (isNear) ? config.playerNearStart : config.playerFarStart;
+    player.position.x = configPlayerStart.x;
+    player.position.y = configPlayerStart.y;
+    player.position.z = configPlayerStart.z;
 
     this.state.players.set(client.sessionId, player);
     this._nextPlayerIndex++;
@@ -212,7 +211,7 @@ export class MyRoom extends Room {
     }
 
     try {
-      await this.allowReconnection(client, 5);
+      await this.allowReconnection(client, config.maxReconnectionTime);
       
       console.log(`${client.sessionId} reconnected successfully!`);
       if (player) player.connected = true;
@@ -259,22 +258,22 @@ export class MyRoom extends Room {
     let winnerStats = (loserStats === p1) ? p2 : p1;
 
     try {
-        await GamePong3D.create({
-            id_player_1: p1.id,
-            id_player_2: p2.id,
-            score_1: p1.score,
-            score_2: p2.score,
-            time: timePlayed,
-            date_game_start: this._timeStart,
-            date_game_end: this._timeEnd,
-            ...(isAbort 
-                ? { abortwinner: winnerStats.id, abortloser: loserStats.id }
-                : { winner: winnerStats.id, loser: loserStats.id }
-            )
-        });
+      await GamePong3D.create({
+        id_player_1: p1.id,
+        id_player_2: p2.id,
+        score_1: p1.score,
+        score_2: p2.score,
+        time: timePlayed,
+        date_game_start: this._timeStart,
+        date_game_end: this._timeEnd,
+        ...(isAbort 
+            ? { abortwinner: winnerStats.id, abortloser: loserStats.id }
+            : { winner: winnerStats.id, loser: loserStats.id }
+        )
+      });
 
-        await this._updateDbPlayer(winnerStats.id, true, timePlayed);
-        await this._updateDbPlayer(loserStats.id, false, timePlayed);
+      await this._updateDbPlayer(winnerStats.id, true, timePlayed);
+      await this._updateDbPlayer(loserStats.id, false, timePlayed);
 
     } catch (e) {
         console.error("Failed to store game results in database", e);

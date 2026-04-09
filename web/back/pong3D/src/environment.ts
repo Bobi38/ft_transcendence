@@ -1,12 +1,12 @@
 import { Quaternion, Vector3 } from "@babylonjs/core";
-import { Env } from "./shared/media.js"
+import { Env } from "./shared/arenaConfig.js"
 
-function ToVec3(input: any) : Vector3 {
+export function ToVec3(input: any) : Vector3 {
     const ret = new Vector3(input.x, input.y, input.z);
     return ret;
 }
 
-function ToQuat(input: any) : Quaternion {
+export function ToQuat(input: any) : Quaternion {
     const ret = Quaternion.FromEulerAngles(input.x, input.y, input.z);
     return ret;
 }

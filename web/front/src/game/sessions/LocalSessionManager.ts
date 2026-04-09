@@ -6,10 +6,13 @@ import { GameState } from "./GameState";
 import { AbstractMesh, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
 import { Bot } from "./Bot";
 import { Ball } from "../physics/Ball";
-import { Environment } from "../physics/Environment";
+import { Environment, ToVec3 } from "../physics/Environment";
+import { Config } from "/app/src/game/shared/gameConfig.js";
 
-const farBallStart = new Vector3(0,3,34.5);
-const nearBallStart = new Vector3(0,3,-12);
+
+const config = JSON.parse(Config);
+const farBallStart =  ToVec3(config.ballFarStart);
+const nearBallStart = ToVec3(config.ballNearStart);
 
 export class LocalSessionManager extends EventEmitter implements GameSession {
     private _gameState: GameState;
@@ -31,7 +34,7 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
         
         this._clock.setInitialClientClock(0);
 
-        this._setupPlayerAndBot(new Vector3(0, 0.5, -20), new Vector3(0, 0.5, 40));
+        this._setupPlayerAndBot(ToVec3(config.playerNearStart), ToVec3(config.playerFarStart));
         this._gameState.ballPos = nearBallStart;
         this._gameState.ballVel = Vector3.Zero();
 
@@ -62,7 +65,7 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
           this._served = false;
         }
         this.emit('onGoalScored', { tick: this._clock.tick, position: ballPos.asArray()});
-        if (this._gameState.teamFar >= 3 || this._gameState.teamNear >= 3) {
+        if (this._gameState.teamFar >= config.pointsToWin || this._gameState.teamNear >= config.pointsToWin) {
             this._gameState.gameStatus = RoomStatus.WON;
             this.emit('onGameStatusChange', this._gameState.gameStatus);
         }
