@@ -9,6 +9,7 @@ import { SynchronizedClock } from "../utils/SynchronizedClock";
 import { GameSession } from "./GameSession";
 import { Ball } from "../physics/Ball";
 import { Environment } from "../physics/Environment";
+import { RoomStatus } from "../App";
 
 
 
@@ -219,6 +220,16 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
                 });
             }
         });
+    }
+
+    public refreshGameState() {
+        this._gameState.gameStatus = this._room.state.roomStatus;
+        this.emit('onGameStatusChange', this._room.state.roomStatus);
+    }
+
+    public setGameState(state: RoomStatus) {
+        this._gameState.gameStatus = state;
+        this.emit('onGameStatusChange', state);
     }
 
     public setVoluntaryLeave() {

@@ -142,42 +142,44 @@ export class App {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
         this._session.on('onDrop', (code: number, reason: string) => {
-            this._player.lockControls();
-            this._ui.showAwaitingReconnectionUI();
+            console.log('onDrop');
+            this._session.setGameState(RoomStatus.AWAITING_RECONNECTION);
+            //this._gameState.gameStatus = RoomStatus.AWAITING_RECONNECTION;
         });
         this._session.on('onReconnect', () => {
-            this._gameStatusStateMachine(this._gameState.gameStatus);
+            console.log('onReconnect');
+            this._session.refreshGameState();
         });
         this._session.on('onLeave', () => {
             this._ui.showFailedReconnectionUI();
         });
     }
 
-     private _gameStatusStateMachine(status: RoomStatus) {
-            switch (status) {
-                case RoomStatus.WAITING:
-                    this._ui.showWaitingUI();
-                    this._player.lockControls();
-                    break;
-                case RoomStatus.STARTED:
-                    console.log("Game has started");
-                    this._player.unlockControls();
-                    this._ui.showNoUI();
-                    this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
-                    break;
-                case RoomStatus.WON:
-                    this._player.lockControls();
-                    this._ui.showEndUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
-                    break;
-                case RoomStatus.PLAYER_DISCONNECTED:
-                    this._player.lockControls();
-                    this._ui.showOtherPlayerDisconnectUI();
-                    break;
-                case RoomStatus.AWAITING_RECONNECTION:
-                    this._player.lockControls();
-                    this._ui.showAwaitingReconnectionUI();
-                    break;
-            }
+    private _gameStatusStateMachine(status: RoomStatus) {
+        switch (status) {
+            case RoomStatus.WAITING:
+                this._ui.showWaitingUI();
+                this._player.lockControls();
+                break;
+            case RoomStatus.STARTED:
+                console.log("Game has started");
+                this._player.unlockControls();
+                this._ui.showNoUI();
+                this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
+                break;
+            case RoomStatus.WON:
+                this._player.lockControls();
+                this._ui.showEndUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
+                break;
+            case RoomStatus.PLAYER_DISCONNECTED:
+                this._player.lockControls();
+                this._ui.showOtherPlayerDisconnectUI();
+                break;
+            case RoomStatus.AWAITING_RECONNECTION:
+                this._player.lockControls();
+                this._ui.showAwaitingReconnectionUI();
+                break;
+        }
     }
 
 
