@@ -206,6 +206,7 @@ export class MyRoom extends Room {
     const player = this.state.players.get(client.sessionId);
     if (player) player.connected = false;
     
+    console.log("onLeave:", this.state.roomStatus);
     if (this.state.roomStatus === RoomStatus.STARTED) {
       this.state.roomStatus = RoomStatus.AWAITING_RECONNECTION;
     }
@@ -216,6 +217,7 @@ export class MyRoom extends Room {
       console.log(`${client.sessionId} reconnected successfully!`);
       if (player) player.connected = true;
 
+      console.log("on reconnection",this.state.roomStatus);
       if (this.state.roomStatus === RoomStatus.AWAITING_RECONNECTION) {
         this.state.roomStatus = RoomStatus.STARTED;
       }
@@ -233,12 +235,14 @@ export class MyRoom extends Room {
         activePlayers.delete(stats.id);
     }
 
-    if (this.state.roomStatus !== RoomStatus.PLAYER_DISCONNECTED) {
+    const state = this.state.roomStatus;
+    if (state == RoomStatus.STARTED || state == RoomStatus.AWAITING_RECONNECTION || state == RoomStatus.WAITING) {
         this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
-        this._timeEnd = this._timeEnd || Date.now();
-        this._simulation?.getEngine()?.stopRenderLoop();
-        this.lock();
     }
+    
+    this._timeEnd = this._timeEnd || Date.now();
+    this._simulation?.getEngine()?.stopRenderLoop();
+    this.lock();
   } 
 
   async _sendGameDataToDatabase() {
