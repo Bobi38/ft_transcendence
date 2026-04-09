@@ -166,7 +166,6 @@ export class MyRoom extends Room {
         stats: this._matchStats.get(client.sessionId), 
         suspended: false 
     } as RoomUserData;
-    console.log("creating user data:", client.userData);
 
     console.log("auth.id:", auth.id);
     console.log(client.sessionId, "joined room", this.roomId);
