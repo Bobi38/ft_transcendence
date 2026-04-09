@@ -7,6 +7,8 @@ class ProfileDTO {
     const email = data.email;
     if (!name || !email || !tel)
       return { success: false, message: "missing data" , code: 400 };
+	if (name.length > 128 || email.length > 128 || tel.length > 128)
+      return { success: false, message: "data too long" , code: 400 };
     if (!validator.isEmail(email))
       return { success: false, message: "invalid email" , code: 400 };
     if (!isValidPhoneNumber(tel))
@@ -29,8 +31,10 @@ class ProfileDTO {
     static validatePassword_Cookie(req) {
 		const password = req.body.Pass;
 		const token = req.cookies.token;
-         if (!password)
-            return { success: false, message: "no password" };
+    	if (!password)
+        	return { success: false, message: "no password" };
+		if (password.length > 128)
+			return { success: false, message: "password too long" };
 		if (!token)
 			return { success: false, message: "no token" };
 		return { success: true, token };

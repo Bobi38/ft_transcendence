@@ -2,8 +2,8 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, MeshBuilder, Color4, StandardMaterial, Color3, PointLight, ShadowGenerator, TransformNode, Quaternion, SpotLight, DirectionalLight, HemisphericLight, ImportMeshAsync, AbstractMesh } from "@babylonjs/core";
-import { Environment, loadCharacterAssets, loadLights } from "./physics/Environment";
+import { Engine, Scene, Vector3, Color4, ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
+import { Environment } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";
 import { Ball } from "./physics/Ball";
@@ -31,6 +31,14 @@ export enum RoomStatus {
   AWAITING_RECONNECTION = 4
 }
 
+interface AppProps {
+    canvas: HTMLCanvasElement,
+    isOffline: boolean,
+    onReturnToMenu: () => void,
+    onReload: () => void,
+    onUnauthorized: () => void
+}
+
 export class App {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
@@ -45,30 +53,33 @@ export class App {
     private _gameState : GameState = new GameState();
     private _session : GameSession;
     private _environment: Environment;
-    //private _network : NetworkManager = new NetworkManager(this._gameState, this._clock);
     private _physicsEngine : PhysicsEngine;
+    public onReturnToMenu: () => void;
+    public onReload: () => void;
 
-
-    constructor(canvas: HTMLCanvasElement, isOffline: boolean) {
+    constructor({canvas, isOffline, onReturnToMenu, onReload, onUnauthorized}: AppProps) {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
+        this.onReturnToMenu = onReturnToMenu;
+        this.onReload = onReload;
 
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
-            this._session = new NetworkSessionManager(this._gameState, this._clock);
+            this._session = new NetworkSessionManager(this._gameState, this._clock, this.onReturnToMenu, onUnauthorized);
         }
         this._physicsEngine = new PhysicsEngine(this._clock, this._session, isOffline);
 
         this._engine = new Engine(this._canvas, true, {adaptToDeviceRatio: true});
         this._scene = new Scene(this._engine);
 
-        window.addEventListener("keydown", this._showInspector.bind(this))
+        window.addEventListener("keydown", this._showInspector)
 
+        console.log("exiting constructor");
         this._main();
     }
     
-    private _showInspector(e: KeyboardEvent) {
+    private _showInspector = (e: KeyboardEvent) => {
         // Shift+Ctrl+Alt+I
         if (e.shiftKey && e.ctrlKey && e.altKey && (e.key === "I" || e.key === "i")) {
             if (this._scene.debugLayer.isVisible()) {
@@ -80,10 +91,17 @@ export class App {
     }
 
     private async _main(): Promise<void> {
-        this._engine.displayLoadingUI();        
-        await this._session.initialize();
-
+        console.log("exiting main");
+        this._engine.displayLoadingUI();
+        try {
+            await this._session.initialize();
+        } catch (error) {
+            this._engine.hideLoadingUI();
+            return ;
+        }    
+        
         await this._setupGameAssets();
+        
         await this._scene.whenReadyAsync();
         this._engine.hideLoadingUI();
 
@@ -94,12 +112,11 @@ export class App {
             this._session.update();
             this._updatePhysicsAndRender();
         });
-        window.addEventListener('resize', this._resizeWindow.bind(this));    
+        window.addEventListener('resize', this._resizeWindow);    
     }
 
-    private _resizeWindow() {
-        console.log(this._engine);
-        this._engine.resize();
+    private _resizeWindow = () => {
+        this._engine?.resize();
     }
 
     private _updatePhysicsAndRender() {
@@ -116,58 +133,54 @@ export class App {
     }
 
     private _setupUI() {
-        this._ui = new GUI(this._session);
+        this._ui = new GUI(this._session, this.onReturnToMenu, this.onReload);
 
         this._isNear = this._gameState.players.get(this._player.sessionId).sideNear;
+        this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
+
         this._gameStatusStateMachine(this._gameState.gameStatus);
+
         this._session.on('onGameStatusChange', (status: RoomStatus) => this._gameStatusStateMachine(status));
+
         this._session.on('onScoreChange', (scoreNear: number, scoreFar: number) => {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
         this._session.on('onDrop', (code: number, reason: string) => {
-            console.log('onDrop');
-            this._player.lockControls();
-            this._ui.showAwaitingReconnectionUI();
+            this._session.setGameState(RoomStatus.AWAITING_RECONNECTION);
         });
         this._session.on('onReconnect', () => {
-            console.log("lmao");
-            // this._player.unlockControls();
-            // this._ui.showNoUI();
-            console.log(this._gameState.gameStatus);
-            this._gameStatusStateMachine(this._gameState.gameStatus);
+            this._session.refreshGameState();
         });
         this._session.on('onLeave', () => {
             this._ui.showFailedReconnectionUI();
         });
     }
 
-     private _gameStatusStateMachine(status: RoomStatus) {
-            switch (status) {
-                case RoomStatus.WAITING:
-                    this._ui.showWaitingUI();
-                    this._player.lockControls();
-                    break;
-                case RoomStatus.STARTED:
-                    console.log("Game has started");
-                    this._player.unlockControls();
-                    this._ui.showNoUI();
-                    this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
-                    break;
-                case RoomStatus.WON:
-                    this._player.lockControls();
-                    this._ui.showEndUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
-                    break;
-                case RoomStatus.PLAYER_DISCONNECTED:
-                    this._player.lockControls();
-                    this._ui.showOtherPlayerDisconnectUI();
-                    break;
-                case RoomStatus.AWAITING_RECONNECTION:
-                    this._player.lockControls();
-                    this._ui.showAwaitingReconnectionUI();
-                    break;
-            }
+    private _gameStatusStateMachine(status: RoomStatus) {
+        switch (status) {
+            case RoomStatus.WAITING:
+                this._ui.showWaitingUI();
+                this._player.lockControls();
+                break;
+            case RoomStatus.STARTED:
+                console.log("Game has started");
+                this._player.unlockControls();
+                this._ui.showNoUI();
+                break;
+            case RoomStatus.WON:
+                this._player.lockControls();
+                this._ui.showEndUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
+                break;
+            case RoomStatus.PLAYER_DISCONNECTED:
+                this._player.lockControls();
+                this._ui.showOtherPlayerDisconnectUI();
+                break;
+            case RoomStatus.AWAITING_RECONNECTION:
+                this._player.lockControls();
+                this._ui.showAwaitingReconnectionUI();
+                break;
+        }
     }
-
 
     private async _setupGameAssets() {
         this._scene.clearColor = new Color4(0.015, 0.015, 0.2);
@@ -186,7 +199,7 @@ export class App {
 
 
     private _initLightAndBall(scene: Scene) {
-        this._shadows = loadLights(scene);
+        this._shadows = this._environment.loadLights(scene);
         let ballPos = this._gameState.ballPos;
         let ballVel = this._gameState.ballVel;
         this._ball = new Ball(ballPos, ballVel, 1, this._shadows, this._scene, this._clock, this._engine, this._physicsEngine);
@@ -203,7 +216,7 @@ export class App {
     }
 
     private async _setupCharacters(isPlayer: boolean, sessionId: string, position: Vector3, isNearSide: boolean) {
-        const assets = await loadCharacterAssets(this._scene, position, isPlayer, isNearSide);
+        const assets = await this._environment.loadCharacterAssets(this._scene, position, isPlayer, isNearSide);
         if (isPlayer) {
             const camera = new PlayerCamera(isNearSide, this._scene);
             this._player = new Player(camera.getUniversalCamera(), sessionId, assets, this._scene, this._shadows, this._session);
@@ -217,13 +230,61 @@ export class App {
         }
     }
 
-    public dispose() {
-        this._session.dispose();
-        this._ui.dispose();
-        this._scene.dispose();
+
+    public async dispose() {
+        this._engine?.stopRenderLoop();
+
+        this._session?.dispose();
+        this._session = null;
+
+        this._ui?.dispose();
+        this._ui = null;
+
+        this._scene?.dispose();
+        this._scene = null;
+
+        this._canvas = null;
+
+        this._player?.dispose();
+        this._player = null;
+
+        this._ball?.dispose();
+        this._ball = null;
+
+        this._shadows = null;
+
+        this._clock = null;
+
+        this._gameState?.dispose();
+        this._gameState = null;
+    
+        this._environment?.dispose();
+        this._environment = null;
+
+        this._physicsEngine?.dispose();
+        this._physicsEngine = null;
+
         window.removeEventListener('resize', this._resizeWindow);
-        this._engine.dispose();
+        if (this._engine)
+            this._engine.dispose();
         window.removeEventListener("keydown", this._showInspector);
+
+        if (this._engine) {
+            // const gl = this._engine._gl;
+            // if (gl) {
+            //     const ext = gl.getExtension('WEBGL_lose_context');
+            //     if (ext) {
+            //         console.log("Forcing WebGL context loss...");
+            //         ext.loseContext();
+            //     }
+            // }
+            this._engine.dispose();
+            this._engine = null;
+        this.onReturnToMenu = null;
+        this.onReload = null;
+    }
+
+        console.log("Pong3D disposal complete");
     }
 
     public getTick() : number {

@@ -18,11 +18,12 @@ function isMobileDevice() {
     return hasCoarsePointer || hasTouchPoints || hasTouchEvents;
 }
 
-export default function Pong3D() {
+export default function Pong3D({type}) {
 
     const navigate = useNavigate();
     const canvasRef = useRef(null);
     const [isMobile,setIsMobile] = useState(false);
+    const [gameKey, setGameKey] = useState(0);
 
     useEffect(() => {
         if (canvasRef.current == null)
@@ -43,22 +44,29 @@ export default function Pong3D() {
                 return;
             }
 
-            if (canvasRef.current) {
-                gameApp = new GameApp(canvasRef.current, false);
-                gameApp.onUnauthorized = () => showAlert("Tu as deja une page ouverte sur Pong3D", "danger");
-            }
+            const showPlayingTwiceAlert = () => showAlert("You already are playing Pong3D", "danger");
+            const navigateHome = () => navigate('/');
+            const reloading = () =>  setGameKey(prev => prev + 1);
+            console.log("ref: ", canvasRef.current)
+            gameApp = new GameApp({
+                canvas: canvasRef.current, 
+                isOffline: type, 
+                onReturnToMenu: navigateHome,
+                onReload: reloading,
+                onUnauthorized: showPlayingTwiceAlert});
         };
 
         init();
-
-        return () => {
+        return async () => {
             gameApp?.dispose?.();
+            gameApp = null;
         };
-    }, [canvasRef.current]);
+    }, [canvasRef.current, gameKey]);
 
     return (
         <main className={`Pong3D-root`}>
             <Button path="/">Home</Button>
+            <p id={`alert-container`}></p>
 			{/* <a href="/" className="button">Home</a> */}
             {isMobile && (
                 <div className="error-game">
