@@ -17,8 +17,6 @@ async function checktok(tokenn) {
   }
   try {
     const decoded = jwt.verify(tokenn, secret);
-    const count = await Co.count();
-
     const co = await Co.findAll({ where: { userId: decoded.id } });
 
     return co.length === 0 ? 1 : 0;
