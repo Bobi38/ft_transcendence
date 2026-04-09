@@ -9,14 +9,15 @@ router.get('/', async (req, res) => {
     const valid = FriendDTO.validateToken(req);
     if (!valid.success)
         return errorHandler(valid.message, 400, res);
-  try{
-    const token = req.cookies.token;
-    const result = await FriendService.getAllFriend(token);
-    if (!result.success)
-        return errorHandler(result.message, result.code, res);
-    }catch(err){
-    return res.status(500).json({success: false, message: "err all_friend back ", err});
-  }
+    try{
+        const token = req.cookies.token;
+        const result = await FriendService.getAllFriend(token);
+        if (!result.success)
+            return errorHandler(result.message, result.code, res);
+        return res.status(result.code).json({success: result.success, message: result.message});
+        }catch(err){
+        return res.status(500).json({success: false, message: "err all_friend back ", err});
+    }
 })
 
 

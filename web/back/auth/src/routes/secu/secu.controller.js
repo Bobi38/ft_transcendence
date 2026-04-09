@@ -11,7 +11,13 @@ router.get('/checkco', async(req, res) =>{
     try{
         let MPFA;
         console.log("API /api/secu/checkco");
-        const token = req.cookies.token;
+        let token
+        if (req.cookies.token)
+            token = req.cookies.token;
+        else if (req.cookies.temp)
+            token = req.cookies.temp;
+        else
+            return res.status(401).json({success: false, message: "no token"});
         const decoded = jwt.verify(token, secret);
         const result = await User.findOne({ where: { id: decoded.id } });
         MPFA = result.MPFA;
@@ -27,7 +33,7 @@ router.get('/checkco', async(req, res) =>{
 
 router.post('/send_mail', async (req, res) => {
     console.log("API /api/secu/send_mail");
-    const valid = SecuDTO.validateCookie(req, 'token');
+    const valid = SecuDTO.validateCookie(req, 'temp');
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code, res);
     }
@@ -71,7 +77,7 @@ router.post('/maila2f_check_code' , async (req, res) => {
     }
     const {code, host} = req.body;
     try{
-        const result = await SecuService.check_code(code, 'token', 1, host, req);
+        const result = await SecuService.check_code(code, 'temp', 1, host, req, res);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
@@ -91,7 +97,7 @@ router.post('/recoverypassword_check_code' , async (req, res) => {
     const {code, host} = req.body;
     try{
         console.log("code " + code + " host " + host);
-        const result = await SecuService.check_code(code, 'ChgPSWD', 2, host, req);
+        const result = await SecuService.check_code(code, 'temp', 2, host, req, res);
         console.log("API /api/secu/recoverypassword_check_code controller result " + result.success + " " + result.message);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
@@ -112,7 +118,7 @@ router.put('/majPswd', async(req,res) => {
     }
     try{
         const new_psd = req.body.new_psd;
-        const token = req.cookies.ChgPSWD;
+        const token = req.cookies.temp;
         const result = await SecuService.maj_password(new_psd, token, res);
         if (!result.success)
             return errorHandler(result.message, result.code, res)
@@ -124,12 +130,12 @@ router.put('/majPswd', async(req,res) => {
 })
 
 router.delete('/cookie', async(req, res) => {
-    const valide = SecuDTO.validateCookie(req, 'ChgPSWD');
+    const valide = SecuDTO.validateCookie(req, 'temp');
     if (!valide.valid) {
         return errorHandler(valide.message, valide.code, res);
     }
     try{
-        res.clearCookie('ChgPSWD');
+        res.clearCookie('temp');
         return res.status(200).json({success: true, message: "cookie cleared"});
     }catch(err){
         return errorHandler("error clearcookie " + err, 500, res);

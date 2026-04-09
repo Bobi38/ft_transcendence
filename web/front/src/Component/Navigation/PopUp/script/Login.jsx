@@ -45,7 +45,7 @@ export default function Login({ password_forget_mode, register_mode}) {
         }
 
         if (repjson.status < 500 && repjson.status >= 400){
-            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            showAlert(`Error : ${repjson.message}`, "danger");
             return ;
         }
         sessionStorage.setItem('username', repjson.username);
@@ -53,7 +53,7 @@ export default function Login({ password_forget_mode, register_mode}) {
         sessionStorage.setItem('username', repjson.username);
 
         if (repjson.success === false){
-            showAlert(`Erreur : ${repjson.message}`, "danger");
+            showAlert(`Error : ${repjson.message}`, "danger");
             return ;
         }
         if (repjson.MPFA) {
@@ -123,33 +123,30 @@ export default function Login({ password_forget_mode, register_mode}) {
                         placeholder={`1234btw`}
                         required
                 />
+                <button type={`submit`}>Connect</button>
 
-                <div className={`button-container`}>
-
-                    <button type={`submit`} className={``}>
-                            Connexion
-                    </button>
-
-                    <button type={`button`} className={``} target="_blank"
-                            onClick={handle_git}>
-                            <FaGithub/> GitHub
-                    </button>
-
-                    <button onClick={handle_google}>
-                        <FcGoogle/> Google
-                        </button>
-
-                    <button type={`button`} className={``}
-                            onClick={register_mode}>
-                            Register
-                    </button>
-
-                    <button type={`button`} className={``} target="_blank"
-                            onClick={password_forget_mode}>
-                            Password forgot ?
-                    </button>
-                </div>
             </form>
+            <hr/>
+            <div className="button-container">
+                <button type={`button`}  target="_blank"
+                        onClick={handle_git}>
+                        <FaGithub/> GitHub
+                </button>
+
+                <button onClick={handle_google}>
+                    <FcGoogle/> Google
+                    </button>
+
+                <button type={`button`} 
+                        onClick={register_mode}>
+                        Register
+                </button>
+
+                <button type={`button`} target="_blank"
+                        onClick={password_forget_mode}>
+                        Password forgot ?
+                </button>
+            </div>
         </div>
     );
 }

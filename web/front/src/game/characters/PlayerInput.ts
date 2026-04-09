@@ -71,9 +71,7 @@ export class PlayerInput {
         this.prevMousePos = mousePos;
 
         const normal = this._camera.getUniversalCamera().getForwardRay().direction;
-        // const normal = this._handNode.forward;
         const position = this._handNode.getAbsolutePosition().add(normal.scale(3));
-        //console.log(this._handNode.getAbsolutePosition(), position, normal);
         const plane = Plane.FromPositionAndNormal(position, normal);
         const ray = this._scene.createPickingRay(this._scene.pointerX, this._scene.pointerY,
             null, this._camera.getUniversalCamera());
@@ -88,7 +86,6 @@ export class PlayerInput {
             const maxRadius = 5;
             if (relativePos.length() > maxRadius) {
                 relativePos.normalize().scaleInPlace(maxRadius);
-                //relativePos.normalize().multiplyInPlace(new Vector3(3.5,3.5,3.5));
             }
             else {
                 relativePos.normalize().scaleInPlace(maxRadius);
@@ -101,7 +98,6 @@ export class PlayerInput {
             let localAxisX : Vector3;
             if (movementDir.lengthSquared() < 0.001)
             {
-                const oldZ = Vector3.Forward;
                 localAxisX = Vector3.Cross(localAxisY, Vector3.RightHandedForwardReadOnly);
             }
             else {
