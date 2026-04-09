@@ -67,22 +67,6 @@ export class Bot {
         this._predictedBallPos = new Vector3(predictedX, predictedY, zStrikePlane);
     }
 
-    // private _predictBallTarget() {
-    //     const ballPos = this._ball.getPhysicsBodyPosition();
-    //     const ballVel = this._ball.getVelocity();
-        
-    //     this._timeToImpact = (this._handNode.absolutePosition.z - ballPos.z) / ballVel.z;
-
-    //     let predictedX = ballPos.x + (ballVel.x * this._timeToImpact);
-    //     let predictedY = ballPos.y + (ballVel.y * this._timeToImpact);
-    //     if (ballVel.z == 0) {
-    //         predictedX = ballPos.x;
-    //         predictedY = ballPos.y;
-    //     }
-
-    //     this._predictedBallPos = new Vector3(predictedX, predictedY, this._handNode.position.z);
-    // }
-
     private _swingRacketTarget() {
         if (this._swingState != SwingState.IDLE)
             this._swingTimer += this._engine.getDeltaTime() / 1000;
