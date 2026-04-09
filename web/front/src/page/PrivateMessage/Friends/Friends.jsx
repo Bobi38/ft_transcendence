@@ -13,15 +13,17 @@ export default function Friends({setGoToAction, setGoToConv}) {
     const [responseFriendArray, setResponseFriendArray] = useState([]);
 
     async function all_friend(){
-        const url = `/api/friend`;
 
+        const url = `/api/friend`;
         console.log(`${url}`)
 
+        console.log("all_frienqwerqwerqwerqwerqwerd ");
         const repjson = await useFetch(`${url}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
             })
+        console.log("all_frienqwerqwerqwerqwerqwerd repjson", repjson);
         if (!repjson || (repjson &&  !repjson.success))
             return;
         console.log("all_friend", repjson.message);

@@ -1,9 +1,9 @@
 import { AbstractMesh, Color3, HemisphericLight, ImportMeshAsync, Light, MeshBuilder, PointLight, Quaternion, Scene, ShadowGenerator, StandardMaterial, Texture, TransformNode, Vector3 } from "@babylonjs/core";
-import { Env } from "/app/src/game/shared/media.js";
+import { Env } from "/app/src/game/shared/arenaConfig.js";
 import { CharacterAssets } from "../App";
 
 
-function ToVec3(input) : Vector3 {
+export function ToVec3(input) : Vector3 {
     const ret = new Vector3(input.x, input.y, input.z);
     return ret;
 }

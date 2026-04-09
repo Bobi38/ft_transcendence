@@ -48,9 +48,10 @@ function move(player, move){
 
         if (!adverse.isInactived()){
             leave(adverse);
-            return false;
         }
-        player.send({message: msgs.wait, turn: false});
+        else{
+            player.send({message: msgs.wait, turn: false});
+        }
         return false;
     }
 
@@ -99,8 +100,7 @@ function searchGame(player, players){
 
     managerRoom.refreshList();
 
-    players.forEach(p => {p.sendList();});
-
+    // players.forEach(p => {p.sendList();});
     game.notifyTurn(
         {message: msgs.my_turn, turn: true},
         {message: msgs.other_turn, turn: false}

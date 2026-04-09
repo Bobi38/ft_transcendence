@@ -71,6 +71,7 @@ export default function StatsMorpion({ username, setUsername }) {
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
 
         const data_formated = {
+            username: username,
 			total_game: data.total_game,
 
             all_win_without_abort: all_win_without_abort,
@@ -88,14 +89,16 @@ export default function StatsMorpion({ username, setUsername }) {
 			winrate_diagonal: cal_percentage(win_diagonal, all_win_without_abort),
         };
 
-        if (statToDisplay != null && statToDisplay.total_game < data.total_game) {
-            setNewPage(1)
+        if (statToDisplay === null || statToDisplay.total_game < data.total_game || username !== statToDisplay.total_game) {
+            setNewPage(Math.ceil(data.total_game / 5))
         }
 		setStatToDisplay(data_formated);
     }
 
     async function fetch_history(page_nb) {
 
+        
+        console.log("fetch_history",page_nb)
         const url = username
             ? `/api/morpion/get_history/${page_nb}?limit=${limit}&name=${username}`
             : `/api/morpion/get_history/${page_nb}?limit=${limit}`;
@@ -116,8 +119,11 @@ export default function StatsMorpion({ username, setUsername }) {
 
 
     useEffect(() => {
-        fetch_stats();
-        fetch_history(currentPage - 1);
+        const test = async ()  => {
+            await fetch_stats();
+        }
+        test();
+        fetch_history(currentPage);
     }, [username, currentPage]);
 
     return (
@@ -125,7 +131,7 @@ export default function StatsMorpion({ username, setUsername }) {
 
             <div className={`history-container border-1`}>
 
-				{historyUser.length !== 0 ? (
+				{historyUser?.length !== 0 ? (
 					<>
 						<div className={`history-card-container border-2`}>
 

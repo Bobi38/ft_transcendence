@@ -123,17 +123,14 @@ export class Player {
     }
 
     isInactived(){
-        console.log(`check inactif`);
         if (this._timeLastActive + 13000 < Date.now())
             return false;
-        console.log(`   --> is actif`);
         return true;
     }
 
     setGame(game){
         if (!game?.getId()) return;
 
-        console.log(`start ${game.getId()}`);
         this.clearTurnTimer();
         this._game = game;
         this._chrono = null;
@@ -192,6 +189,7 @@ export class Player {
     }
 
     sendList() {
+
         const all = JSON.stringify({
             list: structuredClone(this.list),
         });

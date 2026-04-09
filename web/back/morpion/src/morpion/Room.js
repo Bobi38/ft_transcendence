@@ -114,10 +114,8 @@ class Room {
 
     setLock(){
         if (this._state === "init" && this._players.size < this._minPlayers) {
-            console.log(`need more player`);
             return false;
         }
-        console.log("etat lock  = play");
         this._state = "play";
         this._startTime = Date.now();
         return true;  
@@ -126,7 +124,7 @@ class Room {
     setEnd() {
         const base = this._state === "play";
         this._state = "end";
-        console.log(`set return : ${base} et _state = ${this._state}`);
+
         return base;
     }
 

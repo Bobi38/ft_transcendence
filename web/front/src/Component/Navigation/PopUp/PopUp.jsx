@@ -23,7 +23,7 @@ export default function PopUp() {
         await useFetch(`${url}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
-            credential: "include",
+            credentials: "include",
         }, null, null, true)
         setShowLog(AUTH.LOGIN);
     }

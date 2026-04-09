@@ -8,7 +8,7 @@ export function showAlert(message, type = "danger") {
     setTimeout(() => {
         container.textContent = "";
         container.className = "";
-    }, 3000);
+    }, 5000);
 }
 
 
