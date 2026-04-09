@@ -92,6 +92,12 @@ button, input[type="submit"]
 	&:hover{
 		background-color: $grey;
 	}
+	@media (width <= $tablet) {
+		font-size: 1.3rem;
+	}
+	@media (width <= $phone) {
+		font-size: 1.6rem;
+	}
 }
 
 .scanlines {
