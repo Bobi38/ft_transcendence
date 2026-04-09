@@ -223,6 +223,8 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
     }
 
     public async dispose() : Promise<void> {
+        this.onUnauthorized = null;
+        this.onReturnToMenu = null;
         this._callback = null;
 
         if (this._room) {

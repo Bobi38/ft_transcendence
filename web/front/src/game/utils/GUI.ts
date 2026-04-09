@@ -272,5 +272,8 @@ export class GUI {
 
         this._scoreText?.dispose();
         this._scoreText = null;
+
+        this._onReturnToMenu = null;
+        this._onReload = null;
     }
 }

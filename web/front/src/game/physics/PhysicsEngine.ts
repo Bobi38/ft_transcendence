@@ -193,7 +193,7 @@ export class PhysicsEngine {
         this._ball.setMeshPosition(Vector3.Zero());
         this._ball.setVelocity(Vector3.Zero());
         this._ball.ignoreServerUntil = tick;
-        this._ball.snapshots.dispose();
+        this._ball.snapshots.empty();
     }
 
     public updateBallOnOpponentHit(hitData: any) {

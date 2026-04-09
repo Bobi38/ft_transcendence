@@ -58,7 +58,6 @@ export class App {
         if (isOffline) {
             this._session = new LocalSessionManager(this._gameState, this._clock);
         } else {
-            console.log("there", this.onReturnToMenu);
             this._session = new NetworkSessionManager(this._gameState, this._clock, this.onReturnToMenu);
         }
         this._physicsEngine = new PhysicsEngine(this._clock, this._session, isOffline);
@@ -66,12 +65,13 @@ export class App {
         this._engine = new Engine(this._canvas, true, {adaptToDeviceRatio: true});
         this._scene = new Scene(this._engine);
 
-        window.addEventListener("keydown", this._showInspector.bind(this))
+        window.addEventListener("keydown", this._showInspector)
 
+        console.log("exiting constructor");
         this._main();
     }
     
-    private _showInspector(e: KeyboardEvent) {
+    private _showInspector = (e: KeyboardEvent) => {
         // Shift+Ctrl+Alt+I
         if (e.shiftKey && e.ctrlKey && e.altKey && (e.key === "I" || e.key === "i")) {
             if (this._scene.debugLayer.isVisible()) {
@@ -83,25 +83,34 @@ export class App {
     }
 
     private async _main(): Promise<void> {
+        console.log("exiting main");
         this._engine.displayLoadingUI();        
         await this._session.initialize();
+        console.log("initialized session");
+
 
         await this._setupGameAssets();
+        console.log("setup assets");
+        
         await this._scene.whenReadyAsync();
+        console.log("scene ready");
         this._engine.hideLoadingUI();
 
         this._setupUI();
         this._setupPhysicsMessagesListener();
+        console.log("seteup ui and physics listeners");
+
         
         this._engine.runRenderLoop(() => {
+            console.log("rendering");
             this._session.update();
             this._updatePhysicsAndRender();
         });
-        window.addEventListener('resize', this._resizeWindow.bind(this));    
+        window.addEventListener('resize', this._resizeWindow);    
     }
 
-    private _resizeWindow() {
-        this._engine.resize();
+    private _resizeWindow = () => {
+        this._engine?.resize();
     }
 
     private _updatePhysicsAndRender() {
@@ -254,16 +263,18 @@ export class App {
         window.removeEventListener("keydown", this._showInspector);
 
         if (this._engine) {
-            const gl = this._engine._gl;
-            if (gl) {
-                const ext = gl.getExtension('WEBGL_lose_context');
-                if (ext) {
-                    console.log("Forcing WebGL context loss...");
-                    ext.loseContext();
-                }
-            }
+            // const gl = this._engine._gl;
+            // if (gl) {
+            //     const ext = gl.getExtension('WEBGL_lose_context');
+            //     if (ext) {
+            //         console.log("Forcing WebGL context loss...");
+            //         ext.loseContext();
+            //     }
+            // }
             this._engine.dispose();
             this._engine = null;
+        this.onReturnToMenu = null;
+        this.onReload = null;
     }
 
         console.log("Pong3D disposal complete");
