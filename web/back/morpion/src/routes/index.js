@@ -5,6 +5,7 @@ export { Op };
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 import User  from '../models/user.js';
 import StatMorp from '../models/StatMorp.js';

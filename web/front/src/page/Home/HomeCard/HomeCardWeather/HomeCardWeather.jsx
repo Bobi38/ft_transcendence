@@ -31,6 +31,8 @@ export default function HomeCardWeather() {
 				});
 				const data = await response.json();
 
+				if (!data || !data.success)
+					return;
 				setWeather({
 					icon: data.message.current.condition.icon,
 					descript: `${data.message.current.condition.text}`,

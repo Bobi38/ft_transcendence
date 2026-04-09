@@ -19,21 +19,25 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
     private _clock : SynchronizedClock;
     private _interval: number | null = null;
     public onUnauthorized?: () => void;
+    public onReturnToMenu?: () => void;
+    private _voluntaryLeave : boolean = false;
 
-    constructor(gameState: GameState, clock: SynchronizedClock) {
+    constructor(gameState: GameState, clock: SynchronizedClock, onReturnToMenu?: () => void) {
         super();
         this._gameState = gameState;
         this._clock = clock;
+        this.onReturnToMenu = onReturnToMenu;
     }
 
 
     public async initialize(): Promise<void> {
-        console.log("HEEEEEEEEEEEEE");
         this._room = await this._connectOrReconnectToRoom();
         const callback = Callbacks.get(this._room);
         this._callback = callback;
 
+        console.log("got my room");
         await this._waitForStateOnce(this._room);
+        console.log("got the state");
         this._initGameState();
 
         this._setupPhysicsMessages();
@@ -79,13 +83,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         localStorage.removeItem("reconnectionGameToken");
         console.log("Network session cleaned up.");
     }
-
-    // public async drop(): Promise<void> {
-    //     if (this._room) {
-    //         await this._room.leave(false);
-    //     }
-    // }
-
 
     private async _waitForStateOnce(room: Room<MyRoomState>): Promise<void> {
         return new Promise((resolve) => {
@@ -135,7 +132,7 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
                 if (newRoomError.code == 401) {
                     this.onUnauthorized?.();
                 }
-                window.location.href = "/";
+                this.onReturnToMenu();
                 console.log("Failed to join new room, error:", newRoomError, "sending back to home");
             }
         }
@@ -225,11 +222,32 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         });
     }
 
-    public dispose() {
+    public setVoluntaryLeave() {
+        this._voluntaryLeave = true;
+    }
+
+    public async dispose() : Promise<void> {
+        console.log("disposing network");
+        this._callback = null;
+
         if (this._room) {
-            this._room.leave(false);
+            console.log("am i leaving voluntarily:", this._voluntaryLeave);
+            this._room.removeAllListeners();
+            this._room.onStateChange.clear();
+            this._room.onDrop.clear();
+            this._room.onReconnect.clear();
+            this._room.onLeave.clear();
+            this._room.onError.clear();
+            if (!this._voluntaryLeave) {
+                this._room.reconnection.maxRetries = 0;
+                await this._room.leave(false);
+            } else await this._room.leave(true);
+            console.log("leaving room")
+            this._room = null;
         }
+        
         clearInterval(this._interval);
+        this.clear();
     }
 
     public emitGoalScored(teamNearScored: boolean): void {}
