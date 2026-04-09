@@ -31,17 +31,14 @@ export class Enemy extends TransformNode implements Character {
 
     public updateBody() {
         const newPos = this._gameState.players.get(this._sessionId).pos;
-        //const oldPos = this._mesh.position.clone();
-        //const moveDirection = newPos.subtract(oldPos);
-        //this._mesh.moveWithCollisions(moveDirection);
-        this._mesh.position = Vector3.Lerp(this._mesh.position, newPos, 0.4);
+        this._mesh.position = Vector3.Lerp(this._mesh.position, newPos, 0.6);
     }
 
     public updateRacket() {
         const newPos = this._gameState.players.get(this._sessionId).rackPos;
         const newRot = this._gameState.players.get(this._sessionId).rackRot;
-        this._racketNode.position = Vector3.Lerp(this._racketNode.position, newPos, 0.4);
-        this._racketNode.rotationQuaternion = Quaternion.Slerp(this._racketNode.rotationQuaternion, newRot, 0.4);
+        this._racketNode.position = Vector3.Lerp(this._racketNode.position, newPos, 0.6);
+        this._racketNode.rotationQuaternion = Quaternion.Slerp(this._racketNode.rotationQuaternion, newRot, 0.6);
     }
 
     public getRacketHit(): Vector3 {

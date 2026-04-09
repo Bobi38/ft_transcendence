@@ -5,7 +5,6 @@ import { GameSession } from "../sessions/GameSession";
 import { Character } from "./Character";
 
 export class Player extends TransformNode implements Character{
-    PLAYER_SPEED: number;
     public camera : UniversalCamera;
     public scene: Scene;
     private _input : PlayerInput;
@@ -69,9 +68,7 @@ export class Player extends TransformNode implements Character{
         this.mesh.moveWithCollisions(this._input.getMoveDirection());
 
         const playerPos = this.getPlayerPosition();
-        //console.log(playerPos);
         this._session.sendUpdateBody(playerPos);
-        //this.room.send("bodyMoved", {position: playerPos.asArray()});
     }
 
     public updateRacket() : {tick: number, position: Vector3, rotation: Quaternion} {
@@ -80,9 +77,6 @@ export class Player extends TransformNode implements Character{
         this.racket.position = this._input.getNewRacketPos();
         this.racket.rotationQuaternion = this._input.getNewRacketRot();
         this._session.sendUpdateRacket(this.racket.position, this.racket.rotationQuaternion);
-        // this.room.send("racketMoved", {position: this.racket.position.asArray(),
-        //     rotation: this.racket.rotationQuaternion.asArray()});
-        //this.racketHistory.record(tick, this.racket.position, this.racket.rotationQuaternion);
         return {tick: 0, position: this.racket.position, rotation: this.racket.rotationQuaternion}
     }
 
