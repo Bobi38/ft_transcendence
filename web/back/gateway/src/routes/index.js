@@ -17,8 +17,6 @@ async function checktok(tokenn) {
   }
   try {
     const decoded = jwt.verify(tokenn, secret);
-    const count = await Co.count();
-
     const co = await Co.findAll({ where: { userId: decoded.id } });
 
     return co.length === 0 ? 1 : 0;
@@ -48,13 +46,14 @@ export const authMiddleware = async (req, res, next) => {
   console.log("Middleware auth for path WHAT:", req.path);
   if ( req.path === '/' || req.path === '/api/auth/session' || req.path === '/api/auth/user' || req.path === '/api/oauth2/github' 
     || req.path === '/api/oauth2/github/callback' || req.path == '/api/oauth2/google' || req.path == '/api/secu/recovery_password' 
-    || req.path == '/api/secu/recoverypassword_check_code' || req.path == '/api/secu/majPswd' || req.path == '/api/secu/cookie' || req.path == '/api/secu/checkco' || req.path == "/api/secu/send_mail") {
+    || req.path == '/api/secu/recoverypassword_check_code' || req.path == '/api/secu/majPswd' || req.path == '/api/secu/cookie' || req.path == '/api/secu/checkco' || req.path == "/api/secu/send_mail"
+    || req.path == "/api/secu/maila2f_check_code") {
     console.log("Public route, no auth required");
     return next() ;
   }
   if (!token && req.path !== '/' && req.path !== '/api/auth/session' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' 
     && req.path !== '/api/oauth2/github/callback' && req.path !== '/api/oauth2/google' && req.path !== '/api/secu/recovery_password' 
-    && req.path !== '/api/secu/recoverypassword_check_code' && req.path !== '/api/secu/majPswd' && req.path !== '/api/secu/cookie' && req.path !== '/api/secu/checkco' && req.path !== "/api/secu/send_mail") {
+    && req.path !== '/api/secu/recoverypassword_check_code' && req.path !== '/api/secu/majPswd' && req.path !== '/api/secu/cookie' && req.path !== '/api/secu/checkco' && req.path !== "/api/secu/send_mail" && req.path !== "/api/secu/maila2f_check_code") {
     return res.status(401).json({ success: false, redirect: true});
   }
   const valid = await checktok(token);
