@@ -8,5 +8,7 @@ export const Config = JSON.stringify({
     pointsToWin: 3,
     ballDiameter: 1,
     farSideLimit: 50,
-    nearSideLimit: -33
+    nearSideLimit: -33,
+    armLength: 5,
+    strikeZPlane: 3
 });

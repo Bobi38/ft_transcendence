@@ -74,6 +74,7 @@ class Oauth2Service {
                 const re = await Co.create({token: token, userId: result[0].id});
             }
             generateToken(MPFA, token, res);
+            req.session.frontendUrl = null;
             return { success: true, message: 'GitHub authentication successful',  frontendUrl: frontendUrl };
         } catch (err) {
             return { success: false, message: 'GitHub authentication failed: ' + err, code: 500 };
