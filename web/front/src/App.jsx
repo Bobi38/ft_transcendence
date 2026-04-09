@@ -6,7 +6,7 @@ import { useEffect, useState }          from    "react";
 import checkCo                          from    "TOOL/fonction_usefull.js"
 import SocketM                          from    "TOOL/SocketManag";
 import { FRIEND, useFriend }            from    "TOOL/FriendContext.jsx";
-import { useAuth }                      from    "HOOKS/useAuth.jsx"
+import { AUTH, useAuth }                      from    "HOOKS/useAuth.jsx"
 
 /* Css */
 import './style/index.scss'
@@ -30,11 +30,26 @@ import MorpionDisplay                   from    "FRONT/page/all_game/MorpionDisp
 
 export default function App() {
 
-    const { showLog } = useAuth();
+    const { showLog, setShowLog } = useAuth();
     const [notif, setNotif] = useState(null);
     const { setShowFriend } = useFriend();
 
     useEffect(() => {
+				const logout = async () => {
+					const handle_logout = (data) => {
+						if (data.type == 'logout'){
+							setShowLog(AUTH.LOGIN)
+							SocketM.disconnect('friend');
+							SocketM.disconnect('morp');
+							SocketM.disconnect('priv');
+							SocketM.disconnect('chat');
+							sessionStorage.clear();
+							window.location.href = '/';
+						}
+					}
+					SocketM.on("friend", handle_logout, "logout");
+				}
+				logout();
         const init = async () => {
 			console.log("YOOOOOOOOOOOOO");
 
@@ -89,6 +104,7 @@ export default function App() {
         return () => {
           SocketM.off("friend", "un");
           SocketM.off("priv", "deux");
+					SocketM.off("friend", "logout");
           // SocketM.disconnect("friend");
           // if (SocketM.socket)
           //   SocketM.disco();

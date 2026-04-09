@@ -151,6 +151,12 @@ export function initWebSFriend(server) {
         if (data.type === "logout"){
           socket.isAlive = false;
           socket.GoLogout = true;
+          const nono = socket.userId;
+          for (const session of chat.sessions.values()){
+            if (session.userId == nono ){
+              session.socket.send(JSON.stringify({type: 'logout'}));
+            }
+          }
           // socket.close();
         }
         if (data.type === "pong")
