@@ -139,7 +139,9 @@ export class App {
         this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
 
         this._gameStatusStateMachine(this._gameState.gameStatus);
+
         this._session.on('onGameStatusChange', (status: RoomStatus) => this._gameStatusStateMachine(status));
+
         this._session.on('onScoreChange', (scoreNear: number, scoreFar: number) => {
             this._ui.updateScoreUI(this._isNear, scoreNear, scoreFar);
         });
@@ -179,7 +181,6 @@ export class App {
                 break;
         }
     }
-
 
     private async _setupGameAssets() {
         this._scene.clearColor = new Color4(0.015, 0.015, 0.2);
