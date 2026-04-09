@@ -62,8 +62,15 @@ logs%:
 logs-%:
 	docker compose  -f docker-compose.dev.yml logs -f $*
 
-logs:
+logs: print-services
 	docker compose  -f docker-compose.prod.yml logs -f
+
+print-services:
+	@i=1; \
+	for s in $(SERVICES); do \
+		echo "$$i -> $$s"; \
+		i=$$((i+1)); \
+	done
 
 logst:
 	docker compose  -f docker-compose.dev.yml logs -f -t
