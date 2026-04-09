@@ -1,5 +1,9 @@
-import { ActionManager, Axis, ExecuteCodeAction, Plane, Quaternion, Scalar, Scene, TransformNode, UniversalCamera, Vector2, Vector3} from "@babylonjs/core";
+import { ActionManager, ExecuteCodeAction, Plane, Quaternion, Scene, TransformNode, Vector2, Vector3} from "@babylonjs/core";
 import { PlayerCamera } from "./PlayerCamera";
+import { Config } from "/app/src/game/shared/gameConfig.js";
+
+const config = JSON.parse(Config);
+
 
 export class PlayerInput {
     private _moveDirection : Vector3 = Vector3.Zero();
@@ -71,7 +75,7 @@ export class PlayerInput {
         this.prevMousePos = mousePos;
 
         const normal = this._camera.getUniversalCamera().getForwardRay().direction;
-        const position = this._handNode.getAbsolutePosition().add(normal.scale(3));
+        const position = this._handNode.getAbsolutePosition().add(normal.scale(config.strikeZPlane));
         const plane = Plane.FromPositionAndNormal(position, normal);
         const ray = this._scene.createPickingRay(this._scene.pointerX, this._scene.pointerY,
             null, this._camera.getUniversalCamera());
@@ -83,7 +87,7 @@ export class PlayerInput {
             const localHandPos = Vector3.TransformCoordinates(this._handNode.absolutePosition, invertedWorldMatrix);
             const relativePos : Vector3 = localPointerPos.subtract(localHandPos);
 
-            const maxRadius = 5;
+            const maxRadius = config.armLength;
             if (relativePos.length() > maxRadius) {
                 relativePos.normalize().scaleInPlace(maxRadius);
             }
