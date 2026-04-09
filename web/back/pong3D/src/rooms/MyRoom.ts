@@ -139,7 +139,6 @@ export class MyRoom extends Room {
         return false;
       }
 
-      console.log("result.id:", result.id);
       if (activePlayers.has(result.id)) {
             console.log(`Blocked duplicate login for: ${result.id}`);
             throw new ServerError(401, "Account is already logged in elsewhere!");
@@ -167,7 +166,6 @@ export class MyRoom extends Room {
         suspended: false 
     } as RoomUserData;
 
-    console.log("auth.id:", auth.id);
     console.log(client.sessionId, "joined room", this.roomId);
 
     const player = new Player();

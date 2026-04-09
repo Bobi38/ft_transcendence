@@ -46,7 +46,7 @@ export default function Pong3D({type}) {
             }
 
             const showPlayingTwiceAlert = () => showAlert("You already are playing Pong3D", "danger");
-            function onUnauthorized(){setError(true)}
+            const onUnauthorized = () => {setError(true)}
             const navigateHome = () => navigate('/');
             const reloading = () =>  setGameKey(prev => prev + 1);
             console.log("ref: ", canvasRef.current)
@@ -55,7 +55,7 @@ export default function Pong3D({type}) {
                 isOffline: type, 
                 onReturnToMenu: navigateHome,
                 onReload: reloading,
-                onUnauthorized: showPlayingTwiceAlert});
+                onUnauthorized: onUnauthorized});
         };
 
         init();
