@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Color4,  ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Color4, ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
 import { Environment } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";
@@ -45,7 +45,6 @@ export class App {
     private _gameState : GameState = new GameState();
     private _session : GameSession;
     private _environment: Environment;
-    //private _network : NetworkManager = new NetworkManager(this._gameState, this._clock);
     private _physicsEngine : PhysicsEngine;
     public onReturnToMenu?: () => void;
     public onReload?: () => void;

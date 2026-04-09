@@ -134,7 +134,7 @@ export default function Profile() {
                     <input  type={`email`}
                             id={`email`} name={`email`}
                             title={`Can't be changed`}
-                            value={user.email}
+                            value={user.email ?? ""}
                             onChange={(e) => setUser({ ...user, email: e.target.value }) }
                             disabled/>
 

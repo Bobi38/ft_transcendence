@@ -53,7 +53,7 @@ class ChatPService {
         try {
             const user = await get_user_from_token(token);
             if (!user.success)
-                return ({success: false, message: user.message, code: user.code})
+                return ({success: false, message: user.message, code: 404})
             const result = user.user;
             const chats = await PrivChat.findAll({
                         where: { [Op.or]: [{ id1: result.id }, { id2: result.id }] },

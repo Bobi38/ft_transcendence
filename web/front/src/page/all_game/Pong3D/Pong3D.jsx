@@ -18,7 +18,7 @@ function isMobileDevice() {
     return hasCoarsePointer || hasTouchPoints || hasTouchEvents;
 }
 
-export default function Pong3D() {
+export default function Pong3D({type}) {
 
     const navigate = useNavigate();
     const canvasRef = useRef(null);
@@ -44,11 +44,9 @@ export default function Pong3D() {
                 return;
             }
 
-            if (canvasRef.current) {
-                gameApp = new GameApp(canvasRef.current, false, () => { navigate('/') });
-                gameApp.onUnauthorized = () => showAlert("You already are playing Pong3D", "danger");
-                gameApp.onReload = () => setGameKey(prev => prev + 1);
-            }
+            gameApp = new GameApp(canvasRef.current, type, () => { navigate('/') });
+            gameApp.onUnauthorized = () => showAlert("You already are playing Pong3D", "danger");
+            gameApp.onReload = () => setGameKey(prev => prev + 1);
         };
 
         init();
