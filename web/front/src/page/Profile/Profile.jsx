@@ -1,5 +1,6 @@
 /* extern */
 import { useState, useEffect }      from    "react";
+import { Link }      from    "react-router-dom";
 import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
@@ -188,13 +189,13 @@ export default function Profile() {
             </div>
 
             <div className={`Navbar-policy`}>
-                <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                <Link to="/TermsAndPrivacy">
                 Privacy policy
-                </a>
+                </Link>
 
-                <a href="/terms" target="_blank" rel="noopener noreferrer">
+                <Link to="/TermsAndPrivacy">
                 Terms of Use
-                </a>
+                </Link>
             </div>
         </section>
     );
