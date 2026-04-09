@@ -12,7 +12,6 @@ const farBallStart = new Vector3(0,3,34.5);
 const nearBallStart = new Vector3(0,3,-12);
 
 export class LocalSessionManager extends EventEmitter implements GameSession {
-    
     private _gameState: GameState;
     private _clock: SynchronizedClock;
     private _bot: Bot;
@@ -91,6 +90,8 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
     public sendUpdateBody(pos: any) {}
     public sendUpdateRacket(rackPos: any, rackRot: any) {}
     public setVoluntaryLeave(): void {}
+    public refreshGameState(): void {}
+    public setGameState(state: RoomStatus): void {}
     
     public async leave(): Promise<void> {}
 

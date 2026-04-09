@@ -198,8 +198,8 @@ services:
 
   pong3d:
     build: 
-      context: ./web/back
-      dockerfile: pong3D/Dockerfile
+      context: ./web
+      dockerfile: back/pong3D/Dockerfile
       target: prod
     container_name: pong3d
     env_file: 
