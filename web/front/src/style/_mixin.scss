@@ -35,10 +35,10 @@
     transition: all 0.2s;
     padding: 0.6rem;
 
-    background: radial-gradient(#ffffff 60%, $main);
-	box-shadow: 0px 0px 10px 2px #cfcfcf;
+    background: radial-gradient(white 60%, $main);
+	box-shadow: 0px 0px 10px 2px $grey;
 
-    border: 0.5rem solid rgb(189, 189, 189);
+    border: 0.5rem solid $grey;
     border-radius: 25px;
 	@include cursor("pointer");
 

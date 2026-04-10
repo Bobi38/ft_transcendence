@@ -1,6 +1,6 @@
 
 @use '_global.scss';
-@use '_variable.scss';
+@use "STYLE/_variable" as *;
 
 .global-notif {
   position: fixed;
@@ -15,7 +15,7 @@
 }
 
 .global-notif.co{
-  background-color: green;
+  background-color: $green;
 }
 
 .global-notif.deco{
@@ -42,6 +42,6 @@
 
   //     z-index: 3;
   //     opacity: 70%;
-  //     &.danger { background-color: red; }
-  //     &.success { background-color: green; }
+  //     &.danger { background-color: $red; }
+  //     &.success { background-color: $green; }
   // }
