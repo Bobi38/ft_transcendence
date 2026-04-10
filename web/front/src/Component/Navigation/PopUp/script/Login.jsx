@@ -64,7 +64,7 @@ export default function Login({ password_forget_mode, register_mode}) {
             SocketM.sendd('friend', {type: 'co_first'});
         };
     };
-    
+
     const handle_git = () => {
         const frontendUrl = window.location.origin;
         const backUrl = window.location.hostname;
@@ -120,7 +120,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                 <input  type={`password`}
                         id={`password`}
                         name={`password`}
-                        placeholder={`1234btw`}
+                        placeholder={`Password`}
                         required
                 />
                 <button type={`submit`}>Connect</button>
@@ -137,7 +137,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                     <FcGoogle/> Google
                     </button>
 
-                <button type={`button`} 
+                <button type={`button`}
                         onClick={register_mode}>
                         Register
                 </button>
