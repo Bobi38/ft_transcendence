@@ -1,13 +1,9 @@
-
 @use "STYLE/_variable" as *;
 
 @mixin full {
-    height: $root_height;
-    width: $root_width;
+    height: 100%;
+    width: 100%;
 }
-
-@mixin fullh { height: $root_height; }
-@mixin fullw { width: $root_width; }
 
 @mixin page($varcolor : rgb(0, 81, 97)){
 	@include full;
@@ -75,6 +71,6 @@
         background: $active;
     }
     @else if $how_win == "lose" {
-        background: rgb(216, 46, 46);
+        background: $red;
     }
 }

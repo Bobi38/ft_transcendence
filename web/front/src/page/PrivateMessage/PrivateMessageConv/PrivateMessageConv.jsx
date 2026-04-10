@@ -87,7 +87,7 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         setInput("");
     }
     return (
-		<div className={`PrivateMessageConv-root border-0`}>
+		<div className={`PrivateMessageConv-root`}>
 
 			<h1>{login}</h1>
 			<hr />
@@ -95,10 +95,10 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 			<div className="content">
                 <p id={`alert-container`}></p>
 
-				<div className="message border-1">
+				<div className="message">
                     {displayedMessages && displayedMessages.map((msg, index) => { return (
 
-                        <div key={index} className={`${msg.monMsg ? "me" : "other"} border-2`}>
+                        <div key={index} className={`${msg.monMsg ? "me" : "other"}`}>
 
                             {msg.monMsg ? (
                                 <div>

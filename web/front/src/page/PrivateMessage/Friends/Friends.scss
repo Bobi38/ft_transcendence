@@ -10,7 +10,7 @@
 	}
 
     .one-friend{
-        @include mix.fullw;
+        width: 100%;
         background-color: rgba(0, 0, 0, 0.1);
         border-radius: 1rem;
         padding: 0.7rem;
@@ -27,7 +27,7 @@
 
             gap: 0.4rem;
             button{
-                @include mix.fullw;
+                width: 100%;
                 @include mix.default_card;
             }
         }

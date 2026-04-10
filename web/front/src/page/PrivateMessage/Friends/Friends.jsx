@@ -79,13 +79,13 @@ export default function Friends({setGoToAction, setGoToConv}) {
     }
 
     return (
-        <div className={`Friends-root border-0`}>
+        <div className={`Friends-root`}>
 			<h1>Friends</h1>
 			<hr />
 			<div className="content">
 
 	            {responseFriendArray?.length !== 0 ? (responseFriendArray.map((msg, index) => (
-	                <div key={index} className="one-friend border-1">
+	                <div key={index} className="one-friend">
 	                    <h2>{msg.login}</h2>
 
 	                    <div className="div-btn">

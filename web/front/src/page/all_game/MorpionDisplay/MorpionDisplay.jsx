@@ -81,7 +81,7 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 
     return (
 
-        <div className={`MorpionDisplay-root border-base`}>
+        <div className={`MorpionDisplay-root`}>
             {isGame ?
 				<>
 					<h1>Royal Morpion</h1>
