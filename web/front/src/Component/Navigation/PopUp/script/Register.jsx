@@ -65,11 +65,7 @@ export default function Register({login_mode}) {
                     <label htmlFor="legal">
                     I accept{" "}
                     <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
-                    Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
-                    Privacy Policy
+                    	Terms of Service and Privacy Policy
                     </a>
                     </label>
                 </div>

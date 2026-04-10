@@ -26,8 +26,11 @@
 			align-items: center;
             gap: 0.5rem;
 
-            input{width: 100%;}
+            input {
+				width: 100%;
+			}
 			input[type="checkbox"] {
+				width: fit-content;
 				margin-right: 1.5rem;
 			}
 
