@@ -10,15 +10,14 @@
 <!-- [tag_test]: url "on hover" -->
 <!-- Ceci sont des commentaire pour avec ma font: Double-struck et des icon personnaliser -->
 
-[tag_icon_react]: https://skillicons.dev/icons?i=react
-[tag_icon_js]: https://skillicons.dev/icons?i=js
-[tag_icon_infrastructure]: https://skillicons.dev/icons?i=docker,nginx,express,js
+[tag_icon_front]: https://skillicons.dev/icons?i=react,sass
+[tag_icon_back]: https://skillicons.dev/icons?i=express,js
 [tag_icon_db]: https://skillicons.dev/icons?i=mysql
-[tag_icon_all]: https://skillicons.dev/icons?i=github,npm,nodejs,docker,nginx,express,mysql,react,js,html,sass,ts
-[tag_ressource_grid]: https://cssgrid-generator.netlify.app/ 
-[tag_ressource_claude_transition]: https://claude.ai/public/artifacts/96fe632f-2869-4d78-99f4-20053d0ebf7c
+[tag_icon_infrastructure]: https://skillicons.dev/icons?i=docker,nginx
+[tag_icon_all]: https://skillicons.dev/icons?i=github,npm,nodejs,docker,nginx,express,mysql,react,js,html,sass,ts,makefile
+[tag_ressource_grid]: https://cssgrid-generator.netlify.app/
 
-# 𝔽t_transcendence
+# 𝔽t_transcendence too late (without `_` yes....)
 <p align="center">
   <a href="https://skillicons.dev">
     <img src="https://skillicons.dev/icons?i=github,npm,nodejs,docker,nginx,express,mysql,react,js,html,sass,ts" />
@@ -85,7 +84,7 @@ ft_transcendence is a full-stack web application that lets users compete against
 
 | Login     | Role            | Responsibilities                                                              |
 | :---      | :---            | :---                                                                          |
-| Fcretin   | Product Owner   | Product vision, backlog prioritization                                        |
+| Fcretin   | Product Owner   | Product vision, prioritization                                                |
 | Tvoisin   | Project Manager | Team coordination, task tracking & deadline management                        |
 | Edarnand  | Technical Lead  | Architecture design, code quality, code reviews, code refactor                |
 | Niroched  | Developer       | Morpion game logic, custom room & matchmaking system (WebSockets)             |
@@ -142,10 +141,10 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 | Tool           | Version / Notes                        |
 | :---           | :---                                   |
-| Docker         | >= 24.x                                |
-| Docker Compose | >= 2.x (included with Docker Desktop)  |
-| Make           | Any standard version                   |
 | Git            | Any standard version                   |
+| Make           | Any standard version                   |
+| Docker Compose | >= 2.x (included with Docker Desktop)  |
+| Docker         | >= 24.x                                |
 
 > No local Node.js, MySQL, or Nginx installation required — everything runs inside Docker containers.
 
@@ -159,8 +158,9 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 2. **Create your environment file:**
    ```bash
-   cp /sgoinfre/fcretin/private/ft_transcendence_too_late/.env .env
+   cp env.exemple .env
    ```
+      <!-- cp /sgoinfre/fcretin/private/ft_transcendence_too_late/.env .env -->
    Then open `.env` and fill in the required values (database credentials, JWT secrets, OAuth keys if applicable, etc.).
 
 3. **Run in production mode:**
@@ -215,27 +215,28 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 > **Why Docker?** Docker ensures every team member and evaluator runs the exact same environment, eliminating "works on my machine" issues and simplifying deployment.
 
-### Frontend ![icons][tag_icon_react]
+### Frontend ![icons][tag_icon_front]
 
-| Technology    | Role                                                                    |
-| :---          | :---                                                                    |
-| **Vite**      | Fast build tool and dev server for the React frontend                   |
-| **React JSX** | Component-based UI framework for a dynamic single-page application      |
-| **SCSS**      | Structured and maintainable styling with variables, nesting, and mixins |
+| Technology        | Role                                                                    |
+| :---              | :---                                                                    |
+| **Vite (dev)**    | Fast build tool and dev server for the React frontend                   |
+| **React JSX**     | Component-based UI framework for a dynamic single-page application      |
+| **SCSS**          | Structured and maintainable styling with variables, nesting, and mixins |
+| **Babylon**       | oui |
 
-> **Why React?** React's component model fits the modular nature of the app (game views, chat, profile, etc.), its ecosystem accelerated development significantly and main stream.
+> **Why React?** React's component model fits the modular nature of the app (game views, chat, profile, etc.), its ecosystem accelerated development significantly and Mainstream.
 
-### Backend ![icons][tag_icon_js]
+### Backend ![icons][tag_icon_back]
 
-| Technology          | Role                                                                              |
-| :---                | :---                                                                              |
-| **Express.js**      | API gateway handling auth, user management, chat, and routing                |
-| **WebSockets (ws)** | Low-level WebSocket library powering the Morpion matchmaking and room system      |
-| **Colyseus (TS)**   | Authoritative game server framework for Pong 3D, handling rooms and game state    |
+| Technology          | Role                                                                                |
+| :---                | :---                                                                                |
+| **Express.js**      | API gateway handling auth, user management, chat, and routing                       |
+| **WebSockets (ws)** | Low-level WebSocket library powering the Morpion matchmaking and room system        |
+| **Colyseus (TS)**   | Authoritative game server framework for Pong 3D, handling rooms and game state      |
 
-> **Why Colyseus for Pong 3D?** Colyseus provides built-in room management, server-side game loop, and delta-state synchronization — exactly what a real-time 3D game requires. It runs in TypeScript for type safety in complex game logic.
+> **Why Colyseus for Pong 3D ?** Colyseus provides built-in room management, server-side game loop, and delta-state synchronization — exactly what a real-time 3D game requires. It runs in TypeScript for type safety in complex game logic.
 
-> **Why custom WebSockets for Morpion (chat other)?** The Morpion game required a lightweight, fully custom matchmaking system (room creation, player queuing, game state relay) built from scratch to demonstrate mastery of the WebSocket protocol without abstractions.
+> **Why custom WebSockets for Morpion (chat other) ?** The Morpion game required a lightweight, fully custom matchmaking system (room creation, player queuing, game state relay) built from scratch to demonstrate mastery of the WebSocket protocol without abstractions.
 
 ### Database ![icons][tag_icon_db]
 
@@ -244,7 +245,7 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 | **MySQL**      | Relational database for persistent storage                |
 | **Sequelize**  | ORM for schema definition, migrations, and query building |
 
-> **Why MySQL + Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize adds type-safe model definitions and simplifies migrations.
+> **Why MySQL, Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize adds type-safe model definitions and simplifies migrations.
 
 - [🗓 𝕊ummary](#summary)
 
@@ -261,55 +262,187 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
         <h2>🗄 𝔻atabase 𝕊chema</h2>
     </summary>
 
-### Tables Overview
+The database contains **11 tables** managed via Sequelize ORM. A `StatMorp` and `StatPong3D` row is automatically created for each new user via a Sequelize `afterCreate` hook.
 
-#### `users`
-| Field          | Type         | Notes                        |
-| :---           | :---         | :---                         |
-| `id`           | INT (PK)     | Auto-increment primary key   |
-| `username`     | VARCHAR(50)  | Unique, required             |
-| `email`        | VARCHAR(100) | Unique, required             |
-| `password_hash`| VARCHAR(255) | Bcrypt hashed password       |
-| `avatar`       | VARCHAR(255) | Path or URL to avatar image  |
-| `created_at`   | DATETIME     | Account creation timestamp   |
+---
 
-#### `matches`
-| Field        | Type     | Notes                                   |
-| :---         | :---     | :---                                    |
-| `id`         | INT (PK) | Auto-increment primary key              |
-| `game_type`  | ENUM     | `'pong3d'` or `'morpion'`               |
-| `player1_id` | INT (FK) | References `users.id`                   |
-| `player2_id` | INT (FK) | References `users.id`                   |
-| `winner_id`  | INT (FK) | References `users.id`, nullable         |
-| `played_at`  | DATETIME | Match timestamp                         |
+#### `user_co` — Users
+| Field              | Type          | Notes                                          |
+| :---               | :---          | :---                                           |
+| `id`               | INT (PK)      | Auto-increment primary key                     |
+| `name`             | VARCHAR(128)  | Display name, required                         |
+| `Log42`            | VARCHAR(128)  | 42 school login, nullable (OAuth users)        |
+| `password`         | VARCHAR(128)  | Hashed password, nullable (OAuth users)        |
+| `mail`             | VARCHAR(256)  | Unique email address, required                 |
+| `adress`           | VARCHAR(256)  | Optional address                               |
+| `phoneNumber`      | VARCHAR(20)   | Optional phone number                          |
+| `OAuth`            | BOOLEAN       | Whether account was created via OAuth          |
+| `MPFA`             | BOOLEAN       | 2FA enabled flag (default: true)               |
+| `co`               | BOOLEAN       | Currently connected flag                       |
+| `password_2FA`     | VARCHAR(256)  | Temporary 2FA code, nullable                   |
+| `password_2FA_time`| TIME          | Expiry time of the 2FA code                    |
+| `Hostlastco`       | VARCHAR(256)  | IP/host of last connection, nullable           |
+| `Datelastco`       | DATE          | Date of last connection, nullable              |
 
-#### `stats`
-| Field       | Type     | Notes                       |
-| :---        | :---     | :---                        |
-| `id`        | INT (PK) | Auto-increment primary key  |
-| `user_id`   | INT (FK) | References `users.id`       |
-| `wins`      | INT      | Total wins                  |
-| `losses`    | INT      | Total losses                |
-| `game_type` | ENUM     | `'pong3d'` or `'morpion'`   |
+---
 
-#### `messages`
-| Field       | Type         | Notes                      |
-| :---        | :---         | :---                       |
-| `id`        | INT (PK)     | Auto-increment primary key |
-| `sender_id` | INT (FK)     | References `users.id`      |
-| `content`   | TEXT         | Message body               |
-| `sent_at`   | DATETIME     | Timestamp                  |
+#### `connect_co` — Active Sessions / Tokens
+| Field    | Type         | Notes                              |
+| :---     | :---         | :---                               |
+| `id`     | INT (PK)     | Auto-increment primary key         |
+| `token`  | VARCHAR(512) | Session/JWT token, required        |
+| `userId` | INT (FK)     | References `user_co.id` (CASCADE)  |
 
-### Relationships
+---
 
-- A **user** has many **matches** (as player1 or player2).
-- A **user** has one **stats** record per game type.
-- A **match** has one **winner** (nullable until the game ends).
-- A **user** has many **messages**.
+#### `Friend` — Friend Relationships
+| Field    | Type    | Notes                                             |
+| :---     | :---    | :---                                              |
+| `Friend1`| INT (PK, FK) | First user — references `user_co.id`         |
+| `Friend2`| INT (PK, FK) | Second user — references `user_co.id`        |
+| `State`  | BOOLEAN | Friendship accepted (default: false = pending)    |
+| `WhoAsk` | INT (FK)| User who sent the request — references `user_co.id`|
+
+> Composite primary key on `(Friend1, Friend2)` enforces uniqueness of each pair.
+
+---
+
+#### `PswEmail` — Password / Email Verification Codes
+| Field        | Type         | Notes                                      |
+| :---         | :---         | :---                                       |
+| `id`         | INT (PK)     | Auto-increment primary key                 |
+| `type`       | INT          | Code type (e.g. password reset vs 2FA)     |
+| `idUser`     | INT (FK)     | References `user_co.id`                    |
+| `Code`       | VARCHAR(512) | The verification/reset code                |
+| `DateCreate` | DATE         | Code creation timestamp                    |
+
+---
+
+#### `chat_G` — Global Chat Messages
+| Field      | Type         | Notes                              |
+| :---       | :---         | :---                               |
+| `contenu`  | VARCHAR(512) | Message content, required          |
+| `time`     | TIME         | Time the message was sent          |
+| `SenderId` | INT (FK)     | References `user_co.id` (CASCADE)  |
+
+---
+
+#### `PrivChat` — Private Conversations
+| Field      | Type    | Notes                            |
+| :---       | :---    | :---                             |
+| `id`       | INT (PK)| Auto-increment primary key       |
+| `id1`      | INT (FK)| First participant — `user_co.id` |
+| `id2`      | INT (FK)| Second participant — `user_co.id`|
+| `lastmess` | DATE    | Timestamp of latest message      |
+
+---
+
+#### `PrivMess` — Private Messages
+| Field      | Type         | Notes                               |
+| :---       | :---         | :---                                |
+| `id`       | INT (PK)     | Auto-increment primary key          |
+| `SenderId` | INT (FK)     | Sender — references `user_co.id`    |
+| `contenu`  | VARCHAR(512) | Message content, required           |
+| `time`     | TIME         | Time the message was sent           |
+| `ChatId`   | INT (FK)     | References `PrivChat.id` (CASCADE)  |
+
+---
+
+#### `GameMorp` — Morpion Match Records
+| Field            | Type         | Notes                                                            |
+| :---             | :---         | :---                                                             |
+| `id`             | INT (PK)     | Auto-increment primary key                                       |
+| `how_win`        | ENUM         | `horizontal`, `diagonal_lr`, `diagonal_rl`, `vertical`, `abort`, `draw` |
+| `date_game`      | DATE         | Match date (default: now)                                        |
+| `player_1`       | INT (FK)     | References `user_co.id` (CASCADE)                                |
+| `player_2`       | INT (FK)     | References `user_co.id` (CASCADE)                                |
+| `winner`         | INT (FK)     | References `user_co.id`, nullable                                |
+| `loser`          | INT (FK)     | References `user_co.id`, nullable                                |
+| `time_player_1`  | INT          | Total time spent by player 1 (ms)                                |
+| `time_player_2`  | INT          | Total time spent by player 2 (ms)                                |
+| `nb_turn_player_1`| INT         | Number of turns played by player 1                               |
+| `nb_turn_player_2`| INT         | Number of turns played by player 2                               |
+| `map`            | VARCHAR(128) | Board state snapshot (e.g. `"OX--XO-XO"`)                        |
+
+---
+
+#### `StatMorp` — Morpion Aggregated Statistics (per user)
+One row per user, auto-created on user registration. Tracks win/loss counts broken down by symbol (X or O) and win condition type.
+
+| Field                    | Type | Notes                                    |
+| :---                     | :--- | :---                                     |
+| `idUser`                 | INT (FK) | References `user_co.id`              |
+| `total_game`             | INT  | Total games played                       |
+| `time_played`            | INT  | Total time played (ms)                   |
+| `nb_turn_played`         | INT  | Total turns played                       |
+| `type_X_horizontal_winner` | INT | Wins as X via horizontal alignment     |
+| `type_X_horizontal_loser`  | INT | Losses as X vs horizontal alignment    |
+| `type_X_vertical_winner`   | INT | Wins as X via vertical alignment       |
+| `type_X_vertical_loser`    | INT | Losses as X vs vertical alignment      |
+| `type_X_diagonal_winner`   | INT | Wins as X via diagonal                 |
+| `type_X_diagonal_loser`    | INT | Losses as X vs diagonal                |
+| `type_X_abort_winner`      | INT | Wins as X by opponent abort            |
+| `type_X_abort_loser`       | INT | Losses as X by own abort               |
+| `type_X_draw`              | INT | Draws as X                             |
+| *(same fields for O)*    | INT  | Identical set repeated for symbol O      |
+
+---
+
+#### `GamePong3D` — Pong 3D Match Records
+| Field             | Type    | Notes                                        |
+| :---              | :---    | :---                                         |
+| `id`              | INT (PK)| Auto-increment primary key                   |
+| `id_player_1`     | INT (FK)| References `user_co.id` (CASCADE)            |
+| `score_1`         | INT     | Score of player 1                            |
+| `id_player_2`     | INT (FK)| References `user_co.id` (CASCADE)            |
+| `score_2`         | INT     | Score of player 2                            |
+| `abortwinner`     | INT (FK)| Winner if game was aborted, nullable         |
+| `abortloser`      | INT (FK)| Loser if game was aborted, nullable          |
+| `winner`          | INT (FK)| Normal winner, nullable                      |
+| `loser`           | INT (FK)| Normal loser, nullable                       |
+| `date_game_start` | DATE    | Match start timestamp                        |
+| `date_game_end`   | DATE    | Match end timestamp (default: now)           |
+| `time`            | INT     | Match duration (ms)                          |
+
+---
+
+#### `StatPong3D` — Pong 3D Aggregated Statistics (per user)
+One row per user, auto-created on user registration.
+
+| Field        | Type     | Notes                             |
+| :---         | :---     | :---                              |
+| `idUser`     | INT (FK) | References `user_co.id`           |
+| `total_game` | INT      | Total games played                |
+| `time_played`| INT      | Total time played (ms)            |
+| `win`        | INT      | Total wins                        |
+| `lose`       | INT      | Total losses                      |
+| `abortwinner`| INT      | Games won by opponent abort       |
+| `abortloser` | INT      | Games lost by own abort           |
+
+---
+
+### Relationships Summary
+
+```
+user_co
+  ├── has many connect_co         (sessions/tokens)
+  ├── has many PswEmail           (verification codes)
+  ├── has many chat_G             (global chat messages sent)
+  ├── belongs to many User        through Friend (as Friends / FriendOf)
+  ├── has many PrivChat           (as user1 or user2)
+  ├── has many GameMorp           (as player_1, player_2, winner, loser)
+  ├── has one  StatMorp           (auto-created on register)
+  ├── has many GamePong3D         (as id_player_1, id_player_2, winner, loser)
+  └── has one  StatPong3D         (auto-created on register)
+
+PrivChat
+  └── has many PrivMess
+```
 
 - [🗓 𝕊ummary](#summary)
 
 </details>
+
 
 <br>
 
@@ -346,32 +479,23 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
         <h2>📦 𝕄odules</h2>
     </summary>
 
+| Module                                                                                        | Type  | Points | Implemented By   | Description       |
+| :---                                                                                          | :---  | :---   | :---             | :---              |
+| Use a framework for both the frontend and backend.                                            | Major | 2pts   | Fcretin Tvoisin  | ...               |
+| Implement real-time features using WebSockets or similar technology.                          | Major | 4pts   |                  | ...               |
+| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 6pts   |                  | ...               |
+| Introduce an AI Opponent for games                                                            | Major | 8pts   |                  | ...               |
+| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10pts  |                  | ...               |
+| Allow users to interact with other users.                                                     | Major | 12pts  |                  | ...               |
+| Implement a complete web-based game where users can play against each other.                  | Major | 14pts  |                  | ...               |
+| Add another game with user history and matchmaking.                                           | Major | 16pts  |                  | ...               |
+| Use an ORM for the database.                                                                  | Minor | 17pts  |                  | ...               |
+| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18pts  |                  | ...               |
+| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19pts  |                  | ...               |
+| ...                                                                                           | ...   | ...    |                  | ...               |
+| Backend as microservices.                                                                     | Major | ...    |                  | ...               |
+| Support for additional browsers.                                                              | Minor | ...    |                  | ...               |
 
-- **`2`  `Major`**: Use a framework for both the frontend and backend.
-- **`4`  `Major`**: Implement real-time features using WebSockets or similar technology.
-- **`6`  `Major`**: Remote players — Enable two players on separate computers to play the same game in real-time.
-- **`8`  `Major`**: Introduce an AI Opponent for games
-- **`10` `Major`**: Implement advanced 3D graphics using a library like Three.js or Babylon.js.
-- **`12` `Major`**: Allow users to interact with other users. The minimum requirements are:
-- **`14` `Major`**: Implement a complete web-based game where users can play against each other.
-- **`16` `Major`**: Add another game with user history and matchmaking.
-
-<br>
-
-- **`17` `Minor`**: Use an ORM for the database.
-- **`18` `Minor`**: Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).
-- **`19` `Minor`**: Implement a complete 2FA (Two-Factor Authentication) system for the users.
-
-### other
-- **`Major`**: Backend as microservices.
-- **`Minor`**: Support for additional browsers.
-
-**Total: _19_ pts**
-
-### Justifications
-
-> -
-> -
 
 - [🗓 𝕊ummary](#summary)
 
@@ -389,8 +513,8 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
     </summary>
 
 ### Fcretin — Product Owner
-- Defined product vision and wrote user stories for all major features.
-- Maintained and prioritized the product backlog throughout the project.
+- Defined product vision for all major features.
+- Maintained and prioritized features throughout the project.
 - **Challenge**: by quickly identifying lower-priority features and focusing on the main interface.
 
 ### Tvoisin — Project Manager
@@ -401,17 +525,16 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 - Implemented the Makefile, the Express.js gateway, API routes, and the database schema (Sequelize models).
 
 ### Edarnand — Technical Lead
-- Conducted code reviews and enforced code quality standards.
-- Design and wrote scss
-- Work with sflechel on Pong3d game and Colyseus
-- **Challenge**: Getting all services to communicate correctly through the Nginx reverse proxy — resolved by carefully mapping routes and Docker network aliases.
+- Conducted code reviews and make sure every part of the project worked together.
+- Paid attention to the standardization of the UI/UX on the site
+- Work with sflechel on Pong3d game and server implementation
+- **Challenge**: ... .
 
 ### Sflechel — Developer
 - Built the Pong 3D game in TypeScript using the Colyseus framework.
 - Implemented the Colyseus game rooms, server-side game loop, ball physics, and state synchronization to the React frontend.
 - Integrated the Colyseus client in the React frontend for live game updates.
-- **Challenge**: Synchronizing 3D game physics between server and client with minimal latency — resolved by running all physics on the server and sending delta updates to the client.
-
+- **Challenge**: ... .
 ### Niroched — Developer
 - Built the entire Morpion (Tic-Tac-Toe) game from scratch, including game logic, win detection, and board state management.
 - Designed and implemented the custom WebSocket matchmaking system: player queuing, room creation, and game state relay, spectator built entirely from scratch without a game server framework.
@@ -445,14 +568,16 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 - [Vite Documentation](https://vitejs.dev/)
 - [React Documentation](https://react.dev/)
 - [SCSS / Sass Documentation](https://sass-lang.com/documentation/)
+- [Javascript Documentation](https://javascript.info/)
 
 ### AI Usage
 
 Claude, Gemini was used during this project for the following tasks:
 
 - **README drafting**: this README based on project requirements and baseReadme.md.
-- **UI transitions & animations**: Generating CSS transition ideas for the frontend (see [transition artifact][tag_ressource_claude_transition]).
+- **UI transitions & animations**: Generating CSS transition ideas for the frontend.
 - **Boilerplate generation**: Generating initial Sequelize model definitions and Express route scaffolding to accelerate development.
+- **Good practice & bug seeking**: ... .
 
 > All AI-generated code was reviewed, tested, and adapted by the team before being integrated into the project.
 
