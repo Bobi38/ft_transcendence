@@ -61,7 +61,7 @@ function move(player, move){
             managerRoom.refreshList();
 
             setTimeout(() => {
-                 managerRoom.removeRoom(game);
+                managerRoom.removeRoom(game);
             }, 10000);
             return true;
         }
