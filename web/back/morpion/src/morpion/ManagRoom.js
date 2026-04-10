@@ -67,8 +67,7 @@ class ManagerRoom {
         room.remove(message);
         room.clearOutTimer();
         this._rooms.delete(room.getId())
-        this.refreshRoomList();
-        this.sendList();
+        this.refreshList();
     }
 
     abortedRoom(player){
@@ -76,7 +75,7 @@ class ManagerRoom {
 
         if (!game || !game.setEnd()) return ;
 
-        this.refreshRoomList();
+        this.refreshList();
 
         const loser = player;
         let winner = game.getTurn();

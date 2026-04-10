@@ -46,7 +46,6 @@ export function initWebSMopr(server) {
 
       setTimeout(() => {
         players.delete(bot.getId());
-        socket.sendList();
       }, 20 * 60 * 1000);
     }
 
@@ -61,18 +60,23 @@ export function initWebSMopr(server) {
         const player = socket.player;
 
         player.IAmActif();
+
         const data = JSON.parse(message);
+
+        if (typeof data !== "object" || data === null){
+          player.sendList()
+          player.sendGame();
+          return ;
+        }
 
         switch (data.type) {
 
           case "updateName":
             m.updateName(socket.player, data.new_name);
-            socket.sendList();
             break;
 
           case "move":
             if (m.move(socket.player, data.message))
-              setTimeout(() => socket.sendList(), 2000);
             break;
 
           case "play":
