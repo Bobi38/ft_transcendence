@@ -8,6 +8,7 @@ import "./AddFriends.scss";
 import SocketM                  from    "TOOL/SocketManag.js";
 import useFetch                 from    "TOOL/useFetch.jsx";
 import Hr                       from    "FRONT/Component/Hr/Hr.jsx";
+import { showAlert }        from    "TOOL/fonction_usefull.js";
 
 export default function AddFriends() {
 
@@ -45,6 +46,10 @@ export default function AddFriends() {
                 console.log("add_friend callbackfail(info) error back ", repjson.message);
             }
         })
+        if (repjson && !repjson.success && !repjson.status > 500){
+            showAlert(repjson.message, "danger");
+            return;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
         fetch_all_request_friend();
@@ -117,6 +122,7 @@ export default function AddFriends() {
     return (
 
         <div className={`AddFriends-root border-0`}>
+            <p id={`alert-container`}></p>
 			<h1>Friends request</h1>
 			<hr />
 			<div className="content">

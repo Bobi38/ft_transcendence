@@ -1,4 +1,4 @@
-import {jwt, secret, tcheck_MPFA} from '../index_p.js';
+import {jwt, secret, tcheck_MPFA, generateToken} from '../index_p.js';
 import {User, Co} from '../index_p.js';
 
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
@@ -9,7 +9,7 @@ const status = process.env.STATUS
 
 class Oauth2Service {
 
-    static async github(front, back, req) {
+    static async github(back, front, req) {
         try {
             req.session.frontendUrl = front;
             console.log("Api /login called");
@@ -56,14 +56,16 @@ class Oauth2Service {
                 user.login = user.login + prefix
             }
             let token = "";
+            let MPFA
             if (result.length === 0) {
                 const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 console.log("New user created:", newUser);
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: newUser.id});
+                MPFA = newUser.MPFA;
             }
             else {
-                const MPFA = tcheck_MPFA(result[0], frontendUrl);
+                MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
                 
                 await result[0].update({MPFA: MPFA});
@@ -71,11 +73,9 @@ class Oauth2Service {
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: result[0].id});
             }
-            if (status === 'PROD')
-                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
-            else
-                res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
-            return { success: true, message: 'GitHub authentication successful',  frontendUrl: session };
+            generateToken(MPFA, token, res);
+            req.session.frontendUrl = null;
+            return { success: true, message: 'GitHub authentication successful',  frontendUrl: frontendUrl };
         } catch (err) {
             return { success: false, message: 'GitHub authentication failed: ' + err, code: 500 };
         }

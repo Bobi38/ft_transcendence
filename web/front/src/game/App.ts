@@ -63,6 +63,7 @@ export class App {
     constructor({canvas, isOffline, onReturnToMenu, onReload, onUnauthorized}: AppProps) {
         if (!canvas) throw new Error("Canvas is undefined");
         this._canvas = canvas;
+        this._canvas.focus();
         this.onReturnToMenu = onReturnToMenu;
         this.onReload = onReload;
 

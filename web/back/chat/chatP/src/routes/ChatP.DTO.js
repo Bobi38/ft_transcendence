@@ -1,10 +1,14 @@
 class ChatPDTO {
-    static validatePostChatP(body, cookies){
-        if (!cookies.token)
+    static validatePostChatP(req){
+        console.log
+        console.log("in DTO")
+        if (!req.cookies.token)
             return {valid: false, message: 'Unauthorized', code: 401};
-        if (!body.name || !body.message)
+        console.log("1")
+        if (!req.body.id || !req.body.message)
             return {valid: false, message: 'Missing name or message', code: 400};
-        if (typeof body.name !== 'string' || typeof body.message !== 'string')
+        console.log("2")
+        if (typeof req.body.id !== 'string' || typeof req.body.message !== 'string')
             return {valid: false, message: 'Name and message must be strings', code: 400};
         return {valid: true};
     }

@@ -27,6 +27,7 @@ class ChatPService {
 
     static async postChatP(data, token) {
         try {
+            console.log("data " + data );
             const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: data.id}});
             if (!user.success || !id2)

@@ -43,6 +43,8 @@ class FriendService {
             const name_friend = await User.findOne({where: {name: name}});
             if (!name_friend)
                 return ({success: false, message: "new friend doesn't exist", code: 404});
+            if (name_friend.id === decoded.id)
+                return ({success: false, message: "you can't add yourself as a friend", code: 400});
             const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
             if (relation.length > 0)
                 return ({success: false, message: "relation already exist", code: 409});
@@ -55,19 +57,20 @@ class FriendService {
 
     static async deleteFriend(name, token) {
         try{
+            console.log("in dlt " + name)
             const user = await get_user_from_token(token);
             if (!user.success)
-                return { success: false, message: user.message };
+                return { success: false, message: user.message, code: 400 };
             const result = user.user;
             const nfriend = await User.findOne({where: {name: name}});
             if (!nfriend)
                 return ({success: false, message: "friend doesn't exist", code: 404});
             const relation = await Friend.destroy({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
             if (relation === 0)
-                return res.status(404).json({success: false, message: "relation"});
-            return res.status(201).json({success: true});
+                return ({success: false, message: "relation", code: 400});
+            return ({success: true, code: 200});
         }catch(err){
-            return res.status(500).json({success: false, message: "err back add_friend ", err});
+            return ({success: false, message: "err back dlt_friend service " + err});
         }
     }
 

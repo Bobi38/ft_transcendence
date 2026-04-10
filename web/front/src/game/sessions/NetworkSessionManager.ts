@@ -104,7 +104,7 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         const hostname = window.location.hostname;
         const port = window.location.port;
         let colyseusSDK : Client;
-        if (protocol === "https")
+        if (protocol === "https:")
             colyseusSDK = new Client(`${protocol}//${hostname}:${port}/api/pong3d`);
         else
             colyseusSDK = new Client(`ws://${hostname}:2567`);

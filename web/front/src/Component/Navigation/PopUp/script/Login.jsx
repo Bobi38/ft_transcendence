@@ -45,7 +45,7 @@ export default function Login({ password_forget_mode, register_mode}) {
         }
 
         if (repjson.status < 500 && repjson.status >= 400){
-            showAlert(`Erreur ${repjson.status} : ${repjson.message}`, "danger");
+            showAlert(`Error : ${repjson.message}`, "danger");
             return ;
         }
         sessionStorage.setItem('username', repjson.username);
@@ -53,7 +53,7 @@ export default function Login({ password_forget_mode, register_mode}) {
         sessionStorage.setItem('username', repjson.username);
 
         if (repjson.success === false){
-            showAlert(`Erreur : ${repjson.message}`, "danger");
+            showAlert(`Error : ${repjson.message}`, "danger");
             return ;
         }
         if (repjson.MPFA) {

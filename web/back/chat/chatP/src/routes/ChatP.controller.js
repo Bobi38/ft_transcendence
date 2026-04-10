@@ -5,14 +5,17 @@ import ChatPService from './ChatP.service.js'
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    const valid = ChatPDTO.validatePostChatP(req.body, req.cookies)
+    console.log("in post add debut")
+    const valid = ChatPDTO.validatePostChatP(req)
     if (!valid.valid)
         return errorHandler(valid.message, valid.code, res);
     try{
+        console.log("after DTO")
         const data = req.body;
         const result = await ChatPService.postChatP(data, req.cookies.token);
         if (!result.success)
             return errorHandler(result.message, result.code, res);
+        console.log("in post add end success")
         res.status(result.code).json({success: true, message: result.message});
     }
     catch(err){
@@ -22,6 +25,7 @@ router.post('/', async (req, res) => {
 
 
 router.get('/:name', async (req, res) => {
+    console.log("in api get chat")
     const valid = ChatPDTO.validateGetChatP(req)
     if (!valid.valid)
         return errorHandler(valid.message, valid.code, res);

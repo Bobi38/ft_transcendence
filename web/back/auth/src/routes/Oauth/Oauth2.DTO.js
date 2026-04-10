@@ -8,19 +8,20 @@ class Oauth2DTO {
     return { valid: true };
   }
 
-  static validateGit(data) {
-    const back = data.query.backUrl;
-    const frontendUrl = data.session.frontendUrl;
+  static validateGit(req) {
+    const back = req.query.backUrl;
+    const frontendUrl = req.query.frontendUrl;
+    console.log("validateGit", back, frontendUrl);
     if (!back || !frontendUrl) {
       return { valid: false, message: 'Missing fields (Git)', code : 400 };
     }
     return { valid: true };
   }
 
-  static validateGitCallback(data) {
-    const back = data.backUrl;
-    const frontendUrl = data.frontendUrl;
-    if (!back || !frontendUrl) {
+  static validateGitCallback(req) {
+    const code = req.query.code;
+    const frontendUrl = req.session.frontendUrl;
+    if (!code || !frontendUrl) {
       return { valid: false, message: 'Missing fields (Git)', code : 400 };
     }
     return { valid: true };

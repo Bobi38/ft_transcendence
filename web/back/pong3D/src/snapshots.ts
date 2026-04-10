@@ -3,7 +3,7 @@ import { Vector3 } from "@babylonjs/core";
 export interface BallSnapshot {
   tick: number;
   position: Vector3;
-  velocity: Vector3; //TODO: remove saving of velocity
+  velocity: Vector3;
 }
 
 export class SnapshotBuffer {
@@ -19,26 +19,6 @@ export class SnapshotBuffer {
         }
     }
 
-    // public getSnapshotAtTick(targetTick: number) : {snapshot: BallSnapshot, index: number} {
-    //     let left = 0;
-    //     let right = this._snapshots.length - 1;
-
-    //     while (left <= right) {
-    //         const mid = Math.floor((left + right) / 2);
-    //         const tick = this._snapshots[mid].tick;
-    //         if (tick === targetTick) {
-    //             //console.log("targetTick:", targetTick, "result:", this._snapshots[mid].tick, " found");
-    //             return {snapshot: this._snapshots[mid], index: mid};
-    //         }
-    //         if (tick < targetTick) {
-    //             left = mid + 1;
-    //         } else {
-    //             right = mid - 1;
-    //         }
-    //     }
-    //     //console.log("targetTick:", targetTick, "result:", this._snapshots[right].tick, " not found");
-    //     return ({snapshot: this._snapshots[right], index: right});
-    // }
 
     public getSnapshotAtTickInterpolated(targetTick: number) : {snapshot: {tick: number, position: Vector3, velocity: Vector3}, index: number} {
         let left = 0;
@@ -57,7 +37,7 @@ export class SnapshotBuffer {
                 right = mid - 1;
             }
         }
-        const leftIndex = right; //right has the highest value strictly inferior to targetTick
+        const leftIndex = right;
         const rightIndex = leftIndex + 1;
         if (leftIndex < 0) {
             return { snapshot: this._snapshots[0], index: 0 };
@@ -74,7 +54,7 @@ export class SnapshotBuffer {
             position: Vector3.Lerp(snapLeft.position, snapRight.position, alpha),
             velocity: Vector3.Lerp(snapLeft.velocity, snapRight.velocity, alpha)
         };
-        return { snapshot: compositeSnapshot, index: rightIndex }; //we start correcting only at rightIndex
+        return { snapshot: compositeSnapshot, index: rightIndex };
     }
 
     public getSnapshotAtTick(targetTick: number) : {snapshot: {tick: number, position: Vector3, velocity: Vector3}, index: number} {
@@ -95,7 +75,6 @@ export class SnapshotBuffer {
             }
         }
         if (right == -1) {
-            console.log("Snapshot of", targetTick, "is not stored");
             return null;
         }
         return { snapshot: this._snapshots[right], index: right };

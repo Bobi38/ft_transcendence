@@ -17,7 +17,7 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         if (!time || !login)
             return;
 
-        const url = `/api/chatP/add_message_private`;
+        const url = `/api/chatP`;
         console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "POST",

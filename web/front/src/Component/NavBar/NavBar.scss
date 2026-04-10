@@ -19,10 +19,14 @@
     .Navbar-center {
         display: flex;
         flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
         gap: 0.5rem;
 
         .logout {
             @include mix.default_card;
+			width: fit-content;
         }
     }
 	@media (width <= $tablet) {

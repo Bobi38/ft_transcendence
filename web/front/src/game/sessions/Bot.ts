@@ -1,6 +1,9 @@
 import { AbstractEngine, AbstractMesh, Quaternion, Scene, TransformNode, Vector3 } from "@babylonjs/core";
 import { Ball } from "../physics/Ball";
 import { Environment } from "../physics/Environment";
+import { Config } from "/app/src/game/shared/gameConfig.js";
+
+const config = JSON.parse(Config);
 
 enum SwingState {
     IDLE,
@@ -52,7 +55,7 @@ export class Bot {
     private _predictBallTarget() {
         const ballPos = this._ball.getPhysicsBodyPosition();
         const ballVel = this._ball.getVelocity();
-        const zStrikePlane = this._handNode.absolutePosition._z - 3;
+        const zStrikePlane = this._handNode.absolutePosition._z - config.strikeZPlane;
         
         this._timeToImpact = (zStrikePlane - ballPos.z) / ballVel.z;
 
@@ -136,7 +139,7 @@ export class Bot {
         const invertedWorldMatrix = this._handNode.computeWorldMatrix(true).clone().invert();
         const relativePos = Vector3.TransformCoordinates(this._movingTarget, invertedWorldMatrix);
 
-        const maxRadius : number = 5; 
+        const maxRadius : number = config.armLength; 
         relativePos.normalize().scaleInPlace(maxRadius);
 
         const oldPos = this._racket.position;
