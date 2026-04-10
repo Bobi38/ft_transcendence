@@ -44,14 +44,17 @@ input[type="text"], input[type="email"], input[type="password"], input[type="tel
 	border: solid 2px $grey-dark;
 	padding: 0.5rem 1rem;
 	transition: all 0.3s;
+
 	&:focus {
 		outline: none;
 		border-color: $active;
 	}
-
 	&:disabled {
 		background-color: $grey-light;
 		@include mix.cursor;
+	}
+	&::placeholder {
+		text-overflow: ellipsis '..';
 	}
 }
 
