@@ -40,18 +40,21 @@ router.post('/', async (req, res) => {
 })
 
 router.delete('/:name', async (req, res) => {
+    console.log("indlt");
     const valid = FriendDTO.validateName_Cookies(req.params.name, req);
     if (!valid.success)
         return res.status(400).json({success: false, message: valid.message});
     try{
-        const name = req.query.name;
+        console.log("after DTO");
+        const name = req.params.name;
         const token = req.cookies.token;
         const result = await FriendService.deleteFriend(name, token);
+        console.log(result)
         if (!result.success)
             return errorHandler(result.message, result.code, res);
         return res.status(result.code).json({success: true});
     }catch(err){
-        return res.status(500).json({success: false, message: "err back add_friend ", err});
+        return res.status(500).json({success: false, message: "err back dlt_friend " + err});
     }
 })
 
