@@ -1,6 +1,8 @@
 /* Css */
 import "../PopUp.scss";
 
+import { Link }				from	"react-router-dom"
+
 /* Components */
 import { showAlert }        from    "TOOL/fonction_usefull.js";
 import useFetch             from    "TOOL/useFetch.jsx";
@@ -64,9 +66,9 @@ export default function Register({login_mode}) {
                     <input type="checkbox" id="legal" name="legal" required />
                     <label htmlFor="legal">
                     I accept{" "}
-                    <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
+                    <Link to="/TermsAndPrivacy">
                     	Terms of Service and Privacy Policy
-                    </a>
+                    </Link>
                     </label>
                 </div>
 
