@@ -25,36 +25,32 @@ async function checktok(tokenn) {
     return 1;
   }
 }
-const authRouter = [
-	'/',
-	'/api/secu/recovery/password',
-	'/api/secu/recupPswd_check_code',
-	'/api/secu/majPswd',
-	'/api/secu/cookie',
-	'/api/oauth2/github',
-	'/api/oauth2/github/callback',
-	'/api/oauth2/google',
-	'/api/auth/login',
-	'/api/auth/register',
-	'/api/auth/logout',
-  '/api/secu/checkco',
-];
 
+const publicRoutes = [
+  '/',
+  '/api/auth/session',
+  '/api/oauth2/github',
+  '/api/oauth2/github/callback',
+  '/api/oauth2/google',
+  '/api/secu/recovery_password',
+  '/api/secu/recoverypassword_check_code',
+  '/api/secu/majPswd',
+  '/api/secu/cookie',
+  '/api/secu/checkco',
+  '/api/secu/send_mail',
+  '/api/secu/maila2f_check_code'
+];
 
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
+  const is_route_public = publicRoutes.find((element) => element === req.path);
+
   console.log("Middleware auth for path WHAT:", req.path);
-  if ( req.path === '/' || req.path === '/api/auth/session' || req.path === '/api/auth/user' || req.path === '/api/oauth2/github' 
-    || req.path === '/api/oauth2/github/callback' || req.path === '/api/oauth2/google' || req.path === '/api/secu/recovery_password' 
-    || req.path === '/api/secu/recoverypassword_check_code' || req.path === '/api/secu/majPswd' || req.path === '/api/secu/cookie' 
-    || req.path === '/api/secu/checkco'           || req.path === "/api/secu/send_mail" || req.path === '/api/secu/maila2f_check_code') {
+  if (is_route_public || req.path === '/api/auth/user') {
     console.log("Public route, no auth required");
     return next() ;
   }
-  if (!token && req.path !== '/' && req.path !== '/api/auth/session' && req.path !== '/api/auth/register' && req.path !== '/api/oauth2/github' 
-    && req.path !== '/api/oauth2/github/callback' && req.path !== '/api/oauth2/google' && req.path !== '/api/secu/recovery_password' 
-    && req.path !== '/api/secu/recoverypassword_check_code' && req.path !== '/api/secu/majPswd' && req.path !== '/api/secu/cookie'
-    && req.path !== '/api/secu/checkco'           && req.path !== "/api/secu/send_mail" && req.path !== '/api/secu/maila2f_check_code') {
+  if (!token && (!is_route_public || req.path !== '/api/auth/register')) {
     return res.status(401).json({ success: false, redirect: true});
   }
   const valid = await checktok(token);
@@ -65,8 +61,5 @@ export const authMiddleware = async (req, res, next) => {
   }
   return next();
 }
-
-
-
 
 export default router;

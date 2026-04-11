@@ -8,6 +8,7 @@ import "./AddFriends.scss";
 import SocketM                  from    "TOOL/SocketManag.js";
 import useFetch                 from    "TOOL/useFetch.jsx";
 import Hr                       from    "FRONT/Component/Hr/Hr.jsx";
+import { showAlert }        from    "TOOL/fonction_usefull.js";
 
 export default function AddFriends() {
 
@@ -45,6 +46,10 @@ export default function AddFriends() {
                 console.log("add_friend callbackfail(info) error back ", repjson.message);
             }
         })
+        if (repjson && !repjson.success && !repjson.status > 500){
+            showAlert(repjson.message, "danger");
+            return;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
         fetch_all_request_friend();
@@ -116,7 +121,8 @@ export default function AddFriends() {
 
     return (
 
-        <div className={`AddFriends-root border-0`}>
+        <div className={`AddFriends-root`}>
+            <p id={`alert-container`}></p>
 			<h1>Friends request</h1>
 			<hr />
 			<div className="content">
@@ -128,7 +134,7 @@ export default function AddFriends() {
 
 				<hr className={`big`}/>
 
-				<div className={`response border-1`}>
+				<div className={`response`}>
 
 					<Hr mode={`column`} initial={120} min1={100} thickness={2}>
 
@@ -136,9 +142,9 @@ export default function AddFriends() {
 							<h2>Sended request</h2>
 							{responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
 								<div key={`me-${index}`}>
-									<div className={`one-response border-2`}>
+									<div className={`one-response`}>
 									<h3>{msg.login}</h3>
-										<div className={`div-btn border-3`}>
+										<div className={`div-btn`}>
 											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Remove</button>
 										</div>
 									</div>
@@ -151,9 +157,9 @@ export default function AddFriends() {
 							<h2>Receve request</h2>
 							{responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
 								<div key={`other-${index}`}>
-									<div className={`one-response border-2`}>
+									<div className={`one-response`}>
 									<h3>{msg.login}</h3>
-										<div className={`div-btn border-3`}>
+										<div className={`div-btn`}>
 											<button onClick={() => {handel_response({login: msg.login, response: true })}}>Accept</button>
 											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Refuse</button>
 										</div>

@@ -143,8 +143,11 @@ export function initWebSFriend(server) {
         }
         if (data.type === 'maj_frd'){
           const send = chat.findname(data.login)
+          console.log("IN WSSSS " + send)
           for (const session of chat.sessions.values()){
-            if (session.socket.readyState === ws.OPEN && session.username === send.username)
+            if (send && session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'maj_frd'}));
+            if (session.socket.readyState === ws.OPEN && session.username === socket.username)
               session.socket.send(JSON.stringify({type: 'maj_frd'}));
           }
         }

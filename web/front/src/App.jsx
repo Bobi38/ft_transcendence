@@ -6,7 +6,7 @@ import { useEffect, useState }          from    "react";
 import checkCo                          from    "TOOL/fonction_usefull.js"
 import SocketM                          from    "TOOL/SocketManag";
 import { FRIEND, useFriend }            from    "TOOL/FriendContext.jsx";
-import { AUTH, useAuth }                      from    "HOOKS/useAuth.jsx"
+import { AUTH, useAuth }                from    "HOOKS/useAuth.jsx"
 
 /* Css */
 import './style/index.scss'
@@ -70,14 +70,14 @@ export default function App() {
               console.log("friend HANDLE:");
               if (data.type == 'co'){
                 setNotif({
-                    message:`${data.login} vient de se connecter`,
+                    message:`${data.login} just login`,
                     type: "co",
                 });
                 setShowFriend(FRIEND.GREEN);
               }
               if (data.type == 'deco'){
                 setNotif({
-                    message:`${data.login} vient de se deconnecter`,
+                    message:`${data.login} just disconnect`,
                     type: "deco",
                 });
                 setShowFriend(FRIEND.RED);
@@ -87,7 +87,7 @@ export default function App() {
             const handle_msg_notif = (data) => {
                 if (data.type == 'notif' && window.location.pathname !== "/PrivateMessage"){
                     setNotif({
-                        message: `${data.login} vient de vous envoyer un message`,
+                        message: `${data.login} send you a message`,
                         type: "msg",
                     });
                 }
@@ -97,7 +97,7 @@ export default function App() {
         }
 
         init();
-		
+
         return () => {
           SocketM.off("friend", "un");
           SocketM.off("priv", "deux");
@@ -113,9 +113,9 @@ export default function App() {
         if (notif) {
             const timer = setTimeout(() => {
             setNotif(null);
-        }, 1000); // 2 secondes
+        }, 2000); // 2 secondes
 
-        return () => clearTimeout(timer); // cleanup si notif change vite
+        return () => clearTimeout(timer);
         }
     }, [notif]);
     //fait le check co a la place de home et envoyer le result
@@ -141,7 +141,7 @@ export default function App() {
                     <Route path={`/TermsAndPrivacy`}	element={<Navigation> <TermsAndPrivacy/> </Navigation>}/>
 
                     {/* type: false = vs player / true = vs ia */}
-                    <Route path={`/Pong3D`}         	element={<Pong3D type={false}/>}/> 
+                    <Route path={`/Pong3D`}         	element={<Pong3D type={false}/>}/>
                     <Route path={`/Pong3DIa`}         	element={<Pong3D type={true}/>}/>
 
                     {/* bad path */}

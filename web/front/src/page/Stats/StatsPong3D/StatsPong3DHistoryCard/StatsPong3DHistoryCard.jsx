@@ -35,13 +35,13 @@ export default function StatsPong3DHistoryCard({ stats, nameSearched }) {
 
 
     return (
-        <article className={`StatsPong3DHistoryCard-root border-base`}>
+        <article className={`StatsPong3DHistoryCard-root`}>
 
             <div className={`board-container`}>
                 <Board board={stats.map.split('')} isGame={false}/>
             </div>
 
-            <div className={`game-data border-1`}>
+            <div className={`game-data`}>
                 <div className={`${style_card(stats.how_win)}`}></div>
                 <div className={`${color_card(stats.how_win, stats?.winnerUser?.name)}`}></div>
                 <p className={`time`}>time: {format_time(stats.time_player_1 + stats.time_player_2)}</p>

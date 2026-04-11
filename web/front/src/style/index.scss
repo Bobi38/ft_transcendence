@@ -1,7 +1,6 @@
 
-@use "./global/border.scss";
 @use '_global.scss';
-@use '_variable.scss';
+@use "STYLE/_variable" as *;
 
 .global-notif {
   position: fixed;
@@ -16,7 +15,7 @@
 }
 
 .global-notif.co{
-  background-color: green;
+  background-color: $green;
 }
 
 .global-notif.deco{
@@ -27,12 +26,10 @@
   background-color: rgb(2, 0, 128);
 }
 
-
-
-    #alert-container{
-        &.danger { color: red; } 
-        &.success { color: green; }
-    }
+#alert-container{
+	&.danger { color: $red; }
+	&.success { color: $green; }
+}
 
   // #alert-container{
   //     position: fixed;
@@ -45,6 +42,6 @@
 
   //     z-index: 3;
   //     opacity: 70%;
-  //     &.danger { background-color: red; } 
-  //     &.success { background-color: green; }
+  //     &.danger { background-color: $red; }
+  //     &.success { background-color: $green; }
   // }

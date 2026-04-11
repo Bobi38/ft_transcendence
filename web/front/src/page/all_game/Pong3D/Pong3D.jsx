@@ -50,8 +50,8 @@ export default function Pong3D({type}) {
             const reloading = () =>  setGameKey(prev => prev + 1);
             console.log("ref: ", canvasRef.current)
             gameApp = new GameApp({
-                canvas: canvasRef.current, 
-                isOffline: type, 
+                canvas: canvasRef.current,
+                isOffline: type,
                 onReturnToMenu: navigateHome,
                 onReload: reloading,
                 onUnauthorized: onUnauthorized});
@@ -67,7 +67,6 @@ export default function Pong3D({type}) {
     return (
         <main className={`Pong3D-root`}>
             <p id={`alert-container`}></p>
-			{/* <a href="/" className="button">Home</a> */}
             {isMobile && !error && (
                 <div className="error-game">
                     <h1>Desktop Required</h1>
@@ -75,7 +74,7 @@ export default function Pong3D({type}) {
                     <p>Please visit us on a computer to join the match.</p>
                 </div>
             )}
-            {error && 
+            {error &&
                 <div className="error-game">
                     <h1>Unauthorized</h1>
                     <p>You are already playing Pong3D online.</p>

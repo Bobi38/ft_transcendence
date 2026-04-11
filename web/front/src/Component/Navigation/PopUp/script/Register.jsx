@@ -1,6 +1,8 @@
 /* Css */
 import "../PopUp.scss";
 
+import { Link }				from	"react-router-dom"
+
 /* Components */
 import { showAlert }        from    "TOOL/fonction_usefull.js";
 import useFetch             from    "TOOL/useFetch.jsx";
@@ -52,25 +54,21 @@ export default function Register({login_mode}) {
             <form id={`register`} onSubmit={(e) => {register_submit(e)}}>
 
 				<label htmlFor={`name`}>Nickname</label>
-				<input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`}/>
+				<input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`} required/>
 
                 <label htmlFor={`email`}>Email</label>
-                <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`}/>
+                <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`} required/>
 
                 <label htmlFor={`password`}>Password</label>
-                <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`}/>
+                <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`} required/>
 
                 <div>
                     <input type="checkbox" id="legal" name="legal" required />
                     <label htmlFor="legal">
                     I accept{" "}
-                    <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
-                    Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="/TermsAndPrivacy" target="_blank" rel="noopener noreferrer">
-                    Privacy Policy
-                    </a>
+                    <Link to="/TermsAndPrivacy">
+                    	Terms of Service and Privacy Policy
+                    </Link>
                     </label>
                 </div>
 

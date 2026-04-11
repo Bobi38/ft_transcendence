@@ -90,10 +90,6 @@ export class Player {
             payload.message = this._lastMessage;
         }
 
-        if (this.list) {
-            payload.list = structuredClone(this.list);
-        }
-
         if (this._game) {
             payload.board = structuredClone(this._game._board);
         }

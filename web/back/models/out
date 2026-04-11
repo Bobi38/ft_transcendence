@@ -1,0 +1,767 @@
+
+
+--- FILE: ./chatG.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const chatG = sequelize.define('chat', {
+
+  contenu: {
+    type: DataTypes.STRING(512),
+    Allownull: false,
+  },
+  time:{
+    type: DataTypes.TIME,
+    allowNull: false
+  },
+}, {
+  tableName: 'chat_G',
+  timestamps: false,
+});
+
+User.hasMany(chatG, { foreignKey: 'SenderId', onDelete: 'CASCADE' });
+chatG.belongsTo(User, { foreignKey: 'SenderId' });
+
+export default chatG;
+
+
+--- FILE: ./connect.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const Connect = sequelize.define('Connect', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  token: {
+    type: DataTypes.STRING(512),
+    allowNull: false,
+  },
+}, {
+  tableName: 'connect_co',
+  timestamps: false,
+});
+
+User.hasMany(Connect, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Connect.belongsTo(User, { foreignKey: 'userId' });
+
+export default Connect;
+
+--- FILE: ./friend.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const Friend = sequelize.define('Friend', {
+  Friend1: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+  },
+  Friend2: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+  },
+  State: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  WhoAsk: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  }
+}, {
+  tableName: 'Friend',
+  timestamps: false,
+  indexes: [
+    {
+      unique: true,
+      fields: ['Friend1', 'Friend2']
+    }
+  ]
+});
+
+User.belongsToMany(User, {through: Friend,as: 'Friends',foreignKey: 'Friend1',otherKey: 'Friend2'});
+User.belongsToMany(User, {through: Friend,as: 'FriendOf',foreignKey: 'Friend2',otherKey: 'Friend1'});
+Friend.belongsTo(User, { as: 'User1', foreignKey: 'Friend1' });
+Friend.belongsTo(User, { as: 'User2', foreignKey: 'Friend2' });
+Friend.belongsTo(User, { as: 'Requester', foreignKey: 'WhoAsk' });
+
+export default Friend;
+
+--- FILE: ./GameMorp.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const GameMorp = sequelize.define('GameMorp', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    how_win: {
+      type: DataTypes.ENUM("horizontal", "diagonal_lr", "diagonal_rl", "vertical", "abort", "draw"),
+      allowNull: false
+    },
+
+    date_game: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+
+    player_1: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    player_2: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    winner: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    },
+
+    loser: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    },
+
+    time_player_1: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+
+    time_player_2: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+
+    nb_turn_player_1: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+
+    nb_turn_player_2: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+
+    map: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
+
+}, {
+  tableName: 'GameMorp',
+  timestamps: false,
+});
+
+User.hasMany(GameMorp, { foreignKey: 'player_1', as: 'gamesAsPlayer1', onDelete: 'CASCADE' });
+GameMorp.belongsTo(User, { foreignKey: 'player_1', as: 'player1' });
+
+User.hasMany(GameMorp, { foreignKey: 'player_2', as: 'gamesAsPlayer2', onDelete: 'CASCADE' });
+GameMorp.belongsTo(User, { foreignKey: 'player_2', as: 'player2' });
+
+// User.hasMany(GameMorp, { foreignKey: 'winner', as: 'gamesWon', onDelete: 'CASCADE' });
+GameMorp.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
+
+// User.hasMany(GameMorp, { foreignKey: 'loser', as: 'gamesLost', onDelete: 'CASCADE' });
+GameMorp.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
+
+export default GameMorp;
+
+
+--- FILE: ./GamePong3D.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const GamePong3D = sequelize.define('GamePong3D', {
+    //id de la partie
+    id:{
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    //info des joueur
+    id_player_1: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    score_1: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    // ballhit_1:{
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    // },
+    id_player_2: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    score_2: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    // ballhit_2:{
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    // },
+    //info de la partie
+    abortwinner: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    },
+    abortloser: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    },
+    winner: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    },
+    loser: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+    },
+
+    date_game_start: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    date_game_end: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    time: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }
+}, {
+  tableName: 'GamePong3D',
+  timestamps: false,
+});
+
+User.hasMany(GamePong3D, { foreignKey: 'id_player_1', as: 'Pong3DPlayer1', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'id_player_1', as: 'player1' });
+
+User.hasMany(GamePong3D, { foreignKey: 'id_player_2', as: 'Pong3DPlayer2', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'id_player_2', as: 'player2' });
+
+// User.hasMany(GamePong3D, { foreignKey: 'winner', as: 'Pong3DWon', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'winner', as: 'winnerUser' });
+
+// User.hasMany(GamePong3D, { foreignKey: 'loser', as: 'Pong3DLost', onDelete: 'CASCADE' });
+GamePong3D.belongsTo(User, { foreignKey: 'loser', as: 'loserUser' });
+
+export default GamePong3D;
+
+
+--- FILE: ./index.js ---
+// models/index.js
+import {Sequelize} from 'sequelize';
+import dotenv from 'dotenv';
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: 'mysql',
+    port: process.env.DB_PORT || 3306,
+    logging: false,
+  }
+);
+
+export default sequelize;
+
+
+
+--- FILE: ./PongStat.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const PongStat = sequelize.define('PongStat', {
+    id:{
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    Player1id:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    Player2id:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    whowin:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    wholose:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    score1:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    score2:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+}, {
+  tableName: 'PongStat',
+  timestamps: false,
+});
+
+User.hasMany(PongStat, { foreignKey: 'Player1id', as: 'Pong3DAsPlayer1', onDelete: 'CASCADE' });
+PongStat.belongsTo(User, { foreignKey: 'Player1id', as: 'player1' });
+
+User.hasMany(PongStat, { foreignKey: 'Player2id', as: 'Pong3DAsPlayer2', onDelete: 'CASCADE' });
+PongStat.belongsTo(User, { foreignKey: 'Player2id', as: 'player2' });
+
+User.hasMany(PongStat, { foreignKey: 'whowin', as: 'Pong3DWon', onDelete: 'CASCADE' });
+PongStat.belongsTo(User, { foreignKey: 'whowin', as: 'winnerUser' });
+
+User.hasMany(PongStat, { foreignKey: 'wholose', as: 'Pong3DLost', onDelete: 'CASCADE' });
+PongStat.belongsTo(User, { foreignKey: 'wholose', as: 'loserUser' });
+
+export default PongStat;
+
+
+--- FILE: ./privchat.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const PrivChat = sequelize.define('PrivChat', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  id1: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  id2: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  lastmess:{
+    type: DataTypes.DATE,
+    allowNull: true,
+  }
+}, {
+  tableName: 'PrivChat',
+  timestamps: false, 
+});
+
+PrivChat.belongsTo(User, { as: 'user1', foreignKey: 'id1' });
+PrivChat.belongsTo(User, { as: 'user2', foreignKey: 'id2' });
+
+export default PrivChat;
+
+
+--- FILE: ./privmess.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import  PrivChat  from './privchat.js'
+
+const PrivMess = sequelize.define('PrivMess', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  SenderId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  contenu:{
+    type: DataTypes.STRING(512),
+    allowNull: false,
+  },
+    time:{
+    type: DataTypes.TIME,
+    allowNull: false
+  },
+}, {
+  tableName: 'PrivMess',
+  timestamps: false, // désactive cre atedAt / updatedAt si tu n’en veux pas
+  indexes: [
+  {
+    fields: ['ChatId']
+  }
+]
+});
+
+PrivChat.hasMany(PrivMess, { foreignKey: 'ChatId', onDelete: 'CASCADE' });
+PrivMess.belongsTo(PrivChat, { foreignKey: 'ChatId' });
+
+
+export default PrivMess;
+
+--- FILE: ./PssWrdEmail.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './user.js';
+
+const PswEmail = sequelize.define('PswEmail', {
+    id:{
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+
+    },
+    type:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    idUser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    Code:{
+        type: DataTypes.STRING(512),
+        allowNull: false,
+    },
+    DateCreate:{
+        type: DataTypes.DATE,
+        allowNull: false,
+    }
+}, {
+  tableName: 'PswEmail',
+  timestamps: false,
+});
+
+User.hasMany(PswEmail, {as: 'code', foreignKey: 'idUser' });
+
+export default PswEmail;
+
+--- FILE: ./StatMorp.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+
+
+const StatMorp = sequelize.define('StatMorp', {
+    idUser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    total_game:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    time_played:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    nb_turn_played:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_horizontal_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_horizontal_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_vertical_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_vertical_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_diagonal_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_diagonal_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_abort_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_abort_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_X_draw:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_horizontal_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_horizontal_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_vertical_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_vertical_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_diagonal_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_diagonal_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_abort_winner:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_abort_loser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    type_O_draw:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+}, {
+  tableName: 'StatMorp',
+  timestamps: false,
+});
+
+
+//     my_id: 1,
+//     history: [
+//         {
+//             gameid: 1,
+//             game_stats:{
+                
+//                 map: "OX--XO-XO",
+//                 //has_result: {same winner_id = green / not same winner_is = red}, "draw,abort" = blue
+//                 game_result: "has_result,draw,abort",
+//                 id_user: {
+//                     //null !has_result
+//                     winner_id: 1,//if is not my id i have lost
+//                     player:  [
+//                         {id:1, ox: 'X'},
+//                         {id:2, ox: 'O'}
+//                     ]
+//                 },
+//             }
+//         },
+//         {
+//             gameid: 2,
+//             game_stats:{
+                
+//                 map: "OX--XO-XO",
+//                 //has_result: {same winner_id = green / not same winner_is = red}, "draw,abort" = blue
+//                 game_result: "has_result,draw,abort",
+//                 id_user: {
+//                     //null !has_result
+//                     winner_id: 2,//if is not my id i have lost
+//                     player: [
+//                         {id:1, ox: 'X'},
+//                         {id:2, ox: 'O'}
+//                     ]
+//                 },
+//             }
+//         }
+//     ],
+
+export default StatMorp;
+
+--- FILE: ./StatPong3D.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+
+const StatPong3D = sequelize.define('StatPong3D', {
+    //id user
+    idUser:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    // game stats
+    total_game:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    time_played:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    win:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    lose:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    abortwinner: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    abortloser: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+}, {
+  tableName: 'StatPong3D',
+  timestamps: false,
+});
+
+
+export default StatPong3D;
+
+
+--- FILE: ./user.js ---
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import StatMorp from './StatMorp.js';
+import StatPong3D from './StatPong3D.js';
+
+
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING(128),
+    allowNull: false,
+  },
+  Log42: {
+    type: DataTypes.STRING(128),
+    allowNull: true,
+  },
+  password: {
+    type: DataTypes.STRING(128),
+    allowNull: true,
+  },
+  mail: {
+    type: DataTypes.STRING(256),
+    allowNull: false,
+    unique: true,
+  },
+  adress: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
+  OAuth: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,  
+  },
+  MPFA: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,  
+  },
+  co:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  password_2FA: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+  },
+  password_2FA_time: {
+    type: DataTypes.TIME,
+    allowNull: true,
+  },
+  Hostlastco: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+    defaultValue: null,
+  },
+  Datelastco: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null,
+  },
+}, {
+  tableName: 'user_co',
+  timestamps: false, // désactive createdAt / updatedAt si tu n’en veux pas
+});
+
+User.hasMany(StatMorp, { as: 'statMorp', foreignKey: 'idUser' });
+User.hasMany(StatPong3D, { as: 'statPong3D', foreignKey: 'idUser' });
+
+User.afterCreate(async (user, options) => {
+    await StatMorp.create({
+        idUser: user.id,
+        total_game: 0,
+        time_played: 0,
+        nb_turn_played: 0,
+        type_X_horizontal_winner: 0,
+        type_X_horizontal_loser: 0,
+        type_X_vertical_winner: 0,
+        type_X_vertical_loser: 0,
+        type_X_diagonal_winner: 0,
+        type_X_diagonal_loser: 0,
+        type_X_abort_winner: 0,
+        type_X_abort_loser: 0,
+        type_X_draw: 0,
+        type_O_horizontal_winner: 0,
+        type_O_horizontal_loser: 0,
+        type_O_vertical_winner: 0,
+        type_O_vertical_loser: 0,
+        type_O_diagonal_winner: 0,
+        type_O_diagonal_loser: 0,
+        type_O_abort_winner: 0,
+        type_O_abort_loser: 0,
+        type_O_draw: 0,
+    });
+    await StatPong3D.create({
+        idUser: user.id,
+        total_game: 0,
+        time_played: 0,
+        win:0,
+        lose:0,
+        abortwinner:0,
+        abortloser:0,
+        total_ballhit:0
+    });
+});
+
+
+
+export default User;

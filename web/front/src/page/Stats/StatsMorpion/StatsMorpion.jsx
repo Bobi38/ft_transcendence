@@ -127,13 +127,13 @@ export default function StatsMorpion({ username, setUsername }) {
     }, [username, currentPage]);
 
     return (
-        <section className={`StatsMorpion-root border-base`}>
+        <section className={`StatsMorpion-root`}>
 
-            <div className={`history-container border-1`}>
+            <div className={`history-container`}>
 
 				{historyUser?.length !== 0 ? (
 					<>
-						<div className={`history-card-container border-2`}>
+						<div className={`history-card-container`}>
 
 							{historyUser?.map((element, index) => {
 								return (<StatsMorpionHistoryCard key={index} stats={element} nameSearched={username}/>)
