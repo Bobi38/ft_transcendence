@@ -62,6 +62,14 @@ export default function Login({ password_forget_mode, register_mode}) {
         if (!repjson.MPFA) {
             setShowLog(AUTH.NONE);
             SocketM.sendd('friend', {type: 'co_first'});
+            if (sessionStorage.getItem("type") === null)
+                sessionStorage.setItem('type', "success");
+            if (sessionStorage.getItem("message") === null)
+                sessionStorage.setItem('message', "Connexion réussie");
+            if (sessionStorage.getItem("token") === null)
+                sessionStorage.setItem('token', repjson.token);
+            if (sessionStorage.getItem("username") === null)
+                essionStorage.setItem('username', repjson.username);
         };
     };
 
