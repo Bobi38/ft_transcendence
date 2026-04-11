@@ -82,7 +82,7 @@ class SecuService {
                 await result.update({co: true,MPFA: false,Hostlastco: host, Datelastco: new Date()});
                 generateToken(false, token, res);
             }
-            return ({success: true, message: "code valid", code: 200});
+            return ({success: true, message: "code valid", code: 200, username: result.name, token: token});
         }catch(err){
             return ({success: false, message: "back check_code" + err});
         }

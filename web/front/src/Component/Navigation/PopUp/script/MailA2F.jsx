@@ -68,6 +68,14 @@ export default function MailA2F({login_mode}) {
         }
         SocketM.sendd('friend', {type: 'co'});
         setShowLog(AUTH.NONE);
+        if (sessionStorage.getItem("type") === null)
+            sessionStorage.setItem('type', "success");
+        if (sessionStorage.getItem("message") === null)
+            sessionStorage.setItem('message', "Connexion réussie");
+        if (sessionStorage.getItem("token") === null)
+            sessionStorage.setItem('token', repjson.token);
+        if (sessionStorage.getItem("username") === null)
+            sessionStorage.setItem('username', repjson.username);
     }
 
     useEffect(()=>{
