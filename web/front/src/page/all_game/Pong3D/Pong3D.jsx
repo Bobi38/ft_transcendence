@@ -77,8 +77,8 @@ export default function Pong3D({type}) {
             )}
             {error && 
                 <div className="error-game">
-                    <h1>UnAuthorized</h1>
-                    <p>u cant play with ur self.</p>
+                    <h1>Unauthorized</h1>
+                    <p>You are already playing Pong3D online.</p>
                 </div>
             }
             <Button path="/">Home</Button>
