@@ -96,7 +96,7 @@ const StatMorp = sequelize.define('StatMorp', {
   timestamps: false,
 });
 
-
+//TODO ?? to remove ??
 //     my_id: 1,
 //     history: [
 //         {

@@ -128,7 +128,7 @@ export default function PasswordForget({login_mode}) {
                 <>
                     <form onSubmit={(e) => {send_code(e)}}>
                         <label htmlFor={`email`}>Email</label>
-                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
+                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`} required/>
                         <button type={`submit`}>Send mail verification</button>
                     </form>
 					<hr />
