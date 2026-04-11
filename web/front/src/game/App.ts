@@ -2,7 +2,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/gui"
-import { Engine, Scene, Vector3, Color4, ShadowGenerator, TransformNode, AbstractMesh } from "@babylonjs/core";
+import { Engine, Scene, Vector3, Color4, ShadowGenerator, TransformNode, AbstractMesh, EngineStore } from "@babylonjs/core";
 import { Environment } from "./physics/Environment";
 import { PlayerInput } from "./characters/PlayerInput";
 import { Player } from "./characters/Player";
@@ -140,6 +140,7 @@ export class App {
 
         this._isNear = this._gameState.players.get(this._player.sessionId).sideNear;
         this._ui.addScoreUI(this._isNear, this._gameState.teamNear, this._gameState.teamFar);
+        this._ui.addControlsUI();
 
         this._gameStatusStateMachine(this._gameState.gameStatus);
 
@@ -266,20 +267,8 @@ export class App {
         this._physicsEngine?.dispose();
         this._physicsEngine = null;
 
-        window.removeEventListener('resize', this._resizeWindow);
-        this._engine?.dispose();
-        window.removeEventListener("keydown", this._showInspector);
-
-        // const gl = this._engine._gl;
-        // if (gl) {
-        //     const ext = gl.getExtension('WEBGL_lose_context');
-        //     if (ext) {
-        //         console.log("Forcing WebGL context loss...");
-        //         ext.loseContext();
-        //     }
-        // }
-        this._engine = null;
-       
+       this._engine?.dispose();
+       this._engine = null;
         
         this.onReturnToMenu = null;
         this.onReload = null;

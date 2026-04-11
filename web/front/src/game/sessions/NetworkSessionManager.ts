@@ -244,11 +244,16 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
     }
 
     public dispose() {
+        clearInterval(this._interval);
         this.onUnauthorized = null;
         this.onReturnToMenu = null;
+
         this._unlistens.forEach(unlisten => unlisten());
+        
         this._unlistens = null;
         this._callback = null;
+        this._gameState = null;
+        this._clock = null;
 
         if (this._room) {
             (this._room as any).onMessageHandlers = {};
@@ -265,7 +270,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
             this._room = null;
         }
         
-        clearInterval(this._interval);
         this.clear();
     }
 
