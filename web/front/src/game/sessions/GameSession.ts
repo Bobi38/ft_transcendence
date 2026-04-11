@@ -17,5 +17,5 @@ export interface GameSession extends EventEmitter {
     setGameState(state: RoomStatus) : void;
     update(): void;
     leave(): Promise<void>;
-    dispose() : Promise<void>;
+    dispose() : void;
 }

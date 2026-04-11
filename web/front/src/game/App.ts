@@ -17,6 +17,7 @@ import { PhysicsEngine } from "./physics/PhysicsEngine";
 import { GameSession } from "./sessions/GameSession";
 import { LocalSessionManager } from "./sessions/LocalSessionManager"
 import { Config } from "/app/src/game/shared/gameConfig.js";
+import { FloatingOriginCurrentScene } from "@babylonjs/core";
 
 
 const config = JSON.parse(Config);
@@ -77,7 +78,7 @@ export class App {
         this._engine = new Engine(this._canvas, true, {adaptToDeviceRatio: true});
         this._scene = new Scene(this._engine);
 
-        window.addEventListener("keydown", this._showInspector)
+        window.addEventListener("keydown", this._showInspector);
 
         this._main();
     }
@@ -233,7 +234,7 @@ export class App {
     }
 
 
-    public async dispose() {
+    public dispose() {
         this._engine?.stopRenderLoop();
 
         this._session?.dispose();
@@ -244,8 +245,7 @@ export class App {
 
         this._scene?.dispose();
         this._scene = null;
-
-        this._canvas = null;
+        FloatingOriginCurrentScene.getScene = () => undefined;
 
         this._player?.dispose();
         this._player = null;
@@ -267,25 +267,25 @@ export class App {
         this._physicsEngine = null;
 
         window.removeEventListener('resize', this._resizeWindow);
-        if (this._engine)
-            this._engine.dispose();
+        this._engine?.dispose();
         window.removeEventListener("keydown", this._showInspector);
 
-        if (this._engine) {
-            // const gl = this._engine._gl;
-            // if (gl) {
-            //     const ext = gl.getExtension('WEBGL_lose_context');
-            //     if (ext) {
-            //         console.log("Forcing WebGL context loss...");
-            //         ext.loseContext();
-            //     }
-            // }
-            this._engine.dispose();
-            this._engine = null;
+        // const gl = this._engine._gl;
+        // if (gl) {
+        //     const ext = gl.getExtension('WEBGL_lose_context');
+        //     if (ext) {
+        //         console.log("Forcing WebGL context loss...");
+        //         ext.loseContext();
+        //     }
+        // }
+        this._engine = null;
+       
+        
         this.onReturnToMenu = null;
         this.onReload = null;
-    }
-
+        this._canvas.width = 0;
+        this._canvas.height = 0;
+        this._canvas = null;
         console.log("Pong3D disposal complete");
     }
 

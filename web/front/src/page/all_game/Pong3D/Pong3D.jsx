@@ -35,11 +35,14 @@ export default function Pong3D({type}) {
             setIsMobile(bool)
             return;
         }
+        let isCancelled = false;
         let gameApp = null;
 
 
         const init = async () => {
             const isConnected = await checkCo();
+            if (isCancelled)
+                return;
             if (!isConnected.success) {
                 navigate('/');
                 return;
@@ -58,7 +61,8 @@ export default function Pong3D({type}) {
         };
 
         init();
-        return async () => {
+        return () => {
+            isCancelled = true;
             gameApp?.dispose?.();
             gameApp = null;
         };
