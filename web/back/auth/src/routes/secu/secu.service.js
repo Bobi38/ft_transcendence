@@ -19,14 +19,14 @@ class SecuService {
                 console.log("API /api/secu/send_mail get user from token");
                 user = await get_user_from_token(req.cookies.temp);
                 if (!user.success) {
-                    return ({ success: false, message: user.message });
+                    return ({ success: false, message: user.message, code: 400 });
                 }
                 user = user.user;
                 
             } else {
                 user = await User.findOne({ where: { mail: mail } });
                 if (!user) {
-                    return { success: false, message: 'User not found' };
+                    return { success: false, message: 'User not found', code: 400 };
                 }
             }
             let message;
