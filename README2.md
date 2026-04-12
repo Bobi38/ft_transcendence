@@ -287,7 +287,7 @@ Once running, open your browser at: `https://localhost:9443`
 
 | Module                          | Type  | Points | Implemented By  | Description                                                                       |
 | :---                            | :---  | :---   | :---            | :---                                                                              |
-| **Use a Framework (Frontend & Backend)** | Major | 2 pts  | Tvoisin, Fcretin | Express.js used as the backend API framework                            |
+| **Framework (Frontend & Backend)** | Major | 2 pts  | Tvoisin, Fcretin | Express.js used as the backend API framework                                  |
 | **WebSocket Real-Time**         | Major | 2 pts  | Tvoisin, Fcretin, Niroched | Custom WebSocket server powering Morpion and chat systems              |
 | **Web-based game (Pong 3D)**    | Major | 2 pts  | Sflechel        | Three-dimensional Pong using Colyseus for authoritative server-side game state    |
 | **3D graphics and gameplay**    | Major | 2 pts  | Sflechel        | 3D graphics using Babylon JS and a custom 3D physics engine                       |
@@ -385,6 +385,7 @@ The trickiest part of the networking was clock synchronisation: ensuring that ea
 - [Express.js Documentation](https://expressjs.com/)
 - [Sequelize ORM Documentation](https://sequelize.org/)
 - [Colyseus Documentation](https://docs.colyseus.io/)
+- [Babylon JS Documentation](https://doc.babylonjs.com/)
 - [WebSocket API — MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 - [Docker Documentation](https://docs.docker.com/)
 - [Nginx Documentation](https://nginx.org/en/docs/)
