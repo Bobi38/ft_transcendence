@@ -404,6 +404,11 @@ These tables represent the history of all games played in the system.
 - `draw` (BOOLEAN, only for Morpion) – indicates a draw result  
 - `createdAt` (DATETIME) – match timestamp  
 
+
+### RELATIONSHIP
+
+![Database Schema](./conf/schema/relationship_DB_TRAN.png)
+
  
 - [🗓 𝕊ummary](#summary)
 
