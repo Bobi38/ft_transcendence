@@ -22,7 +22,7 @@ router.post('/session', async (req, res) => {
     console.log("Api /login called");
     const result = await AuthService.login({ email, password, host, res });
     if (!result.success) {
-      return errorHandler(result.message, result.code || 500, res);
+      return errorHandler(result.message, result.code || 400, res);
     }
     res.status(200).json({ success: true, message: result.message, token: result.token, username: result.username, MPFA: result.MPFA });
   } catch (err) {

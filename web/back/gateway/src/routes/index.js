@@ -43,6 +43,7 @@ const publicRoutes = [
 
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
+
   const is_route_public = publicRoutes.find((element) => element === req.path);
 
   console.log("Middleware auth for path WHAT:", req.path);

@@ -71,6 +71,40 @@ export function generateToken(MPFA, token, res) {
   }
 }
 
+async function checktok(tokenn) {
+  if (!tokenn) {
+    console.log("no token provided");
+    return 1;
+  }
+  try {
+    const decoded = jwt.verify(tokenn, secret);
+    const co = await User.findAll({ where: { userId: decoded.id } });
+
+    return co.length === 0 ? 1 : 0;
+  } catch (err) {
+    console.log("token error:", err.message);
+    return 1;
+  }
+}
+
+export const SecuMiddleware = async (req, res, next) => {
+  try {
+    const token =  req.cookies.temp;
+
+    const valid = await checktok(token);
+
+    if (valid === 1) {
+      res.clearCookie('token');
+      return res.status(401).json({ success: false, redirect: true });
+    }
+
+    next();
+  } catch (err) {
+    console.log("middleware error:", err);
+    return res.status(500).json({ success: false });
+  }
+};
+
 
 export {
     User,
