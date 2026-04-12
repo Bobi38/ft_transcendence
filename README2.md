@@ -175,7 +175,7 @@ The team followed an **Agile/Scrum** methodology with weekly sprints. Tasks were
 
 ### Access
 
-Once running, open your browser at: `https://localhost`
+Once running, open your browser at: `https://localhost:9443`
 
 - [🗓 𝕊ummary](#summary)
 
@@ -210,8 +210,11 @@ Once running, open your browser at: `https://localhost`
 | **React JSX** | Component-based UI framework for a dynamic single-page application      |
 | **SCSS**      | Structured and maintainable styling with variables, nesting, and mixins |
 | **Vite**      | Fast build tool and dev server for the React frontend                   |
+| **Babylon (TS)** | Web-native, game-oriented 3D library     
 
 > **Why React?** React's component model fits the modular nature of the app (game views, chat, profile, etc.) and its ecosystem accelerated development significantly.
+
+> **Why Babylon?** Babylon JS is built specifically for the web, and unlike Three.js ships with game-oriented features.
 
 ### Backend ![icons][tag_icon_js]
 
@@ -221,7 +224,7 @@ Once running, open your browser at: `https://localhost`
 | **WebSockets (ws)**| Low-level WebSocket library powering the Morpion matchmaking and room system    |
 | **Colyseus (TS)** | Authoritative game server framework for Pong 3D, handling rooms and game state   |
 
-> **Why Colyseus for Pong 3D?** Colyseus provides built-in room management, server-side game loop, and delta-state synchronization — exactly what a real-time 3D game requires. It runs in TypeScript for type safety in complex game logic.
+> **Why Colyseus for Pong 3D?** Colyseus provides built-in room management and binary-encoded delta-state synchronization, allowng for lightweight coordination between server and client. It runs in TypeScript for type safety in complex game logic.
 
 > **Why custom WebSockets for Morpion?** The Morpion game required a lightweight, fully custom matchmaking system (room creation, player queuing, game state relay) built from scratch to demonstrate mastery of the WebSocket protocol without abstractions.
 
@@ -263,7 +266,6 @@ Once running, open your browser at: `https://localhost`
 | **Pong 3D**                    | 3D Pong game with real-time multiplayer via Colyseus rooms                  | Sflechel               |
 | **Morpion (Tic-Tac-Toe)**      | Multiplayer Morpion with custom matchmaking and room system via WebSockets  | Niroched               |
 | **Matchmaking System**         | Custom queue-based matchmaking built from scratch for Morpion               | Niroched               |
-| **Leaderboard**                | Player rankings by wins across game types                                   | Fcretin                |
 | **Match History**              | Per-user record of past games and results                                   | Edarnand               |
 | **Nginx Reverse Proxy**        | HTTPS routing and static file serving                                       | Edarnand               |
 | **Docker Containerization**    | Full multi-service Docker setup for dev and prod                            | Edarnand               |
@@ -283,21 +285,21 @@ Once running, open your browser at: `https://localhost`
         <h2>📦 𝕄odules</h2>
     </summary>
 
-> ⚠️ *Fill in the exact module names from the subject to match the official list. The table below is a draft based on your stack — update points and justifications accordingly.*
-
 | Module                          | Type  | Points | Implemented By  | Description                                                                       |
 | :---                            | :---  | :---   | :---            | :---                                                                              |
-| **Use a Framework (Frontend)**  | Major | 2 pts  | All             | React JSX used as the frontend framework instead of vanilla JS                    |
-| **Use a Framework (Backend)**   | Major | 2 pts  | Edarnand        | Express.js used as the backend API framework                                      |
-| **WebSocket Real-Time**         | Major | 2 pts  | Niroched        | Custom WebSocket server powering Morpion matchmaking and live game state           |
+| **Use a Framework (Frontend & Backend)** | Major | 2 pts  | Tvoisin, Fcretin | Express.js used as the backend API framework                            |
+| **WebSocket Real-Time**         | Major | 2 pts  | Tvoisin, Fcretin, Niroched | Custom WebSocket server powering Morpion and chat systems              |
+| **Web-based game (Pong 3D)**    | Major | 2 pts  | Sflechel        | Three-dimensional Pong using Colyseus for authoritative server-side game state    |
+| **3D graphics and gameplay**    | Major | 2 pts  | Sflechel        | 3D graphics using Babylon JS and a custom 3D physics engine                       |
+| **Second game (Morpion)**       | Major | 2 pts  | Niroched        | Morpion: Tic-tac-toe game with remote players and vs AI mode, and spectating      | 
 | **Remote Players**              | Major | 2 pts  | Sflechel, Niroched | Both games support two remote players connecting over the network              |
-| **3D Game (Pong 3D)**           | Major | 2 pts  | Sflechel        | Three-dimensional Pong using Colyseus for authoritative server-side game state    |
-| **Colyseus Game Server**        | Major | 2 pts  | Sflechel        | Colyseus framework (TypeScript) manages Pong 3D rooms, state sync & game loop    |
-| **Live Chat**                   | Minor | 1 pt   | Tvoisin         | Real-time messaging between connected users via WebSockets                        |
-| **User Management**             | Minor | 1 pt   | Edarnand        | Registration, login, profile editing, avatar upload, stats & match history        |
-| **Leaderboard**                 | Minor | 1 pt   | Fcretin         | Dynamic leaderboard displaying player rankings                                    |
+| **AI Opponent**                 | Major | 2 pts  | Sflechel, Niroched | Both games feature AI opponents, online (Morpion) and offline (Pong3D)         |
+| **User interactions**           | Major | 2 pts  | Tvoisin, Fcretin, Edarnand | Real-time messaging between connected users via WebSockets             |
+| **ORM Database**                | Minor | 1 pt   | Tvoisin         | Sequelize                                                                         |
+| **OAuth Remote Authentication** | Minor | 1 pt   | Tvoisin         | Possible to register and connect with Google and Github accounts                  |
+| **Two-Factor Authentication**   | Minor | 1 pt   | Tvoisin         | User accounts are protected with email sent when connecting                       |
 
-**Total: _X_ pts** *(update once your full module list is confirmed)*
+**Total: 19 pts**
 
 ### Justifications
 
@@ -348,10 +350,19 @@ Once running, open your browser at: `https://localhost`
 - **Challenge**: Building a reliable room/matchmaking system without Colyseus — resolved by carefully designing a queue manager with proper connection lifecycle handling (disconnects, timeouts).
 
 ### Sflechel — Developer
-- Built the Pong 3D game in TypeScript using the Colyseus framework.
-- Implemented the Colyseus game rooms, server-side game loop, ball physics, and state synchronization to the React frontend.
-- Integrated the Colyseus client in the React frontend for live game updates.
-- **Challenge**: Synchronizing 3D game physics between server and client with minimal latency — resolved by running all physics on the server and sending delta updates to the client.
+Modules implemeted:
+
+Web-based game : Pong3D, a 3D online multiplayer squash game
+Remote players : Real-time two-player networked gameplay via Colyseus
+Advanced 3D graphics : Full Babylon.js scene, court and player avatars
+AI opponent : Local single-player mode with a bot opponent
+
+sflechel built Pong3D end-to-end: a 3D squash game where the ball rebounds off all four surfaces of a walled court and players lose a point by missing the ball. It uses a custom deterministic physics engine (sphere vs. AABB racket, sphere vs. infinite-plane walls, no gravity) running headlessly in both server and client.
+Multiplayer follows a server-authoritative model with client-side prediction: the client simulates ahead locally, saves a ball state snapshot every tick, and reconciles against tick-stamped server patches — applying a corrective delta for small errors or rewinding and re-simulating for large ones. The rendered mesh lerps to the corrected physics body to keep corrections visually smooth.
+The AI and multiplayer modes are architecturally separated via a GameSession interface implemented by LocalSessionManager (AI mode) and NetworkSessionManager (online mode), following SOLID principles so that switching modes requires no changes to game logic.
+The player avatar is a Wii-inspired Mii model modified in Blender (arms, legs removed; face added).
+Challenges:
+The trickiest part of the networking was clock synchronisation: ensuring that each server patch's tick number matched the exact locally-saved snapshot for that tick. This was resolved by tick-stamping all server broadcasts and saving full ball state per tick on the client, then diagnosing drift through careful position/velocity log comparison. Integrating Babylon.js into a React SPA also proved unexpectedly problematic as Babylon assumes full page reloads between sessions, so navigating in and out of the game caused rapid memory accumulation. This was solved by implementing an OOP dispose cascade on component unmount that explicitly releases all Babylon resources in dependency order.
 
 - [🗓 𝕊ummary](#summary)
 
