@@ -12,8 +12,18 @@ class Oauth2Service {
     static async github(back, front, req) {
         try {
             req.session.frontendUrl = front;
-            console.log("Api /login called");
-            const redirectUri = `http://${back}:9000/api/oauth2/github/callback`;
+            console.log("Api /loginnnnnnnn called");
+            let host;
+            let htt;
+            if (status == "PROD"){
+                htt = "https"
+                host = 9443;
+            }
+            else{
+                htt = "http"
+                host = 9000;
+            }
+            const redirectUri = `${htt}://${back}:${host}/api/oauth2/github/callback`;
             const githubAuthUrl = `https://github.com/login/oauth/authorize` + `?client_id=${clientiD}` +`&redirect_uri=${redirectUri}` +`&scope=user:email`;
             return { success: true, message: 'Redirecting to GitHub', url: githubAuthUrl };
         } catch (err) {
@@ -21,7 +31,7 @@ class Oauth2Service {
         }
     }
 
-    static async githubCallback(code, frontendUrl, res) {
+    static async githubCallback(code, frontendUrl, res, req) {
         try{
             const params = new URLSearchParams();
             params.append("client_id", clientiD);
