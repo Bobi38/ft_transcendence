@@ -6,7 +6,7 @@ import "./Stats.scss";
 
 /* Components */ 
 import StatsMorpion 			from	"./StatsMorpion/StatsMorpion.jsx";
-// import StatsPong3D 				from	"./StatsPong3D/StatsPong3D.jsx";
+import StatsPong 				from	"./StatsPong/StatsPong.jsx";
 
 
 export default function Stats() {
@@ -39,7 +39,7 @@ export default function Stats() {
 {/* ------------------------------------------------------------------------------------------------------------------ */}
 			{!selected && <p>Select a game to see the stats</p>}
 
-			{/* {selected === "Pong3D" && <StatsPong3D username={username} setUsername={setUsername} />} */}
+			{selected === "Pong3D" && <StatsPong username={username} setUsername={setUsername} />}
 			{selected === "Morpion" && <StatsMorpion username={username} setUsername={setUsername} />}
 		</div>
     )

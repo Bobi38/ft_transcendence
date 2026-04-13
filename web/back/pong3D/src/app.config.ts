@@ -12,7 +12,8 @@ import cors from "cors";
  * Import your Room files
  */
 import { MyRoom } from "./rooms/MyRoom.js";
-import servRoute from "./routes/Pong3D.js";
+import Pongroute from "./routes/Pong.controller.js";
+
 
 const server = defineServer({
     /**
@@ -49,7 +50,7 @@ const server = defineServer({
             res.send("It's time to kick ass and chew bubblegum!");
         });
 
-        app.use("/", servRoute);
+        app.use("/", Pongroute);
 
         /**
          * Use @colyseus/monitor

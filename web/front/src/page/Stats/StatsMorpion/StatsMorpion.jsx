@@ -112,9 +112,12 @@ export default function StatsMorpion({ username, setUsername }) {
         }, function(repjson){
             console.log("useFetch(info) success history_user: " , repjson.history_user);
         })
-        if (!repjson || (repjson &&  !repjson.success))
+        if (!repjson)
             return;
-        setHistoryUser(repjson.history_user);
+		if ((repjson && !repjson.success))
+			setHistoryUser([]);
+		else
+			setHistoryUser(repjson.history_user);
     }
 
 
@@ -152,7 +155,6 @@ export default function StatsMorpion({ username, setUsername }) {
             <aside>
 
 				<form onSubmit={(e) => {e.preventDefault();
-					console.log(e.target.name.value)
 					if (e.target.name.value.lenght === 0) return
 					setUsername(e.target.name.value); setNewPage(1);}}>
 					<input type={`text`} id="name" name="name" placeholder="Someone name" required/>
