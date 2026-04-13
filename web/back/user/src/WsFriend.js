@@ -3,6 +3,7 @@ import { WebSocketServer } from 'ws';
 import {chat} from './ClassChat.js';
 import Friend from './models/friend.js';
 import User from './models/user.js';
+import { error } from 'console';
 
 function getCookie(name, cookieHeader) {
   if (!cookieHeader) return null;
@@ -96,6 +97,11 @@ export function initWebSFriend(server) {
     socket.on('message', async (message) => {
       try{
         const data = JSON.parse(message.toString());
+        
+        if (!data || typeof data !== "object" || typeof data.type !== "string") {
+          throw new Error("Invalid message format");
+        }
+
         console.log('=== MESSAGE REÇU IN WSCHAT ===');
         console.log('Type:', data.type);
         console.log('===================');
