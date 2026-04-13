@@ -66,11 +66,7 @@ export function initWebSFriend(server) {
     try{
       const iid = idd++;
       socket.id = iid;
-      // console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-      // console.log('URL:', req.url);
-      // console.log('Headers upgrade:', req.headers.upgrade);
-      // console.log('Headers socket:', socket.id);
-      // console.log(req.headers.cookie)
+
       const token = getCookie('token', req.headers.cookie);
       if (!token)
         return;

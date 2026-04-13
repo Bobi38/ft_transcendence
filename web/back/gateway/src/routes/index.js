@@ -37,7 +37,8 @@ const publicRoutes = [
   '/api/secu/majPswd',
   '/api/secu/cookie',
   '/api/secu/send_mail',
-  '/api/secu/maila2f_check_code'
+  '/api/secu/maila2f_check_code',
+  '/api/secu/checkco'
 ];
 
 export const authMiddleware = async (req, res, next) => {
