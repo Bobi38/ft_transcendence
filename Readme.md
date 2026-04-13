@@ -245,7 +245,7 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 | **MySQL**      | Relational database for persistent storage                |
 | **Sequelize**  | ORM for schema definition, migrations, and query building |
 
-> **Why MySQL, Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize adds type-safe model definitions and simplifies migrations.
+> **Why MySQL, Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize enhances developer productivity with type-safe model definitions, streamlined migrations, and seamless integration with JavaScript, making it particularly well-suited for Node.js applications.
 
 - [🗓 𝕊ummary](#summary)
 
@@ -265,8 +265,6 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 The database contains **11 tables** managed via Sequelize ORM. A `StatMorp` and `StatPong3D` row is automatically created for each new user via a Sequelize `afterCreate` hook.
 
 ---
-
-> **Why MySQL + Sequelize?** > **Why MySQL + Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize enhances developer productivity with type-safe model definitions, streamlined migrations, and seamless integration with JavaScript, making it particularly well-suited for Node.js applications.
 
 > **Database Schema**  
 Nous avons qu'une seule database MYSQL que nous visualisons avec myadminphp sous le port 8081
