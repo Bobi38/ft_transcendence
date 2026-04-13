@@ -8,9 +8,9 @@ class ChatGDTO {
   }
 
   static validatePostChatG(data) {
-    const { message, time } = data;
+    const { message } = data;
 
-    if (!message || !time) {
+    if (!message) {
       return { valid: false, message: 'Missing fields (post chat)', code : 400 };
     }
     return { valid: true };

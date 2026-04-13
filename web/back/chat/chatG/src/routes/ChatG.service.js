@@ -35,7 +35,8 @@ class ChatGService {
             const mess = encrypt(chat.message);
             if (mess.length > 511)
                 return ({success: false, message: "Message send too long", code: 413})
-            await ChatG.create({contenu: mess, SenderId: result.id, time: chat.time });
+            const time = new Date()
+            await ChatG.create({contenu: mess, SenderId: result.id, time: time });
             return { success: true, code: 201, message: "messG add too db" };
         }catch(err){
             return { success: false, message: err, code: 500 };

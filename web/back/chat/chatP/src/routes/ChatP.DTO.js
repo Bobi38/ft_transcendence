@@ -16,9 +16,9 @@ class ChatPDTO {
     static validateGetChatP(req){
         if (!req.cookies.token)
             return {valid: false, message: 'Unauthorized', code: 401};
-        if (!req.query.name)
+        if (!req.params.name)
             return {valid: false, message: 'Missing name', code: 400};
-        if (typeof req.query.name !== 'string')
+        if (typeof req.params.name !== 'string')
             return {valid: false, message: 'Name must be a string', code: 400};
         return {valid: true};
     }
