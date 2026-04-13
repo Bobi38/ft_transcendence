@@ -266,178 +266,179 @@ The database contains **11 tables** managed via Sequelize ORM. A `StatMorp` and 
 
 ---
 
-#### `user_co` — Users
-| Field              | Type          | Notes                                          |
-| :---               | :---          | :---                                           |
-| `id`               | INT (PK)      | Auto-increment primary key                     |
-| `name`             | VARCHAR(128)  | Display name, required                         |
-| `Log42`            | VARCHAR(128)  | 42 school login, nullable (OAuth users)        |
-| `password`         | VARCHAR(128)  | Hashed password, nullable (OAuth users)        |
-| `mail`             | VARCHAR(256)  | Unique email address, required                 |
-| `adress`           | VARCHAR(256)  | Optional address                               |
-| `phoneNumber`      | VARCHAR(20)   | Optional phone number                          |
-| `OAuth`            | BOOLEAN       | Whether account was created via OAuth          |
-| `MPFA`             | BOOLEAN       | 2FA enabled flag (default: true)               |
-| `co`               | BOOLEAN       | Currently connected flag                       |
-| `password_2FA`     | VARCHAR(256)  | Temporary 2FA code, nullable                   |
-| `password_2FA_time`| TIME          | Expiry time of the 2FA code                    |
-| `Hostlastco`       | VARCHAR(256)  | IP/host of last connection, nullable           |
-| `Datelastco`       | DATE          | Date of last connection, nullable              |
+> **Why MySQL + Sequelize?** > **Why MySQL + Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize enhances developer productivity with type-safe model definitions, streamlined migrations, and seamless integration with JavaScript, making it particularly well-suited for Node.js applications.
+
+> **Database Schema**
+Nous avons qu'une seule database MYSQL que nous visualisons avec myadminphp sous le port 8081
+
+### Tables and Relationships
 
 ---
 
-#### `connect_co` — Active Sessions / Tokens
-| Field    | Type         | Notes                              |
-| :---     | :---         | :---                               |
-| `id`     | INT (PK)     | Auto-increment primary key         |
-| `token`  | VARCHAR(512) | Session/JWT token, required        |
-| `userId` | INT (FK)     | References `user_co.id` (CASCADE)  |
+## Users
+
+Stores user accounts created during registration. Users are linked to other tables through relationships, enabling direct access to their data across the application.
+
+#### Fields
+
+- `id` (INT, Primary Key, Auto Increment)  
+  Used to generate authentication cookies (`token` and `temp`) and identify users across all related tables (JOIN operations).
+
+- `username`, `password`, `email` (STRING)  
+  Basic authentication and identity information.
+
+- `co`, `MPFA` (BOOLEAN)  
+  Indicates if the user is currently connected and whether Multi-Factor Authentication is enabled.
+
+- `HostLastCo`, `DateLastCo` (BOOLEAN, DATE)  
+  Used to determine if the user must pass 2FA:
+  - first login
+  - login from a new host
+  - last connection older than a defined threshold (e.g. 10 days)
 
 ---
 
-#### `Friend` — Friend Relationships
-| Field    | Type    | Notes                                             |
-| :---     | :---    | :---                                              |
-| `Friend1`| INT (PK, FK) | First user — references `user_co.id`         |
-| `Friend2`| INT (PK, FK) | Second user — references `user_co.id`        |
-| `State`  | BOOLEAN | Friendship accepted (default: false = pending)    |
-| `WhoAsk` | INT (FK)| User who sent the request — references `user_co.id`|
+## PssWrdEmail
 
-> Composite primary key on `(Friend1, Friend2)` enforces uniqueness of each pair.
+Stores verification codes sent by email for 2FA or password reset operations.
 
----
+#### Fields
 
-#### `PswEmail` — Password / Email Verification Codes
-| Field        | Type         | Notes                                      |
-| :---         | :---         | :---                                       |
-| `id`         | INT (PK)     | Auto-increment primary key                 |
-| `type`       | INT          | Code type (e.g. password reset vs 2FA)     |
-| `idUser`     | INT (FK)     | References `user_co.id`                    |
-| `Code`       | VARCHAR(512) | The verification/reset code                |
-| `DateCreate` | DATE         | Code creation timestamp                    |
+- `id` (INT, Foreign Key → Users.id)  
+  Links the code to a specific user.
 
----
+- `type` (INT)  
+  Defines the purpose of the code:
+  - `1` = 2FA authentication  
+  - `2` = password reset  
 
-#### `chat_G` — Global Chat Messages
-| Field      | Type         | Notes                              |
-| :---       | :---         | :---                               |
-| `contenu`  | VARCHAR(512) | Message content, required          |
-| `time`     | TIME         | Time the message was sent          |
-| `SenderId` | INT (FK)     | References `user_co.id` (CASCADE)  |
+- `code` (INT, hashed)  
+  Secure verification code.
+
+- `DateCreate` (DATE)  
+  Creation date used for expiration logic.
 
 ---
 
-#### `PrivChat` — Private Conversations
-| Field      | Type    | Notes                            |
-| :---       | :---    | :---                             |
-| `id`       | INT (PK)| Auto-increment primary key       |
-| `id1`      | INT (FK)| First participant — `user_co.id` |
-| `id2`      | INT (FK)| Second participant — `user_co.id`|
-| `lastmess` | DATE    | Timestamp of latest message      |
+## Chat
 
 ---
 
-#### `PrivMess` — Private Messages
-| Field      | Type         | Notes                               |
-| :---       | :---         | :---                                |
-| `id`       | INT (PK)     | Auto-increment primary key          |
-| `SenderId` | INT (FK)     | Sender — references `user_co.id`    |
-| `contenu`  | VARCHAR(512) | Message content, required           |
-| `time`     | TIME         | Time the message was sent           |
-| `ChatId`   | INT (FK)     | References `PrivChat.id` (CASCADE)  |
+### General Chat (`ChatG`)
+
+Stores all messages sent in the public chat room. Messages are encrypted before being saved.
+
+#### Fields
+
+- `SenderId` (INT, Foreign Key → Users.id)  
+  Identifies the user who sent the message.
+
+- `contenu` (STRING)  
+  Encrypted message content.
+
+- `time` (TIME)  
+  Timestamp of message sending.
 
 ---
 
-#### `GameMorp` — Morpion Match Records
-| Field            | Type         | Notes                                                            |
-| :---             | :---         | :---                                                             |
-| `id`             | INT (PK)     | Auto-increment primary key                                       |
-| `how_win`        | ENUM         | `horizontal`, `diagonal_lr`, `diagonal_rl`, `vertical`, `abort`, `draw` |
-| `date_game`      | DATE         | Match date (default: now)                                        |
-| `player_1`       | INT (FK)     | References `user_co.id` (CASCADE)                                |
-| `player_2`       | INT (FK)     | References `user_co.id` (CASCADE)                                |
-| `winner`         | INT (FK)     | References `user_co.id`, nullable                                |
-| `loser`          | INT (FK)     | References `user_co.id`, nullable                                |
-| `time_player_1`  | INT          | Total time spent by player 1 (ms)                                |
-| `time_player_2`  | INT          | Total time spent by player 2 (ms)                                |
-| `nb_turn_player_1`| INT         | Number of turns played by player 1                               |
-| `nb_turn_player_2`| INT         | Number of turns played by player 2                               |
-| `map`            | VARCHAR(128) | Board state snapshot (e.g. `"OX--XO-XO"`)                        |
+### Private Chat (`PrivChat` & `PrivMess`)
+
+Each private conversation between two users is stored in `PrivChat`. Messages are stored separately in `PrivMess` using the chat ID.
+
+Example:
+To retrieve a conversation between user `6` and user `12`, the application finds the corresponding entry in `PrivChat`, retrieves its `id`, then fetches all messages in `PrivMess` with that `ChatId`.
+
+#### PrivChat Fields
+
+- `id` (INT, Primary Key, Auto Increment)  
+  Unique identifier of the conversation. Ensures one conversation per pair of users.
+
+- `id1` (INT, Foreign Key → Users.id)  
+  First user in the conversation.
+
+- `id2` (INT, Foreign Key → Users.id)  
+  Second user in the conversation.
+
+- `lastMess` (DATE)  
+  Used to retrieve the last message sent.
 
 ---
 
-#### `StatMorp` — Morpion Aggregated Statistics (per user)
-One row per user, auto-created on user registration. Tracks win/loss counts broken down by symbol (X or O) and win condition type.
+#### PrivMess Fields
 
-| Field                    | Type | Notes                                    |
-| :---                     | :--- | :---                                     |
-| `idUser`                 | INT (FK) | References `user_co.id`              |
-| `total_game`             | INT  | Total games played                       |
-| `time_played`            | INT  | Total time played (ms)                   |
-| `nb_turn_played`         | INT  | Total turns played                       |
-| `type_X_horizontal_winner` | INT | Wins as X via horizontal alignment     |
-| `type_X_horizontal_loser`  | INT | Losses as X vs horizontal alignment    |
-| `type_X_vertical_winner`   | INT | Wins as X via vertical alignment       |
-| `type_X_vertical_loser`    | INT | Losses as X vs vertical alignment      |
-| `type_X_diagonal_winner`   | INT | Wins as X via diagonal                 |
-| `type_X_diagonal_loser`    | INT | Losses as X vs diagonal                |
-| `type_X_abort_winner`      | INT | Wins as X by opponent abort            |
-| `type_X_abort_loser`       | INT | Losses as X by own abort               |
-| `type_X_draw`              | INT | Draws as X                             |
-| *(same fields for O)*    | INT  | Identical set repeated for symbol O      |
+- `id` (INT, Primary Key, Auto Increment)  
+  Unique message identifier.
 
----
+- `ChatId` (INT, Foreign Key → PrivChat.id)  
+  Identifies the conversation (HasMany / BelongsTo relation).
 
-#### `GamePong3D` — Pong 3D Match Records
-| Field             | Type    | Notes                                        |
-| :---              | :---    | :---                                         |
-| `id`              | INT (PK)| Auto-increment primary key                   |
-| `id_player_1`     | INT (FK)| References `user_co.id` (CASCADE)            |
-| `score_1`         | INT     | Score of player 1                            |
-| `id_player_2`     | INT (FK)| References `user_co.id` (CASCADE)            |
-| `score_2`         | INT     | Score of player 2                            |
-| `abortwinner`     | INT (FK)| Winner if game was aborted, nullable         |
-| `abortloser`      | INT (FK)| Loser if game was aborted, nullable          |
-| `winner`          | INT (FK)| Normal winner, nullable                      |
-| `loser`           | INT (FK)| Normal loser, nullable                       |
-| `date_game_start` | DATE    | Match start timestamp                        |
-| `date_game_end`   | DATE    | Match end timestamp (default: now)           |
-| `time`            | INT     | Match duration (ms)                          |
+- `SenderId` (INT, Foreign Key → Users.id)  
+  User who sent the message.
+
+- `contenu` (STRING, encrypted)  
+  Message content.
+
+- `time` (TIME)  
+  Timestamp of message sending.
+
+### Friend Relationship
+
+Users can establish friendships with other users through a junction table (`Friend`), implementing a many-to-many self-referential relationship.
+
+This table not only links users together but also stores additional metadata such as the friendship status and the user who initiated the request.
+
+#### Fields
+
+- `Friend1` (INT, Primary Key) – ID of the first user
+- `Friend2` (INT, Primary Key) – ID of the second user
+- `State` (BOOLEAN) – indicates whether the friend request is accepted
+- `WhoAsk` (INT) – ID of the user who initiated the friend request
+
+## GAME
+
+Each game mode (PONG3D and MORPION) has its own dedicated tables to store statistics and match history.
 
 ---
 
-#### `StatPong3D` — Pong 3D Aggregated Statistics (per user)
-One row per user, auto-created on user registration.
+## STATS (StatMorp & StatPong3D)
 
-| Field        | Type     | Notes                             |
-| :---         | :---     | :---                              |
-| `idUser`     | INT (FK) | References `user_co.id`           |
-| `total_game` | INT      | Total games played                |
-| `time_played`| INT      | Total time played (ms)            |
-| `win`        | INT      | Total wins                        |
-| `lose`       | INT      | Total losses                      |
-| `abortwinner`| INT      | Games won by opponent abort       |
-| `abortloser` | INT      | Games lost by own abort           |
+Each user has a dedicated stats record per game mode. These tables store aggregated performance data that is updated after each match.
+
+They track overall progression such as total games played, wins, losses, and game-specific outcomes (e.g. win conditions in Morpion).
+
+#### Purpose
+
+- Track user performance per game mode
+- Increment values after each completed match
+- Provide historical statistics for ranking and analysis
 
 ---
 
-### Relationships Summary
+## GAME (GameMorp & GamePong3D)
 
-```
-user_co
-  ├── has many connect_co         (sessions/tokens)
-  ├── has many PswEmail           (verification codes)
-  ├── has many chat_G             (global chat messages sent)
-  ├── belongs to many User        through Friend (as Friends / FriendOf)
-  ├── has many PrivChat           (as user1 or user2)
-  ├── has many GameMorp           (as player_1, player_2, winner, loser)
-  ├── has one  StatMorp           (auto-created on register)
-  ├── has many GamePong3D         (as id_player_1, id_player_2, winner, loser)
-  └── has one  StatPong3D         (auto-created on register)
+Each played match is stored as a single database entry containing the result and relevant metadata.
 
-PrivChat
-  └── has many PrivMess
-```
+These tables represent the history of all games played in the system.
+
+#### Purpose
+
+- Store each game instance
+- Record winner and loser IDs
+- Track match-specific data (e.g. draw state for Morpion)
+- Allow replay/history reconstruction if needed
+
+#### Fields (general concept)
+
+- `id` (INT, Primary Key, Auto Increment) – unique match identifier  
+- `winnerId` (INT, Foreign Key → Users.id) – winning player  
+- `loserId` (INT, Foreign Key → Users.id) – losing player  
+- `draw` (BOOLEAN, only for Morpion) – indicates a draw result  
+- `createdAt` (DATETIME) – match timestamp  
+
+
+### RELATIONSHIP
+
+![Database Schema](./conf/schema/relationship_DB_TRAN.png)
 
 - [🗓 𝕊ummary](#summary)
 
