@@ -41,7 +41,8 @@ class ChatPService {
                 return ({ success: false, message: "Message too long", code: 400 });
             }
             console.log(crypt)
-            await PrivMess.create({SenderId: id1.id, contenu: crypt, ChatId: findchat.id, time: data.time});
+            const time = new Date();
+            await PrivMess.create({SenderId: id1.id, contenu: crypt, ChatId: findchat.id, time: time});
             findchat.lastmess = new Date();
             await findchat.save()
             return ({success: true, message: "add messP success", code: 200});

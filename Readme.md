@@ -120,7 +120,7 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 ### Meetings & Communication
 
 - Weekly sprint planning meetings.
-- All major technical decisions were discussed (but never be documented in something like GitHub Issues, Notion) before implementation.
+- All major technical decisions were discussed orally and in Discord before implementation.
 
 - [🗓 𝕊ummary](#summary)
 
@@ -222,9 +222,12 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 | **Vite (dev)**    | Fast build tool and dev server for the React frontend                   |
 | **React JSX**     | Component-based UI framework for a dynamic single-page application      |
 | **SCSS**          | Structured and maintainable styling with variables, nesting, and mixins |
-| **Babylon**       | oui |
+| **Babylon**       | Web-native, game-oriented 3D library                                    |
 
 > **Why React?** React's component model fits the modular nature of the app (game views, chat, profile, etc.), its ecosystem accelerated development significantly and Mainstream.
+
+> **Why Babylon?** Babylon JS is built specifically for the web, and unlike Three.js ships with game-oriented features.
+
 
 ### Backend ![icons][tag_icon_back]
 
@@ -478,23 +481,23 @@ These tables represent the history of all games played in the system.
         <h2>📦 𝕄odules</h2>
     </summary>
 
-| Module                                                                                        | Type  | Points | Implemented By           | Description       |
-| :---                                                                                          | :---  | :---   | :---                     | :---              |
-| Use a framework for both the frontend and backend.                                            | Major | 2pts   | Fcretin Tvoisin Edarnand | React, Express    |
-| Implement real-time features using WebSockets or similar technology.                          | Major | 4pts   | Tvoisin Niroched         | morpion, notification connection, chat                |
-| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 6pts   | Niroched Sflechel        | colyseus, websocket               |
-| Introduce an AI Opponent for games                                                            | Major | 8pts   | Niroched Sflechel        | morpion, Pond3d   |
-| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10pts  | Sflechel Edarnand        | Pong3d Babylon    |
-| Allow users to interact with other users.                                                     | Major | 12pts  | Fcretin Tvoisin          | friend system, user profile |
-| Implement a complete web-based game where users can play against each other.                  | Major | 14pts  | Sflechel Edarnand        | Pond3d            |
-| Add another game with user history and matchmaking.                                           | Major | 16pts  | Niroched                 | morpion           |
-| ...                                                                                           | ...   | ...    |                          | ...               |
-| Use an ORM for the database.                                                                  | Minor | 17pts  | Tvoisin                  | sequelize         |
-| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18pts  | Tvoisin                  | github google     |
-| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19pts  | Tvoisin                  | send code by mail |
-| ...                                                                                           | ...   | ...    |                          | ...               |
-| Backend as microservices.                                                                     | Major | ...    |                          | ...               |
-| Support for additional browsers.                                                              | Minor | ...    |                          | ...               |
+| Module                                                                                        | Type  | Points | Implemented By           | Implementation    | Justification |
+| :---                                                                                          | :---  | :---   | :---                     | :---              | :----|
+| Use a framework for both the frontend and backend.                                            | Major | 2 pts  | Fcretin Tvoisin Edarnand | React for Frontend, Express for Backend  | | 
+| Allow users to interact with other users.                                                     | Major | 4 pts  | Fcretin Tvoisin          | Public chat, private chat with friend system, and user profiles | Two chat systems for communication between users, a friend system allowing to add, remove, see and chat with friends, and ability to see all user profiles. | 
+| Implement real-time features using WebSockets or similar technology.                          | Major | 6 pts  | Tvoisin Niroched         | Morpion game, notifications and chat systems all rely on Websockets | Morpion, notifications and chats get real-time updates thanks to JSON broadcasted via Websockets. | 
+| Implement a complete web-based game where users can play against each other.                  | Major | 8 pts  | Sflechel Edarnand        | 3D real-time Squash game where missing the ball loses a point | Two-players game with live matches over the network. | 
+| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10 pts | Sflechel Edarnand        | 3D squash court, players and ball allowing movement in 3D implemented using BabylonJS | Full 3D environment with base color, normal map and ambiant occlusion, and soft shadows, running smoothly. | 
+| Add another game with user history and matchmaking.                                           | Major | 12 pts | Niroched                 | 2D game of Tic-Tac-Toe | Two-players games with live matches played over the network, game statistics are tracked and displayed. | 
+| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 14 pts | Niroched Sflechel        | Pong3D uses Colyseus for data synchronization and Websocket handling, and Morpion uses a custom Websocket server | Pong3D and Morpion allow remote players over the network in real network conditions of latency and jitter, and allow for reconnection to ongoing games. | 
+| Introduce an AI Opponent for games                                                            | Major | 16 pts | Niroched Sflechel        | For Pong3D, custom AI system predicting ball position. For Morpion simple AI that first try to win, second to counter the enemy and third plays randomly. | PongAI is subject to the same limitations as human players. | 
+| ...                                                                                           | ...   | ...    |                          | ...               | ...  | 
+| Use an ORM for the database.                                                                  | Minor | 17 pts | Tvoisin                  | Sequelize         | | 
+| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18 pts | Tvoisin                  | Github, Goodle    | Possible to register or connect with Google or Github accounts. | 
+| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19 pts | Tvoisin                  | At session start after connecting email verification is required. |  | 
+| ...                                                                                           | ...   | ...    |                          | ...               | ...  | 
+| Backend as microservices.                                                                     | Major | ...    | Tvoisin                  | All systems (Database, both games, each chat system, etc) have their own Docker container and do not communicate between themselves. | Each container has one responsability, and they are loosely coupled as they do not interact. | 
+| Support for additional browsers.                                                              | Minor | ...    | Elevan                   | Working in Chrome, Edge and Firefox | No limitations per browser, consistent UI across them. | 
 
 
 - [🗓 𝕊ummary](#summary)
@@ -518,6 +521,23 @@ These tables represent the history of all games played in the system.
 - **Challenge**: by quickly identifying lower-priority features and focusing on the main interface.
 
 ### Tvoisin — Project Manager
+- **Modules implemented**:
+    - Use ORM for database : Sequelize
+    - authentication with OAuth 2.0 : Github, Google
+    - Two-Factor Authentication : sends a verification code by email
+    - Implement real-time features using WebSockets or similar technology   
+<br/>
+
+- **Detailed breakdown**:
+Tvoisin was responsible for designing and developing the backend, including the implementation of a microservices architecture and the initialization of the database. He selected Sequelize as the ORM due to its compatibility with Node.js and its ease of configuration. In addition, he implemented WebSocket servers to handle real-time features such as general chat, private messaging, the tic-tac-toe game, and the "friends" system. These features enable real-time notifications for user connections and disconnections. This work also required coordinating the initialization of WebSockets on the frontend. Furthermore, the implementation of Two-Factor Authentication (2FA) and OAuth 2.0 authentication mechanisms was carried out as a personal initiative.
+
+<br/>
+
+- **Challenges**:
+One of the main challenges Tvoisin encountered was transitioning from a monolithic architecture to a microservices-based architecture using Docker Compose. Despite having limited prior experience with Dockerfiles and Docker Compose, he successfully addressed this challenge. Another significant challenge involved implementing WebSocket communication across both backend and frontend components. This aspect of the project proved to be both technically demanding and highly rewarding once fully operational.
+  
+<br/>
+
 - Organized sprint planning and retrospectives.
 - Tracked tasks and deadlines.
 - Designed the overall microservice architecture and Docker Compose setup.
@@ -531,10 +551,24 @@ These tables represent the history of all games played in the system.
 - **Challenge**: ... .
 
 ### Sflechel — Developer
-- Built the Pong 3D game in TypeScript using the Colyseus framework.
-- Implemented the Colyseus game rooms, server-side game loop, ball physics, and state synchronization to the React frontend.
-- Integrated the Colyseus client in the React frontend for live game updates.
-- **Challenge**: ... .
+- **Modules implemented**:
+    - Web-based game : Pong3D, a 3D online multiplayer squash game
+    - Remote players : Real-time two-player networked gameplay via Colyseus
+    - Advanced 3D graphics : Full Babylon.js scene, court and player avatars
+    - AI opponent : Local single-player mode with a bot opponent    
+<br/>
+
+- **Detailed breakdown**:  
+sflechel built Pong3D end-to-end: a 3D squash game where the ball rebounds off all four surfaces of a walled court and players lose a point by missing the ball. It uses a custom deterministic physics engine (sphere vs. AABB racket, sphere vs. infinite-plane walls, no gravity) running headlessly in both server and client.
+Multiplayer follows a server-authoritative model with client-side prediction: the client simulates ahead locally, saves a ball state snapshot every tick, and reconciles against tick-stamped server patches — applying a corrective delta for small errors or rewinding and re-simulating for large ones. The rendered mesh lerps to the corrected physics body to keep corrections visually smooth.
+The AI and multiplayer modes are architecturally separated via a GameSession interface implemented by LocalSessionManager (AI mode) and NetworkSessionManager (online mode), following SOLID principles so that switching modes requires no changes to game logic.
+The player avatar is a Wii-inspired Mii model modified in Blender (arms, legs removed; face added).   
+<br/>
+
+- **Challenges**:  
+The trickiest part of the networking was clock synchronisation: ensuring that each server patch's tick number matched the exact locally-saved snapshot for that tick. This was resolved by tick-stamping all server broadcasts and saving full ball state per tick on the client, then diagnosing drift through careful position/velocity log comparison. Integrating Babylon.js into a React SPA also proved unexpectedly problematic as Babylon assumes full page reloads between sessions, so navigating in and out of the game caused rapid memory accumulation. This was solved by implementing an OOP dispose cascade on component unmount that explicitly releases all Babylon resources in dependency order.`   
+<br/>
+
 ### Niroched — Developer
 - Built the entire Morpion (Tic-Tac-Toe) game from scratch, including game logic, win detection, and board state management.
 - Designed and implemented the custom WebSocket matchmaking system: player queuing, room creation, and game state relay, spectator built entirely from scratch without a game server framework.

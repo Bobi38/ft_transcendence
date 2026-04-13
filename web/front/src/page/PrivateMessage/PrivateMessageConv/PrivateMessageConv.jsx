@@ -64,7 +64,7 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         if (input === "") return;
         if (input.length > 511) {
             setInput("");
-            showAlert("Message trop long (511 caractères max)", "danger");
+            showAlert("Message too long", "danger");
             return;
         }
 
@@ -77,7 +77,7 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 
         const isFriend = await is_friend(login);
         if (!isFriend) {
-            showAlert("Vous n'êtes pas ou plus amis avec cet utilisateur", "danger");
+            showAlert("You are not, or are no longer, friends with this user.", "danger");
             return;
         }
         await add_private_message(time, login);
@@ -102,12 +102,12 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 
                             {msg.monMsg ? (
                                 <div>
-                                    <div><span>{msg.timer}</span></div>
+                                    <div id="timerP"><span>{msg.timer}</span></div>
                                     <p>{msg.message}</p>
                                 </div>
                             ) : (
                                 <div>
-                                    <div><strong>{msg.login}</strong><span> {msg.timer}</span></div>
+                                    <div id="timerP"><strong>{msg.login}</strong><span> {msg.timer}</span></div>
                                     <p>{msg.message}</p>
                                 </div>
                             )}

@@ -20,8 +20,6 @@ export default function HomeChat() {
 
         const url = `/api/chatG`;
 
-        console.log(`${url}`)
-
         const repjson = await useFetch(`${url}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -32,18 +30,15 @@ export default function HomeChat() {
         setDisplayedMessages([...repjson.message].reverse());//reverse for front display
     }
 
-    async function add_message_global(time){
-        if (!time) return
+    async function add_message_global(){
 
         const url = `/api/chatG`;
-
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: "include",
-            body: JSON.stringify({ message: input, time: time }),
+            body: JSON.stringify({ message: input }),
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
@@ -69,7 +64,6 @@ export default function HomeChat() {
                     fetch_global_message();
                     return;
                 }
-                console.log("handle_global_message(1) Message global reçu via WebSocket:", data);
 
                 setDisplayedMessages((prev) => [data, ...prev]);//reverse for front display
             };
@@ -85,7 +79,6 @@ export default function HomeChat() {
 
     const handle_submit = async (e) => {
         e.preventDefault();
-        console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
         if (input.length > 511) {
             setInput("");
@@ -93,11 +86,9 @@ export default function HomeChat() {
             return;
         }
 
-        const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        const data = {type: "mess", message: input, timer: time};
+        const data = {type: "mess", message: input};
 
-        console.log("handle_submit(2): " ,data);
-        await add_message_global(time);
+        await add_message_global();
         SocketM.sendd('chat', data);
         setInput("");
     };

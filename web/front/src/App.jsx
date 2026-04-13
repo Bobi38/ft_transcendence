@@ -64,10 +64,8 @@ export default function App() {
                 SocketM.connectsocket("morp");
             if (!SocketM.getState("friend") || SocketM.getState("friend") === "closed")
                 SocketM.connectsocket("friend");
-            console.log("App.jsx useEffect(1) SocketM.connect() called");
 
             const handle_friend_co = (data) => {
-              console.log("friend HANDLE:");
               if (data.type == 'co'){
                 setNotif({
                     message:`${data.login} just login`,
@@ -102,10 +100,6 @@ export default function App() {
           SocketM.off("friend", "un");
           SocketM.off("priv", "deux");
 					SocketM.off("friend", "logout");
-          // SocketM.disconnect("friend");
-          // if (SocketM.socket)
-          //   SocketM.disco();
-          // console.log("App.jsx useEffect(2) SocketM.disconnect() called");
         };
     }, [showLog]);
 
