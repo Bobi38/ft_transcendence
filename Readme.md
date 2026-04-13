@@ -500,6 +500,7 @@ These tables represent the history of all games played in the system.
 | Support for additional browsers.                                                              | Minor | ...    |                          | ...               |
 
 
+
 - [🗓 𝕊ummary](#summary)
 
 </details>
@@ -516,9 +517,28 @@ These tables represent the history of all games played in the system.
     </summary>
 
 ### Fcretin — Product Owner
-- Defined product vision for all major features.
-- Maintained and prioritized features throughout the project.
-- **Challenge**: by quickly identifying lower-priority features and focusing on the main interface.
+- **Modules implemented**:  
+  - Used a framework for both the frontend and backend (React).
+  - Enabled user interaction features between users.
+<br/>
+
+- **Detailed breakdown**:  
+  - Learned how React works and created each page using JSX.
+  - Developed the application logic and a base CSS structure.
+  - Collaborated with tvoisin on the first major feature: the global chat system.
+    - Sent data to the backend.
+    - Received and displayed messages in real time.
+  - After implementing the global chat, we developed:
+    - A friend relationship system.
+    - Dedicated pages for managing and interacting with friends.
+    - And all other page accept Pong3d and Morpion
+<br/>
+
+- **Challenges**:  
+  - Defining requirements: deciding what features were needed and when to implement them.
+  - Designing base pages to visually explain and structure the application.
+<br/>
+
 
 ### Tvoisin — Project Manager
 
