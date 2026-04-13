@@ -120,7 +120,7 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 ### Meetings & Communication
 
 - Weekly sprint planning meetings.
-- All major technical decisions were discussed (but never be documented in something like GitHub Issues, Notion) before implementation.
+- All major technical decisions were discussed orally and in Discord before implementation.
 
 - [🗓 𝕊ummary](#summary)
 
@@ -222,9 +222,12 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 | **Vite (dev)**    | Fast build tool and dev server for the React frontend                   |
 | **React JSX**     | Component-based UI framework for a dynamic single-page application      |
 | **SCSS**          | Structured and maintainable styling with variables, nesting, and mixins |
-| **Babylon**       | oui |
+| **Babylon**       | Web-native, game-oriented 3D library                                    |
 
 > **Why React?** React's component model fits the modular nature of the app (game views, chat, profile, etc.), its ecosystem accelerated development significantly and Mainstream.
+
+> **Why Babylon?** Babylon JS is built specifically for the web, and unlike Three.js ships with game-oriented features.
+
 
 ### Backend ![icons][tag_icon_back]
 
@@ -532,10 +535,24 @@ These tables represent the history of all games played in the system.
 - **Challenge**: ... .
 
 ### Sflechel — Developer
-- Built the Pong 3D game in TypeScript using the Colyseus framework.
-- Implemented the Colyseus game rooms, server-side game loop, ball physics, and state synchronization to the React frontend.
-- Integrated the Colyseus client in the React frontend for live game updates.
-- **Challenge**: ... .
+- **Modules implemented**:
+    - Web-based game : Pong3D, a 3D online multiplayer squash game
+    - Remote players : Real-time two-player networked gameplay via Colyseus
+    - Advanced 3D graphics : Full Babylon.js scene, court and player avatars
+    - AI opponent : Local single-player mode with a bot opponent    
+<br/>
+
+- **Detailed breakdown**:  
+sflechel built Pong3D end-to-end: a 3D squash game where the ball rebounds off all four surfaces of a walled court and players lose a point by missing the ball. It uses a custom deterministic physics engine (sphere vs. AABB racket, sphere vs. infinite-plane walls, no gravity) running headlessly in both server and client.
+Multiplayer follows a server-authoritative model with client-side prediction: the client simulates ahead locally, saves a ball state snapshot every tick, and reconciles against tick-stamped server patches — applying a corrective delta for small errors or rewinding and re-simulating for large ones. The rendered mesh lerps to the corrected physics body to keep corrections visually smooth.
+The AI and multiplayer modes are architecturally separated via a GameSession interface implemented by LocalSessionManager (AI mode) and NetworkSessionManager (online mode), following SOLID principles so that switching modes requires no changes to game logic.
+The player avatar is a Wii-inspired Mii model modified in Blender (arms, legs removed; face added).   
+<br/>
+
+- **Challenges**:  
+The trickiest part of the networking was clock synchronisation: ensuring that each server patch's tick number matched the exact locally-saved snapshot for that tick. This was resolved by tick-stamping all server broadcasts and saving full ball state per tick on the client, then diagnosing drift through careful position/velocity log comparison. Integrating Babylon.js into a React SPA also proved unexpectedly problematic as Babylon assumes full page reloads between sessions, so navigating in and out of the game caused rapid memory accumulation. This was solved by implementing an OOP dispose cascade on component unmount that explicitly releases all Babylon resources in dependency order.`   
+<br/>
+
 ### Niroched — Developer
 - Built the entire Morpion (Tic-Tac-Toe) game from scratch, including game logic, win detection, and board state management.
 - Designed and implemented the custom WebSocket matchmaking system: player queuing, room creation, and game state relay, spectator built entirely from scratch without a game server framework.
