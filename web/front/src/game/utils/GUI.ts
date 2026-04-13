@@ -6,7 +6,7 @@ export class GUI {
     private _ui: AdvancedDynamicTexture | null = null;
     private _controls: AdvancedDynamicTexture;
     private _score : AdvancedDynamicTexture;
-    private controlsText : TextBlock;
+    private scoreText : TextBlock;
     private _playerDisconnected : AdvancedDynamicTexture | null = null;
     private _disposing : boolean = false;
     private _interval: number | null = null;
@@ -178,18 +178,18 @@ export class GUI {
         scoreLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         stack.addControl(scoreLabel);
 
-        this.controlsText = new TextBlock();
+        this.scoreText = new TextBlock();
         if (isNear)
-            this.controlsText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
+            this.scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
         else
-            this.controlsText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
-        this.controlsText.color = "white";
-        this.controlsText.fontSize = 14;
-        this.controlsText.fontWeight = "bold";
-        this.controlsText.width = "70px";
-        this.controlsText.fontFamily = "Inter";
-        this.controlsText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        stack.addControl(this.controlsText);
+            this.scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
+        this.scoreText.color = "white";
+        this.scoreText.fontSize = 14;
+        this.scoreText.fontWeight = "bold";
+        this.scoreText.width = "70px";
+        this.scoreText.fontFamily = "Inter";
+        this.scoreText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        stack.addControl(this.scoreText);
     }
 
     public addControlsUI() {
@@ -229,9 +229,9 @@ export class GUI {
 
     public updateScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
         if (isNear)
-            this.controlsText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
+            this.scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
         else
-            this.controlsText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
+            this.scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
     }
 
     public showEndUI(isNear: boolean, scoreNear: number, scoreFar: number) {
@@ -308,8 +308,11 @@ export class GUI {
         this._playerDisconnected?.dispose();
         this._playerDisconnected = null;
 
-        this.controlsText?.dispose();
-        this.controlsText = null;
+        this.scoreText?.dispose();
+        this.scoreText = null;
+
+        this._controls?.dispose();
+        this._controls = null;
 
         this._onReturnToMenu = null;
         this._onReload = null;
