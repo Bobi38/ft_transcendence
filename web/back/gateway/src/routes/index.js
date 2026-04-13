@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
-import Co  from '../models/connect.js';
+import User  from '../models/user.js';
 
 const router = express.Router();
 export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
@@ -17,8 +17,7 @@ async function checktok(tokenn) {
   }
   try {
     const decoded = jwt.verify(tokenn, secret);
-    const co = await Co.findAll({ where: { userId: decoded.id } });
-
+    const co = await User.findAll({ where: { id: decoded.id } });
     return co.length === 0 ? 1 : 0;
   } catch (err) {
     console.log("token error:", err.message);
@@ -37,7 +36,6 @@ const publicRoutes = [
   '/api/secu/recoverypassword_check_code',
   '/api/secu/majPswd',
   '/api/secu/cookie',
-  '/api/secu/checkco',
   '/api/secu/send_mail',
   '/api/secu/maila2f_check_code'
 ];
@@ -45,9 +43,9 @@ const publicRoutes = [
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   const temp = req.cookies.temp;
-
+  let val;
   if (temp){
-    const val = await checktok(temp)
+    val = await checktok(temp)
     if (val === 1)
       res.clearCookie('temp');
   }
@@ -55,7 +53,8 @@ export const authMiddleware = async (req, res, next) => {
   const is_route_public = publicRoutes.find((element) => element === req.path);
 
   console.log("Middleware auth for path WHAT:", req.path);
-  if (is_route_public) {
+  
+  if (is_route_public || req.path === '/api/auth/user') {
     console.log("Public route, no auth required");
     return next() ;
   }
