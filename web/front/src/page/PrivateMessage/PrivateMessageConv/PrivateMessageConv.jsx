@@ -118,11 +118,14 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 
 				<form onSubmit={handler_submit}>
                     <p id={`alert-container`}></p>
-					<input type="text"
-                        value = {input}
-                        onChange={(e) => setInput(e.target.value)}
-					/>
-					<button className="button" type="submit">Send</button>
+					<div>
+						<input type="text"
+                    	    value = {input}
+                    	    onChange={(e) => setInput(e.target.value)}
+							required/>
+
+						<button className="button" type="submit">Send</button>
+					</div>
 				</form>
 
 			</div>

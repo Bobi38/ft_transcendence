@@ -42,14 +42,14 @@ class FriendService {
             const decoded = user.user;
             const name_friend = await User.findOne({where: {name: name}});
             if (!name_friend)
-                return ({success: false, message: "new friend doesn't exist", code: 404});
+                return ({success: false, message: name + " doesn't exist", code: 404});
             if (name_friend.id === decoded.id)
-                return ({success: false, message: "you can't add yourself as a friend", code: 400});
+                return ({success: false, message: "You can't add yourself as friend", code: 400});
             const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
             if (relation.length > 0)
-                return ({success: false, message: "relation already exist", code: 409});
+                return ({success: false, message: "You are already friends", code: 409});
             await Friend.create({Friend1: decoded.id, Friend2: name_friend.id, State: false, WhoAsk: decoded.id});
-            return ({success: true, message: "friend request sent", code: 201});
+            return ({success: true, message: "Friend request sent", code: 201});
         }catch(err){
             return ({success: false, message: "err back add_friend " + err, code: 500});
         }
@@ -63,12 +63,12 @@ class FriendService {
             const decoded = user.user;
             const name_friend = await User.findOne({where: {name: name}});
             if (!name_friend)
-                return ({success: false, message: "friend doesn't exist", code: 404});
+                return ({success: false, message: "Friend doesn't exist", code: 404});
             if (name_friend.id === decoded.id)
-                return ({success: false, message: "you can't ask yourself", code: 400});
+                return ({success: false, message: "You can't ask yourself", code: 400});
             const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
             if (relation.length == 0)
-                return ({success: false, message: "your are not friend", code: 409});
+                return ({success: false, message: "Your are not friend", code: 409});
             const data = {
                 login: name_friend.name,
                 mail: name_friend.mail,
@@ -89,7 +89,7 @@ class FriendService {
             const result = user.user;
             const nfriend = await User.findOne({where: {name: name}});
             if (!nfriend)
-                return ({success: false, message: "friend doesn't exist", code: 404});
+                return ({success: false, message: "Friend doesn't exist", code: 404});
             const relation = await Friend.destroy({where: {[Op.or]: [{Friend1: result.id, Friend2: nfriend.id}, {Friend1: nfriend.id, Friend2: result.id}]}})
             if (relation === 0)
                 return ({success: false, message: "relation", code: 400});
@@ -115,7 +115,7 @@ class FriendService {
                                                     {
                                                         model: User,
                                                         as: 'User2',
-                                                        attributes: ['id', 'name']														
+                                                        attributes: ['id', 'name']
                                                     }
                                                 ]})
 
@@ -141,7 +141,7 @@ class FriendService {
             const friend = await User.findOne({ where: { name: login } });
             const relat = await Friend.findOne({where: { [Op.or]: [{Friend1: result.id, Friend2: friend.id}, {Friend1:friend.id , Friend2: result.id}]}})
             if (relat.length === 0)
-                return ({success: false, message: "relation doesn't exist", code: 409})
+                return ({success: false, message: "Relation doesn't exist", code: 409})
             if (response){
                 await relat.update({State: true})
                 acceptt = true;
@@ -164,7 +164,7 @@ class FriendService {
             const result = user.user;
             const friend = await User.findOne({ where: { name: name } });
             if (!friend)
-                return ({success: false, message: "invalid name", code: 404});
+                return ({success: false, message: "Invalid name", code: 404});
             const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: result.id, Friend2: friend.id}, {Friend1: friend.id, Friend2: result.id}]}})
             if (relation.length === 0)
                 return ({success: false, message: "no relation", code: 404});
