@@ -18,7 +18,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             return;
 
         const url = `/api/chatP`;
-        console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
@@ -33,9 +32,11 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
                 console.log("dlt_friend callbackfail(info) error back ", repjson.message);
             }
         });
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-        console.log("good");
+        if (!repjson || (repjson &&  !repjson.success)){
+            showAlert(repjson.message, "danger");
+            return false;
+        }
+        return true;
     }
 
     async function is_friend(login){
@@ -43,7 +44,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             return;
 
         const url = `/api/friend/${login}/status`;
-        console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
@@ -60,7 +60,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 
     const handler_submit = async (e) => {
         e.preventDefault();
-        console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
         if (input.length > 511) {
             setInput("");
@@ -71,7 +70,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
         const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: login}
 
-        console.log("handle_submit(2): ", data);
 
         const data2 = {...data, monMsg: false};
 
@@ -80,11 +78,13 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             showAlert("You are not, or are no longer, friends with this user.", "danger");
             return;
         }
-        await add_private_message(time, login);
-
-        console.log("handle_submit(3) send via WebSocket data2:", data2);
-        SocketM.sendd('priv', data2);
+        if (!await add_private_message(time, login)){
+            setInput("");
+            return;
+        }
+        
         setInput("");
+        SocketM.sendd('priv', data2);
     }
     return (
 		<div className={`PrivateMessageConv-root`}>
@@ -93,7 +93,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 			<hr />
 
 			<div className="content">
-                <p id={`alert-container`}></p>
 
 				<div className="message">
                     {displayedMessages && displayedMessages.map((msg, index) => { return (
@@ -118,9 +117,10 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 				<hr />
 
 				<form onSubmit={handler_submit}>
+                    <p id={`alert-container`}></p>
 					<input type="text"
-					value = {input}
-					onChange={(e) => setInput(e.target.value)}
+                        value = {input}
+                        onChange={(e) => setInput(e.target.value)}
 					/>
 					<button className="button" type="submit">Send</button>
 				</form>

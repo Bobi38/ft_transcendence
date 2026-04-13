@@ -29,8 +29,10 @@ export default function PrivateMessage() {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         });
-        if (!repjson || (repjson &&  !repjson.success))
+        if (!repjson || (repjson &&  !repjson.success)){
+            
             return;
+        }
         setDisplayedInfoConv(repjson.message)
     }
 
@@ -47,8 +49,6 @@ export default function PrivateMessage() {
             return;
         const url = `/api/chatP/${goToConv}`
 
-        console.log(`${url} goToConv: `,goToConv)
-
         const repjson = await useFetch(`${url}`, {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
@@ -63,21 +63,20 @@ export default function PrivateMessage() {
 
 	useEffect(() => {
         const handle_private_message = async (data) => {
-            console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.type === "updateName_good"){
                 if (data.old_name === goToConv){
                     setGoToConv(data.new_name);
-                    fetch_go_to_conv_private();
-                    fetch_private_message(data.new_name);
+                    await fetch_go_to_conv_private();
+                    await fetch_private_message(data.new_name);
                     return;
                 }
-                fetch_go_to_conv_private();
-                fetch_private_message(goToConv);
+                await fetch_go_to_conv_private();
+                await fetch_private_message(goToConv);
                 return;
             }
             if (data.type == 'priv_mess' && (data.login === goToConv || data.monMsg == true))
                 setDisplayedMessages(prev => [...prev, data]);
-            fetch_go_to_conv_private();
+            await fetch_go_to_conv_private();
         }
         SocketM.on("priv", handle_private_message, "un");
         fetch_private_message(goToConv);

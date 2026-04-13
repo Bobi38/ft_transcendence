@@ -18,13 +18,15 @@
 		margin-bottom: 1rem;
 	}
 
+	.button {
+		position: absolute;
+		right: 1rem;
+		bottom: 1rem;
+	}
+
 	section {
 		width: 100%;
 		article {
-			h3 {
-				//font-size: 1.5rem;
-			}
-
 			p {
 				padding-left: 1rem;
 				padding-bottom: 1rem;

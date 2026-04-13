@@ -140,7 +140,7 @@ export default function Profile() {
                             disabled/>
 
 
-                    <label htmlFor={`tel`}>Phone</label>
+                    <label htmlFor={`tel`}>Phone Number</label>
                     <input  type={`tel`}
                             id={`tel`} name={`tel`}
                             value={user.tel ?? ""}

@@ -498,6 +498,8 @@ These tables represent the history of all games played in the system.
 | ...                                                                                           | ...   | ...    |                          | ...               | ...  | 
 | Backend as microservices.                                                                     | Major | ...    | Tvoisin                  | All systems (Database, both games, each chat system, etc) have their own Docker container and do not communicate between themselves. | Each container has one responsability, and they are loosely coupled as they do not interact. | 
 | Support for additional browsers.                                                              | Minor | ...    | Elevan                   | Working in Chrome, Edge and Firefox | No limitations per browser, consistent UI across them. | 
+| Implement spectator mode for games.                                                           | Minor | ...    | Niroched                 | Morpion-only, implemented using custom matchmaking system using Websockets | Possible to see list of ongoing Morpion games and spectate one of them | 
+
 
 
 - [🗓 𝕊ummary](#summary)
@@ -516,9 +518,28 @@ These tables represent the history of all games played in the system.
     </summary>
 
 ### Fcretin — Product Owner
-- Defined product vision for all major features.
-- Maintained and prioritized features throughout the project.
-- **Challenge**: by quickly identifying lower-priority features and focusing on the main interface.
+- **Modules implemented**:  
+  - Used a framework for both the frontend and backend (React).
+  - Enabled user interaction features between users.
+<br/>
+
+- **Detailed breakdown**:  
+  - Learned how React works and created each page using JSX.
+  - Developed the application logic and a base CSS structure.
+  - Collaborated with tvoisin on the first major feature: the global chat system.
+    - Sent data to the backend.
+    - Received and displayed messages in real time.
+  - After implementing the global chat, we developed:
+    - A friend relationship system.
+    - Dedicated pages for managing and interacting with friends.
+    - All other pages except Pong3d and Morpion
+<br/>
+
+- **Challenges**:  
+  - Defining requirements: architecturing site pages and features in React.
+  - Designing base pages to visually explain and structure the application.
+<br/>
+
 
 ### Tvoisin — Project Manager
 - **Modules implemented**:
@@ -545,10 +566,22 @@ One of the main challenges Tvoisin encountered was transitioning from a monolith
 - Implemented the Makefile, the Express.js gateway, API routes, and the database schema (Sequelize models).
 
 ### Edarnand — Technical Lead
-- Conducted code reviews and make sure every part of the project worked together.
+- Help connecting every part of the project and ensure they worked together.
+- Define, choose and garantee harmony on the technical architecture
 - Paid attention to the standardization of the UI/UX on the site
-- Work with sflechel on Pong3d game and server implementation
-- **Challenge**: ... .
+- **Modules implemented**:
+    - Web-based game : Pong3D, a 3D online multiplayer squash game
+    - Remote players : Real-time two-player networked gameplay via Colyseus
+<br/>
+
+- **Detailed breakdown**:  
+temp
+<br/>
+
+- **Challenges**:  
+temp
+<br/>
+
 
 ### Sflechel — Developer
 - **Modules implemented**:

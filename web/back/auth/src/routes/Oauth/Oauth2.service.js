@@ -12,8 +12,18 @@ class Oauth2Service {
     static async github(back, front, req) {
         try {
             req.session.frontendUrl = front;
-            console.log("Api /login called");
-            const redirectUri = `http://${back}:9000/api/oauth2/github/callback`;
+            console.log("Api /loginnnnnnnn called");
+            let host;
+            let htt;
+            if (status == "PROD"){
+                htt = "https"
+                host = 9443;
+            }
+            else{
+                htt = "http"
+                host = 9000;
+            }
+            const redirectUri = `${htt}://${back}:${host}/api/oauth2/github/callback`;
             const githubAuthUrl = `https://github.com/login/oauth/authorize` + `?client_id=${clientiD}` +`&redirect_uri=${redirectUri}` +`&scope=user:email`;
             return { success: true, message: 'Redirecting to GitHub', url: githubAuthUrl };
         } catch (err) {
@@ -21,7 +31,7 @@ class Oauth2Service {
         }
     }
 
-    static async githubCallback(code, frontendUrl, res) {
+    static async githubCallback(code, frontendUrl, res, req) {
         try{
             const params = new URLSearchParams();
             params.append("client_id", clientiD);
@@ -67,7 +77,6 @@ class Oauth2Service {
             else {
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
-                
                 await result[0].update({MPFA: MPFA});
                 console.log("Existing user logged in:", result[0].name);
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
@@ -101,20 +110,15 @@ class Oauth2Service {
             if (result.length === 0) {
                 const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
-                const re = await Co.create({token: token, userId: newUser.id});
-                MPFA = newUser.MPFA;
+                MPFA = true;
             }
             else {
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date()});
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({MPFA: MPFA});
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
-                const re = await Co.create({token: token, userId: result[0].id});
             }
-            if (status === 'PROD')
-                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
-            else
-                res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+            generateToken(MPFA, token, res)
             return ({ success: true, MPFA: MPFA, message: "connected", code: 200 });
         } catch (err) {
            return ({ success: false, message: 'Google authentication failed: ' + err , code: 500 });

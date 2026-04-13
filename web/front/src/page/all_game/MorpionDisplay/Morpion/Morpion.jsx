@@ -37,8 +37,6 @@ export default function Morpion() {
 
       useEffect(() => {
 
-        console.log("Morpion component called");
-
         const handleSocket = (data) => {
             if (data?.message){
                 setMsg(data.message);

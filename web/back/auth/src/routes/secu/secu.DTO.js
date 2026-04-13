@@ -23,7 +23,7 @@ class SecuDTO {
   }
 
   static validateMaj_Password(data) {
-    const token = data.cookies.ChgPSWD;
+    const token = data.cookies.temp;
     const new_psd = data.body.new_psd;
     if (!token || !new_psd) {
       return { valid: false, message: 'Missing fields', code : 400 };

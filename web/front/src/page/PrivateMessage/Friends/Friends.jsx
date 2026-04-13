@@ -16,18 +16,14 @@ export default function Friends({setGoToAction, setGoToConv}) {
     async function all_friend(){
 
         const url = `/api/friend`;
-        console.log(`${url}`)
 
-        console.log("all_frienqwerqwerqwerqwerqwerd ");
         const repjson = await useFetch(`${url}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
             })
-        console.log("all_frienqwerqwerqwerqwerqwerd repjson", repjson);
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        console.log("all_friend", repjson.message);
         setResponseFriendArray(repjson.message)
     }
 
@@ -37,7 +33,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
             return;
 
         const url = `/api/friend/${name}`;
-        console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
                 method: "DELETE",
                 headers: {'Content-Type': 'application/json'},
@@ -55,7 +50,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
             return;
         await all_friend();
         SocketM.sendd("friend", {type: "maj_frd", login: name});
-        console.log("good");
     }
 
     async function get_friend_profil(name){
@@ -64,7 +58,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
             return;
 
         const url = `/api/friend/${name}/profil`;
-        console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
@@ -78,7 +71,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
             mail: repjson.message.mail,
             tel: repjson.message.tel
         }
-        console.log("data " + data.mail)
         return data;
     }
 
@@ -103,9 +95,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
         await dlt_friend(friend.login);
     }
     const handleFriendProfil = async (friend) => {
-        console.log("name " + friend.login);
         const profil = await get_friend_profil(friend.login);
-        console.log(profil.mail);
         setPopupFriend(profil);
     }
 
@@ -115,13 +105,13 @@ export default function Friends({setGoToAction, setGoToConv}) {
                 <div id="popup-profil">
                     <div>
                         <div className="head">
-                            <h2>Friend profil</h2>
+                            <h2>Friend Profil</h2>
                             <button onClick={()=>(setPopupFriend(null))}>X</button>
                         </div>
                         <div className="content">
-                            <p>login: {popupFriend.login || "..."}</p>
-                            <p>email: {popupFriend.mail || "..."}</p>
-                            <p>tel: {popupFriend.tel || "..."}</p>
+                            <p>Login: {popupFriend.login || "None"}</p>
+                            <p>Email: {popupFriend.mail || "None"}</p>
+                            <p>Phone Number: {popupFriend.tel || "None"}</p>
                         </div>
                     </div>
                 </div>

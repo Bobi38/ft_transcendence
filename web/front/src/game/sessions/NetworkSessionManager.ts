@@ -111,7 +111,6 @@ export class NetworkSessionManager extends EventEmitter implements GameSession {
         else
             colyseusSDK = new Client(`ws://${hostname}:2567`);
         const token = sessionStorage.getItem("token");
-        console.log("mytoken:", token);
         const reconnectionGameToken = localStorage.getItem("reconnectionGameToken");
 
         let room: Room<MyRoomState>;
