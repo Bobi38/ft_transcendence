@@ -35,8 +35,11 @@ class ChatPService {
     }
 
     static async postChatP(data, token) {
-        try {
-            console.log("data " + data );
+        try {            
+            const crypt = encrypt(data.message);
+            if (crypt.length > 511) {
+                return ({ success: false, message: "Message too long", code: 400 });
+            }
             const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: data.id}});
             if (!user.success || !id2)
@@ -45,16 +48,11 @@ class ChatPService {
             let findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
             if (!findchat)
                 findchat = await PrivChat.create({id1: id1.id, id2: id2.id});
-            const crypt = encrypt(data.message);
-            if (crypt.length > 511) {
-                return ({ success: false, message: "Message too long", code: 400 });
-            }
-            console.log(crypt)
             const time = new Date();
             await PrivMess.create({SenderId: id1.id, contenu: crypt, ChatId: findchat.id, time: time});
             findchat.lastmess = new Date();
             await findchat.save()
-            return ({success: true, message: "add messP success", code: 200});
+            return ({success: true, message: "add privChat success", code: 200});
         }catch(err){
             return ({ success: false, message: err, code: 500 });
         }

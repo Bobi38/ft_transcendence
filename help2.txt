@@ -63,7 +63,7 @@ Ils décrivent la même relation vue des deux côtés.
 Cela signifie :
 
 Plusieurs A peuvent avoir plusieurs B
-Plusieurs B peuvent avoir plusieurs A
+Plusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs APlusieurs B peuvent avoir plusieurs A
 
 Exemple : système d’amis
 
