@@ -35,6 +35,7 @@ router.get('/github/callback', async (req, res) => {
     if (!result.success) {
         return errorHandler(result.message, result.code, res);
     }
+    console.log("in callbakc " + result.frontendUrl)
     res.redirect(result.frontendUrl);
 });
 

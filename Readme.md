@@ -498,6 +498,7 @@ These tables represent the history of all games played in the system.
 | ...                                                                                           | ...   | ...    |                          | ...               | ...  | 
 | Backend as microservices.                                                                     | Major | ...    | Tvoisin                  | All systems (Database, both games, each chat system, etc) have their own Docker container and do not communicate between themselves. | Each container has one responsability, and they are loosely coupled as they do not interact. | 
 | Support for additional browsers.                                                              | Minor | ...    | Elevan                   | Working in Chrome, Edge and Firefox | No limitations per browser, consistent UI across them. | 
+| Implement spectator mode for games.                                                           | Minor | ...    | Niroched                 | Morpion-only, implemented using custom matchmaking system using Websockets | Possible to see list of ongoing Morpion games and spectate one of them | 
 
 
 
@@ -531,11 +532,11 @@ These tables represent the history of all games played in the system.
   - After implementing the global chat, we developed:
     - A friend relationship system.
     - Dedicated pages for managing and interacting with friends.
-    - And all other page accept Pong3d and Morpion
+    - All other pages except Pong3d and Morpion
 <br/>
 
 - **Challenges**:  
-  - Defining requirements: deciding what features were needed and when to implement them.
+  - Defining requirements: architecturing site pages and features in React.
   - Designing base pages to visually explain and structure the application.
 <br/>
 
