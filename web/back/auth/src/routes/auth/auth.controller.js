@@ -60,6 +60,7 @@ router.delete('/session', async (req, res) => {
     if (!result.success) {
       return errorHandler(result.message, result.code || 500, res);
     }
+    res.clearCookie('token');
     return res.status(200).json({ success: true, message: "You have been logged out" });
   }
     catch (err) {

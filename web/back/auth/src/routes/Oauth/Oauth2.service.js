@@ -23,6 +23,7 @@ class Oauth2Service {
                 htt = "http"
                 host = 9000;
             }
+            console.log(back + " " + front);
             const redirectUri = `${htt}://${back}:${host}/api/oauth2/github/callback`;
             const githubAuthUrl = `https://github.com/login/oauth/authorize` + `?client_id=${clientiD}` +`&redirect_uri=${redirectUri}` +`&scope=user:email`;
             return { success: true, message: 'Redirecting to GitHub', url: githubAuthUrl };
@@ -47,18 +48,15 @@ class Oauth2Service {
 
             const data = await response.json();
             const accessToken = data.access_token;
-            console.log("GitHub access token:", accessToken);
 
             const userRes = await fetch("https://api.github.com/user", {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
             const user = await userRes.json();
-            console.log("GitHub user info:", user);
             const emailuse = await fetch ("https://api.github.com/user/emails", {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
             const email = await emailuse.json();
-            console.log("GitHub user email:", email);
             const result = await User.findAll({ where: { mail: email[0].email } });
             const name = await User.findAll({where :{name: user.login}})
             if (name.length != 0){
@@ -78,7 +76,6 @@ class Oauth2Service {
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
                 await result[0].update({MPFA: MPFA});
-                console.log("Existing user logged in:", result[0].name);
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: result[0].id});
             }
