@@ -55,6 +55,31 @@ class FriendService {
         }
     }
 
+    static async getFriendProfil(name, token) {
+        try{
+            const user = await get_user_from_token(token);
+            if (!user.success)
+                return { success: false, message: user.message };
+            const decoded = user.user;
+            const name_friend = await User.findOne({where: {name: name}});
+            if (!name_friend)
+                return ({success: false, message: "friend doesn't exist", code: 404});
+            if (name_friend.id === decoded.id)
+                return ({success: false, message: "you can't ask yourself", code: 400});
+            const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
+            if (relation.length == 0)
+                return ({success: false, message: "your are not friend", code: 409});
+            const data = {
+                login: name_friend.name,
+                mail: name_friend.mail,
+                tel: name_friend.tel,
+            }
+            return ({success: true, message: data, code: 201});
+        }catch(err){
+            return ({success: false, message: "err back add_friend " + err, code: 500});
+        }
+    }
+
     static async deleteFriend(name, token) {
         try{
             console.log("in dlt " + name)

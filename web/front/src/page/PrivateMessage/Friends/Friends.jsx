@@ -58,6 +58,30 @@ export default function Friends({setGoToAction, setGoToConv}) {
         console.log("good");
     }
 
+    async function get_friend_profil(name){
+
+        if (!name)
+            return;
+
+        const url = `/api/friend/${name}/profil`;
+        console.log(`${url}`)
+        const repjson = await useFetch(`${url}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            }, null , function(repjson) {
+            });
+        if (!repjson || (repjson &&  !repjson.success))
+            return null;
+        const data = {
+            login: repjson.message.login,
+            mail: repjson.message.mail,
+            tel: repjson.message.tel
+        }
+        console.log("data " + data.mail)
+        return data;
+    }
+
     useEffect(() => {
         all_friend();
 
@@ -79,8 +103,9 @@ export default function Friends({setGoToAction, setGoToConv}) {
         await dlt_friend(friend.login);
     }
     const handleFriendProfil = async (friend) => {
-        
-        const profil = "oui";
+        console.log("name " + friend.login);
+        const profil = await get_friend_profil(friend.login);
+        console.log(profil.mail);
         setPopupFriend(profil);
     }
 

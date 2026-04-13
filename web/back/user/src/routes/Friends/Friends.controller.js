@@ -20,9 +20,24 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/:name/profil', async (req, res) => {
+    const valid = FriendDTO.validateName_Cookies(req.params.name, req);
+    if (!valid.success)
+        return res.status(400).json({success: false, message: valid.message});
+    try{
+        const token = req.cookies.token;
+        const name = req.params.name;
+        const result = await FriendService.getFriendProfil(name, token);
+        if (!result.success)
+            return errorHandler(result.message, result.code, res);
+        return res.status(result.code).json({success: result.success, message: result.message});
+        }catch(err){
+        return res.status(500).json({success: false, message: "err all_friend back ", err});
+    }
+})
+
 
 router.post('/', async (req, res) => {
-    console.log("in ADD FRIEND CONTROLLER"  );
     const valid = FriendDTO.validateName_Cookies(req.body.name, req);
     if (!valid.success)
         return res.status(400).json({success: false, message: valid.message});
