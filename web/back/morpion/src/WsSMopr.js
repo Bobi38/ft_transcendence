@@ -63,7 +63,7 @@ export function initWebSMopr(server) {
 
         const data = JSON.parse(message);
 
-        if (typeof data !== "object" || data === null){
+        if (!data || typeof data !== "object" || typeof data.type !== "string") {
           player.sendList()
           player.sendGame();
           return ;

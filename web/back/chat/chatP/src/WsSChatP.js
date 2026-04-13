@@ -69,6 +69,11 @@ export function initWebSChat(server) {
     socket.on('message', (message) => {
       try{
         const data = JSON.parse(message.toString());
+
+        if (!data || typeof data !== "object" || typeof data.type !== "string") {
+          throw new Error("Invalid message format");
+        }
+
         console.log('=== MESSAGE REÇU IN WSCHAT ===');
         console.log('Type:', data.type);
         console.log('===================');
