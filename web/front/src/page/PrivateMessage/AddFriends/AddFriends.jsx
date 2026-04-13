@@ -44,12 +44,10 @@ export default function AddFriends() {
                 console.log("add_friend callbackfail(info) error back ", repjson.message);
             }
         })
-        if (repjson && !repjson.success && !repjson.status > 500){
+        if (!repjson || (repjson &&  !repjson.success)){
             showAlert(repjson.message, "danger");
             return;
         }
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
         fetch_all_request_friend();
         SocketM.sendd("friend", {type: "req_frd", login: name});
     }
@@ -110,12 +108,11 @@ export default function AddFriends() {
     return (
 
         <div className={`AddFriends-root`}>
-            <p id={`alert-container`}></p>
 			<h1>Friends request</h1>
 			<hr />
 			<div className="content">
 				<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
-           			 <p id={`alert-container`}></p>
+           			<p id={`alert-container`}></p>
 					<input  type={`text`} id={`add-friend`} placeholder="Nickname" required/>
 					<button type={`submit`}>Add friend</button>
 				</form>
