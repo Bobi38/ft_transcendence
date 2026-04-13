@@ -32,8 +32,10 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
                 console.log("dlt_friend callbackfail(info) error back ", repjson.message);
             }
         });
-        if (!repjson || (repjson &&  !repjson.success))
+        if (!repjson || (repjson &&  !repjson.success)){
+            showAlert(repjson.message, "danger");
             return false;
+        }
         return true;
     }
 
@@ -91,7 +93,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 			<hr />
 
 			<div className="content">
-                <p id={`alert-container`}></p>
 
 				<div className="message">
                     {displayedMessages && displayedMessages.map((msg, index) => { return (
@@ -116,9 +117,10 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 				<hr />
 
 				<form onSubmit={handler_submit}>
+                    <p id={`alert-container`}></p>
 					<input type="text"
-					value = {input}
-					onChange={(e) => setInput(e.target.value)}
+                        value = {input}
+                        onChange={(e) => setInput(e.target.value)}
 					/>
 					<button className="button" type="submit">Send</button>
 				</form>

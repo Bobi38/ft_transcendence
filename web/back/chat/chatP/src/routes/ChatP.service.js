@@ -10,22 +10,15 @@ class ChatPService {
             const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: Name}});
             if (!user.success || !id2)
-                return ({success: false, message: "error user not found", code: 400})
+                return ({success: false, message: "error user not found", code: 404})
             const id1 = user.user;
-                        console.log("2")
-                        console.log(id1.id)
-                        console.log(id2.id)
             const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
-            console.log("findchat " + findchat)
-            console.log("coco");
             if (!findchat)
-                return ({success: false, message: 'error conv not found', code: 400});
-            console.log("5")
+                return ({success: false, message: 'error conv not found', code: 404});
             const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
 
             const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id}});
             let ret = "";
-                        console.log("3")
             if (conv.length != 0)
                 ret = maj_conv(id1.id, conv, name);
             return ({success: true, message: ret, code: 200});
@@ -40,7 +33,7 @@ class ChatPService {
             const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: data.id}});
             if (!user.success || !id2)
-                return ({success: false, message: "error user not found", code: 400})
+                return ({success: false, message: "error user not found", code: 404})
             const crypt = encrypt(data.message);
             if (crypt.length > 511) {
                 return ({ success: false, message: "Message too long", code: 413 });
@@ -91,7 +84,6 @@ class ChatPService {
                         ],
                         order: [['lastmess', 'DESC']]
                     });
-            console.log("API fetch_conv test join(3)");
             for(const chat of chats){
                 if (chat.PrivMesses[0].contenu && chat.PrivMesses[0].contenu.length > 0){
                     const enc = chat.PrivMesses[0].contenu;
@@ -103,7 +95,6 @@ class ChatPService {
                     }
                 }
             }
-            console.log("API fetch_conv test join(4)");
             const cleanChats = chats.map(chat => {
             const isUser1 = chat.user1.id === result.id;
             const interlocuteur = isUser1 ? chat.user2 : chat.user1;
