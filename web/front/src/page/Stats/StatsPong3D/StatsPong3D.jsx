@@ -32,7 +32,6 @@ export default function StatsPong3D({ username, setUsername }) {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         }, function(repjson){
-            console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success)){
             setTotalGame(null);
@@ -81,7 +80,6 @@ export default function StatsPong3D({ username, setUsername }) {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         }, function(repjson){
-            console.log("useFetch(info) success history_user: " , repjson.history_user);
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;

@@ -67,7 +67,6 @@ class Oauth2Service {
             else {
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
-                
                 await result[0].update({MPFA: MPFA});
                 console.log("Existing user logged in:", result[0].name);
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
@@ -101,20 +100,15 @@ class Oauth2Service {
             if (result.length === 0) {
                 const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
-                const re = await Co.create({token: token, userId: newUser.id});
-                MPFA = newUser.MPFA;
+                MPFA = true;
             }
             else {
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date()});
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({MPFA: MPFA});
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
-                const re = await Co.create({token: token, userId: result[0].id});
             }
-            if (status === 'PROD')
-                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: 12 * 60 * 60 * 1000 });
-            else
-                res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 12 * 60 * 60 * 1000 });
+            generateToken(MPFA, token, res)
             return ({ success: true, MPFA: MPFA, message: "connected", code: 200 });
         } catch (err) {
            return ({ success: false, message: 'Google authentication failed: ' + err , code: 500 });

@@ -12,12 +12,11 @@
 		width: 100%;
 		justify-content: center;
 		align-items: center;
-		text-align: center;
-	    z-index: 1000;
+        z-index: 1000;
 		background-color: rgba(17, 28, 69, 0.185);
         >div{
             padding: 2rem;
-            background-color: $main-dark;
+            background-color: $main;
 	        border: 4px $active-dark solid;
 	        border-radius: 20px;
             display: flex;
@@ -32,10 +31,6 @@
                 align-items: center;
                 gap: 1rem;
             }
-            .content{
-
-            }
-            
         }
     }
     .content {
@@ -50,7 +45,6 @@
         background-color: rgba(0, 0, 0, 0.1);
         border-radius: 1rem;
         padding: 0.7rem;
-        text-align: center;
 
         display: flex;
         flex-direction: row;

@@ -37,12 +37,10 @@ export default function Navigation({ children }) {
     useEffect(() => {
         showLogRef = showLog;
     }, [showLog]);
-    console.log("connection_handler called with event:", event);
 
     const connection_handler = async (event) => {
         const sho = showLogRef;
         if (event && event.target && event.target.closest('.PopUp-root')) {
-            console.log("connection_handler(1) need to connect")
             return;
         }
         if (sessionStorage.getItem("CodeInput") == "true" || sessionStorage.getItem("CodeInput") == "false"){
@@ -50,8 +48,6 @@ export default function Navigation({ children }) {
             return;
         }
         const resCo = await checkCo();
-        console.log("connection_handler(2) resCo: ",resCo)
-        console.log("connection_handler(3) resCo:", resCo.success + " " + resCo.MPFA);
         if (!resCo.success && !resCo.MPFA) {
             if (sho !== AUTH.LOGIN) setShowLog(AUTH.LOGIN);
             sessionStorage.clear();
