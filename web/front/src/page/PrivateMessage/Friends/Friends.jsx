@@ -11,6 +11,7 @@ import useFetch                 from    "TOOL/useFetch.jsx";
 export default function Friends({setGoToAction, setGoToConv}) {
 
     const [responseFriendArray, setResponseFriendArray] = useState([]);
+    const [popupFriend, setPopupFriend] = useState(null);
 
     async function all_friend(){
 
@@ -58,9 +59,9 @@ export default function Friends({setGoToAction, setGoToConv}) {
     useEffect(() => {
         all_friend();
 
-        const handle_friend_maj = (data) => {
+        const handle_friend_maj = async (data) => {
             if (data.type == 'maj_frd'){
-                all_friend();
+                await all_friend();
                 return ;
             }
             return ;
@@ -77,9 +78,29 @@ export default function Friends({setGoToAction, setGoToConv}) {
         await all_friend();
         SocketM.sendd("friend", {type: "maj_frd", login: friend});
     }
+    const handleFriendProfil = async (friend) => {
+        
+        const profil = "oui";
+        setPopupFriend(profil);
+    }
 
     return (
         <div className={`Friends-root`}>
+            { popupFriend && (
+                <div id="popup-profil">
+                    <div>
+                        <div className="head">
+                            <h2>Friend profil</h2>
+                            <button onClick={()=>(setPopupFriend(null))}>X</button>
+                        </div>
+                        <div className="content">
+                            <p>login: {popupFriend}</p>
+                            <p>mail: {popupFriend}</p>
+                            <p>tel: {popupFriend === "oui" && "..."}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
 			<h1>Friends</h1>
 			<hr />
 			<div className="content">
@@ -90,6 +111,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
 	                    <div className="div-btn">
 	                        <button onClick={() => {setGoToAction(0); setGoToConv(msg.login);}}>Message</button>
+                            <button onClick={() => {handleFriendProfil({login: msg.login })}}>Profil</button>
 	                        <button onClick={() => {handleDelete({login: msg.login })}}>Remove</button>
 	                    </div>
 	                </div>

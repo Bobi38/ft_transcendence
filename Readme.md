@@ -268,7 +268,7 @@ The database contains **11 tables** managed via Sequelize ORM. A `StatMorp` and 
 
 > **Why MySQL + Sequelize?** > **Why MySQL + Sequelize?** MySQL is a battle-tested relational database well-suited to the structured, relational data of this project (users, matches, stats). Sequelize enhances developer productivity with type-safe model definitions, streamlined migrations, and seamless integration with JavaScript, making it particularly well-suited for Node.js applications.
 
-> **Database Schema**
+> **Database Schema**  
 Nous avons qu'une seule database MYSQL que nous visualisons avec myadminphp sous le port 8081
 
 ### Tables and Relationships
@@ -480,22 +480,23 @@ These tables represent the history of all games played in the system.
         <h2>📦 𝕄odules</h2>
     </summary>
 
-| Module                                                                                        | Type  | Points | Implemented By   | Description       |
-| :---                                                                                          | :---  | :---   | :---             | :---              |
-| Use a framework for both the frontend and backend.                                            | Major | 2pts   | Fcretin Tvoisin  | ...               |
-| Implement real-time features using WebSockets or similar technology.                          | Major | 4pts   |                  | ...               |
-| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 6pts   |                  | ...               |
-| Introduce an AI Opponent for games                                                            | Major | 8pts   |                  | ...               |
-| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10pts  |                  | ...               |
-| Allow users to interact with other users.                                                     | Major | 12pts  |                  | ...               |
-| Implement a complete web-based game where users can play against each other.                  | Major | 14pts  |                  | ...               |
-| Add another game with user history and matchmaking.                                           | Major | 16pts  |                  | ...               |
-| Use an ORM for the database.                                                                  | Minor | 17pts  |                  | ...               |
-| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18pts  |                  | ...               |
-| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19pts  |                  | ...               |
-| ...                                                                                           | ...   | ...    |                  | ...               |
-| Backend as microservices.                                                                     | Major | ...    |                  | ...               |
-| Support for additional browsers.                                                              | Minor | ...    |                  | ...               |
+| Module                                                                                        | Type  | Points | Implemented By           | Description       |
+| :---                                                                                          | :---  | :---   | :---                     | :---              |
+| Use a framework for both the frontend and backend.                                            | Major | 2pts   | Fcretin Tvoisin Edarnand | React, Express    |
+| Implement real-time features using WebSockets or similar technology.                          | Major | 4pts   | Tvoisin Niroched         | morpion, notification connection, chat                |
+| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 6pts   | Niroched Sflechel        | colyseus, websocket               |
+| Introduce an AI Opponent for games                                                            | Major | 8pts   | Niroched Sflechel        | morpion, Pond3d   |
+| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10pts  | Sflechel Edarnand        | Pong3d Babylon    |
+| Allow users to interact with other users.                                                     | Major | 12pts  | Fcretin Tvoisin          | friend system, user profile |
+| Implement a complete web-based game where users can play against each other.                  | Major | 14pts  | Sflechel Edarnand        | Pond3d            |
+| Add another game with user history and matchmaking.                                           | Major | 16pts  | Niroched                 | morpion           |
+| ...                                                                                           | ...   | ...    |                          | ...               |
+| Use an ORM for the database.                                                                  | Minor | 17pts  | Tvoisin                  | sequelize         |
+| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18pts  | Tvoisin                  | github google     |
+| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19pts  | Tvoisin                  | send code by mail |
+| ...                                                                                           | ...   | ...    |                          | ...               |
+| Backend as microservices.                                                                     | Major | ...    |                          | ...               |
+| Support for additional browsers.                                                              | Minor | ...    |                          | ...               |
 
 
 - [🗓 𝕊ummary](#summary)

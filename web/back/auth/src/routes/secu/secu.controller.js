@@ -31,7 +31,7 @@ router.get('/checkco', async(req, res) =>{
     }
 })
 
-router.post('/send_mail', SecuMiddleware, async (req, res) => {
+router.post('/send_mail', async (req, res) => {
     console.log("API /api/secu/send_mail");
     const valid = SecuDTO.validateCookie(req, 'temp');
     if (!valid.valid) {

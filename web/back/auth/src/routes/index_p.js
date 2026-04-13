@@ -78,7 +78,7 @@ async function checktok(tokenn) {
   }
   try {
     const decoded = jwt.verify(tokenn, secret);
-    const co = await User.findAll({ where: { userId: decoded.id } });
+    const co = await User.findAll({ where: { id: decoded.id } });
 
     return co.length === 0 ? 1 : 0;
   } catch (err) {
@@ -95,7 +95,7 @@ export const SecuMiddleware = async (req, res, next) => {
 
     if (valid === 1) {
       res.clearCookie('token');
-      return res.status(401).json({ success: false, redirect: true });
+      return res.status(401).json({ success: false, message: "token temp not valid" });
     }
 
     next();
