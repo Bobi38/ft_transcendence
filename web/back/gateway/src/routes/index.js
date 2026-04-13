@@ -29,6 +29,7 @@ async function checktok(tokenn) {
 const publicRoutes = [
   '/',
   '/api/auth/session',
+  '/api/auth/user',
   '/api/oauth2/github',
   '/api/oauth2/github/callback',
   '/api/oauth2/google',
@@ -47,11 +48,11 @@ export const authMiddleware = async (req, res, next) => {
   const is_route_public = publicRoutes.find((element) => element === req.path);
 
   console.log("Middleware auth for path WHAT:", req.path);
-  if (is_route_public || req.path === '/api/auth/user') {
+  if (is_route_public) {
     console.log("Public route, no auth required");
     return next() ;
   }
-  if (!token && (!is_route_public || req.path !== '/api/auth/register')) {
+  if (!token && !is_route_public) {
     return res.status(401).json({ success: false, redirect: true});
   }
   const valid = await checktok(token);
