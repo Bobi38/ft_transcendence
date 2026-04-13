@@ -66,8 +66,8 @@ export default function MailA2F({login_mode}) {
             console.log(repjson.message)
             return ;
         }
-        SocketM.sendd('friend', {type: 'co'});
         setShowLog(AUTH.NONE);
+        SocketM.sendd('friend', {type: 'co_first'});
         if (sessionStorage.getItem("type") === null)
             sessionStorage.setItem('type', "success");
         if (sessionStorage.getItem("message") === null)
