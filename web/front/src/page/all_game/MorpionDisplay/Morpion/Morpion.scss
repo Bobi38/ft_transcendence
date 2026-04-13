@@ -1,0 +1,9 @@
+@use "STYLE/_variable" as *;
+@use "STYLE/_mixin" as mix;
+
+.Morpion-root {
+	flex-direction: column;
+	padding: 0 2rem;
+	gap: 1.5rem;
+	max-width: 1300px;
+}

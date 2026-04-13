@@ -1,0 +1,47 @@
+
+@use '_global.scss';
+@use "STYLE/_variable" as *;
+
+.global-notif {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 9999;
+  font-weight: bold;
+}
+
+.global-notif.co{
+  background-color: $green;
+}
+
+.global-notif.deco{
+  background-color: rgb(128, 73, 0);
+}
+
+.global-notif.msg{
+  background-color: rgb(2, 0, 128);
+}
+
+#alert-container{
+	&.danger { color: $red; }
+	&.success { color: $green; }
+}
+
+  // #alert-container{
+  //     position: fixed;
+
+  //     width: 100%;
+  //     height: 32px;
+
+  //     text-align: center;
+  //     font-size: 24px;
+
+  //     z-index: 3;
+  //     opacity: 70%;
+  //     &.danger { background-color: $red; }
+  //     &.success { background-color: $green; }
+  // }

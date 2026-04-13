@@ -1,0 +1,147 @@
+@use "STYLE/_variable" as *;
+@use "STYLE/_mixin" as mix;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+	scrollbar-width: thin;
+	scrollbar-color: $second-dark transparent;
+}
+
+body {
+	@include mix.cursor("default");
+	background-color: white;
+}
+
+body, #root {
+    height: 100vh;
+    width: 100vw;
+}
+
+p, a, input, h1, h2, h3, h4, h5, h6, button, span, li, label, strong {
+	font-size: 1.15rem;
+	font-family: inter, roboto;
+	font-weight: 700;
+	letter-spacing: 0.75px;
+	color: $second-dark;
+
+	@media (width <= $tablet) {
+		font-size: 1.6rem;
+	}
+	@media (width <= $phone) {
+		font-size: 2rem;
+	}
+}
+
+a {
+	text-decoration: none;
+	@include mix.cursor("pointer");
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+	border-radius: 50px;
+	border: solid 2px $grey-dark;
+	padding: 0.5rem 1rem;
+	transition: all 0.3s;
+
+	&:focus {
+		outline: none;
+		border-color: $active;
+	}
+	&:disabled {
+		background-color: $grey-light;
+		@include mix.cursor;
+	}
+	&::placeholder {
+		text-overflow: ellipsis '..';
+	}
+}
+
+input {
+ 	text-transform: none;
+ 	@include mix.cursor("text");
+}
+
+button, input[type="submit"], label, li {
+	@include mix.cursor("pointer");
+}
+
+button, input[type="submit"]
+{
+	width: fit-content;
+	background-color: $grey-light;
+	border: none;
+	border-radius: 0.5rem;
+	padding: 0.5rem 1rem;
+	font-size: 1.15rem;
+	transition: all 0.2s;
+
+	&:hover{
+		background-color: $grey;
+	}
+	@media (width <= $tablet) {
+		font-size: 1.3rem;
+	}
+	@media (width <= $phone) {
+		font-size: 1.6rem;
+	}
+}
+
+li {
+	list-style-type: none;
+}
+
+hr {
+	width: 100%;
+	border: 4px solid $grey;
+	border-radius: 50px;
+}
+
+.scanlines {
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1001;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            transparent 60%,
+            rgba(0, 0, 0, 0.07) 40%
+        );
+        background-size: 100% 4px;
+        opacity: 0.6;
+    }
+}
+
+.hidden {display: none;}
+.visible {display: block;}
+
+.center {
+	justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+:root{
+	font-size: 16px;
+}
+
+@media (width <= $tablet) {
+	:root{
+		font-size: 13px;
+	}
+}
+@media (width <= $phone) {
+	:root{
+		font-size: 10px;
+	}
+}

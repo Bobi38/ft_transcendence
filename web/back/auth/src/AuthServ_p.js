@@ -1,0 +1,61 @@
+import express from 'express';
+import session from "express-session";
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+
+import authroute from './routes/auth/auth.controller.js'
+import oauth2route from './routes/Oauth/Oauth2.controller.js'
+import securoute from './routes/secu/secu.controller.js'
+
+dotenv.config();
+
+const PORT = process.env.PORT || 9005;
+const isDev = process.env.NODE_ENV !== 'production';
+const SECSESSION = process.env.SEC_SESSION;
+
+const app = express();
+
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+app.use(cookieParser());
+app.use(session({
+  secret: SECSESSION,
+  resave: false,
+  saveUninitialized: true
+}))
+
+app.use((req, res, next) => {
+  console.log(`[AUTH SERVICE] ${req.method} ${req.path}`);
+  next();
+});
+
+app.use('/auth', authroute);
+app.use('/oauth2', oauth2route);
+app.use('/secu', securoute);
+
+// 404
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// error handler
+app.use((err, req, res, next) => {
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'Payload too large' });
+  }
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
+});
+
+(async () => {
+  try {
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+      if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
+    });
+  } catch (err) {
+    console.error("Error while initializing server :", err);
+    process.exit(1);
+  }
+})();

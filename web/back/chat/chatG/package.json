@@ -1,0 +1,23 @@
+{
+  "name": "ft_transcendence-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "ChatServ.js",
+  "scripts": {
+    "start": "node ChatServ.js",
+    "dev": "nodemon src/ChatServ.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+	"mysql2": "^3.16.0",
+    "sequelize": "^6.37.1",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

@@ -1,0 +1,13 @@
+@use "STYLE/_mixin" as mix;
+
+.Hr-root {
+    @include mix.full;
+
+	.hr-custom{
+		margin: 0;
+		@include mix.cursor("grab");
+
+		transition: opacity 0.2s;
+        &:hover { opacity: 0.5; }
+	}
+}

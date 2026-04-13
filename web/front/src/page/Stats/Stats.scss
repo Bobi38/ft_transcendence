@@ -1,0 +1,23 @@
+@use "STYLE/variable" as *;
+@use "STYLE/_mixin" as mix;
+
+.Stats-root{
+	@include mix.page;
+
+    display: flex;
+    flex-direction: column;
+	align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+
+	h1 {
+		text-align: center;
+		font-size: 1.25rem;
+	}
+
+	.btn_container{
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+    }
+}

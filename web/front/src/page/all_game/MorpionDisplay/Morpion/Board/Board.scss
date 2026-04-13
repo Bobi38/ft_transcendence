@@ -1,0 +1,16 @@
+@use "STYLE/_mixin" as mix;
+@use "STYLE/_variable" as *;
+
+.Board-root{
+	height: 100%;
+	width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+
+    .square {
+        @include mix.default_card;
+        font-size: 2rem;
+    }
+}

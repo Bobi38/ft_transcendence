@@ -1,0 +1,90 @@
+@use "STYLE/_variable" as *;
+@use "STYLE/_mixin" as mix;
+
+.PrivateMessage-root{
+	@include mix.page;
+    display: flex;
+    flex-direction: row;
+
+	padding: 0.75rem;
+
+	h1 {
+		font-size: 1.75rem;
+		text-align: center;
+		margin-bottom: 1rem
+	}
+	h1 + hr {
+		margin-bottom: 1rem
+	}
+
+	input[type="text"] {
+		width: 100%;
+	}
+
+	.display-screen{
+	    @include mix.full;
+		padding-top: 0.5rem;
+		padding-left: 0.5rem;
+
+		> div {
+			@include mix.full;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.content {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-bottom: 0.5rem;
+		}
+    }
+
+    .big {
+		margin: 1rem 0;
+	}
+    .info {
+	    @include mix.full;
+
+        display: flex;
+        flex-direction: column;
+
+		scrollbar-width: thin;
+		padding-right: 0.5rem;
+
+        .bloc-friend-addfriend, .bloc-last-conv-friend {
+			display: flex;
+			flex-direction: column;
+			padding: 0.5rem 0;
+			gap: 1rem;
+
+            .bloc-left {
+                width: 100%;
+                @include mix.default_card;
+            }
+        }
+
+        .bloc-last-conv-friend {
+            gap: 1rem;
+
+            .bloc-left {
+
+                .truncate ,h2, p{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin: 0;
+                }
+                .header-last-conv{
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    h2 {
+                        width: 30%;
+                    }
+                }
+            }
+        }
+    }
+}

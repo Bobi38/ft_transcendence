@@ -1,0 +1,40 @@
+@use "STYLE/variable" as *;
+
+.Paging-root{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+
+    width: 100%;
+    height: 58px;
+    padding: 0.5rem;
+    ul {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+
+        padding: 0.3rem;
+        border-radius: 25px;
+        button {
+            background: none;
+            border: none;
+			padding: 0;
+        }
+        li {
+			background-color: white;
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+			transition: all 0.2s;
+        }
+		.onhover:hover, .active {
+			background-color: $active;
+		}
+    }
+}
+
+
+
+
+

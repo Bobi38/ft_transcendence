@@ -1,0 +1,51 @@
+/* Css */
+import "./PopUp.scss";
+
+/* Components */
+import { AUTH, useAuth }        from    "HOOKS/useAuth.jsx";
+import useFetch			        from    "TOOL/useFetch.jsx";
+import Login                    from    "./script/Login.jsx";
+import PasswordForget           from    "./script/PasswordForget.jsx";
+import MailA2F                  from    "./script/MailA2F.jsx";
+import Register                 from    "./script/Register.jsx";
+
+
+export default function PopUp() {
+
+    const {showLog, setShowLog} = useAuth();
+
+    async function login_mode() {
+
+        sessionStorage.clear();
+        const url = `/api/secu/cookie`;
+        console.log(`${url}`)
+
+        await useFetch(`${url}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+        }, null, null, true)
+        setShowLog(AUTH.LOGIN);
+    }
+
+    const password_forget_mode = () => {
+        sessionStorage.clear();
+        setShowLog(AUTH.PASSFORGET);
+    };
+
+    const register_mode = () => {
+        sessionStorage.clear();
+        setShowLog(AUTH.REGISTER);
+    }
+
+    return (
+        <div className={`PopUp-root`}>
+            <p id={`alert-container`}></p>
+
+            {showLog === AUTH.LOGIN && <Login password_forget_mode={password_forget_mode} register_mode={register_mode}/>}
+            {showLog === AUTH.MAILA2F && <MailA2F login_mode={login_mode}/>}
+            {showLog === AUTH.REGISTER && <Register login_mode={login_mode}/>}
+            {showLog === AUTH.PASSFORGET && <PasswordForget login_mode={login_mode}/>}
+        </div>
+    );
+}

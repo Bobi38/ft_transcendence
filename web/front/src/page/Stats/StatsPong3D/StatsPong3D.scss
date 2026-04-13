@@ -1,0 +1,57 @@
+@use "STYLE/variable" as *;
+
+$width_history: 80%;
+$width_game_winrate: 100% - $width_history;
+
+.StatsPong3D-root {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .history-container , .game-winrate {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .history-container {
+        width: $width_history;
+        padding-right: 0;
+
+        scrollbar-width: thin;
+        display: flex;
+        flex-direction: column;
+
+        .history-card-container{
+            height: calc(100% - 58px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+
+	.aside{
+
+        display: flex;
+        flex-direction: column;
+        width: $width_game_winrate;
+        height: 100%;
+        padding-bottom: 0.5rem;
+		.game-winrate {
+			overflow: hidden auto;
+			width: 100%;
+		}
+        .search {
+            display: flex;
+            flex-direction: column;
+            padding: 0.3rem;
+            .searchmorp {
+                input[type="text"] {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

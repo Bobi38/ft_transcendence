@@ -1,0 +1,273 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./conf/db/conf.cnf:/etc/mysql/conf.d/my.cnf
+      - ./conf/db/conf.sh:/docker-entrypoint-initdb.d/conf.sh
+    networks:
+      - home
+    env_file: 
+      - .env_dev
+    secrets:
+      - data_pswd
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  myadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: myadmin
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+    env_file: 
+      - .env_dev
+    networks:
+      - home
+    restart: always
+  
+  init_service:
+    container_name: init_service
+    build:
+      context: ./web/back
+      dockerfile: init_db/Dockerfile
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    secrets:
+      - cle_pswd
+      - cle_chat
+    restart: "no"
+    networks:
+      - home
+
+  add_service:
+    container_name: add_service
+    build:
+      context: ./web/back
+      dockerfile: add_db/Dockerfile
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    secrets:
+      - cle_pswd
+      - cle_chat
+    restart: "no"
+    networks:
+      - home
+    profiles:
+      - add
+
+  front:
+    container_name: front
+    build: 
+      context: ./web/front
+      dockerfile: Dockerfile
+      target: dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    env_file: 
+      - .env_dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web/front/:/app
+      - /app/node_modules
+    restart: always
+
+
+  gateway:
+    build:
+      context: ./web/back/gateway
+      dockerfile: Dockerfile
+      target: dev
+    container_name: gateway
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./web/back/gateway:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+    restart: always
+  
+  auth:
+    build:
+      context: ./web/back/auth
+      dockerfile: Dockerfile
+      target : dev
+    container_name: auth
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9005:9005"
+    volumes:
+      - ./web/back/auth:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+    restart: always
+
+  chatp_service:
+    build: 
+      context: ./web/back/chat/chatP
+      dockerfile: Dockerfile
+      target: dev
+    container_name: chatp_service
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9002:9002"
+    volumes:
+      - ./web/back/chat/chatP:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+    restart: always
+
+  chatg_service:
+    build: 
+      context: ./web/back/chat/chatG
+      dockerfile: Dockerfile
+      target: dev
+    container_name: chatg_service
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./web/back/chat/chatG:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+    restart: always
+
+  user_service:
+    build: 
+      context: ./web/back/user
+      dockerfile: Dockerfile
+      target: dev
+    container_name: user_service
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9003:9003"
+    volumes:
+      - ./web/back/user:/app
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
+    secrets:
+    - cle_pswd
+    - cle_chat
+    restart: always
+
+  pong3d:
+    build: 
+      context: ./web/back/pong3D
+      dockerfile: Dockerfile
+      target: dev
+    container_name: pong3d
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "2567:2567"
+    secrets:
+      - cle_pswd
+      - cle_chat
+    volumes:
+      - ./web/back/pong3D:/app
+      - ./web/front/src/game/shared:/app/src/shared
+      - ./web/back/models:/app/src/models
+      - /app/node_modules
+    cap_add:
+      - NET_ADMIN
+    restart: always
+
+  morpion:
+    build:
+      context: ./web/back
+      dockerfile: morpion/Dockerfile
+      target: dev
+    container_name: morpion
+    env_file: 
+      - .env_dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - home
+    ports:
+      - "9004:9004"
+    secrets:
+      - cle_pswd
+      - cle_chat
+    volumes:
+      - ./web/back/morpion/src:/app/src
+      - ./web/back/models:/app/src/models
+      - ./web/back/common/ws:/app/common/ws
+      - /app/node_modules
+    restart: always
+
+secrets:
+  data_pswd:
+    file: ./conf/secrets/data_pswd
+  cle_chat:
+    file: ./conf/secrets/cle_chat
+  cle_pswd:
+    file: ./conf/secrets/cle_pswd
+
+networks:
+  home:
+    driver: bridge

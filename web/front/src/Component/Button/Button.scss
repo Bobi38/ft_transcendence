@@ -1,0 +1,24 @@
+@use "STYLE/_variable" as *;
+
+.button {
+	background-color: $active;
+	padding: 1rem 1.5rem;
+	border-radius: 50px;
+	border: 4px $active-dark solid;
+	color: white;
+	transition: all 0.2s;
+
+	&:hover, &:focus{
+		background-color: $active;
+		outline: none;
+		scale: 1.05;
+		border-color: $active-light;
+		box-shadow: 0px 0px 7px 5px #ffffff93;//half transparent
+	}
+	&:active{
+		scale: 1.15;
+	}
+	@media (width <= $tablet) {
+		font-size: 1.5rem;
+    }
+}

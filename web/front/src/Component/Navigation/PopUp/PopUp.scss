@@ -1,0 +1,84 @@
+@use "STYLE/_variable" as *;
+@use "STYLE/_mixin" as mix;
+
+.PopUp-root {
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    padding: 1.5rem;
+	border: $second-dark 5px solid;
+	border-radius: 40px;
+	box-shadow: 0px 0px 30px 30px #d5e4efbc;
+    max-width: 500px;
+
+    h1{
+        font-size: 1.5rem;
+    }
+    .script-in-root {
+        display: flex;
+        flex-direction: column;
+		align-items: center;
+        gap: 1.5rem;
+
+        form {
+            display: flex;
+            flex-direction: column;
+			align-items: center;
+            gap: 0.5rem;
+
+            input {
+				width: 100%;
+			}
+			input[type="checkbox"] {
+				width: fit-content;
+				margin-right: 1.5rem;
+			}
+
+			a {
+				text-decoration: underline solid;
+				transition: all 0.2s;
+				&:hover {
+					color: $active-dark;
+				}
+			}
+
+            .input-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 100%;
+                .password-field {
+                    padding: 10px;
+                    padding-right: 40px;//for the icon
+                }
+                .toggle-icon {
+                    position: absolute;
+                    right: 12px;
+					@include mix.cursor("pointer");
+                    display: flex;
+                    align-items: center;
+                    color: $grey-dark;
+                    font-size: 1.2rem;
+					transition: all 0.2s;
+
+                    &:hover {
+                        color: #000;
+                    }
+                }
+            }
+        }
+        .policy{
+            height: 200px;
+            width: 100%;
+            overflow-y: auto;
+        }
+        .button-container{
+            display: flex;
+            flex-direction: column;
+			gap: 0.5rem;
+			button {
+				width: 100%;
+			}
+        }
+    }
+}

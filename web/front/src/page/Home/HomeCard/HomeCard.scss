@@ -1,0 +1,19 @@
+@use "STYLE/_variable" as *;
+@use "STYLE/_mixin" as mix;
+
+.HomeCard-root {
+    @include mix.default_card;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+	overflow: hidden;
+	min-height: 100px;
+	text-align: center;
+
+	@media (width <= $phone) {
+		min-height: 200px;
+	}
+}
+

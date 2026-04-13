@@ -1,0 +1,8 @@
+conf/secrets/*
+secrets
+.env*
+*rror
+*nico*
+.vite
+*dist
+node_modules

@@ -1,0 +1,104 @@
+
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+
+//router
+import { authMiddleware } from './routes/index.js';
+
+dotenv.config();
+
+const PORT = process.env.PORT || 9000;
+const isDev = process.env.NODE_ENV !== 'production';
+
+const app = express();
+
+app.use(cookieParser());
+app.use(authMiddleware);
+
+app.use('/api/auth', createProxyMiddleware({
+  target: 'http://auth:9005',
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/auth' + path;
+  },
+}));
+
+app.use('/api/oauth2', createProxyMiddleware({
+  target: 'http://auth:9005',
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/oauth2' + path;
+  },
+}))
+
+app.use('/api/secu', createProxyMiddleware({
+  target: 'http://auth:9005',
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/secu' + path;
+  },
+}))
+
+app.use('/api/profile', createProxyMiddleware({
+  target: 'http://user_service:9003',
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/profile' + path;
+  },
+}))
+
+app.use('/api/friend', createProxyMiddleware({
+  target: 'http://user_service:9003',
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return '/friend' + path;
+  },
+}))
+
+app.use('/api/chatG', createProxyMiddleware({
+  target: 'http://chatg_service:9001',
+  changeOrigin: true
+}))
+
+app.use('/api/chatP', createProxyMiddleware({
+  target: 'http://chatp_service:9002',
+  changeOrigin: true
+}))
+
+const pong3dProxy = createProxyMiddleware({
+  target: 'http://pong3d:2567',
+  changeOrigin: true,
+  ws: true,
+  pathRewrite: {
+    '^/api/pong3d': '',
+  },
+});
+
+app.use('/api/pong3d', pong3dProxy);
+
+app.use('/api/morpion', createProxyMiddleware({
+  target: 'http://morpion:9004',
+  changeOrigin: true
+}))
+
+
+app.use((req, res) => { res.status(404).json({ error: "Api Not found" }); });
+
+(async () => {
+  try {
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+      if (isDev) console.log("\x1b[32m%s\x1b[0m",`Proxying front to Vite at http://localhost:5173`);
+    });
+    server.on('upgrade', (req, socket, head) => {
+      if (req.url.startsWith('/api/pong3d')) {
+        pong3dProxy.upgrade(req, socket, head);
+      }
+    });
+  } catch (err) {
+    console.error("Error while initializing server :", err);
+    process.exit(1);
+  }
+})();
