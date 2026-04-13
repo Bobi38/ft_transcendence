@@ -40,8 +40,6 @@ export default function PopUp() {
 
     return (
         <div className={`PopUp-root`}>
-            <p id={`alert-container`}></p>
-
             {showLog === AUTH.LOGIN && <Login password_forget_mode={password_forget_mode} register_mode={register_mode}/>}
             {showLog === AUTH.MAILA2F && <MailA2F login_mode={login_mode}/>}
             {showLog === AUTH.REGISTER && <Register login_mode={login_mode}/>}

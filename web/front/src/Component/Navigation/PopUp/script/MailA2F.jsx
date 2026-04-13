@@ -90,6 +90,7 @@ export default function MailA2F({login_mode}) {
             {showMode === "send_code" && (
                 <>
                     <button type={`button`} id={`mailverif`} onClick={(e) => {maila2f_send_code(e);}}>Send mail verification</button>
+					<hr />
                     <button type={`button`} onClick={login_mode}>Connexion</button>
                 </>
             )}
@@ -97,7 +98,8 @@ export default function MailA2F({login_mode}) {
             {showMode === "check_code" && (
                 <>
                     <form id={`maila2f`} onSubmit={(e) => {maila2f_check_code(e)}}>
-                        <input type={`text`} id={`code`} name={`code`} placeholder={`Entrez Code`}/>
+    		    	    <p id={`alert-container`}></p>
+                        <input type={`text`} id={`code`} name={`code`} placeholder={`Your Code`}/>
                         <button type={`submit`}>Valid</button>
                     </form>
                     <hr/>

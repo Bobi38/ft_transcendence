@@ -80,6 +80,9 @@ button, input[type="submit"]
 	&:hover{
 		background-color: $grey;
 	}
+	&:disabled {
+		background-color: $grey-dark;
+	}
 	@media (width <= $tablet) {
 		font-size: 1.3rem;
 	}
