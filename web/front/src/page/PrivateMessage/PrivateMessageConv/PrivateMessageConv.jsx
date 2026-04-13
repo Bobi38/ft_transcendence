@@ -33,7 +33,8 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             }
         });
         if (!repjson || (repjson &&  !repjson.success))
-            return;
+            return false;
+        return true;
     }
 
     async function is_friend(login){
@@ -75,10 +76,13 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             showAlert("You are not, or are no longer, friends with this user.", "danger");
             return;
         }
-        await add_private_message(time, login);
-
-        SocketM.sendd('priv', data2);
+        if (!await add_private_message(time, login)){
+            setInput("");
+            return;
+        }
+        
         setInput("");
+        SocketM.sendd('priv', data2);
     }
     return (
 		<div className={`PrivateMessageConv-root`}>
