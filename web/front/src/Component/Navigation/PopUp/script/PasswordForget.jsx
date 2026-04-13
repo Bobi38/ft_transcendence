@@ -93,7 +93,7 @@ export default function PasswordForget({login_mode}) {
         }
 
         if (password !== confirmePassword) {
-            showAlert("Passwords didnt match", "danger");
+            showAlert("Passwords did not match", "danger");
             return;
         }
 
@@ -163,31 +163,31 @@ export default function PasswordForget({login_mode}) {
                 <>
                     <form onSubmit={(e) => {handle_pass(e)}}>
 
-                        <label htmlFor={`password`}>Nouveau Mot de passe</label>
+                        <label htmlFor={`password`}>New password</label>
                         <div className={`input-wrapper`}>
                             <input type={showPassword ? "text" : "password"}
                                 id={`password`} name={`password`}
                                 className={`password-field`}
-                                placeholder={`Votre nouveau mot de passe`}
+                                placeholder={`Password`}
                                 />
                             <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <label htmlFor={`confirmePassword`}>Confirmer Mot de passe</label>
+                        <label htmlFor={`confirmePassword`}>Confirm your password</label>
                         <div className={`input-wrapper`}>
                             <input type={showPassword ? "text" : "password"}
                                 id={`confirmePassword`} name={`confirmePassword`}
                                 className={`password-field`}
-                                placeholder={`Confirmation du nouveau mot de passe`}
+                                placeholder={`Password`}
                                 />
                             <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <VscEyeClosed /> : <VscEye />}
                             </span>
                         </div>
 
-                        <button type={`submit`}>Modifier mon mot de passe</button>
+                        <button type={`submit`}>Validate</button>
 
                     </form>
 					<hr />
