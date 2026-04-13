@@ -119,9 +119,9 @@ export default function Friends({setGoToAction, setGoToConv}) {
                             <button onClick={()=>(setPopupFriend(null))}>X</button>
                         </div>
                         <div className="content">
-                            <p>login: {popupFriend?.login || "..."}</p>
-                            <p>email: {popupFriend?.email || "..."}</p>
-                            <p>tel: {popupFriend?.tel || "..."}</p>
+                            <p>login: {popupFriend.login || "..."}</p>
+                            <p>email: {popupFriend.mail || "..."}</p>
+                            <p>tel: {popupFriend.tel || "..."}</p>
                         </div>
                     </div>
                 </div>
