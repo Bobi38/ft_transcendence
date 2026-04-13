@@ -481,23 +481,23 @@ These tables represent the history of all games played in the system.
         <h2>📦 𝕄odules</h2>
     </summary>
 
-| Module                                                                                        | Type  | Points | Implemented By           | Description       |
-| :---                                                                                          | :---  | :---   | :---                     | :---              |
-| Use a framework for both the frontend and backend.                                            | Major | 2pts   | Fcretin Tvoisin Edarnand | React, Express    |
-| Implement real-time features using WebSockets or similar technology.                          | Major | 4pts   | Tvoisin Niroched         | morpion, notification connection, chat                |
-| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 6pts   | Niroched Sflechel        | colyseus, websocket               |
-| Introduce an AI Opponent for games                                                            | Major | 8pts   | Niroched Sflechel        | morpion, Pond3d   |
-| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10pts  | Sflechel Edarnand        | Pong3d Babylon    |
-| Allow users to interact with other users.                                                     | Major | 12pts  | Fcretin Tvoisin          | friend system, user profile |
-| Implement a complete web-based game where users can play against each other.                  | Major | 14pts  | Sflechel Edarnand        | Pond3d            |
-| Add another game with user history and matchmaking.                                           | Major | 16pts  | Niroched                 | morpion           |
-| ...                                                                                           | ...   | ...    |                          | ...               |
-| Use an ORM for the database.                                                                  | Minor | 17pts  | Tvoisin                  | sequelize         |
-| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18pts  | Tvoisin                  | github google     |
-| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19pts  | Tvoisin                  | send code by mail |
-| ...                                                                                           | ...   | ...    |                          | ...               |
-| Backend as microservices.                                                                     | Major | ...    |                          | ...               |
-| Support for additional browsers.                                                              | Minor | ...    |                          | ...               |
+| Module                                                                                        | Type  | Points | Implemented By           | Implementation    | Justification |
+| :---                                                                                          | :---  | :---   | :---                     | :---              | :----|
+| Use a framework for both the frontend and backend.                                            | Major | 2 pts  | Fcretin Tvoisin Edarnand | React for Frontend, Express for Backend  | | 
+| Allow users to interact with other users.                                                     | Major | 4 pts  | Fcretin Tvoisin          | Public chat, private chat with friend system, and user profiles | Two chat systems for communication between users, a friend system allowing to add, remove, see and chat with friends, and ability to see all user profiles. | 
+| Implement real-time features using WebSockets or similar technology.                          | Major | 6 pts  | Tvoisin Niroched         | Morpion game, notifications and chat systems all rely on Websockets | Morpion, notifications and chats get real-time updates thanks to JSON broadcasted via Websockets. | 
+| Implement a complete web-based game where users can play against each other.                  | Major | 8 pts  | Sflechel Edarnand        | 3D real-time Squash game where missing the ball loses a point | Two-players game with live matches over the network. | 
+| Implement advanced 3D graphics using a library like Three.js or Babylon.js.                   | Major | 10 pts | Sflechel Edarnand        | 3D squash court, players and ball allowing movement in 3D implemented using BabylonJS | Full 3D environment with base color, normal map and ambiant occlusion, and soft shadows, running smoothly. | 
+| Add another game with user history and matchmaking.                                           | Major | 12 pts | Niroched                 | 2D game of Tic-Tac-Toe | Two-players games with live matches played over the network, game statistics are tracked and displayed. | 
+| Remote players — Enable two players on separate computers to play the same game in real-time. | Major | 14 pts | Niroched Sflechel        | Pong3D uses Colyseus for data synchronization and Websocket handling, and Morpion uses a custom Websocket server | Pong3D and Morpion allow remote players over the network in real network conditions of latency and jitter, and allow for reconnection to ongoing games. | 
+| Introduce an AI Opponent for games                                                            | Major | 16 pts | Niroched Sflechel        | For Pong3D, custom AI system predicting ball position. For Morpion simple AI that first try to win, second to counter the enemy and third plays randomly. | PongAI is subject to the same limitations as human players. | 
+| ...                                                                                           | ...   | ...    |                          | ...               | ...  | 
+| Use an ORM for the database.                                                                  | Minor | 17 pts | Tvoisin                  | Sequelize         | | 
+| Implement remote authentication with OAuth 2.0 (Google, GitHub, 42, etc.).                    | Minor | 18 pts | Tvoisin                  | Github, Goodle    | Possible to register or connect with Google or Github accounts. | 
+| Implement a complete 2FA (Two-Factor Authentication) system for the users.                    | Minor | 19 pts | Tvoisin                  | At session start after connecting email verification is required. |  | 
+| ...                                                                                           | ...   | ...    |                          | ...               | ...  | 
+| Backend as microservices.                                                                     | Major | ...    | Tvoisin                  | All systems (Database, both games, each chat system, etc) have their own Docker container and do not communicate between themselves. | Each container has one responsability, and they are loosely coupled as they do not interact. | 
+| Support for additional browsers.                                                              | Minor | ...    | Elevan                   | Working in Chrome, Edge and Firefox | No limitations per browser, consistent UI across them. | 
 
 
 
@@ -541,6 +541,22 @@ These tables represent the history of all games played in the system.
 
 
 ### Tvoisin — Project Manager
+- **Modules implemented**:
+    - Use ORM for database : Sequelize
+    - authentication with OAuth 2.0 : Github, Google
+    - Two-Factor Authentication : sends a verification code by email
+    - Implement real-time features using WebSockets or similar technology   
+<br/>
+
+- **Detailed breakdown**:
+Tvoisin was responsible for designing and developing the backend, including the implementation of a microservices architecture and the initialization of the database. He selected Sequelize as the ORM due to its compatibility with Node.js and its ease of configuration. In addition, he implemented WebSocket servers to handle real-time features such as general chat, private messaging, the tic-tac-toe game, and the "friends" system. These features enable real-time notifications for user connections and disconnections. This work also required coordinating the initialization of WebSockets on the frontend. Furthermore, the implementation of Two-Factor Authentication (2FA) and OAuth 2.0 authentication mechanisms was carried out as a personal initiative.
+
+<br/>
+
+- **Challenges**:
+One of the main challenges Tvoisin encountered was transitioning from a monolithic architecture to a microservices-based architecture using Docker Compose. Despite having limited prior experience with Dockerfiles and Docker Compose, he successfully addressed this challenge. Another significant challenge involved implementing WebSocket communication across both backend and frontend components. This aspect of the project proved to be both technically demanding and highly rewarding once fully operational.
+  
+<br/>
 
 - Organized sprint planning and retrospectives.
 - Tracked tasks and deadlines.

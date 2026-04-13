@@ -23,7 +23,6 @@ export default function HomeCardWeather() {
 			try {
 				if (showLog != AUTH.NONE)
 					return ;
-				console.log("fetchWeather(1) called");
 				const response = await fetch("/api/profile/Homeweather", {
 					method: "GET",
 					headers: {'Content-Type': 'application/json'},

@@ -8,7 +8,6 @@ import "./Pong3D.scss";
 /* Components */
 import Button                   from    "COMP/Button/Button.jsx"
 import checkCo                  from    "TOOL/fonction_usefull.js"
-import {showAlert}              from    "TOOL/fonction_usefull.js"
 import { App as GameApp }       from    "FRONT/game/App.ts";
 
 function isMobileDevice() {
@@ -51,7 +50,6 @@ export default function Pong3D({type}) {
             const onUnauthorized = () => {setError(true)}
             const navigateHome = () => navigate('/');
             const reloading = () =>  setGameKey(prev => prev + 1);
-            console.log("ref: ", canvasRef.current)
             gameApp = new GameApp({
                 canvas: canvasRef.current,
                 isOffline: type,
