@@ -105,13 +105,13 @@ export default function Friends({setGoToAction, setGoToConv}) {
                 <div id="popup-profil">
                     <div>
                         <div className="head">
-                            <h2>Friend profil</h2>
+                            <h2>Friend Profil</h2>
                             <button onClick={()=>(setPopupFriend(null))}>X</button>
                         </div>
                         <div className="content">
-                            <p>login: {popupFriend.login || "..."}</p>
-                            <p>email: {popupFriend.mail || "..."}</p>
-                            <p>tel: {popupFriend.tel || "..."}</p>
+                            <p>Login: {popupFriend.login || "None"}</p>
+                            <p>Email: {popupFriend.mail || "None"}</p>
+                            <p>Phone Number: {popupFriend.tel || "None"}</p>
                         </div>
                     </div>
                 </div>
