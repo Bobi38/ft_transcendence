@@ -65,11 +65,11 @@ export function initWebSFriend(server) {
     try{
       const iid = idd++;
       socket.id = iid;
-      console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-      console.log('URL:', req.url);
-      console.log('Headers upgrade:', req.headers.upgrade);
-      console.log('Headers socket:', socket.id);
-      console.log(req.headers.cookie)
+      // console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
+      // console.log('URL:', req.url);
+      // console.log('Headers upgrade:', req.headers.upgrade);
+      // console.log('Headers socket:', socket.id);
+      // console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
       if (!token)
         return;
@@ -113,23 +113,30 @@ export function initWebSFriend(server) {
         if (data.type === 'updateName'){
           const nono = socket.userId;
           socket.username = data.new_name;
+          const friend = await getAllFriendsFromToken(socket.userId);
+          const friendIds = new Set(friend.map(f => f.login));
           for (const session of chat.sessions.values()){
-            if (session.userId == nono && session.username == data.old_name){
+            if (session.socket.readyState === ws.OPEN && session.userId == nono) {
               session.socket.username = data.new_name;
               session.username = data.new_name;
             }
+            if (session.socket.readyState === ws.OPEN && session.userId != nono && friendIds.has(session.userId))
+              session.socket.send(JSON.stringify({type: 'updateName'}));
           }
         }
         if (data.type === 'req_frd'){
+          console.log(data.login);
           const send = chat.findname(data.login)
+          console.log("IN WSSSS " + send)
           for (const session of chat.sessions.values()){
             if (send && session.socket.readyState === ws.OPEN && session.username === send.username)
-              session.socket.send(JSON.stringify({type: 'add_frd'}));
+              session.socket.send(JSON.stringify({type: 'req_frd'}));
             if (session.socket.readyState === ws.OPEN && session.username === socket.username)
-              session.socket.send(JSON.stringify({type: 'maj_frd'}));
+              session.socket.send(JSON.stringify({type: 'req_frd'}));
           }
         }
         if (data.type === 'maj_frd'){
+          console.log(data.login);
           const send = chat.findname(data.login)
           console.log("IN WSSSS " + send)
           for (const session of chat.sessions.values()){

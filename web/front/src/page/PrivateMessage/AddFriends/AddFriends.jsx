@@ -75,9 +75,10 @@ export default function AddFriends() {
     useEffect(() => {
         fetch_all_request_friend();
 
-        const handle_friend_add = (data) => {
-                if (data.type == 'req_frd')
-                    setResponseFriendArray(repjson.message);
+        const handle_friend_add = async (data) => {
+            console.log("handle_friend_add " + data.type)
+                if (data.type == 'req_frd' || data.type == 'updateName')
+                    await fetch_all_request_friend()
         }
 
         SocketM.on("friend", handle_friend_add, "trois");
@@ -108,14 +109,12 @@ export default function AddFriends() {
         headers: {'Content-Type': 'application/json'},
         credentials: "include",
         body: JSON.stringify(arg)
-    })
+        })
         if (!repjson || (repjson &&  !repjson.success))
             return;
         await fetch_all_request_friend()
-        if (repjson.accept === true)
-            SocketM.sendd("friend", {type: "maj_frd", login: repjson.name});
-        else
-            SocketM.sendd("friend", {type: "req_frd", login: repjson.name});
+        SocketM.sendd("friend", {type: "maj_frd", login: repjson.login});
+        SocketM.sendd("friend", {type: "req_frd", login: repjson.login});
     }
 
 

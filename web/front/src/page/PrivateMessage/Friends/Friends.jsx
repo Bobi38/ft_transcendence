@@ -52,6 +52,8 @@ export default function Friends({setGoToAction, setGoToConv}) {
             });
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        await all_friend();
+        SocketM.sendd("friend", {type: "maj_frd", login: name});
         console.log("good");
     }
 
@@ -59,7 +61,7 @@ export default function Friends({setGoToAction, setGoToConv}) {
         all_friend();
 
         const handle_friend_maj = (data) => {
-            if (data.type == 'maj_frd'){
+            if (data.type == 'maj_frd' || data.type == 'updateName'){
                 all_friend();
                 return ;
             }
@@ -74,8 +76,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
 
     const handleDelete = async (friend) => {
         await dlt_friend(friend.login);
-        await all_friend();
-        SocketM.sendd("friend", {type: "maj_frd", login: friend});
     }
 
     return (

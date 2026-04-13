@@ -97,9 +97,9 @@ class FriendService {
             if (relation.length === 0){
                 return ({success: true, message: [], code: 201})
             }
-            console.log(relation[0].User1.name)
+            // console.log(relation[0].User1.name)
             const formated_relation = format_all_request_friend(result.name, relation)
-            console.log(formated_relation)
+            // console.log(formated_relation)
             return ({success: true, message: formated_relation, code: 201})      
         }catch(err){
             return ({success: false, message: "error /all_request_friend back " + err, code: 500})

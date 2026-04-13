@@ -64,7 +64,7 @@ router.get('/requests', async (req,res) => {
         const result = await FriendService.request(token);
         if (!result.success)
             return errorHandler(result.message, result.code, res);
-        return res.status(result.code).json({success: true, message: result.message});
+        return res.status(result.code).json({success: true, message: result.message });
     }catch(err){
         return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
     }
@@ -81,6 +81,7 @@ router.patch('/response', async (req, res) => {
         const result = await FriendService.response(login, response, token);
         if (!result.success)
             return errorHandler(result.message, result.code, res);
+        console.log("in repsonse " + result.login);
         return res.status(201).json({success: true, message: result.message, accept: result.accept, login: result.login});
     }catch(err){
         return res.status(501).json({success: false, message: "error /all_request_friend back " + err})
