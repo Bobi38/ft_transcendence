@@ -528,10 +528,22 @@ These tables represent the history of all games played in the system.
 - Implemented the Makefile, the Express.js gateway, API routes, and the database schema (Sequelize models).
 
 ### Edarnand — Technical Lead
-- Conducted code reviews and make sure every part of the project worked together.
+- Help connecting every part of the project and ensure they worked together.
+- Define, choose and garantee harmony on the technical architecture
 - Paid attention to the standardization of the UI/UX on the site
-- Work with sflechel on Pong3d game and server implementation
-- **Challenge**: ... .
+- **Modules implemented**:
+    - Web-based game : Pong3D, a 3D online multiplayer squash game
+    - Remote players : Real-time two-player networked gameplay via Colyseus
+<br/>
+
+- **Detailed breakdown**:  
+temp
+<br/>
+
+- **Challenges**:  
+temp
+<br/>
+
 
 ### Sflechel — Developer
 - **Modules implemented**:
