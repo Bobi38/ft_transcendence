@@ -8,13 +8,14 @@ import './Morpion.scss';
 import SocketM                  from    "TOOL/SocketManag.js";
 import Board                    from    "./Board/Board.jsx";
 
+function sendMessage(s_message){
+    SocketM.sendd('morp',{
+            type: "play",
+            message: s_message,
+        })
+}
+
 function NewPartie() {
-    function sendMessage(s_message){
-        SocketM.sendd('morp',{
-                type: "play",
-                message: s_message,
-            })
-    }
 
     return (
         <button

@@ -7,6 +7,7 @@ import  SocketM  from "TOOL/SocketManag.js";
 export default function Board({ board , isGame }) {
 
     function handleClick(i) {
+        
         SocketM.sendd("morp", {
             type: "move",
             message: i,
