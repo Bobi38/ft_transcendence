@@ -138,11 +138,11 @@ export default function App() {
                     <Route path={`/Stats`}          	element={<Navigation> <Stats/>          </Navigation>}/>
                     <Route path={`/Morpion`}        	element={<Navigation> <MorpionDisplay isGame={true}/> </Navigation>}/>
                     <Route path={`/SpecMorpion`}    	element={<Navigation> <MorpionDisplay isGame={false}/> </Navigation>}/>
-                    <Route path={`/TermsAndPrivacy`}	element={<Navigation> <TermsAndPrivacy/> </Navigation>}/>
 
                     {/* type: false = vs player / true = vs ia */}
                     <Route path={`/Pong3D`}         	element={<Pong3D type={false}/>}/>
                     <Route path={`/Pong3DIa`}         	element={<Pong3D type={true}/>}/>
+                    <Route path={`/TermsAndPrivacy`}	element={<TermsAndPrivacy/>}/>
 
                     {/* bad path */}
                     <Route path={`/*`}              element={<Navigation> <ErrorRedir/>     </Navigation>} />
