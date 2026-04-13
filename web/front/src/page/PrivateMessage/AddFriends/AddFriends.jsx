@@ -105,13 +105,15 @@ export default function AddFriends() {
     }
     return (
         <div className={`AddFriends-root`}>
-			<h1>Friends request</h1>
+			<h1>Friend requests</h1>
 			<hr />
 			<div className="content">
 				<form onSubmit={(e) => {e.preventDefault(); handel_form(e)}}>
            			<p id={`alert-container`}></p>
-					<input  type={`text`} id={`add-friend`} placeholder="Nickname" required/>
-					<button type={`submit`}>Add friend</button>
+					<div>
+						<input  type={`text`} id={`add-friend`} placeholder="Nickname" required/>
+						<button type={`submit`}>Add</button>
+					</div>
 				</form>
 
 				<hr className={`big`}/>
@@ -121,7 +123,7 @@ export default function AddFriends() {
 					<Hr mode={`column`} initial={120} min1={100} thickness={2}>
 
 						<div className={`bloc1`}>
-							<h2>Sended request</h2>
+							<h2>Requests sent</h2>
 							{responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
 								<div key={`me-${index}`}>
 									<div className={`one-response`}>
@@ -136,7 +138,7 @@ export default function AddFriends() {
 
 
 						<div className={`bloc2`}>
-							<h2>Receve request</h2>
+							<h2>Requests received</h2>
 							{responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
 								<div key={`other-${index}`}>
 									<div className={`one-response`}>

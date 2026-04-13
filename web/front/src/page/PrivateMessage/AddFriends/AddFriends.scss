@@ -6,11 +6,18 @@
     form {
         width: 100%;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
 		justify-content: center;
 		gap: 1rem;
         padding: 0.5rem;
+
+		div {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			gap: 1rem;
+		}
     }
     .response{
         @include mix.full;
@@ -40,6 +47,9 @@
 			border-radius: 15px;
 			transition: all 0.2s;
 
+			h3 {
+				overflow-wrap: anywhere;
+			}
 			&:hover {
                 background-color: rgba(0, 0, 0, 0.100);
             }

@@ -96,7 +96,7 @@ export default function PrivateMessage() {
 
 					<div className={`bloc-friend-addfriend`}>
 						<div className="bloc-left" onClick={() => {setGoToAction(2); setGoToConv(null)} }><p>Friend list</p></div>
-						<div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }><p>Friend request</p></div>
+						<div className="bloc-left" onClick={() => {setGoToAction(1); setGoToConv(null)} }><p>Friend requests</p></div>
 					</div>
 
 					<hr className={`big`}/>

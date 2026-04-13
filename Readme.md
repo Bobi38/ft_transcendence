@@ -566,10 +566,22 @@ One of the main challenges Tvoisin encountered was transitioning from a monolith
 - Implemented the Makefile, the Express.js gateway, API routes, and the database schema (Sequelize models).
 
 ### Edarnand — Technical Lead
-- Conducted code reviews and make sure every part of the project worked together.
+- Help connecting every part of the project and ensure they worked together.
+- Define, choose and garantee harmony on the technical architecture
 - Paid attention to the standardization of the UI/UX on the site
-- Work with sflechel on Pong3d game and server implementation
-- **Challenge**: ... .
+- **Modules implemented**:
+    - Web-based game : Pong3D, a 3D online multiplayer squash game
+    - Remote players : Real-time two-player networked gameplay via Colyseus
+<br/>
+
+- **Detailed breakdown**:  
+temp
+<br/>
+
+- **Challenges**:  
+temp
+<br/>
+
 
 ### Sflechel — Developer
 - **Modules implemented**:
@@ -592,8 +604,26 @@ The trickiest part of the networking was clock synchronisation: ensuring that ea
 
 ### Niroched — Developer
 - Built the entire Morpion (Tic-Tac-Toe) game from scratch, including game logic, win detection, and board state management.
-- Designed and implemented the custom WebSocket matchmaking system: player queuing, room creation, and game state relay, spectator built entirely from scratch without a game server framework.
-- **Challenge**: ... .
+- Designed and implemented the custom WebSocket matchmaking system: player queuing, room creation, game state relay, and spectator built entirely from scratch without a game server framework.
+<br/>
+
+- **Modules implemented**:
+    - Other Game : Tic-Tac-Toe
+    - Remote players : two-player networked gameplay
+    - AI opponent : Local single-player mode with a bot opponent    
+<br/>
+
+- **Detailed breakdown**:  
+niroched developed a JavaScript-based Tic-Tac-Toe game with a real-time multiplayer system powered by a custom server handling matchmaking, game sessions, and data persistence.
+Players join a queue by clicking “search,” and a match starts automatically when two players are paired. A right-click option allows starting a game against an AI. The server manages the game state to ensure consistency across all clients.
+Each session is saved, including move history and player timing data. A timeout system enforces turn limits and handles inactive players.
+A spectator mode allows users to watch ongoing games in real time. This required adapting the system to send game updates to additional clients without affecting active players.
+The architecture was designed to remain flexible and can be extended to support more complex modes, such as games with more than two players.
+<br/>
+
+- **Challenges**:  
+Handling edge cases in a real-time context was a key challenge, including player disconnections, invalid inputs, and synchronization issues.
+<br/>
 
 
 - [🗓 𝕊ummary](#summary)
