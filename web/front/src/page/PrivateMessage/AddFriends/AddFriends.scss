@@ -4,7 +4,7 @@
 .AddFriends-root{
 
     form {
-        @include mix.fullw;
+        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -48,7 +48,7 @@
                 flex-direction: row;
                 gap: 0.4rem;
                 button{
-                    @include mix.fullw;
+                    width: 100%;
                     @include mix.default_card;
                 }
             }

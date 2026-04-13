@@ -1,4 +1,4 @@
-import {bcrypt, express, jwt, crypto,  errorHandler, validator, secret } from '../index_p.js';
+import {bcrypt, express, jwt, crypto,  errorHandler, validator, secret, SecuMiddleware } from '../index_p.js';
 
 import {User, PswEmail} from '../index_p.js';
 
@@ -31,7 +31,7 @@ router.get('/checkco', async(req, res) =>{
     }
 })
 
-router.post('/send_mail', async (req, res) => {
+router.post('/send_mail', SecuMiddleware, async (req, res) => {
     console.log("API /api/secu/send_mail");
     const valid = SecuDTO.validateCookie(req, 'temp');
     if (!valid.valid) {
@@ -70,7 +70,7 @@ router.post('/recovery_password', async (req, res) => {
     }
 })
 
-router.post('/maila2f_check_code' , async (req, res) => {
+router.post('/maila2f_check_code' , SecuMiddleware, async (req, res) => {
     const valid = SecuDTO.validateMail2FA_CheckCode(req.body);
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code, res);
@@ -81,24 +81,20 @@ router.post('/maila2f_check_code' , async (req, res) => {
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
-        return res.status(201).json({success: true, message: "good"});  
+        return res.status(201).json({success: true, message: "good", token: result.token, username: result.username});  
     }catch(err){
         return errorHandler("back check_code" + err, 500, res); 
     }
 })
 
-router.post('/recoverypassword_check_code' , async (req, res) => {
-    console.log("API /api/secu/recoverypassword_check_code controller");
+router.post('/recoverypassword_check_code' , SecuMiddleware, async (req, res) => {
     const valid = SecuDTO.validateMail2FA_CheckCode(req.body);
     if (!valid.valid) {
         return errorHandler(valid.message, valid.code, res);
     }
-    console.log("API /api/secu/recoverypassword_check_code controller valid");
     const {code, host} = req.body;
     try{
-        console.log("code " + code + " host " + host);
         const result = await SecuService.check_code(code, 'temp', 2, host, req, res);
-        console.log("API /api/secu/recoverypassword_check_code controller result " + result.success + " " + result.message);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
@@ -108,10 +104,7 @@ router.post('/recoverypassword_check_code' , async (req, res) => {
     }
 })
 
-router.put('/majPswd', async(req,res) => {
-    console.log("API /api/secu/majPswd controller");
-    console.log("body " + req.body.new_psd);
-    console.log("cookies " + req.cookies.ChgPSWD);
+router.put('/majPswd', SecuMiddleware, async(req,res) => {
     const valid = SecuDTO.validateMaj_Password(req)
     if (!valid.valid){
         return errorHandler(valid.message, valid.code, res);
@@ -129,7 +122,7 @@ router.put('/majPswd', async(req,res) => {
         
 })
 
-router.delete('/cookie', async(req, res) => {
+router.delete('/cookie', SecuMiddleware, async(req, res) => {
     const valide = SecuDTO.validateCookie(req, 'temp');
     if (!valide.valid) {
         return errorHandler(valide.message, valide.code, res);

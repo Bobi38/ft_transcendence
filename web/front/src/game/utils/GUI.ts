@@ -4,8 +4,9 @@ import { GameSession } from "../sessions/GameSession";
 export class GUI {
     private _session : GameSession;
     private _ui: AdvancedDynamicTexture | null = null;
+    private _controls: AdvancedDynamicTexture;
     private _score : AdvancedDynamicTexture;
-    private _scoreText : TextBlock;
+    private controlsText : TextBlock;
     private _playerDisconnected : AdvancedDynamicTexture | null = null;
     private _disposing : boolean = false;
     private _interval: number | null = null;
@@ -177,25 +178,60 @@ export class GUI {
         scoreLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         stack.addControl(scoreLabel);
 
-        this._scoreText = new TextBlock();
+        this.controlsText = new TextBlock();
         if (isNear)
-            this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
+            this.controlsText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
         else
-            this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
-        this._scoreText.color = "white";
-        this._scoreText.fontSize = 14;
-        this._scoreText.fontWeight = "bold";
-        this._scoreText.width = "70px";
-        this._scoreText.fontFamily = "Inter";
-        this._scoreText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        stack.addControl(this._scoreText);
+            this.controlsText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
+        this.controlsText.color = "white";
+        this.controlsText.fontSize = 14;
+        this.controlsText.fontWeight = "bold";
+        this.controlsText.width = "70px";
+        this.controlsText.fontFamily = "Inter";
+        this.controlsText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        stack.addControl(this.controlsText);
+    }
+
+    public addControlsUI() {
+        if (this._disposing)
+            return ;
+        this._controls = AdvancedDynamicTexture.CreateFullscreenUI("ui");
+
+        const controlsPanel = new Rectangle();
+        controlsPanel.width = "250px";
+        controlsPanel.height = "50px";
+        controlsPanel.cornerRadius = 12;
+        controlsPanel.color = "#ffffff";
+        controlsPanel.thickness = 1;
+        controlsPanel.background = "#1e1e1ecc";
+        controlsPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        controlsPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        controlsPanel.top = "20px";
+        controlsPanel.left = "20px";
+        this._score.addControl(controlsPanel);
+
+        const stack = new StackPanel();
+        stack.isVertical = false;
+        stack.paddingLeft = "12px";
+        stack.paddingRight = "12px";
+        controlsPanel.addControl(stack);
+
+        const controlsText = new TextBlock();
+        controlsText.text = "Use right and left arrows to move";
+        controlsText.color = "white";
+        controlsText.fontSize = 14;
+        controlsText.fontWeight = "bold";
+        controlsText.width = "250px";
+        controlsText.fontFamily = "Inter";
+        controlsText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        stack.addControl(controlsText);
     }
 
     public updateScoreUI(isNear: boolean, scoreNear: number, scoreFar: number) {
         if (isNear)
-            this._scoreText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
+            this.controlsText.text = scoreNear.toString() + ' : ' + scoreFar.toString();
         else
-            this._scoreText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
+            this.controlsText.text = scoreFar.toString() + ' : ' + scoreNear.toString();
     }
 
     public showEndUI(isNear: boolean, scoreNear: number, scoreFar: number) {
@@ -272,8 +308,8 @@ export class GUI {
         this._playerDisconnected?.dispose();
         this._playerDisconnected = null;
 
-        this._scoreText?.dispose();
-        this._scoreText = null;
+        this.controlsText?.dispose();
+        this.controlsText = null;
 
         this._onReturnToMenu = null;
         this._onReload = null;

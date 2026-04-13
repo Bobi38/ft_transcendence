@@ -35,11 +35,14 @@ export default function Pong3D({type}) {
             setIsMobile(bool)
             return;
         }
+        let isCancelled = false;
         let gameApp = null;
 
 
         const init = async () => {
             const isConnected = await checkCo();
+            if (isCancelled)
+                return;
             if (!isConnected.success) {
                 navigate('/');
                 return;
@@ -50,15 +53,16 @@ export default function Pong3D({type}) {
             const reloading = () =>  setGameKey(prev => prev + 1);
             console.log("ref: ", canvasRef.current)
             gameApp = new GameApp({
-                canvas: canvasRef.current, 
-                isOffline: type, 
+                canvas: canvasRef.current,
+                isOffline: type,
                 onReturnToMenu: navigateHome,
                 onReload: reloading,
                 onUnauthorized: onUnauthorized});
         };
 
         init();
-        return async () => {
+        return () => {
+            isCancelled = true;
             gameApp?.dispose?.();
             gameApp = null;
         };
@@ -67,7 +71,6 @@ export default function Pong3D({type}) {
     return (
         <main className={`Pong3D-root`}>
             <p id={`alert-container`}></p>
-			{/* <a href="/" className="button">Home</a> */}
             {isMobile && !error && (
                 <div className="error-game">
                     <h1>Desktop Required</h1>
@@ -75,10 +78,10 @@ export default function Pong3D({type}) {
                     <p>Please visit us on a computer to join the match.</p>
                 </div>
             )}
-            {error && 
+            {error &&
                 <div className="error-game">
-                    <h1>UnAuthorized</h1>
-                    <p>u cant play with ur self.</p>
+                    <h1>Unauthorized</h1>
+                    <p>You are already playing Pong3D online.</p>
                 </div>
             }
             <Button path="/">Home</Button>

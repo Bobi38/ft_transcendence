@@ -121,7 +121,7 @@ export default function AddFriends() {
 
     return (
 
-        <div className={`AddFriends-root border-0`}>
+        <div className={`AddFriends-root`}>
             <p id={`alert-container`}></p>
 			<h1>Friends request</h1>
 			<hr />
@@ -134,7 +134,7 @@ export default function AddFriends() {
 
 				<hr className={`big`}/>
 
-				<div className={`response border-1`}>
+				<div className={`response`}>
 
 					<Hr mode={`column`} initial={120} min1={100} thickness={2}>
 
@@ -142,9 +142,9 @@ export default function AddFriends() {
 							<h2>Sended request</h2>
 							{responseFriendArray.Fme && responseFriendArray.Fme.map((msg, index) => (
 								<div key={`me-${index}`}>
-									<div className={`one-response border-2`}>
+									<div className={`one-response`}>
 									<h3>{msg.login}</h3>
-										<div className={`div-btn border-3`}>
+										<div className={`div-btn`}>
 											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Remove</button>
 										</div>
 									</div>
@@ -157,9 +157,9 @@ export default function AddFriends() {
 							<h2>Receve request</h2>
 							{responseFriendArray.Fother && responseFriendArray.Fother.map((msg, index) => (
 								<div key={`other-${index}`}>
-									<div className={`one-response border-2`}>
+									<div className={`one-response`}>
 									<h3>{msg.login}</h3>
-										<div className={`div-btn border-3`}>
+										<div className={`div-btn`}>
 											<button onClick={() => {handel_response({login: msg.login, response: true })}}>Accept</button>
 											<button onClick={() => {handel_response({login: msg.login, response: false })}}>Refuse</button>
 										</div>

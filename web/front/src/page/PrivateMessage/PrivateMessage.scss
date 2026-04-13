@@ -60,7 +60,7 @@
 			gap: 1rem;
 
             .bloc-left {
-                @include mix.fullw;
+                width: 100%;
                 @include mix.default_card;
             }
         }
@@ -77,7 +77,7 @@
                     margin: 0;
                 }
                 .header-last-conv{
-                    @include mix.fullw;
+                    width: 100%;
                     display: flex;
                     justify-content: space-between;
                     h2 {

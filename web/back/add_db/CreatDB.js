@@ -25,9 +25,9 @@ import { CreatGameMorp } from './seedmorp.js';
 async function CreatUser() {
 
     const CrypPass = await bcrypt.hash('tt', 10);
-    const toto = await User.create({name: 'tr1', password: CrypPass, mail: 'tr1@yopmail.com', co: false});
-    const titi = await User.create({name: 'tr2', password: CrypPass, mail: 'tr2@yopmail.com', co: false});
-    const tata = await User.create({name: 'tr3', password: CrypPass, mail: 'tr3@yopmail.com', co: false});
+    const toto = await User.create({name: 'tr1', password: CrypPass, mail: 'tr1@yopmail.com', co: false, MPFA: false});
+    const titi = await User.create({name: 'tr2', password: CrypPass, mail: 'tr2@yopmail.com', co: false, MPFA: false});
+    const tata = await User.create({name: 'tr3', password: CrypPass, mail: 'tr3@yopmail.com', co: false, MPFA: false});
     const tutu = await User.create({name: 'tr4', password: CrypPass, mail: 'tr4@yopmail.com', co: false});
     const ni = await User.create({name: 'tr5', password: CrypPass, mail: 'tr5@yopmail.com', co: false});
     const no = await User.create({name: 'tr6', password: CrypPass, mail: 'tr6@yopmail.com', co: false});

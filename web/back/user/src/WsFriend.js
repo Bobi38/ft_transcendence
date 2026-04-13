@@ -71,10 +71,8 @@ export function initWebSFriend(server) {
       console.log('Headers socket:', socket.id);
       console.log(req.headers.cookie)
       const token = getCookie('token', req.headers.cookie);
-      if (!token) {
-        // socket.close();
+      if (!token)
         return;
-      }
       let user;
       try {
         user = chat.decoded(token);
@@ -88,20 +86,9 @@ export function initWebSFriend(server) {
       socket.GoLogout = false;
       socket.cleanedUp = false;
       socket.isAlive = true;
-
-      // const exist = chat.finduser(socket.id);
-      // const id = chat.finduserId(socket.userId);
-      // if (exist){
-      //   exist.socket = socket;
-      // }
-      // else if (id){
-      //   id.socket = socket
-      // }
-      // else{
-        await chat.addtok(useid, socket, useid);
-        const sess = chat.finduserId(useid);
-        socket.username = sess.username;
-      // }
+      await chat.addtok(useid, socket, useid);
+      const sess = chat.finduserId(useid);
+      socket.username = sess.username;
       socket.send(JSON.stringify({type: 'co_good'}));
     }catch(err){
       console.log("err debut wsss ", err);
@@ -122,7 +109,6 @@ export function initWebSFriend(server) {
             if (session.socket.readyState === ws.OPEN && session.userId != nono && friendIds.has(session.userId))
               session.socket.send(JSON.stringify({type: 'co', login: ni}));
           }
-
         }
         if (data.type === 'updateName'){
           const nono = socket.userId;
@@ -137,8 +123,10 @@ export function initWebSFriend(server) {
         if (data.type === 'req_frd'){
           const send = chat.findname(data.login)
           for (const session of chat.sessions.values()){
-            if (session.socket.readyState === ws.OPEN && session.username === send.username)
+            if (send && session.socket.readyState === ws.OPEN && session.username === send.username)
               session.socket.send(JSON.stringify({type: 'add_frd'}));
+            if (session.socket.readyState === ws.OPEN && session.username === socket.username)
+              session.socket.send(JSON.stringify({type: 'maj_frd'}));
           }
         }
         if (data.type === 'maj_frd'){
@@ -160,7 +148,6 @@ export function initWebSFriend(server) {
               session.socket.send(JSON.stringify({type: 'logout'}));
             }
           }
-          // socket.close();
         }
         if (data.type === "pong")
           socket.isAlive = true;

@@ -47,14 +47,6 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  password_2FA: {
-    type: DataTypes.STRING(256),
-    allowNull: true,
-  },
-  password_2FA_time: {
-    type: DataTypes.TIME,
-    allowNull: true,
-  },
   Hostlastco: {
     type: DataTypes.STRING(256),
     allowNull: true,

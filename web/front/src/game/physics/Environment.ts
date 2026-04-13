@@ -66,19 +66,19 @@ export class Environment {
         wallRight.rotationQuaternion = rotationQuaternion;
 
         let ceilingMat = new StandardMaterial("ceilingmat", this._scene);
-        const ceilingTexture = new Texture("media/ceiling.png");
+        const ceilingTexture = new Texture("media/ceiling.png", this._scene);
         ceilingTexture.wAng = - Math.PI / 2;
         ceilingTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         ceilingTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         ceilingTexture.uScale = 6;
         ceilingTexture.vScale = 2;
-        const ceilingNTexture = new Texture("media/ceiling_n.png");
+        const ceilingNTexture = new Texture("media/ceiling_n.png", this._scene);
         ceilingNTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         ceilingNTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         ceilingNTexture.uScale = 6.0;
         ceilingNTexture.vScale = 2.0;
         ceilingNTexture.wAng = - Math.PI / 2;
-        const ceilingAoTexture = new Texture("media/ceiling_ao.png");
+        const ceilingAoTexture = new Texture("media/ceiling_ao.png", this._scene);
         ceilingAoTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         ceilingAoTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         ceilingAoTexture.uScale = 6.0;
@@ -91,23 +91,23 @@ export class Environment {
         let wallMat = new StandardMaterial("wallmat", this._scene);
         let groundMat = new StandardMaterial("groundmat", this._scene);
         groundMat.specularColor = new Color3(0.1, 0.1, 0.1);
-        const groundTexture = new Texture("media/court.png");
+        const groundTexture = new Texture("media/court.png", this._scene);
         groundTexture.wAng = Math.PI / 2;
         groundTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         groundTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         groundTexture.uScale = 15.0;
         groundTexture.vScale = 15.0;
-        const wallTexture = new Texture("media/wall.png");
+        const wallTexture = new Texture("media/wall.png", this._scene);
         wallTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         wallTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         wallTexture.uScale = 9.0;
         wallTexture.vScale = 3.0;
-        const wallNTexture = new Texture("media/wall_normal.png");
+        const wallNTexture = new Texture("media/wall_normal.png", this._scene);
         wallNTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         wallNTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         wallNTexture.uScale = 9.0;
         wallNTexture.vScale = 3.0;
-        const wallAoTexture = new Texture("media/wall_ambient.png");
+        const wallAoTexture = new Texture("media/wall_ambient.png", this._scene);
         wallAoTexture.wrapU = Texture.WRAP_ADDRESSMODE;
         wallAoTexture.wrapV = Texture.WRAP_ADDRESSMODE;
         wallAoTexture.uScale = 9.0;
@@ -138,10 +138,12 @@ export class Environment {
 
     public async loadCharacterAssets(scene: Scene, position: Vector3, isPlayer: boolean, isNearSide: boolean): Promise<CharacterAssets> {
         const assets = await ImportMeshAsync("/media/mii.glb", scene);
+        assets.meshes.forEach((m) => this.meshes.push(m));
         const body = assets.meshes[0];  
         if (isPlayer) {
             assets.meshes.forEach((m) => {
                 m.isVisible = false;
+                this.meshes.push(m);
             });
         }
         if (isPlayer && !isNearSide) {
@@ -179,7 +181,7 @@ export class Environment {
         racketRoot.parent = hand_node;
         hand_node.parent = body;
 
-        this.meshes.push(body);
+        this.meshes.push(hand, stick, racket);
         this.materials.push(bodymtl, racketmtl);
         this.nodes.push(hand_node, racketRoot);
         return { mesh: body, handNode: hand_node, racketNode: racketRoot};
@@ -210,22 +212,23 @@ export class Environment {
 
     public dispose() {
         this.shadows.forEach((shadow: ShadowGenerator) => shadow.dispose());
-        this.shadows = null;
 
         this.lights.forEach((light: Light) => light.dispose());
+
+        this.meshes?.forEach((mesh: AbstractMesh) => mesh.dispose(false, false));
+    
+        this.nodes?.forEach((node: TransformNode) => node.dispose());
+
+        this.materials?.forEach((material: StandardMaterial) => material.dispose(true, true));
+
+        this.textures?.forEach((texture: Texture) => texture.dispose());
+
+        this.shadows = null;
         this.lights = null;
-
-        this.materials.forEach((material: StandardMaterial) => material.dispose());
-        this.materials = null;
-
-        this.textures.forEach((texture: Texture) => texture.dispose());
-        this.textures = null;
-
-        this.nodes.forEach((node: TransformNode) => node.dispose());
-        this.nodes = null;
-
-        this.meshes.forEach((mesh: AbstractMesh) => mesh.dispose(false, true));
         this.meshes = null;
+        this.nodes = null;
+        this.materials = null;
+        this.textures = null;
     }
 }
 

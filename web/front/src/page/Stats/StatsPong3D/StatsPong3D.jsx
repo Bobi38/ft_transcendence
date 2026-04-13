@@ -7,8 +7,8 @@ import { useEffect, useState }  from    "react";
 import "./StatsPong3D.scss";
 
 /* Components */
-import useFetch                 from    "TOOL/useFetch.jsx";   
-import Paging                   from    "COMP/Paging/Paging.jsx"; 
+import useFetch                 from    "TOOL/useFetch.jsx";
+import Paging                   from    "COMP/Paging/Paging.jsx";
 import StatsPong3DHistoryCard   from    "./StatsPong3DHistoryCard/StatsPong3DHistoryCard";
 
 export default function StatsPong3D({ username, setUsername }) {
@@ -21,7 +21,7 @@ export default function StatsPong3D({ username, setUsername }) {
 
     async function fetch_stats() {
 
-        const url = username 
+        const url = username
             ? `/api/pong3d/get_stat?name=${username}`
             : `/api/pong3d/get_stat`;
 
@@ -70,7 +70,7 @@ export default function StatsPong3D({ username, setUsername }) {
 
     async function fetch_history(page_nb) {
 
-        const url = username 
+        const url = username
             ? `/api/pong3d/get_history/${page_nb}?limit=${limit}&name=${username}`
             : `/api/pong3d/get_history/${page_nb}?limit=${limit}`;
 
@@ -102,10 +102,10 @@ export default function StatsPong3D({ username, setUsername }) {
 
     return (
         
-        <section className={`StatsPong3D-root border-base`}>
-            <div className={`history-container border-1`}>
+        <section className={`StatsPong3D-root`}>
+            <div className={`history-container`}>
 
-                <div className={`history-card-container border-2`}>
+                <div className={`history-card-container`}>
 
                     {historyUser?.map((element, index) => {
                         return (<StatsPong3DHistoryCard key={index} stats={element} nameSearched={username}/>)
@@ -116,18 +116,18 @@ export default function StatsPong3D({ username, setUsername }) {
 
             </div>
 
-            <aside className={`aside border-1`}>
+            <aside className={`aside`}>
 
-                <div className={`search border-2`}>
+                <div className={`search`}>
                     <form className={`searchmorp`} onSubmit={(e) => {e.preventDefault(); setUsername(inputValue); setNewPage(1);setInputValue("")}}>
                         <input type={`text`} value={inputValue}
-                            onChange={(e) => {setInputValue(e.target.value);}} 
+                            onChange={(e) => {setInputValue(e.target.value);}}
                             />
                         <input type={`submit`} value={`search`}/>
                     </form>
                 </div>
 
-                <div className={`game-winrate border-2`}>
+                <div className={`game-winrate`}>
 
                     <div>
                         win:1

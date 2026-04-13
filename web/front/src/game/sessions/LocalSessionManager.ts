@@ -98,7 +98,7 @@ export class LocalSessionManager extends EventEmitter implements GameSession {
     
     public async leave(): Promise<void> {}
 
-    public async dispose() {
+    public dispose() {
         this.clear();
         this._gameState = null;
         this._clock = null;

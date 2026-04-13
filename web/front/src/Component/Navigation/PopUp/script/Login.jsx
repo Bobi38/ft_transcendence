@@ -62,9 +62,17 @@ export default function Login({ password_forget_mode, register_mode}) {
         if (!repjson.MPFA) {
             setShowLog(AUTH.NONE);
             SocketM.sendd('friend', {type: 'co_first'});
+            if (sessionStorage.getItem("type") === null)
+                sessionStorage.setItem('type', "success");
+            if (sessionStorage.getItem("message") === null)
+                sessionStorage.setItem('message', "Connexion réussie");
+            if (sessionStorage.getItem("token") === null)
+                sessionStorage.setItem('token', repjson.token);
+            if (sessionStorage.getItem("username") === null)
+                essionStorage.setItem('username', repjson.username);
         };
     };
-    
+
     const handle_git = () => {
         const frontendUrl = window.location.origin;
         const backUrl = window.location.hostname;
@@ -120,7 +128,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                 <input  type={`password`}
                         id={`password`}
                         name={`password`}
-                        placeholder={`1234btw`}
+                        placeholder={`Password`}
                         required
                 />
                 <button type={`submit`}>Connect</button>
@@ -137,7 +145,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                     <FcGoogle/> Google
                     </button>
 
-                <button type={`button`} 
+                <button type={`button`}
                         onClick={register_mode}>
                         Register
                 </button>
