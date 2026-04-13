@@ -41,7 +41,8 @@ export default function HomeChat() {
             body: JSON.stringify({ message: input }),
         });
         if (!repjson || (repjson &&  !repjson.success))
-            return;
+            return false;
+        return true
     }
 
     useEffect(() =>{
@@ -88,9 +89,12 @@ export default function HomeChat() {
 
         const data = {type: "mess", message: input};
 
-        await add_message_global();
-        SocketM.sendd('chat', data);
+        if (!await add_message_global()){
+            setInput("");
+            return
+        }
         setInput("");
+        SocketM.sendd('chat', data);
     };
 
     return (
