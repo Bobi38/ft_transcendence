@@ -30,8 +30,6 @@ export default function AddFriends() {
 
         const url = `/api/friend`;
 
-        console.log(`${url}`)
-
         const repjson = await useFetch(`${url}`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
@@ -59,8 +57,6 @@ export default function AddFriends() {
     async function fetch_all_request_friend(){
         const url = `/api/friend/requests`;
 
-        console.log(`${url}`)
-
         const repjson = await useFetch(`${url}`, {
                 method: "GET",
                 headers: {'Content-Type': 'application/json'},
@@ -68,7 +64,6 @@ export default function AddFriends() {
             }, null , null);
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        console.log("all_request_friend", repjson.message)
         setResponseFriendArray(repjson.message)
     }
 
@@ -76,7 +71,6 @@ export default function AddFriends() {
         fetch_all_request_friend();
 
         const handle_friend_add = async (data) => {
-            console.log("handle_friend_add " + data.type)
                 if (data.type == 'req_frd' || data.type == 'updateName')
                     await fetch_all_request_friend()
         }
@@ -89,11 +83,8 @@ export default function AddFriends() {
     }, []);
 
     const handel_form = (e) =>{
-        // console.log("handel_form(1) called")
         const el_add_friend = document.getElementById("add-friend")
-        // console.log("handel_form(2) demande envoyer", el_add_friend.value)
         add_friend(el_add_friend.value)
-        // console.log("handel_form(info) clear input value")
         el_add_friend.value = ""
     }
 
@@ -101,8 +92,6 @@ export default function AddFriends() {
         console.log("requestfriend finish", arg)
 
         const url = `/api/friend/response`;
-
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
         method: "PATCH",

@@ -8,13 +8,14 @@ import './Morpion.scss';
 import SocketM                  from    "TOOL/SocketManag.js";
 import Board                    from    "./Board/Board.jsx";
 
+function sendMessage(s_message){
+    SocketM.sendd('morp',{
+            type: "play",
+            message: s_message,
+        })
+}
+
 function NewPartie() {
-    function sendMessage(s_message){
-        SocketM.sendd('morp',{
-                type: "play",
-                message: s_message,
-            })
-    }
 
     return (
         <button
@@ -35,8 +36,6 @@ export default function Morpion() {
     const [wait, setWait] = useState(0);
 
       useEffect(() => {
-
-        console.log("Morpion component called");
 
         const handleSocket = (data) => {
             if (data?.message){

@@ -32,7 +32,6 @@ export default function MailA2F({login_mode}) {
         if (btn) btn.disabled = false;
 
         if (!repjson || (repjson && !repjson.success)) {
-            console.log(repjson.message);
             return;
         }
         sessionStorage.setItem("check_code", "true");
@@ -49,7 +48,6 @@ export default function MailA2F({login_mode}) {
         }
 
         const url = `/api/secu/maila2f_check_code`;
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",

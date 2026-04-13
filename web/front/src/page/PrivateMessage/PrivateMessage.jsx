@@ -47,8 +47,6 @@ export default function PrivateMessage() {
             return;
         const url = `/api/chatP/${goToConv}`
 
-        console.log(`${url} goToConv: `,goToConv)
-
         const repjson = await useFetch(`${url}`, {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
@@ -63,7 +61,6 @@ export default function PrivateMessage() {
 
 	useEffect(() => {
         const handle_private_message = async (data) => {
-            console.log("handle_private_message(1) Message privé reçu via WebSocket:", data);
             if (data.type === "updateName_good"){
                 if (data.old_name === goToConv){
                     setGoToConv(data.new_name);

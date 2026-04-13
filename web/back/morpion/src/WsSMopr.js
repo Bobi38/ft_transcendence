@@ -76,7 +76,7 @@ export function initWebSMopr(server) {
             break;
 
           case "move":
-            if (m.move(socket.player, data.message))
+            m.move(socket.player, data.message)
             break;
 
           case "play":
@@ -109,7 +109,7 @@ export function initWebSMopr(server) {
             break ;
 
           default:
-            socket.sendList();
+            socket.sendList();  
             socket.player.sendGame();
           }
         }
