@@ -6,17 +6,26 @@ class ChatPService {
 
     static async getChatP(token, Name) {
         try{
+            console.log("1")
             const user = await get_user_from_token(token);
             const id2 = await User.findOne({ where: { name: Name}});
             if (!user.success || !id2)
                 return ({success: false, message: "error user not found", code: 400})
             const id1 = user.user;
+                        console.log("2")
+                        console.log(id1.id)
+                        console.log(id2.id)
             const findchat = await PrivChat.findOne({where :{ [Op.or]:[{id1: id1.id, id2: id2.id},{id1: id2.id, id2: id1.id} ]}});
-            if (findchat === 0)
-                return res.status(404).json({success: false, message: 'ERROR CONV NOT FOUND'});
+            console.log("findchat " + findchat)
+            console.log("coco");
+            if (!findchat)
+                return ({success: false, message: 'ERROR CONV NOT FOUND', code: 400});
+            console.log("5")
             const conv = await PrivMess.findAll({order:[['id', 'DESC']], limit: 30, where:{chatid: findchat.id}});
+
             const name = await User.findAll({attributes: ['id', 'name'], where: {id: id2.id}});
             let ret = "";
+                        console.log("3")
             if (conv.length != 0)
                 ret = maj_conv(id1.id, conv, name);
             return ({success: true, message: ret, code: 200});
