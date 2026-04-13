@@ -60,7 +60,7 @@ export default function Register({login_mode}) {
                 <input type={`email`} id={`email`} name={`email`} placeholder={`you@exemple.com`} required/>
 
                 <label htmlFor={`password`}>Password</label>
-                <input type={`password`} id={`password`} name={`password`} placeholder={`1234btw`} required/>
+                <input type={`password`} id={`password`} name={`password`} placeholder={`Password`} required/>
 
                 <div>
                     <input type="checkbox" id="legal" name="legal" required />
