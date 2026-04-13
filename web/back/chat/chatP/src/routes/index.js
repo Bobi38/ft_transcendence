@@ -32,7 +32,14 @@ export function maj_conv(id, conv, namelst){
             monMs = false;
         }
         const mess = decrypt(conv[i].contenu);
-        tableau.push({monMsg: monMs, message: mess, login: name, timer: conv[i].time})
+
+        const jour = String(conv[i].time.getDate()).padStart(2, '0');
+        const mois = String(conv[i].time.getMonth() + 1).padStart(2, '0');
+        const heure = String(conv[i].time.getHours() + 2).padStart(2, '0');
+        const minute = String(conv[i].time.getMinutes()).padStart(2, '0');
+
+        const resultat = `${jour}-${mois} ${heure}:${minute}`;
+        tableau.push({monMsg: monMs, message: mess, login: name, timer: resultat})
     }
     return tableau;
 };

@@ -83,18 +83,24 @@ export function initWebSChat(server) {
           const na = chat.finduserId(nono);
           const ni = na.username;
           const send = chat.findname(data.to);
+          const now = new Date()
+          const jour = String(now.getDate()).padStart(2, '0');
+          const mois = String(now.getMonth() + 1).padStart(2, '0');
+          const heure = String(now.getHours() + 2).padStart(2, '0');
+          const minute = String(now.getMinutes()).padStart(2, '0');
+          const time = `${jour}-${mois} ${heure}:${minute}`;
           console.log("name" , ni, " ", data.to)
           for (const session of chat.sessions.values()){
             console.log(session.username, " " , session.userId, " ", session.socket.id);
             if (send && session.socket.readyState === ws.OPEN && session.userId === send.userId){
               console.log("le message " , data.message, " va etre envoye a ", session.username, " ", session.userId, " ", session.socket.id);
-              session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+              session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: time}));
               session.socket.send(JSON.stringify({type: 'notif', login: ni}));
               console.log("message envoye a ", session.username, " ", session.userId, " ", session.socket.id);
             }
             if (session.socket.readyState === ws.OPEN && session.userId === nono){
               console.log("innnnnnn" , session.username, " " , session.userId, " ", session.socket.id);
-              session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: data.timer}));
+              session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: time}));
             }
           }
         }

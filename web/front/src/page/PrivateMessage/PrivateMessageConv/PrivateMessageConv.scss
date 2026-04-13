@@ -55,6 +55,12 @@
 			p {
 				overflow-wrap: anywhere;
 			}
+			#timerP{
+				font-size: 0.8rem;
+				span, strong{
+					font-size: inherit;
+				}
+			}
 		}
 		.me {
 			text-align: right;

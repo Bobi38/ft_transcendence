@@ -30,7 +30,7 @@ router.get('/:name', async (req, res) => {
     if (!valid.valid)
         return errorHandler(valid.message, valid.code, res);
     try{
-        const name = req.query.name;
+        const name = req.params.name;
         const my_token = req.cookies.token;
         const result = await ChatPService.getChatP(my_token, name);
         if (!result.success)

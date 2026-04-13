@@ -62,22 +62,25 @@ export function initWebSChat(server) {
         console.log('Type:', data.type);
         console.log('===================');
         if (data.type === 'mess'){
-          console.log("je suis dans un type messsssssssss " , socket.id)
           const nono = socket.userId;
           const na = chat.finduserId(socket.userId)
           const ni = na.username;
-          console.log ("----" , nono , "----", ni);
-          console.log("taille === ", chat.countUser());
+          const now = new Date()
+          const jour = String(now.getDate()).padStart(2, '0');
+          const mois = String(now.getMonth() + 1).padStart(2, '0');
+          const heure = String(now.getHours() + 2).padStart(2, '0');
+          const minute = String(now.getMinutes()).padStart(2, '0');
+          const time = `${jour}-${mois} ${heure}:${minute}`;
           for (const session of chat.sessions.values()){
             console.log("session ", session.userId);
             console.log("idddd " + session.userId + "   "  +  nono + "-----");
             if (session.socket.readyState === ws.OPEN && session.userId != nono){
               console.log("ca va SEND from server " + nono + " to " + session.userId + "name " + session.username);
-              session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: data.timer}));
+              session.socket.send(JSON.stringify({type: 'message',monMsg: false, message: data.message, login: ni, timer: time}));
             }
             if (session.socket.readyState === ws.OPEN && session.userId === nono){
               console.log("MYSEFLF");
-              session.socket.send(JSON.stringify({type: 'message',monMsg: true, message: data.message, login: ni, timer: data.timer}));
+              session.socket.send(JSON.stringify({type: 'message',monMsg: true, message: data.message, login: ni, timer: time}));
             }
           }
         }

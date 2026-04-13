@@ -9,7 +9,7 @@ const chatG = sequelize.define('chat', {
     Allownull: false,
   },
   time:{
-    type: DataTypes.TIME,
+    type: DataTypes.DATE,
     allowNull: false
   },
 }, {
