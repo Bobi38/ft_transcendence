@@ -1,14 +1,50 @@
-@use "STYLE/_mixin" as mix;
+@use 'STYLE/mixin' as mix;
+@use 'STYLE/_variable' as *;
 
 .Friends-root{
-	.content {
+	
+    #popup-profil{
+		position: absolute;
+		top:0;
+		left:0;
+		display: flex;
+		height: 100%;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	    z-index: 1000;
+		background-color: rgba(17, 28, 69, 0.185);
+        >div{
+            padding: 2rem;
+            background-color: $main-dark;
+	        border: 4px $active-dark solid;
+	        border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            .head{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+            }
+            .content{
+
+            }
+            
+        }
+    }
+    .content {
 		gap: 0.5rem
 	}
 
 	.no-friend {
 		text-align: center;
 	}
-
     .one-friend{
         width: 100%;
         background-color: rgba(0, 0, 0, 0.1);
