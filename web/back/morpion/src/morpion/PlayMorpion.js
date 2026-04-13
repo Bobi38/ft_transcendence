@@ -35,16 +35,21 @@ function move(player, move){
 
     const game = player.getGame();
 
-    if (!game) return false;
+    if (!game) {
+        player.sendMessage(msgs.welcome);
+        return false;
+    }
 
     if (game.isState("end")){
-        p.sendList();
+        player.sendList();
         player.disconnect("game over", game.getId())
         return false;
     }
 
     if (!game.isTurnPlayer(player) || game.isState("init")){
         const adverse = game.getOther(player)
+
+        if (!adverse) return ;
 
         if (!adverse.isInactived()){
             leave(adverse);
@@ -54,7 +59,7 @@ function move(player, move){
         }
         return false;
     }
-
+    
     if (game.play(player, move)) {
         if(game.checkVictory()){
             game.setEnd();
@@ -83,6 +88,7 @@ function move(player, move){
 function searchGame(player){
 
     let game = player.getGame();
+
     if (game?.isState("play")){
         player.sendMessage();
         return false;
