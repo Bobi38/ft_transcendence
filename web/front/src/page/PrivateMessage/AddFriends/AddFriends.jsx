@@ -103,10 +103,7 @@ export default function AddFriends() {
         SocketM.sendd("friend", {type: "maj_frd", login: repjson.login});
         SocketM.sendd("friend", {type: "req_frd", login: repjson.login});
     }
-
-
     return (
-
         <div className={`AddFriends-root`}>
 			<h1>Friends request</h1>
 			<hr />

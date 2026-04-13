@@ -31,7 +31,7 @@ router.get('/github/callback', async (req, res) => {
     }
     const code = req.query.code;
     const frontendUrl = req.session.frontendUrl;
-    const result = await Oauth2Service.githubCallback(code, frontendUrl, res);
+    const result = await Oauth2Service.githubCallback(code, frontendUrl, res, req);
     if (!result.success) {
         return errorHandler(result.message, result.code, res);
     }

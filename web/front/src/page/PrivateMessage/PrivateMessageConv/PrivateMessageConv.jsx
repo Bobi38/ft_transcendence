@@ -32,8 +32,11 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
                 console.log("dlt_friend callbackfail(info) error back ", repjson.message);
             }
         });
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
+        if (!repjson || (repjson &&  !repjson.success)){
+            showAlert(repjson.message, "danger");
+            return false;
+        }
+        return true;
     }
 
     async function is_friend(login){
@@ -75,10 +78,13 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             showAlert("You are not, or are no longer, friends with this user.", "danger");
             return;
         }
-        await add_private_message(time, login);
-
-        SocketM.sendd('priv', data2);
+        if (!await add_private_message(time, login)){
+            setInput("");
+            return;
+        }
+        
         setInput("");
+        SocketM.sendd('priv', data2);
     }
     return (
 		<div className={`PrivateMessageConv-root`}>
@@ -87,7 +93,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 			<hr />
 
 			<div className="content">
-                <p id={`alert-container`}></p>
 
 				<div className="message">
                     {displayedMessages && displayedMessages.map((msg, index) => { return (
@@ -112,9 +117,10 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 				<hr />
 
 				<form onSubmit={handler_submit}>
+                    <p id={`alert-container`}></p>
 					<input type="text"
-					value = {input}
-					onChange={(e) => setInput(e.target.value)}
+                        value = {input}
+                        onChange={(e) => setInput(e.target.value)}
 					/>
 					<button className="button" type="submit">Send</button>
 				</form>
