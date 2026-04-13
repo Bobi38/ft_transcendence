@@ -32,8 +32,6 @@ export default function PasswordForget({login_mode}) {
         const email = e.target.email.value;
         console.log("email",email)
 
-        if (email === "")
-            return;
         const url = `/api/secu/recovery_password`;
 
         console.log(`${url}`)
@@ -44,6 +42,10 @@ export default function PasswordForget({login_mode}) {
             body: JSON.stringify({mail: email}),
         }, null, null, true);
         console.log("recupPswd repjson",repjson)
+		if (repjson && repjson.status < 500 && repjson.status >= 400){
+            showAlert(`${repjson.message}`, "danger");
+            return ;
+        }
         if (!repjson || (repjson &&  !repjson.success)){
             console.log(repjson.message)
             return ;
@@ -125,75 +127,81 @@ export default function PasswordForget({login_mode}) {
             <h1>Password Forget</h1>
 
             {showMode === "send_code" && (
-                <>
-                    <form onSubmit={(e) => {send_code(e)}}>
-                        <label htmlFor={`email`}>Email</label>
-                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`} required/>
-                        <button type={`submit`}>Send mail verification</button>
-                    </form>
-					<hr />
-                    <button type={`button`} onClick={login_mode}>Connexion</button>
-                </>
+				<form onSubmit={(e) => {send_code(e)}}>
+					<p id={`alert-container`}></p>
+
+					<label htmlFor={`email`}>Email</label>
+					<input
+						type={`email`}
+						id={`email`}
+						name={`email`}
+						placeholder={`you@example.com`}
+						required/>
+					<button type={`submit`}>Send mail verification</button>
+				</form>
             )}
 
             {showMode === "check_code" && (
-                <>
-                    <form onSubmit={(e) => {check_code(e)}}>
+				<>
+				<form onSubmit={(e) => {check_code(e)}}>
+					<p id={`alert-container`}></p>
 
-						<input type={`text`}
-								id={`code`} name={`code`}
-								placeholder={`Entrez Code`}/>
-						<button type={`submit`}>Valid</button>
-
-                    </form>
-                    <hr/>
-                    <form onSubmit={(e) => {send_code(e)}}>
+					<input
+						type={`text`}
+						id={`code`} name={`code`}
+						placeholder={`Your Code`}
+						required/>
+					<button type={`submit`}>Valid</button>
+				</form>
+				<hr />
+				<form onSubmit={(e) => {send_code(e)}}>
 
                         <label htmlFor={`email`}>Email</label>
-                        <input type={`email`} id={`email`} name={`email`} placeholder={`you@example.com`}/>
+                        <input
+							type={`email`}
+							id={`email`}
+							name={`email`}
+							placeholder={`you@example.com`}
+							required/>
                         <button type={`submit`}>Send mail verification</button>
 
                     </form>
-					<hr />
-                    <button type={`button`} onClick={login_mode}>Connexion</button>
                 </>
             )}
 
             {showMode === "new_password" && (
-                <>
-                    <form onSubmit={(e) => {handle_pass(e)}}>
+				<form onSubmit={(e) => {handle_pass(e)}}>
+					<p id={`alert-container`}></p>
+					<label htmlFor={`password`}>New password</label>
+					<div className={`input-wrapper`}>
+						<input type={showPassword ? "text" : "password"}
+							id={`password`} name={`password`}
+							className={`password-field`}
+							placeholder={`Password`}
+							required />
+						<span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
+							{showPassword ? <VscEyeClosed /> : <VscEye />}
+						</span>
+					</div>
 
-                        <label htmlFor={`password`}>New password</label>
-                        <div className={`input-wrapper`}>
-                            <input type={showPassword ? "text" : "password"}
-                                id={`password`} name={`password`}
-                                className={`password-field`}
-                                placeholder={`Password`}
-                                />
-                            <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
-                            </span>
-                        </div>
+					<label htmlFor={`confirmePassword`}>Confirm your password</label>
+					<div className={`input-wrapper`}>
+						<input type={showPassword ? "text" : "password"}
+							id={`confirmePassword`} name={`confirmePassword`}
+							className={`password-field`}
+							placeholder={`Password`}
+							required />
+						<span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
+							{showPassword ? <VscEyeClosed /> : <VscEye />}
+						</span>
+					</div>
 
-                        <label htmlFor={`confirmePassword`}>Confirm your password</label>
-                        <div className={`input-wrapper`}>
-                            <input type={showPassword ? "text" : "password"}
-                                id={`confirmePassword`} name={`confirmePassword`}
-                                className={`password-field`}
-                                placeholder={`Password`}
-                                />
-                            <span className={`toggle-icon`} onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
-                            </span>
-                        </div>
+					<button type={`submit`}>Validate</button>
 
-                        <button type={`submit`}>Validate</button>
-
-                    </form>
-					<hr />
-                    <button type={`button`} onClick={login_mode}>Connexion</button>
-                </>
+				</form>
             )}
+			<hr />
+			<button type={`button`} onClick={login_mode}>Connexion</button>
 
         </div>
     );

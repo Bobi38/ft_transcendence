@@ -114,6 +114,7 @@ export default function Login({ password_forget_mode, register_mode}) {
 
             <h1>Connexion</h1>
             <form id={`login`} onSubmit={(e) => {login_submit(e)}}>
+         	   <p id={`alert-container`}></p>
 
 
                 <label  htmlFor="email">Email</label>

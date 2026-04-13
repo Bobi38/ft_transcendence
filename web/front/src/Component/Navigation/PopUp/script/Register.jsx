@@ -52,7 +52,7 @@ export default function Register({login_mode}) {
             <h1>Register</h1>
 
             <form id={`register`} onSubmit={(e) => {register_submit(e)}}>
-
+    	        <p id={`alert-container`}></p>
 				<label htmlFor={`name`}>Nickname</label>
 				<input type={`text`} id={`name`} name={`name`} placeholder={`XxX_DarkSasuke_XxX`} required/>
 
