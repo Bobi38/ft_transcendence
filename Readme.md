@@ -521,6 +521,23 @@ These tables represent the history of all games played in the system.
 - **Challenge**: by quickly identifying lower-priority features and focusing on the main interface.
 
 ### Tvoisin — Project Manager
+- **Modules implemented**:
+    - Use ORM for database : Sequelize
+    - authentication with OAuth 2.0 : Github, Google
+    - Two-Factor Authentication : sends a verification code by email
+    - Implement real-time features using WebSockets or similar technology   
+<br/>
+
+- **Detailed breakdown**:
+Tvoisin was responsible for designing and developing the backend, including the implementation of a microservices architecture and the initialization of the database. He selected Sequelize as the ORM due to its compatibility with Node.js and its ease of configuration. In addition, he implemented WebSocket servers to handle real-time features such as general chat, private messaging, the tic-tac-toe game, and the "friends" system. These features enable real-time notifications for user connections and disconnections. This work also required coordinating the initialization of WebSockets on the frontend. Furthermore, the implementation of Two-Factor Authentication (2FA) and OAuth 2.0 authentication mechanisms was carried out as a personal initiative.
+
+<br/>
+
+- **Challenges**:
+One of the main challenges Tvoisin encountered was transitioning from a monolithic architecture to a microservices-based architecture using Docker Compose. Despite having limited prior experience with Dockerfiles and Docker Compose, he successfully addressed this challenge. Another significant challenge involved implementing WebSocket communication across both backend and frontend components. This aspect of the project proved to be both technically demanding and highly rewarding once fully operational.
+  
+<br/>
+
 - Organized sprint planning and retrospectives.
 - Tracked tasks and deadlines.
 - Designed the overall microservice architecture and Docker Compose setup.
