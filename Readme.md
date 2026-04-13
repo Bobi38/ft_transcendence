@@ -569,17 +569,22 @@ One of the main challenges Tvoisin encountered was transitioning from a monolith
 - Help connecting every part of the project and ensure they worked together.
 - Define, choose and garantee harmony on the technical architecture
 - Paid attention to the standardization of the UI/UX on the site
+
 - **Modules implemented**:
     - Web-based game : Pong3D, a 3D online multiplayer squash game
     - Remote players : Real-time two-player networked gameplay via Colyseus
+    - Used a framework for both the frontend and backend (React).
 <br/>
 
 - **Detailed breakdown**:  
-temp
+Edarnand acted as the primary bridge between the diverse technical layers of the project and also ensuring the communication remained consistent across every part and modules. He played a crucial role in standardizing the UI/UX, implementing a global design system in SCSS to ensure that the 3D game interfaces, chat modules, and pages felt like a unified product. In the development of Pong3D, he focused on the integration of the Colyseus client within the React component lifecycle, managing complex state synchronizations to ensure that game rooms were correctly initialized and cleaned up to prevent memory leaks.
 <br/>
 
 - **Challenges**:  
-temp
+Ensuring the Colyseus client integrated properly with React’s state management without introducing lag.
+Integrating a heavy 3D engine like BabylonJS into a Single Page Application.
+Edarnand's primary hurdles was managing the lifecycle of the 3D engine within a Single Page Application (SPA). He had to address the conflict between React's component mounting logic and Babylon.js’s resource-heavy nature, ensuring that engine instances were properly disposed of to prevent memory leaks during navigation.
+Additionally, he faced the complex task of unifying a fragmented codebase. He had to reconcile the differing coding styles and data structures used by the separate game developers (Pong3D vs. Morpion) into a single cohesive design system.
 <br/>
 
 
