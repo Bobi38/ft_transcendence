@@ -518,6 +518,7 @@ These tables represent the history of all games played in the system.
 - **Challenge**: by quickly identifying lower-priority features and focusing on the main interface.
 
 ### Tvoisin — Project Manager
+
 - Organized sprint planning and retrospectives.
 - Tracked tasks and deadlines.
 - Designed the overall microservice architecture and Docker Compose setup.
