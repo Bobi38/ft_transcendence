@@ -18,7 +18,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             return;
 
         const url = `/api/chatP`;
-        console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
@@ -35,7 +34,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-        console.log("good");
     }
 
     async function is_friend(login){
@@ -43,7 +41,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             return;
 
         const url = `/api/friend/${login}/status`;
-        console.log(`${url}`)
         const repjson = await useFetch(`${url}`, {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
@@ -60,7 +57,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
 
     const handler_submit = async (e) => {
         e.preventDefault();
-        console.log("handler_submit(1) called: ", e.target[0].value);
         if (input === "") return;
         if (input.length > 511) {
             setInput("");
@@ -71,7 +67,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
         const data = {monMsg: true, type: 'priv_mess', message: input, timer: time, to: login}
 
-        console.log("handle_submit(2): ", data);
 
         const data2 = {...data, monMsg: false};
 
@@ -82,7 +77,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
         }
         await add_private_message(time, login);
 
-        console.log("handle_submit(3) send via WebSocket data2:", data2);
         SocketM.sendd('priv', data2);
         setInput("");
     }
