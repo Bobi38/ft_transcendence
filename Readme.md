@@ -577,7 +577,7 @@ Claude, Gemini was used during this project for the following tasks:
 - **README drafting**: this README based on project requirements and baseReadme.md.
 - **UI transitions & animations**: Generating CSS transition ideas for the frontend.
 - **Boilerplate generation**: Generating initial Sequelize model definitions and Express route scaffolding to accelerate development.
-- **Good practice & bug seeking**: ... .
+- **Good practice & bug seeking**: ....
 
 > All AI-generated code was reviewed, tested, and adapted by the team before being integrated into the project.
 
