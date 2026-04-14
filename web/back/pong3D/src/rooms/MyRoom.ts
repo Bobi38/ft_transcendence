@@ -227,17 +227,17 @@ export class MyRoom extends Room {
 
   private _finalizeDisconnection(sessionId: string) {
     const stats = this._matchStats.get(sessionId);
-
     const state = this.state.roomStatus;
+
+    if (stats && (state == RoomStatus.STARTED || state == RoomStatus.AWAITING_RECONNECTION || state == RoomStatus.WAITING)) {
+      stats.hasDisconnected = true;
+      activePlayers.delete(stats.id);
+    }
+
     if (state == RoomStatus.STARTED || state == RoomStatus.AWAITING_RECONNECTION || state == RoomStatus.WAITING) {
       this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
     }
 
-    if (stats && this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED) {
-      stats.hasDisconnected = true;
-      activePlayers.delete(stats.id);
-    }
-    
     this._timeEnd = this._timeEnd || Date.now();
     this._simulation?.getEngine()?.stopRenderLoop();
     this.lock();
@@ -251,9 +251,9 @@ export class MyRoom extends Room {
     const p1 = players[0];
     const p2 = players[1];
     const timePlayed = this._timeEnd - this._timeStart;
-    const isAbort = this.state.roomStatus === RoomStatus.PLAYER_DISCONNECTED;
+    const isAbort = this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED;
 
-    let loserStats = p1.hasDisconnected ? p1 : (p2.hasDisconnected ? p2 : (p1.hasWon ? p2 : (p2.hasWon ? p1 : p2)));
+    let loserStats = p1.hasDisconnected ? p1 : (p2.hasDisconnected ? p2 : (p1.hasWon ? p2 : p1));
     let winnerStats = (loserStats === p1) ? p2 : p1;
 
     try {
