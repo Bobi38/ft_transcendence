@@ -282,7 +282,7 @@ export class MyRoom extends Room {
   async _updateDbPlayer(playerId: string, won: boolean, abort: boolean, timePlayed: number){
     const userData = await StatPong3D.findOne({where: {idUser: playerId}});
     if (abort)
-      await userData.increment({total_game: 1, time_played: timePlayed, abortwin: won, abortlose: !won});
+      await userData.increment({total_game: 1, time_played: timePlayed, abortwinner: won, abortloser: !won});
     else 
       await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
   }
