@@ -44,6 +44,10 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        if (repjson && !repjson.success){
+            showAlert(repjson.message, "danger");
+            return;
+        }
         showAlert("Password update with success", "success");
 
     }
