@@ -36,7 +36,6 @@ function move(player, move){
     const game = player.getGame();
 
     if (!game) {
-        player.sendMessage(msgs.welcome);
         return false;
     }
 
