@@ -40,6 +40,7 @@ export default function StatsPong({ username, setUsername }) {
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
             setStatToDisplay(null);
             setHistoryUser([]);
             setNewPage(1);
@@ -47,7 +48,6 @@ export default function StatsPong({ username, setUsername }) {
         }
 
         const data = repjson.stat_user;
-		console.log(data)
 
 		const win = data.win + data.abortwinner;
 		const lose = data.lose + data.abortloser;
@@ -84,8 +84,10 @@ export default function StatsPong({ username, setUsername }) {
         })
         if (!repjson)
             return;
-		if ((repjson && !repjson.success))
+		if ((repjson && !repjson.success)){
+            console.log(repjson.message);
 			setHistoryUser([]);
+        }
 		else
 			setHistoryUser(repjson.history_user);
     }
