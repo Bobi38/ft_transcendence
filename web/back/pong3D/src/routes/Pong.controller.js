@@ -25,7 +25,7 @@ router.get('/get_stat', async (req, res) => {
 		//console.log (result);
         if (!result.success)
 			return errorHandler(result.message, result.code, res);
-        return res.status(result.code).json({success: true, stat_user: result.stat_user, name: validation.name ? validation.name : "current user"});
+        return res.status(result.code).json({success: true, message: "success", stat_user: result.stat_user, name: validation.name ? validation.name : "current user"});
 
     }catch(err){
         return errorHandler("API/pong get_stat(catch) " + err, 500, res);
@@ -41,7 +41,7 @@ router.get('/get_history/:page', async (req, res) => {
         const result = await PongService.get_history(validation.name, validation.page,validation.limit, validation.token);
         if (!result.success)
           return errorHandler(result.message, result.code, res);
-        return res.status(result.code).json({success: true, history_user: result.history_user, name: validation.name ? validation.name : "current user"});
+        return res.status(result.code).json({success: true, message: "success", history_user: result.history_user, name: validation.name ? validation.name : "current user"});
     }catch(err){
         return errorHandler("API/pong get_history(catch) " + err, 500, res);
     }

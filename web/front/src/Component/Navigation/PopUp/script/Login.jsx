@@ -84,7 +84,6 @@ export default function Login({ password_forget_mode, register_mode}) {
         onSuccess: async (tokenResponse) => {
             try{
                 const url = "/api/oauth2/google";
-                console.log(`${url}`)
 
                 const repjson = await useFetch(`${url}`, {
                     method: 'POST',
