@@ -20,6 +20,7 @@ export const secret = fs.readFileSync('/run/secrets/cle_pswd', 'utf-8').trim();
 router.use(cookieParser());
 const status = process.env.STATUS
 
+
 export function tcheck_MPFA(user, host){
     const now = new Date();
     const limit = new Date(now.getTime() - 10 * 60 * 1000);
@@ -97,6 +98,27 @@ export const SecuMiddleware = async (req, res, next) => {
       res.clearCookie('token');
       return res.status(401).json({ success: false, message: "token TEMP not valid" });
     }
+
+    next();
+  } catch (err) {
+    console.log("middleware error:", err);
+    return res.status(500).json({ success: false });
+  }
+};
+
+export const SecuChecko = async (req, res, next) => {
+  try {
+    const token =  req.cookies.token;
+    const temp = req.cookies.temp;
+
+    const valid = await checktok(token);
+    const val = await checktok(temp);
+    if (valid === 1) 
+      res.clearCookie('token');
+    if (val === 1)
+      res.clearCookie('temp');
+    if (val === 1 && valid === 1)
+      return res.status(401).json({ success: false, message: "token TEMP not valid" });
 
     next();
   } catch (err) {

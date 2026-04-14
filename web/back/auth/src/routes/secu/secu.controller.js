@@ -1,4 +1,4 @@
-import {bcrypt, express, jwt, crypto,  errorHandler, validator, secret, SecuMiddleware } from '../index_p.js';
+import {bcrypt, express, jwt, crypto,  errorHandler, validator, secret, SecuMiddleware, SecuChecko } from '../index_p.js';
 
 import {User, PswEmail} from '../index_p.js';
 
@@ -7,7 +7,7 @@ const router = express.Router();
 import SecuDTO from './secu.DTO.js';
 import SecuService from './secu.service.js';
 
-router.get('/checkco', async(req, res) =>{
+router.get('/checkco', SecuChecko, async(req, res) =>{
     try{
         let MPFA;
         console.log("API /api/secu/checkco");
