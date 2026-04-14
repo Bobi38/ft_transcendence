@@ -80,6 +80,12 @@ export default function App() {
                 });
                 setShowFriend(FRIEND.RED);
               }
+              if (data.type == 'add'){
+                setNotif({
+                    message:`${data.login} send friend request`,
+                    type: "add",
+                });
+              }
             }
 
             const handle_msg_notif = (data) => {
