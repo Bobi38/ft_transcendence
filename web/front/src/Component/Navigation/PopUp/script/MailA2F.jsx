@@ -99,7 +99,7 @@ export default function MailA2F({login_mode}) {
                 <>
                     <form id={`maila2f`} onSubmit={(e) => {maila2f_check_code(e)}}>
     		    	    <p id={`alert-container`}></p>
-                        <input type={`text`} id={`code`} name={`code`} placeholder={`Your Code`}/>
+                        <input type={`text`} id={`code`} name={`code`} placeholder={`Your Code`} required/>
                         <button type={`submit`}>Valid</button>
                     </form>
                     <hr/>

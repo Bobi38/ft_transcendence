@@ -9,6 +9,7 @@ import "./StatsPong.scss";
 import useFetch                     from "TOOL/useFetch.jsx";
 import Paging                       from "COMP/Paging/Paging.jsx";
 import StatsPongHistoryCard         from "./StatsPongHistoryCard/StatsPongHistoryCard";
+import { format_time }				from "./StatsPongHistoryCard/StatsPongHistoryCard"
 
 function cal_percentage(value, max)
 {
@@ -22,7 +23,7 @@ export default function StatsPong({ username, setUsername }) {
     const limit = 5;
     const [statToDisplay, setStatToDisplay] = useState(null);
     const [historyUser, setHistoryUser] = useState([]);
-    const [currentPage, setNewPage] = useState(1);
+    const [currentPage, setNewPage] = useState(0);
 
     async function fetch_stats() {
 
@@ -43,7 +44,7 @@ export default function StatsPong({ username, setUsername }) {
             console.log(repjson.message)
             setStatToDisplay(null);
             setHistoryUser([]);
-            setNewPage(1);
+            setNewPage(0);
             return;
         }
 
@@ -60,8 +61,8 @@ export default function StatsPong({ username, setUsername }) {
 			winrate: cal_percentage(win, win + lose)
         };
 
-        if (statToDisplay === null || statToDisplay.total_game < data.total_game || username !== statToDisplay.total_game) {
-            setNewPage(Math.ceil(data.total_game / 5))
+        if (statToDisplay === null || statToDisplay.total_game < data.total_game) {
+            setNewPage(0)
         }
 		setStatToDisplay(data_formated);
     }
@@ -101,7 +102,7 @@ export default function StatsPong({ username, setUsername }) {
     }, [username, currentPage]);
 
     return (
-        <section className={`StatsMorpion-root`}>
+        <section className={`StatsPong-root`}>
 
             <div className={`history-container`}>
 
@@ -127,16 +128,16 @@ export default function StatsPong({ username, setUsername }) {
 
 				<form onSubmit={(e) => {e.preventDefault();
 					if (e.target.name.value.lenght === 0) return
-					setUsername(e.target.name.value); setNewPage(1);}}>
-					<input type={`text`} id="name" name="name" placeholder="Someone name" required/>
-					<input type={`submit`} value={`search`}/>
+					setUsername(e.target.name.value); setNewPage(0);}}>
+					<input type={`text`} id="name" name="name" placeholder="Username" required/>
+					<input type={`submit`} value={`Search`}/>
 				</form>
 
 				<hr />
 
 				<div className="content">
 					<p>Total game played: { statToDisplay?.total_game }</p>
-					<p>Total time played: { statToDisplay?.time_played }</p>
+					<p>Total time played: { format_time(statToDisplay?.time_played) }</p>
 					<p>Total win: { statToDisplay?.win }</p>
 					<p>Total lose: { statToDisplay?.lose }</p>
 					<p>Winrate: { statToDisplay?.winrate }%</p>
