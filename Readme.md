@@ -158,7 +158,7 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 2. **Create your environment file:**
    ```bash
-   cp env.exemple .env
+   cp .env.exemple .env
    ```
       <!-- cp /sgoinfre/fcretin/private/ft_transcendence_too_late/.env .env -->
    Then open `.env` and fill in the required values (database credentials, JWT secrets, OAuth keys if applicable, etc.).
