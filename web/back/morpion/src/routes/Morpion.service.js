@@ -54,7 +54,7 @@ class MorpionService {
                 if (to_search === null)
                     return ({success: false, message: `no user with this name..`, code: 404});
             }
-            const offsetpage = limit * (page - 1)
+            const offsetpage = limit * page
             console.log("offsetpage", offsetpage)
             console.log("limit", limit)
             const result_history = await GameMorp.findAll({where: {[Op.or]: [{ player_1: to_search.id }, { player_2: to_search.id }]}, limit: limit, offset: offsetpage, order: [['id', 'DESC']], include: [
