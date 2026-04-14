@@ -271,17 +271,20 @@ export class MyRoom extends Room {
         )
       });
 
-      await this._updateDbPlayer(winnerStats.id, true, timePlayed);
-      await this._updateDbPlayer(loserStats.id, false, timePlayed);
+      await this._updateDbPlayer(winnerStats.id, true, isAbort, timePlayed);
+      await this._updateDbPlayer(loserStats.id, false, isAbort, timePlayed);
 
     } catch (e) {
         console.error("Failed to store game results in database", e);
     }
   }
 
-  async _updateDbPlayer(playerId: string, won: boolean, timePlayed: number){
+  async _updateDbPlayer(playerId: string, won: boolean, abort: boolean, timePlayed: number){
     const userData = await StatPong3D.findOne({where: {idUser: playerId}});
-    await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
+    if (abort)
+      await userData.increment({total_game: 1, time_played: timePlayed, abortwin: won, abortlose: !won});
+    else 
+      await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
   }
 
   onDispose() {
