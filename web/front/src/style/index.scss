@@ -26,6 +26,10 @@
   background-color: rgb(2, 0, 128);
 }
 
+.global-notif.add{
+  background-color: rgb(198, 230, 17);
+}
+
 #alert-container{
 	&.danger { color: $red; }
 	&.success { color: $green; }

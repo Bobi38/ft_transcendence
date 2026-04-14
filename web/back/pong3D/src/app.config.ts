@@ -12,7 +12,9 @@ import cors from "cors";
  * Import your Room files
  */
 import { MyRoom } from "./rooms/MyRoom.js";
-import servRoute from "./routes/Pong3D.js";
+import Pongroute from "./routes/Pong.controller.js";
+import cookieParser from "cookie-parser";
+
 
 const server = defineServer({
     /**
@@ -29,11 +31,6 @@ const server = defineServer({
      *   client.http.get("/api/hello").then((response) => {})
      * 
      */
-    routes: createRouter({
-        api_hello: createEndpoint("/api/hello", { method: "GET", }, async (ctx) => {
-            return { message: "Hello World" }
-        })
-    }),
 
     /**
      * Bind your custom express routes here:
@@ -45,11 +42,14 @@ const server = defineServer({
             credentials: true}
         ));
 
-        app.get("/hi", (req, res) => {
-            res.send("It's time to kick ass and chew bubblegum!");
+        app.use((req, res, next) => {
+            console.log(`[PONG SERVICE] ${req.method} ${req.path}`);
+            next();
         });
 
-        app.use("/", servRoute);
+        app.use(cookieParser());
+
+        app.use("/", Pongroute);
 
         /**
          * Use @colyseus/monitor

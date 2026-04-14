@@ -67,16 +67,21 @@ app.use('/api/chatP', createProxyMiddleware({
   changeOrigin: true
 }))
 
-const pong3dProxy = createProxyMiddleware({
-  target: 'http://pong3d:2567',
-  changeOrigin: true,
-  ws: true,
-  pathRewrite: {
-    '^/api/pong3d': '',
-  },
-});
+// const pong3dProxy = createProxyMiddleware({
+//   target: 'http://pong3d:2567',
+//   changeOrigin: true,
+//   ws: true,
+//   pathRewrite: {
+//     '^/api/pong3d': '',
+//   },
+// });
 
-app.use('/api/pong3d', pong3dProxy);
+// app.use('/api/pong3d', pong3dProxy);
+
+app.use('/api/pong3d', createProxyMiddleware({
+  target: 'http://pong3d:2567',
+  changeOrigin: true
+}))
 
 app.use('/api/morpion', createProxyMiddleware({
   target: 'http://morpion:9004',

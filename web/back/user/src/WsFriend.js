@@ -66,11 +66,7 @@ export function initWebSFriend(server) {
     try{
       const iid = idd++;
       socket.id = iid;
-      // console.log('Nouvelle connexion WebSocket de', req.socket.remoteAddress);
-      // console.log('URL:', req.url);
-      // console.log('Headers upgrade:', req.headers.upgrade);
-      // console.log('Headers socket:', socket.id);
-      // console.log(req.headers.cookie)
+
       const token = getCookie('token', req.headers.cookie);
       if (!token)
         return;
@@ -150,6 +146,14 @@ export function initWebSFriend(server) {
               session.socket.send(JSON.stringify({type: 'maj_frd'}));
             if (session.socket.readyState === ws.OPEN && session.username === socket.username)
               session.socket.send(JSON.stringify({type: 'maj_frd'}));
+          }
+        }
+        if (data.type === 'add_frd'){
+          console.log(data.login);
+          const send = chat.findname(data.login)
+          for (const session of chat.sessions.values()){
+            if (send && session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'add', login: data.login}));
           }
         }
         if (data.type === "logout"){

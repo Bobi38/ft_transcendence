@@ -1,4 +1,4 @@
-class MorpionDTO {
+class PongDTO {
 
     static validateGetStat(req) {
         const token = req.cookies.token;
@@ -24,4 +24,4 @@ class MorpionDTO {
     }
 }
 
-export default MorpionDTO;
+export default PongDTO;

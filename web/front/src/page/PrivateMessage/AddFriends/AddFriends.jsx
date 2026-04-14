@@ -50,6 +50,7 @@ export default function AddFriends() {
         }
         fetch_all_request_friend();
         SocketM.sendd("friend", {type: "req_frd", login: name});
+        SocketM.sendd("friend", {type: "add_frd", login: name});
     }
 
     async function fetch_all_request_friend(){
