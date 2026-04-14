@@ -23,14 +23,6 @@ export default function PrivateMessageConv({ login, displayedMessages }) {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
             body: JSON.stringify({ message: input, time: time, id: login }),
-        }, null , function(repjson) {
-            if (repjson.message === "exist") {
-                console.log("dlt_friend callbackfail(info) people not exist");
-            } else if (repjson.message === "relation") {
-                console,log("dlt_friend callbackfail(info) people are not friend");
-            } else {
-                console.log("dlt_friend callbackfail(info) error back ", repjson.message);
-            }
         });
         if (!repjson || (repjson &&  !repjson.success)){
             showAlert(repjson.message, "danger");

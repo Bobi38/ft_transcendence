@@ -9,7 +9,7 @@ const paths = {
 
 class SocketManag{
     constructor(){
-        console.log("Création de SocketManag");
+        console.log("Creation of SocketManag");
         this.socket = {
             chat : null,
             priv : null,
@@ -78,7 +78,7 @@ class SocketManag{
             }
         }
         this.socket[name].onerror = (error) => {
-            console.log("errr socket" + error);
+            console.error("socket" + error);
         }
         this.socket[name].onclose = (event) => {
             if (this.reco[name] === false) return;   
@@ -105,7 +105,6 @@ class SocketManag{
     }
 
     sendd (name, data){
-        // console.log("sendd called with data:", data);
         const socket = this.socket[name];
         if (!socket){
             if (name === "friend" && data.type === "co_first"){
@@ -122,7 +121,6 @@ class SocketManag{
             this.queue[name].push(data);
             return;
         }
-        // console.log("envoi du message via WebSocket:", data, " to socket:", name);
         socket.send(JSON.stringify(data));
     }
     

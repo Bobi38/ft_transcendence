@@ -20,7 +20,6 @@ export default function StatsMorpionHistoryCard({ stats, nameSearched }) {
     }
 
     const color_card = (how_win, winnerUser)=> {
-        console.log(winnerUser)
         if (how_win === "draw") {
             return ("draw")
         } else if (how_win === "abort"){

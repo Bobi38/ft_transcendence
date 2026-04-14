@@ -30,7 +30,7 @@ export default async function useFetch(url, type_request, callbacksucces = null,
             return repjson
         }
     }catch(error){
-        console.log("Failed to fetch ressource :", error);
+        console.log("Failed to fetch ressource:", error);
         return null;
     }
 }

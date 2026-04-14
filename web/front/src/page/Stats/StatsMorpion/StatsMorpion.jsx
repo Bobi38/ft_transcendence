@@ -30,14 +30,11 @@ export default function StatsMorpion({ username, setUsername }) {
             ? `/api/morpion/get_stat?name=${username}`
             : `/api/morpion/get_stat`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`,  {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-        }, function(repjson){
-            console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success)){
             setStatToDisplay(null);
@@ -47,7 +44,6 @@ export default function StatsMorpion({ username, setUsername }) {
         }
 
         const data = repjson.stat_user;
-		console.log(data)
 
         const win_horizontal = data.type_X_horizontal_winner + data.type_O_horizontal_winner
         const win_vertical = data.type_X_vertical_winner + data.type_O_vertical_winner
@@ -98,19 +94,15 @@ export default function StatsMorpion({ username, setUsername }) {
     async function fetch_history(page_nb) {
 
         
-        console.log("fetch_history",page_nb)
         const url = username
             ? `/api/morpion/get_history/${page_nb}?limit=${limit}&name=${username}`
             : `/api/morpion/get_history/${page_nb}?limit=${limit}`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`,  {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-        }, function(repjson){
-            console.log("useFetch(info) success history_user: " , repjson.history_user);
         })
         if (!repjson)
             return;

@@ -32,7 +32,6 @@ export default function Login({ password_forget_mode, register_mode}) {
         }
 
         const api_url = `/api/auth/session`;
-        console.log(`${api_url}`)
 
         const repjson = await useFetch(`${api_url}`, {
             method: 'POST',
@@ -101,7 +100,7 @@ export default function Login({ password_forget_mode, register_mode}) {
                 setShowLog(AUTH.NONE);
                 SocketM.sendd('friend', {type: 'co_first'});
             }catch(err){
-                console.log("error front handle_google " + err);
+                showAlert("error front handle_google " + err, "danger");
             }
 
         },

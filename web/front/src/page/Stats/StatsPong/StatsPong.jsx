@@ -31,17 +31,12 @@ export default function StatsPong({ username, setUsername }) {
             ? `/api/pong3d/get_stat?name=${username}`
             : `/api/pong3d/get_stat`;
 
-        console.log(`${url}`)
-
         const repjson = await useFetch(`${url}`,  {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-        }, function(repjson){
-            console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
             setStatToDisplay(null);
             setHistoryUser([]);
             setNewPage(0);
@@ -71,24 +66,19 @@ export default function StatsPong({ username, setUsername }) {
 
     async function fetch_history(page_nb) {
 
-        console.log("fetch_history",page_nb)
         const url = username
             ? `/api/pong3d/get_history/${page_nb}?limit=${limit}&name=${username}`
             : `/api/pong3d/get_history/${page_nb}?limit=${limit}`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`,  {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
-        }, function(repjson){
-            console.log("useFetch(info) success history_user: " , repjson.history_user);
         })
         if (!repjson)
             return;
 		if ((repjson && !repjson.success)){
-            console.log(repjson.message);
 			setHistoryUser([]);
         }
 		else

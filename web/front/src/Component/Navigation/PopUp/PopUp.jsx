@@ -18,7 +18,6 @@ export default function PopUp() {
 
         sessionStorage.clear();
         const url = `/api/secu/cookie`;
-        console.log(`${url}`)
 
         await useFetch(`${url}`, {
             method: "DELETE",

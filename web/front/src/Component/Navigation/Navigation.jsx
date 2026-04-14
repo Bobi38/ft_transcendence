@@ -53,7 +53,6 @@ export default function Navigation({ children }) {
             sessionStorage.clear();
             return ;
         } else if (!resCo.success && resCo.MPFA === true) {
-            console.log("in MPFA");
             if (sho !== AUTH.MAILA2F) setShowLog(AUTH.MAILA2F);
             // sessionStorage.clear();
             return ;

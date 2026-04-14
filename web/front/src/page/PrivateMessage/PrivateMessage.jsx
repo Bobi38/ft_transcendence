@@ -64,9 +64,7 @@ export default function PrivateMessage() {
 	useEffect(() => {
         const handle_private_message = async (data) => {
             if (data.type === "updateName_good"){
-                console.log("i m in handle 7878" + data.new_name);
                 if (data.old_name === goToConv){
-                    console.log("i m in handle 7878" + data.new_name);
                     setGoToConv(data.new_name);
                     await fetch_go_to_conv_private();
                     await fetch_private_message(data.new_name);

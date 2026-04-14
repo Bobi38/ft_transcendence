@@ -35,15 +35,7 @@ export default function AddFriends() {
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 body: JSON.stringify({name: name})
-            }, null , function(repjson) {
-            if (repjson.message === undefined) {
-                console.log("add_friend callbackfail(info) people not exist");
-            } else if (repjson.message === name) {
-                console,log("add_friend callbackfail(info) people are already friend");
-            } else {
-                console.log("add_friend callbackfail(info) error back ", repjson.message);
-            }
-        })
+            })
         if (!repjson || (repjson &&  !repjson.success)){
             showAlert(repjson.message, "danger");
             return;
@@ -88,15 +80,14 @@ export default function AddFriends() {
     }
 
     const handel_response = async (arg) => {
-        console.log("requestfriend finish", arg)
 
         const url = `/api/friend/response`;
 
         const repjson = await useFetch(`${url}`, {
-        method: "PATCH",
-        headers: {'Content-Type': 'application/json'},
-        credentials: "include",
-        body: JSON.stringify(arg)
+            method: "PATCH",
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+            body: JSON.stringify(arg)
         })
         if (!repjson || (repjson &&  !repjson.success))
             return;
