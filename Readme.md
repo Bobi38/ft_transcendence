@@ -617,6 +617,7 @@ The trickiest part of the networking was clock synchronisation: ensuring that ea
 - **Modules implemented**:
     - Other Game : Tic-Tac-Toe
     - Remote players : two-player networked gameplay
+    - Spectator mode : spectate ongoing games
     - AI opponent : Local single-player mode with a bot opponent    
 <br/>
 

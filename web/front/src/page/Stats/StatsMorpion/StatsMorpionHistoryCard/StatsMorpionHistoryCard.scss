@@ -5,9 +5,7 @@
 .StatsMorpionHistoryCard-root{
     display: flex;
     flex-direction: row;
-    height: 100%;
     width: 100%;
-    max-height: 200px;
     background: rgba(255, 255, 255, 0.900);
     padding: 1rem;
     border-radius: 30px;
@@ -24,7 +22,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        border: solid rgb(0, 0, 0) 2px;
+        border: solid black 2px;
         padding: 1rem;
         width: max-content;
         height: 100%;

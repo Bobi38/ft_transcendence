@@ -5,12 +5,11 @@ import { useEffect, useState }  from    "react";
 import "./Paging.scss";
 
 export default function Paging({ totalPages, currentPage, setNewPage}) {
-
     function default_tab() {
         const tab = []
 
         for (let i = 1; i <= totalPages; i++) {
-            if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1) ) {
+            if (i === 0 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1) ) {
                 tab.push(i);
             }
         }
@@ -28,7 +27,6 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                 if (i - last === 2) {
                     tab_with_dot.push(last + 1);
                 }
-
                 else if (i - last > 2) {
                     tab_with_dot.push("...");
                 }
@@ -53,7 +51,7 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
         <div className={`Paging-root`}>
             <ul>
                 <li className={`onhover`}>
-                    <button onClick={(e) => {(currentPage == 1) ? null : setNewPage(currentPage - 1)}}>
+                    <button onClick={(e) => {(currentPage === 0) ? null : setNewPage(currentPage - 1)}}>
                         &lt;prev {/* "<"prev */}
                     </button>
                 </li>
@@ -82,7 +80,7 @@ export default function Paging({ totalPages, currentPage, setNewPage}) {
                 })}
 
                 <li className={`onhover`}>
-                    <button onClick={(e) => {(currentPage == totalPages) ? null : setNewPage(currentPage + 1)}}>
+                    <button onClick={(e) => {(currentPage === totalPages - 1) ? null : setNewPage(currentPage + 1)}}>
                         next&gt;  {/* next">" */}
                     </button>
                 </li>
