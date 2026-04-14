@@ -29,23 +29,23 @@ class ProfileDTO {
     }
 
     static validatePassword_Cookie(req) {
-		const password = req.body.Pass;
-		const token = req.cookies.token;
-    if (!password)
-        	return { success: false, message: "no password" };
-		if (password.length > 128)
-			return { success: false, message: "password too long" };
-    if (password.length < 4) {
-      return { valid: false, message: 'Password too short (min: 4 caract)', code: 400 };
-    }
-    if (!/[A-Z]/.test(password)) {
-      return { valid: false, message: 'Password must contain at least one uppercase letter', code: 400 };
-    }
-    if (!/[0-9]/.test(password))
-      return { valid: false, message: 'Password must contain at least one number character', code: 400 };
-		if (!token)
-			return { success: false, message: "no token" };
-		return { success: true, token };
+		  const password = req.body.Pass;
+		  const token = req.cookies.token;
+      if (!password)
+        	  return { success: false, message: "no password", code: 400 };
+		  if (password.length > 128)
+			  return { success: false, message: "password too long", code: 400 };
+      if (password.length < 4) {
+        return { valid: false, message: 'Password too short (min: 4 caract)', code: 400 };
+      }
+      if (!/[A-Z]/.test(password)) {
+        return { valid: false, message: 'Password must contain at least one uppercase letter', code: 400 };
+      }
+      if (!/[0-9]/.test(password))
+        return { valid: false, message: 'Password must contain at least one number character', code: 400 };
+		  if (!token)
+			  return { success: false, message: "no token" };
+		  return { success: true, token };
     }
 }
 

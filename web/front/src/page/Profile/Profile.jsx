@@ -41,13 +41,13 @@ export default function Profile() {
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({Pass: password})
-        });
-        if (!repjson || (repjson &&  !repjson.success))
-            return;
-        if (repjson && !repjson.success){
+        });        
+        if (repjson && !repjson.success && repjson.status < 500){
             showAlert(repjson.message, "danger");
             return;
         }
+        if (!repjson || (repjson &&  !repjson.success))
+            return;
         showAlert("Password update with success", "success");
 
     }
