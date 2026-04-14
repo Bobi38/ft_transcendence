@@ -22,7 +22,7 @@ export default function StatsPong({ username, setUsername }) {
     const limit = 5;
     const [statToDisplay, setStatToDisplay] = useState(null);
     const [historyUser, setHistoryUser] = useState([]);
-    const [currentPage, setNewPage] = useState(1);
+    const [currentPage, setNewPage] = useState(0);
 
     async function fetch_stats() {
 
@@ -40,14 +40,14 @@ export default function StatsPong({ username, setUsername }) {
             console.log("useFetch(info) success stat_user: " , repjson.stat_user);
         })
         if (!repjson || (repjson &&  !repjson.success)){
+            console.log(repjson.message)
             setStatToDisplay(null);
             setHistoryUser([]);
-            setNewPage(1);
+            setNewPage(0);
             return;
         }
 
         const data = repjson.stat_user;
-		console.log(data)
 
 		const win = data.win + data.abortwinner;
 		const lose = data.lose + data.abortloser;
@@ -60,8 +60,8 @@ export default function StatsPong({ username, setUsername }) {
 			winrate: cal_percentage(win, win + lose)
         };
 
-        if (statToDisplay === null || statToDisplay.total_game < data.total_game || username !== statToDisplay.total_game) {
-            setNewPage(Math.ceil(data.total_game / 5))
+        if (statToDisplay === null || statToDisplay.total_game < data.total_game) {
+            setNewPage(0)
         }
 		setStatToDisplay(data_formated);
     }
@@ -84,8 +84,10 @@ export default function StatsPong({ username, setUsername }) {
         })
         if (!repjson)
             return;
-		if ((repjson && !repjson.success))
+		if ((repjson && !repjson.success)){
+            console.log(repjson.message);
 			setHistoryUser([]);
+        }
 		else
 			setHistoryUser(repjson.history_user);
     }
@@ -125,7 +127,7 @@ export default function StatsPong({ username, setUsername }) {
 
 				<form onSubmit={(e) => {e.preventDefault();
 					if (e.target.name.value.lenght === 0) return
-					setUsername(e.target.name.value); setNewPage(1);}}>
+					setUsername(e.target.name.value); setNewPage(0);}}>
 					<input type={`text`} id="name" name="name" placeholder="Someone name" required/>
 					<input type={`submit`} value={`search`}/>
 				</form>

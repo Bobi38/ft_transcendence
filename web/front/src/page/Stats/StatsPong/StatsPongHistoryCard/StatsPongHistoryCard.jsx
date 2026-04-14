@@ -20,8 +20,8 @@ export default function StatsPongHistoryCard({ stats }) {
     return (
         <article className={`StatsMorpionHistoryCard-root`}>
 			<p className={`time`}>time: {stats.time}</p>
-			<p className={`stat`}>{`${stats.id_player1.name} : ${stats.winnner ? 'win' : 'lose'} ${stats.score_1}`}</p>
-			<p className={`stat`}>{`${stats.id_player2.name} : ${stats.winnner ? 'win' : 'lose'} ${stats.score_2}`}</p>
+			<p className={`stat`}>{`${stats.player1.name} : ${stats.winnner ? 'win' : 'lose'} ${stats.score_1}`}</p>
+			<p className={`stat`}>{`${stats.player2.name} : ${stats.winnner ? 'win' : 'lose'} ${stats.score_2}`}</p>
         </article>
     )
 }
