@@ -228,6 +228,8 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 > **Why Babylon?** Babylon JS is built specifically for the web, and unlike Three.js ships with game-oriented features.
 
+> **Why SCSS?** SCSS extends CSS with variables and mixins, allowing for styling that is more reusable and easier to scale.
+
 
 ### Backend ![icons][tag_icon_back]
 
@@ -615,6 +617,7 @@ The trickiest part of the networking was clock synchronisation: ensuring that ea
 - **Modules implemented**:
     - Other Game : Tic-Tac-Toe
     - Remote players : two-player networked gameplay
+    - Spectator mode : spectate ongoing games
     - AI opponent : Local single-player mode with a bot opponent    
 <br/>
 

@@ -157,8 +157,8 @@ export default function StatsMorpion({ username, setUsername }) {
 				<form onSubmit={(e) => {e.preventDefault();
 					if (e.target.name.value.lenght === 0) return
 					setUsername(e.target.name.value); setNewPage(0);}}>
-					<input type={`text`} id="name" name="name" placeholder="Someone name" required/>
-					<input type={`submit`} value={`search`}/>
+					<input type={`text`} id="name" name="name" placeholder="Username" required/>
+					<input type={`submit`} value={`Search`}/>
 				</form>
 
 				<hr />
