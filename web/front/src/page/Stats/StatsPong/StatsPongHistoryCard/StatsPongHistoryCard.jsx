@@ -27,8 +27,8 @@ export default function StatsPongHistoryCard({ stats }) {
 			<p className={`time`}>Game duration: {format_time(stats.time)}</p>
 			{stats.abortwinner ? (
 				<>
-					<p className={`stat`}>{`${stats.player1.name} ${stats.id_player_1 == stats.abortwinner ? 'won' : 'lost'} after abort with ${stats.score_1} point${stats.score_1 <= 1 ? '' : 's'}`}</p>
-					<p className={`stat`}>{`${stats.player2.name} ${stats.id_player_2 == stats.abortwinner ? 'won' : 'lost'} after abort with ${stats.score_2} point${stats.score_2 <= 1 ? '' : 's'}`}</p>
+					{/*<p className={`stat`}>{`${stats.player1.name} ${stats.id_player_1 == stats.abortwinner ? 'won' : 'lost'} after abort with ${stats.score_1} point${stats.score_1 <= 1 ? '' : 's'}`}</p>*/}
+					{/*<p className={`stat`}>{`${stats.player2.name} ${stats.id_player_2 == stats.abortwinner ? 'won' : 'lost'} after abort with ${stats.score_2} point${stats.score_2 <= 1 ? '' : 's'}`}</p>*/}
 				</>
 			) : (
 				<>
