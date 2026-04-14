@@ -93,13 +93,12 @@ export function initWebSChat(server) {
           for (const session of chat.sessions.values()){
             console.log(session.username, " " , session.userId, " ", session.socket.id);
             if (send && session.socket.readyState === ws.OPEN && session.userId === send.userId){
-              console.log("le message " , data.message, " va etre envoye a ", session.username, " ", session.userId, " ", session.socket.id);
+              
               session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: false, message: data.message, login: ni, timer: time}));
               session.socket.send(JSON.stringify({type: 'notif', login: ni}));
-              console.log("message envoye a ", session.username, " ", session.userId, " ", session.socket.id);
+            
             }
             if (session.socket.readyState === ws.OPEN && session.userId === nono){
-              console.log("innnnnnn" , session.username, " " , session.userId, " ", session.socket.id);
               session.socket.send(JSON.stringify({type: 'priv_mess',monMsg: true, message: data.message, login: ni, timer: time}));
             }
           }

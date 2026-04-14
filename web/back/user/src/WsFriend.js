@@ -148,6 +148,14 @@ export function initWebSFriend(server) {
               session.socket.send(JSON.stringify({type: 'maj_frd'}));
           }
         }
+        if (data.type === 'add_frd'){
+          console.log(data.login);
+          const send = chat.findname(data.login)
+          for (const session of chat.sessions.values()){
+            if (send && session.socket.readyState === ws.OPEN && session.username === send.username)
+              session.socket.send(JSON.stringify({type: 'add', login: data.login}));
+          }
+        }
         if (data.type === "logout"){
           socket.isAlive = false;
           socket.GoLogout = true;

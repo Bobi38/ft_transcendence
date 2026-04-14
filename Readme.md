@@ -228,6 +228,8 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 > **Why Babylon?** Babylon JS is built specifically for the web, and unlike Three.js ships with game-oriented features.
 
+> **Why SCSS?** SCSS extends CSS with variables and mixins, allowing for styling that is more reusable and easier to scale.
+
 
 ### Backend ![icons][tag_icon_back]
 
