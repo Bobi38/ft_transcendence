@@ -1,6 +1,5 @@
 // models/index.js
 import {Sequelize} from 'sequelize';
-import dotenv from 'dotenv';
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
