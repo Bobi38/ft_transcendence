@@ -115,7 +115,7 @@ class MorpionRoom extends Room {
         }
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send({message: m.msgs.badMove, board: this._board});
+            currentPlayer.send({message: m.msgs.badMove, board: this._board, turn: true});
             return false;
         }
 
