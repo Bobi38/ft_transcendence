@@ -82,8 +82,8 @@ services:
     networks:
       - home
 
-  add_service:
-    container_name: add_service
+  add_db:
+    container_name: add_db
     build:
       context: ./web/back
       dockerfile: add_db/Dockerfile

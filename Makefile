@@ -26,10 +26,10 @@ compose_prod:
 	docker compose -f docker-compose.prod.yml up -d
 
 add_dev:
-	docker compose -f docker-compose.dev.yml --profile add up -d add_service
+	docker compose -f docker-compose.dev.yml --profile add up -d add_db
 
 add_prod:
-	docker compose -f docker-compose.prod.yml --profile add up -d add_service
+	docker compose -f docker-compose.prod.yml --profile add up -d add_db
 
 compose:
 	docker compose up -d
