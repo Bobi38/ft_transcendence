@@ -31,6 +31,14 @@ class SecuDTO {
     if (new_psd.length > 128) {
       return { valid: false, message: 'Password too long', code: 400 };
     }
+    if (new_psd.length < 4) 
+      return { valid: false, message: 'Password too short (min: 4 caract)', code: 400 };
+    if (!/[A-Z]/.test(new_psd)) {
+      return { valid: false, message: 'Password must contain at least one uppercase letter', code: 400 };
+    }
+    if (!/[0-9]/.test(new_psd)) {
+      return { valid: false, message: 'Password must contain at least one number character', code: 400 };
+    }
     return { valid: true };
   }
 
