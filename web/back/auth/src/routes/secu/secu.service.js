@@ -80,6 +80,7 @@ class SecuService {
             if (type === 1 ){
                 res.clearCookie(CookieName);
                 await result.update({co: true,MPFA: false,Hostlastco: host, Datelastco: new Date()});
+                console.log("in " + result.MPFA);
                 generateToken(false, token, res);
             }
             return ({success: true, message: "code valid", code: 200, username: result.name, token: token});

@@ -98,6 +98,10 @@ export default function Login({ password_forget_mode, register_mode}) {
                     return;
                 }
                 setShowLog(AUTH.NONE);
+                sessionStorage.setItem('type', "success");
+                sessionStorage.setItem('message', "Connexion réussie");
+                sessionStorage.setItem('token', repjson.token);
+                sessionStorage.setItem('username', repjson.username);
                 SocketM.sendd('friend', {type: 'co_first'});
             }catch(err){
                 showAlert("error front handle_google " + err, "danger");

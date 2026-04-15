@@ -51,7 +51,7 @@ router.post('/google', async (req, res) => {
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
-        return res.status(200).json({success: true, message: 'Google authntication successful', MPFA: result.MPFA });
+        return res.status(200).json({success: true, message: 'Google authntication successful', MPFA: result.MPFA,token: result.token, username: result.username });
     } catch (err) {
         return res.status(500).json({ success: false, message: "error back google " + err });
     }

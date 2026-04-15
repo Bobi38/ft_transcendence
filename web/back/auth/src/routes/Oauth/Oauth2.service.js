@@ -74,6 +74,7 @@ class Oauth2Service {
             }
             else {
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
+                console.log("in old user  " + MPFA)
                 await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: MPFA});
                 await result[0].update({MPFA: MPFA});
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
@@ -104,19 +105,20 @@ class Oauth2Service {
             }
             let token = "";
             let MPFA;
+            let newUser
             if (result.length === 0) {
-                const newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
+                newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
                 MPFA = true;
             }
             else {
-                await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date()});
+                newUser = await result[0].update({co: true, Hostlastco: frontendUrl, Datelastco: new Date()});
                 MPFA = tcheck_MPFA(result[0], frontendUrl);
                 await result[0].update({MPFA: MPFA});
                 token = jwt.sign({id: result[0].id}, secret, {expiresIn: '12h'});
             }
             generateToken(MPFA, token, res)
-            return ({ success: true, MPFA: MPFA, message: "connected", code: 200 });
+            return ({ success: true, MPFA: MPFA, message: "connected", code: 200, token: token, username: newUser.name  });
         } catch (err) {
            return ({ success: false, message: 'Google authentication failed: ' + err , code: 500 });
         }

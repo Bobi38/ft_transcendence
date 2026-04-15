@@ -21,9 +21,8 @@ router.get('/checkco', SecuChecko, async(req, res) =>{
         const decoded = jwt.verify(token, secret);
         const result = await User.findOne({ where: { id: decoded.id } });
         MPFA = result.MPFA;
-        console.log("API /api/secu/checkco " + MPFA + " co " + result.co);
         if (result.co == true && MPFA == false)
-            return res.status(200).json({success: true, message: "token ok", MPFA: MPFA, token: token});
+            return res.status(200).json({success: true, message: "token ok", MPFA: MPFA, token: token, username: result.name});
         else
             return res.status(403).json({success: false, message: "not co completed", MPFA: MPFA});
     }catch(err){
