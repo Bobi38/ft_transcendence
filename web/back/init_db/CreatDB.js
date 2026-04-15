@@ -12,7 +12,7 @@ import StatPong3D from './models/StatPong3D.js';
 import PswEmail from './models/PssWrdEmail.js';
 //DO NOT DELETE ITS USEFULL
 
-async function majDb(retry = 5) {
+async function initDb(retry = 5) {
     while (retry > 0) {
         try {
             await sequelize.authenticate();
@@ -27,4 +27,4 @@ async function majDb(retry = 5) {
     }
 }
 
-export {majDb};
+export {initDb};
