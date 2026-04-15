@@ -107,7 +107,9 @@ class Oauth2Service {
             let MPFA;
             let newUser
             if (result.length === 0) {
-                newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
+                
+                const clean_name = name.replace(/[^a-zA-Z0-9_]/g, "");
+                newUser = await User.create({name: clean_name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
                 MPFA = true;
             }
