@@ -18,14 +18,19 @@ function sendMessage(s_message){
 function NewPartie() {
 
     return (
-        <button
-            onClick={() => { sendMessage("player"); }}
-            onContextMenu={(e) => {
-				e.preventDefault();
-				sendMessage('bot');
-			}}>
-            Search Game
-        </button>
+        <div className="NewPartie">
+            <button
+                onClick={() => { sendMessage("player"); }}>
+
+                Search Game
+            </button>
+            <button  onClick={(e) => {
+                    e.preventDefault();
+                    sendMessage('bot');
+                }}>
+                Play Vs IA
+            </button>
+        </div>
     );
 }
 

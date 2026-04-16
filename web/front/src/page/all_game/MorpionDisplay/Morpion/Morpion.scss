@@ -6,4 +6,11 @@
 	padding: 0 2rem;
 	gap: 1.5rem;
 	max-width: 1300px;
+	.NewPartie{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+	}
 }
