@@ -233,7 +233,7 @@ export default function Profile() {
                     ):(
                         <>
                             <form onSubmit={(e) => {check_code(e)}}>
-                                <button onClick={() => {send_code()}}>Send mail verification</button>
+                                <button type="button" onClick={() => {send_code()}}>Send mail verification</button>
                                 <p id={`alert-container`}></p>
 
                                 <input
