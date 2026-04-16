@@ -24,30 +24,25 @@ export default function PasswordForget({login_mode}) {
             setShowMode("new_password");
         else
             sessionStorage.setItem("CodeInput", "false");
-        // console.log("in use " + sessionStorage.getItem("CodeInput"));
     }, [])
 
     async function send_code(e) {
         e.preventDefault();
         const email = e.target.email.value;
-        console.log("email",email)
 
         const url = `/api/secu/recovery_password`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({mail: email}),
         }, null, null, true);
-        console.log("recupPswd repjson",repjson)
 		if (repjson && repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
             return ;
         }
         setShowMode("check_code");
@@ -62,7 +57,6 @@ export default function PasswordForget({login_mode}) {
             host:  window.location.host
         }
         const url = `/api/secu/recoverypassword_check_code`;
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
@@ -76,7 +70,6 @@ export default function PasswordForget({login_mode}) {
             return ;
         }
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
             return ;
         }
         setShowMode("new_password");
@@ -101,8 +94,6 @@ export default function PasswordForget({login_mode}) {
 
         const url = `/api/secu/majPswd`;
 
-        console.log(`${url}`)
-
         const repjson = await useFetch(`${url}`, {
             method: "PUT",
             headers : { "Content-Type" : "application/json" },
@@ -114,7 +105,6 @@ export default function PasswordForget({login_mode}) {
             return ;
         }
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson?.message)
             return ;
         }
         sessionStorage.clear()

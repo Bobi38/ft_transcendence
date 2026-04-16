@@ -40,7 +40,7 @@ export default function HomeCardWeather() {
 				});
 
 			} catch (err) {
-				console.log("weather error", err);
+				console.error("weather error", err);
 			}
 		}
 

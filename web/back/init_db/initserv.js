@@ -1,9 +1,9 @@
-import { majDb } from './CreatDB.js';
+import { initDb } from './CreatDB.js';
 
 
 (async () => {
-    await majDb();
-    console.log("DB mise à jour avec succès");
+    await initDb();
+    console.log("DB update with success");
 })();
 
-console.log("Init DB terminée");
+console.log("Init DB end");

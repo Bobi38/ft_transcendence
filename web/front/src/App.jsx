@@ -80,10 +80,16 @@ export default function App() {
                 });
                 setShowFriend(FRIEND.RED);
               }
+              if (data.type == 'add' && window.location.pathname !== "/Friends"){
+                setNotif({
+                    message:`${data.login} send friend request`,
+                    type: "add",
+                });
+              }
             }
 
             const handle_msg_notif = (data) => {
-                if (data.type == 'notif' && window.location.pathname !== "/PrivateMessage"){
+                if (data.type == 'notif' && window.location.pathname !== "/PrivateMessage" && window.location.pathname !== "/Friends"){
                     setNotif({
                         message: `${data.login} send you a message`,
                         type: "msg",

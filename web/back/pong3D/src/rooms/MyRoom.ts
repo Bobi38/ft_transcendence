@@ -227,16 +227,17 @@ export class MyRoom extends Room {
 
   private _finalizeDisconnection(sessionId: string) {
     const stats = this._matchStats.get(sessionId);
-    if (stats) {
-        stats.hasDisconnected = true;
-        activePlayers.delete(stats.id);
+    const state = this.state.roomStatus;
+
+    if (stats && (state == RoomStatus.STARTED || state == RoomStatus.AWAITING_RECONNECTION || state == RoomStatus.WAITING)) {
+      stats.hasDisconnected = true;
+      activePlayers.delete(stats.id);
     }
 
-    const state = this.state.roomStatus;
     if (state == RoomStatus.STARTED || state == RoomStatus.AWAITING_RECONNECTION || state == RoomStatus.WAITING) {
-        this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
+      this.state.roomStatus = RoomStatus.PLAYER_DISCONNECTED;
     }
-    
+
     this._timeEnd = this._timeEnd || Date.now();
     this._simulation?.getEngine()?.stopRenderLoop();
     this.lock();
@@ -250,7 +251,7 @@ export class MyRoom extends Room {
     const p1 = players[0];
     const p2 = players[1];
     const timePlayed = this._timeEnd - this._timeStart;
-    const isAbort = this.state.roomStatus === RoomStatus.PLAYER_DISCONNECTED;
+    const isAbort = this.state.roomStatus == RoomStatus.PLAYER_DISCONNECTED;
 
     let loserStats = p1.hasDisconnected ? p1 : (p2.hasDisconnected ? p2 : (p1.hasWon ? p2 : p1));
     let winnerStats = (loserStats === p1) ? p2 : p1;
@@ -270,17 +271,20 @@ export class MyRoom extends Room {
         )
       });
 
-      await this._updateDbPlayer(winnerStats.id, true, timePlayed);
-      await this._updateDbPlayer(loserStats.id, false, timePlayed);
+      await this._updateDbPlayer(winnerStats.id, true, isAbort, timePlayed);
+      await this._updateDbPlayer(loserStats.id, false, isAbort, timePlayed);
 
     } catch (e) {
         console.error("Failed to store game results in database", e);
     }
   }
 
-  async _updateDbPlayer(playerId: string, won: boolean, timePlayed: number){
+  async _updateDbPlayer(playerId: string, won: boolean, abort: boolean, timePlayed: number){
     const userData = await StatPong3D.findOne({where: {idUser: playerId}});
-    await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
+    if (abort)
+      await userData.increment({total_game: 1, time_played: timePlayed, abortwinner: won, abortloser: !won});
+    else 
+      await userData.increment({total_game: 1, time_played: timePlayed, win: won, lose: !won});
   }
 
   onDispose() {

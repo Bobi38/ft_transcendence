@@ -27,7 +27,6 @@ router.put('/', async(req, res) => {
     if (!valid.success)
         return errorHandler(valid.message, 400, res);
     try{
-        console.log("API /updateProfil BEFORE router.put", req.body.login);
         const data = {
             login: req.body.login,
             email: req.body.email,

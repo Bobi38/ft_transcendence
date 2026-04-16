@@ -28,15 +28,12 @@ export default function Register({login_mode}) {
             return;
         }
         const url = `/api/auth/user`;
-        console.log(`${url}`)
-        console.log(data.name + " " + data.email + " " + data.password);
 
         const repjson = await useFetch(`${url}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         }, null, null, true);
-        console.log("register_submit:", repjson);
         if (repjson.status < 500 && repjson.status >= 400){
             showAlert(`${repjson.message}`, "danger");
             return ;

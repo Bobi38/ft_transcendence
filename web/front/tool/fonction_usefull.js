@@ -25,7 +25,6 @@ export default async function checkCo(){
         // le 3eme pour maila2f
     }
     catch(err){
-        console.log("checkCo(3) Error in checkCo function:", err);
         return false;
     }
 }

@@ -32,7 +32,6 @@ export default function Login({ password_forget_mode, register_mode}) {
         }
 
         const api_url = `/api/auth/session`;
-        console.log(`${api_url}`)
 
         const repjson = await useFetch(`${api_url}`, {
             method: 'POST',
@@ -84,7 +83,6 @@ export default function Login({ password_forget_mode, register_mode}) {
         onSuccess: async (tokenResponse) => {
             try{
                 const url = "/api/oauth2/google";
-                console.log(`${url}`)
 
                 const repjson = await useFetch(`${url}`, {
                     method: 'POST',
@@ -100,9 +98,13 @@ export default function Login({ password_forget_mode, register_mode}) {
                     return;
                 }
                 setShowLog(AUTH.NONE);
+                sessionStorage.setItem('type', "success");
+                sessionStorage.setItem('message', "Connexion réussie");
+                sessionStorage.setItem('token', repjson.token);
+                sessionStorage.setItem('username', repjson.username);
                 SocketM.sendd('friend', {type: 'co_first'});
             }catch(err){
-                console.log("error front handle_google " + err);
+                showAlert("error front handle_google " + err, "danger");
             }
 
         },

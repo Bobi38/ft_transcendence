@@ -37,14 +37,6 @@ export default function Friends({setGoToAction, setGoToConv}) {
                 method: "DELETE",
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
-            }, null , function(repjson) {
-                if (repjson.message === "exist") {
-                    console.log("dlt_friend callbackfail(info) people not exist");
-                } else if (repjson.message === "relation") {
-                    console,log("dlt_friend callbackfail(info) people are not friend");
-                } else {
-                    console.log("dlt_friend callbackfail(info) error back ", repjson.message);
-                }
             });
         if (!repjson || (repjson &&  !repjson.success))
             return;

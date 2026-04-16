@@ -44,7 +44,7 @@ export default function MailA2F({login_mode}) {
         const formData = new FormData(e.target);
         const data = {
             code: formData.get("code"),
-            host:  window.location.host
+            host:  window.location.origin
         }
 
         const url = `/api/secu/maila2f_check_code`;
@@ -56,12 +56,10 @@ export default function MailA2F({login_mode}) {
             body: JSON.stringify(data),
         }, null, null, true);
         if (repjson.status < 500 && repjson.status >= 400){
-            console.log("where is showalert " + repjson.message);
             showAlert(`${repjson.message}`, "danger");
             return ;
         }
         if (!repjson || (repjson &&  !repjson.success)){
-            console.log(repjson.message)
             return ;
         }
         setShowLog(AUTH.NONE);

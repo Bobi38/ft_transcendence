@@ -53,18 +53,18 @@ export default function Navigation({ children }) {
             sessionStorage.clear();
             return ;
         } else if (!resCo.success && resCo.MPFA === true) {
-            console.log("in MPFA");
             if (sho !== AUTH.MAILA2F) setShowLog(AUTH.MAILA2F);
             // sessionStorage.clear();
             return ;
         } else{
-            if (sessionStorage.getItem("type") === null)
+            console.log("innnnnnnnnn gooog " + resCo.username)
+            //if (sessionStorage.getItem("type") === null)
                 sessionStorage.setItem('type', "success");
-            if (sessionStorage.getItem("message") === null)
+            //if (sessionStorage.getItem("message") === null)
                 sessionStorage.setItem('message', "Connexion réussie");
-            if (sessionStorage.getItem("token") === null)
+            //if (sessionStorage.getItem("token") === null)
                 sessionStorage.setItem('token', resCo.token);
-            if (sessionStorage.getItem("username") === null)
+            //if (sessionStorage.getItem("username") === null || !sessionStorage.getItem("username"))
                 sessionStorage.setItem('username', resCo.username);
             if (sho !== AUTH.NONE) setShowLog(AUTH.NONE);
             if (event && event.target && event.target.id === "HomeChatsubmit"){

@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -28,8 +27,6 @@ async function checktok(tokenn) {
   }
 }
 
-
-
 export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   console.log("Middleware auth for path WHAT:", req.path);
@@ -48,8 +45,5 @@ export const authMiddleware = async (req, res, next) => {
   }
   return next();
 }
-
-
-
 
 export default router;

@@ -34,14 +34,17 @@ export default function Profile() {
 
         const url = `/api/profile/password`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "PATCH",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({Pass: password})
-        });
+        });        
+        if (repjson && !repjson.success && repjson.status < 500){
+            showAlert(repjson.message, "danger");
+            return;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return;
         showAlert("Password update with success", "success");
@@ -63,7 +66,6 @@ export default function Profile() {
 
         const url = `/api/profile`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "PUT",
@@ -71,7 +73,6 @@ export default function Profile() {
             credentials: "include",
             body: JSON.stringify(user)
         });
-        console.log(repjson.status + " " + repjson.success)
         if (repjson && !repjson.success && repjson.status < 500 && repjson.status >= 400){
             showAlert(repjson.message, "danger");
             return;
@@ -80,7 +81,6 @@ export default function Profile() {
             return;
 
         sessionStorage.setItem('username', repjson.username);
-        console.log("oldname: ", repjson.oldname, " newname: ", repjson.username);
         if (repjson.oldname !== repjson.username) {
             SocketM.sendd('friend', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
             SocketM.sendd('chat', {type: 'updateName', old_name: repjson.oldname, new_name: repjson.username});
@@ -94,7 +94,6 @@ export default function Profile() {
     async function fetch_user_data(){
         const url = `/api/profile`;
 
-        console.log(`${url}`)
 
         const repjson = await useFetch(`${url}`, {
             method: "GET",
@@ -103,7 +102,6 @@ export default function Profile() {
         });
         if (!repjson || (repjson &&  !repjson.success))
             return;
-		console.log("repjson",repjson)
         setUser(repjson.message)
     }
 

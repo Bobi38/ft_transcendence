@@ -14,6 +14,10 @@ class AuthService {
         const result = await User.findAll({ where: { mail: email } });
         if (result.length === 0)
             return {success: false, message: 'Email not found', code: 401};
+        if (result[0].OAuth == true && !result[0].password)
+            return {success: false, message: 'Email use to OAuth 2.0, try Github/Google or init your password', code: 401 };
+        if (!result[0].password)
+            return {success: false, message: 'Password not init', code: 401 };
         const DecrypPass = await bcrypt.compare(password, result[0].password);
         if (!DecrypPass)
             return {success: false, message: 'Password not valid', code: 401};

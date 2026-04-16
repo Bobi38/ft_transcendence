@@ -61,7 +61,6 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 
 		SocketM.sendd("morp", {});
         const handleSpec = (data) => {
-            // console.log("Morpion component handleSpec data:", data)
             if (data?.other_board){
                 setSpecSelect(data.other_board)
             }

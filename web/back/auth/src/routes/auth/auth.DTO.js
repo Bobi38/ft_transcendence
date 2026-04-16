@@ -33,8 +33,17 @@ class AuthDTO {
     if (email.length > 128) {
       return { valid: false, message: 'Email too long', code: 400 };
     }
-    if (!validator.isEmail(email)) {
+    if (!/^[a-zA-Z0-9_]+$/.test(name))
+      return {valid: false,message: 'Username can only contain letters, numbers and underscores',code: 400};
+    if (!validator.isEmail(email))
       return { valid: false, message: 'Invalid email format', code : 400 };
+    if (password.length < 4) 
+      return { valid: false, message: 'Password too short (min: 4 caract)', code: 400 };
+    if (!/[A-Z]/.test(password)) {
+      return { valid: false, message: 'Password must contain at least one uppercase letter', code: 400 };
+    }
+    if (!/[0-9]/.test(password)) {
+      return { valid: false, message: 'Password must contain at least one number character', code: 400 };
     }
     return { valid: true };
   }

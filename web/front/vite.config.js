@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    host: '0.0.0.0', allowedHosts: ['fcretin.ddns.net', '.42lyon.fr'],
     proxy: {
   '/api': {
     target: 'http://gateway:9000',

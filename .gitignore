@@ -1,6 +1,7 @@
 conf/secrets/*
 secrets
 .env*
+!.env.example
 *rror
 *nico*
 .vite

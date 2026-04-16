@@ -17,7 +17,7 @@
 [tag_icon_all]: https://skillicons.dev/icons?i=github,npm,nodejs,docker,nginx,express,mysql,react,js,html,sass,ts,makefile
 [tag_ressource_grid]: https://cssgrid-generator.netlify.app/
 
-# 𝔽t_transcendence too late (without `_` yes....)
+# 𝔽t_transcendence too_late
 <p align="center">
   <a href="https://skillicons.dev">
     <img src="https://skillicons.dev/icons?i=github,npm,nodejs,docker,nginx,express,mysql,react,js,html,sass,ts" />
@@ -158,7 +158,7 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 2. **Create your environment file:**
    ```bash
-   cp env.exemple .env
+   cp .env.exemple .env
    ```
       <!-- cp /sgoinfre/fcretin/private/ft_transcendence_too_late/.env .env -->
    Then open `.env` and fill in the required values (database credentials, JWT secrets, OAuth keys if applicable, etc.).
@@ -185,11 +185,18 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 
 ### Access
 
-#### Once running,
-- Prod open your browser at: `https://localhost:9443`
-- Dev open your browser at: `http://localhost:5173` (`http://localhost:8081` PHPMyAdmin)
+#### At 42lyon
+- For prod go to: `https://z3r3p4.42lyon.fr:9443`
+- For dev go to: `http://z3r3p4.42lyon.fr:5173`
+- For the database go to: `http://z3r3p4.42lyon.fr:8081`
+- **Don't forget to replace `z3r3p4` by your actual place**
 
-- [🗓 𝕊ummary](#summary)
+#### For others
+- just replace `z3r3p4.42lyon.fr` by `localhost`
+
+<br>
+
+[🗓 𝕊ummary](#summary)
 
 </details>
 
@@ -227,6 +234,8 @@ Weekly planning sessions with a short retrospective to identify blockers and imp
 > **Why React?** React's component model fits the modular nature of the app (game views, chat, profile, etc.), its ecosystem accelerated development significantly and Mainstream.
 
 > **Why Babylon?** Babylon JS is built specifically for the web, and unlike Three.js ships with game-oriented features.
+
+> **Why SCSS?** SCSS extends CSS with variables and mixins, allowing for styling that is more reusable and easier to scale.
 
 
 ### Backend ![icons][tag_icon_back]

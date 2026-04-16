@@ -2,23 +2,15 @@
 import bcrypt from 'bcrypt';
 import { encrypt } from './routes/crypt.js';
 
-import sequelize from './models/index.js';
 //model
 import User from './models/user.js';
 import Friend from './models/friend.js';
 import PrivChat from './models/privchat.js';
 import PrivMess from './models/privmess.js';
-import chatG from './models/chatG.js';
 import GameMorp from './models/GameMorp.js';
 import StatMorp from './models/StatMorp.js';
-import Connect from './models/connect.js';
-
 import GamePong3D from './models/GamePong3D.js';
 import StatPong3D from './models/StatPong3D.js';
-import PswEmail from './models/PssWrdEmail.js';
-
-// // creatdb
-// import { CreatGameMorp } from './seedmorp.js';
 
 async function createGameMorp() {
 
@@ -88,7 +80,7 @@ async function createGameMorp() {
         const time1 = Math.floor(Math.random() * 30) + 5;
         const time2 = Math.floor(Math.random() * 30) + 5;
 
-        // stats de base
+        // base stats
         stats[p1].total_game++;
         stats[p2].total_game++;
 
@@ -127,19 +119,19 @@ async function createGameMorp() {
     }
 
     try {
-        // 1. insert games
+        // insert games
         await GameMorp.bulkCreate(games);
 
-        // 2. increment stats (clé par clé)
+        // increment stats
         for (const userId in stats) {
             await StatMorp.increment(stats[userId], {
                 where: { idUser: userId }
             });
         }
 
-        console.log("✅ Games + stats incrémentées !");
+        console.log("✅ Games + stats increment !");
     } catch (err) {
-        console.error("❌ Erreur :", err);
+        console.error("❌ Error :", err);
     }
 }
 
@@ -148,7 +140,7 @@ async function createGamePong() {
     const games = [];
     const stats = {};
 
-    // init stats (SANS idUser ici, juste les increments)
+    // init stats (WITHOUT idUser here, just increment)
     for (let i = 1; i <= 5; i++) {
         stats[i] = {
             total_game: 0,
@@ -169,7 +161,7 @@ async function createGamePong() {
             player2 = Math.floor(Math.random() * 5) + 1;
         } while (player2 === player1);
 
-        const isAbort = Math.random() < 0.2; // 20% abandon
+        const isAbort = Math.random() < 0.2; // 20% abort
 
         let score1 = 0;
         let score2 = 0;
@@ -229,19 +221,19 @@ async function createGamePong() {
     }
 
     try {
-        // 1. insert games
+        // insert games
         await GamePong3D.bulkCreate(games);
 
-        // 2. increment stats existantes
+        // increment stats existantes
         for (const userId in stats) {
             await StatPong3D.increment(stats[userId], {
                 where: { idUser: userId }
             });
         }
 
-        console.log("✅ Pong games + stats incrémentées !");
+        console.log("✅ Pong games + stats increment");
     } catch (error) {
-        console.error("❌ Erreur :", error);
+        console.error("❌ Error :", error);
     }
 }
 
@@ -289,9 +281,6 @@ async function CreatFriend(){
   await Friend.create({Friend1: 5, Friend2: 1, State: true, WhoAsk: 5});
 }
 
-
-
-
 async function addDb(){
   const count = await User.count();
     if (count === 0){
@@ -306,7 +295,6 @@ async function addDb(){
       await createGameMorp();
       console.log("game morp good")
     }
-    
 }
 
 export {addDb};

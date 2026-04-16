@@ -31,8 +31,8 @@ services:
       - home
     restart: always
   
-  init_service:
-    container_name: init_service
+  init_db:
+    container_name: init_db
     build:
       context: ./web/back
       dockerfile: init_db/Dockerfile
@@ -48,8 +48,8 @@ services:
     networks:
       - home
 
-  add_service:
-    container_name: add_service
+  add_db:
+    container_name: add_db
     build:
       context: ./web/back
       dockerfile: add_db/Dockerfile
