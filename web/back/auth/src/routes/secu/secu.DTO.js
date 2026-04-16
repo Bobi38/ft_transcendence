@@ -24,9 +24,9 @@ class SecuDTO {
     return { valid: true };
   }
 
-  static validateMaj_Password(data, token) {
-    const token = data.cookies[token];
-    const new_psd = data.body.new_psd;
+  static validateMaj_Password(req, nameCook) {
+    const token = req.cookies[nameCook];
+    const new_psd = req.body.new_psd;
     if (!token || !new_psd) {
       return { valid: false, message: 'Missing fields', code : 400 };
     }

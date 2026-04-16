@@ -19,9 +19,8 @@ export default function Profile() {
     const [pass, setPass] = useState(false);
 
     async function send_code(e) {
-        e.preventDefault();
 
-        const url = `/api/secu/recovery_password`;
+        const url = `/api/secu/send_mail_profil`;
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",
@@ -35,6 +34,7 @@ export default function Profile() {
         if (!repjson || (repjson &&  !repjson.success)){
             return ;
         }
+        showAlert("Mail send", "success")
     }
 
     async function check_code(e) {
@@ -44,7 +44,7 @@ export default function Profile() {
             code: formData.get("code"),
             host:  window.location.host
         }
-        const url = `/api/secu/recoverypassword_check_code`;
+        const url = `/api/secu/profil_check_code`;
 
         const repjson = await useFetch(`${url}`, {
             method: "POST",

@@ -93,7 +93,7 @@ async function checktok(tokenn) {
 
 export const SecuMiddleware = async (req, res, next) => {
   try {
-    const token =  req.cookies.temp;
+    let token =  req.cookies.temp;
     if (!token)
       token = req.cookies.token;
     if (!token)
