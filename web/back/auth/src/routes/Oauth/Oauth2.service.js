@@ -7,6 +7,26 @@ const clientiD = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 const status = process.env.STATUS
 
+async function generateUniqueLogin(baseLogin) {
+  let existing = await User.findOne({ where: { name: baseLogin } });
+  if (!existing) {
+    return baseLogin;
+  }
+
+  let newLogin;
+  let isTaken = true;
+
+  while (isTaken) {
+    const prefix = genRanHex(3);
+    newLogin = `${baseLogin}.${prefix}`;
+
+    existing = await User.findOne({ where: { name: newLogin } });
+    isTaken = !!existing;
+  }
+
+  return newLogin;
+}
+
 class Oauth2Service {
 
     static async github(back, front, req) {
@@ -56,17 +76,14 @@ class Oauth2Service {
             const emailuse = await fetch ("https://api.github.com/user/emails", {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
+            user.name = user.name.replace(/[^a-zA-Z0-9_]/g, "");
             const email = await emailuse.json();
             const result = await User.findAll({ where: { mail: email[0].email } });
-            const name = await User.findAll({where :{name: user.login}})
-            if (name.length != 0){
-                let prefix = genRanHex(6);
-                user.login = user.login + prefix
-            }
+            const name = await generateUniqueLogin(user.name)
             let token = "";
             let MPFA
             if (result.length === 0) {
-                const newUser = await User.create({name: user.login, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
+                const newUser = await User.create({name: name, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 console.log("New user created:", newUser);
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: newUser.id});
@@ -97,19 +114,14 @@ class Oauth2Service {
 
             console.log("2 google")
             let { sub, name, email, picture } = await response.json();
+            name = name.replace(/[^a-zA-Z0-9_]/g, "");
             const result = await User.findAll({ where: { mail: email } });
-            const nam = await User.findAll({where :{name: name}})
-            if (nam.length != 0){
-                let prefix = genRanHex(6);
-                name = name + prefix
-            }
+            name = await generateUniqueLogin(name)
             let token = "";
             let MPFA;
             let newUser
             if (result.length === 0) {
-                
-                const clean_name = name.replace(/[^a-zA-Z0-9_]/g, "");
-                newUser = await User.create({name: clean_name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
+                newUser = await User.create({name: name, password: null, mail: email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
                 MPFA = true;
             }

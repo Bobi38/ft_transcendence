@@ -16,6 +16,52 @@ export default function Profile() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [user, setUser] = useState({ login: "", tel: "", });
+    const [pass, setPass] = useState(false);
+
+    async function send_code(e) {
+
+        const url = `/api/secu/send_mail_profil`;
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        });
+		if (repjson && repjson.status < 500 && repjson.status >= 400){
+            showAlert(`${repjson.message}`, "danger");
+            return ;
+        }
+        if (!repjson || (repjson &&  !repjson.success)){
+            return ;
+        }
+        showAlert("Mail send", "success")
+    }
+
+    async function check_code(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+            code: formData.get("code"),
+            host:  window.location.host
+        }
+        const url = `/api/secu/profil_check_code`;
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+            body: JSON.stringify(data),
+        }, null, null, true)
+
+        if (repjson && repjson.status < 500 && repjson.status >= 400){
+            showAlert(`${repjson.message}`, "danger");
+            return ;
+        }
+        if (!repjson || (repjson &&  !repjson.success)){
+            return ;
+        }
+        setPass(true)
+    }
 
     const handle_pass = async (e) => {
         e.preventDefault();
@@ -32,14 +78,14 @@ export default function Profile() {
             return;
         }
 
-        const url = `/api/profile/password`;
+        const url = `/api/secu/majPswd_profil`;
 
 
         const repjson = await useFetch(`${url}`, {
-            method: "PATCH",
+            method: "PUT",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
-            body: JSON.stringify({Pass: password})
+            body: JSON.stringify({new_psd: password})
         });        
         if (repjson && !repjson.success && repjson.status < 500){
             showAlert(repjson.message, "danger");
@@ -47,6 +93,8 @@ export default function Profile() {
         }
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        setShowPassword(false)
+        setPass(false);
         showAlert("Password update with success", "success");
 
     }
@@ -151,37 +199,54 @@ export default function Profile() {
 				<hr />
 
                 <div>
-                    <form className="password-form" onSubmit={handle_pass}>
+                    <h2>Change Password</h2>
+                    {pass?(
+                        <form className="password-form" onSubmit={handle_pass}>
 
-                        <label htmlFor="password">New password</label>
-                        <div className="input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password" name="password"
-                                className="password-field"
-                                placeholder="Password"
-                            />
-                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
-                            </span>
-                        </div>
+                            <label htmlFor="password">New password</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password" name="password"
+                                    className="password-field"
+                                    placeholder="Password"
+                                />
+                                <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <VscEyeClosed /> : <VscEye />}
+                                </span>
+                            </div>
 
-                        <label htmlFor="confirmePassword">Confirm password</label>
-                        <div className="input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="confirmePassword" name="confirmePassword"
-                                className="password-field"
-                                placeholder="Password"
-                            />
-                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
-                            </span>
-                        </div>
+                            <label htmlFor="confirmePassword">Confirm password</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="confirmePassword" name="confirmePassword"
+                                    className="password-field"
+                                    placeholder="Password"
+                                />
+                                <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <VscEyeClosed /> : <VscEye />}
+                                </span>
+                            </div>
 
-                        <button type="submit" className="submit-btn">Update password</button>
+                            <button type="submit" className="submit-btn">Update password</button>
 
-                    </form>
+                        </form>
+                    ):(
+                        <>
+                            <form onSubmit={(e) => {check_code(e)}}>
+                                <button type="button" onClick={() => {send_code()}}>Send mail verification</button>
+                                <p id={`alert-container`}></p>
+
+                                <input
+                                    type={`text`}
+                                    id={`code`} name={`code`}
+                                    placeholder={`Your Code`}
+                                    required/>
+                                <button type={`submit`}>Valid</button>
+                            </form>
+                        </>
+                    )}
 
                 </div>
             </div>

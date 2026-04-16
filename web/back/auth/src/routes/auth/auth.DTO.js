@@ -1,4 +1,4 @@
-import {validator} from '../index_p.js';
+import {validator, bcrypt} from '../index_p.js';
 
 class AuthDTO {
   static validateLogin(data) {
@@ -7,7 +7,7 @@ class AuthDTO {
     if (!email || !password || !host) {
       return { valid: false, message: 'Missing fields (login)', code : 400 };
     }
-    if (email.length > 128 || password.length > 128 || host.length > 128) {
+    if (email.length > 128 || password.length > 128) {
       return { valid: false, message: 'Fields too long', code: 400 };
     } 
 
@@ -27,7 +27,7 @@ class AuthDTO {
     if (name.length > 128) {
       return { valid: false, message: 'Username too long', code: 400 };
     }
-    if (password.length > 128) {
+    if (password.length > 71) {
       return { valid: false, message: 'Password too long', code: 400 };
     }
     if (email.length > 128) {
@@ -45,9 +45,13 @@ class AuthDTO {
     if (!/[0-9]/.test(password)) {
       return { valid: false, message: 'Password must contain at least one number character', code: 400 };
     }
+    const Cryp = bcrypt.hash(password, 10)
+    if (Cryp.length > 128)
+      return { valid: false, message: 'Password too long', code: 400 }; 
     return { valid: true };
   }
 
 }
+
 
 export default AuthDTO;

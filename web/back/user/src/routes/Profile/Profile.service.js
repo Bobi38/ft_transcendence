@@ -32,7 +32,7 @@ class ProfileService {
                 return { success: false, message: user.message, code: user.code };
             const result = user.user;
             const oldname = result.name;
-            const name = await User.findAll({where :{name: result.name}})
+            const name = await User.findAll({where :{name: data.login}})
             if ((name.length != 0) && (name[0].id != result.id))
                 return ({success: false, message: 'The login ' + data.login + " already used", code: 409})
             await result.update({ name: data.login, mail: data.email, phoneNumber: data.tel })

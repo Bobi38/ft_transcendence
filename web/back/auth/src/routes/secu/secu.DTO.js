@@ -1,4 +1,4 @@
-import { validator } from '../index_p.js';
+import { bcrypt, validator } from '../index_p.js';
 
 class SecuDTO {
   static validateRecoveryPassword(mail) {
@@ -19,16 +19,18 @@ class SecuDTO {
     if (!code || !host) {
       return { valid: false, message: 'Missing fields', code : 400 };
     }
+    if (code.length > 10)
+      return { valid: false, message: 'Code fields', code : 400 };
     return { valid: true };
   }
 
-  static validateMaj_Password(data) {
-    const token = data.cookies.temp;
-    const new_psd = data.body.new_psd;
+  static validateMaj_Password(req, nameCook) {
+    const token = req.cookies[nameCook];
+    const new_psd = req.body.new_psd;
     if (!token || !new_psd) {
       return { valid: false, message: 'Missing fields', code : 400 };
     }
-    if (new_psd.length > 128) {
+    if (new_psd.length > 71) {
       return { valid: false, message: 'Password too long', code: 400 };
     }
     if (new_psd.length < 4) 
@@ -39,6 +41,9 @@ class SecuDTO {
     if (!/[0-9]/.test(new_psd)) {
       return { valid: false, message: 'Password must contain at least one number character', code: 400 };
     }
+    const Cryp = bcrypt.hash(new_psd, 10)
+    if (Cryp.length > 128)
+      return { valid: false, message: 'Password too long', code: 400 }; 
     return { valid: true };
   }
 

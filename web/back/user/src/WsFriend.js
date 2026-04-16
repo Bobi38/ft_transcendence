@@ -30,7 +30,7 @@ function format_all_friend(relation) {
 	return tableau;
 };
 
-async function getAllFriendsFromToken(id) {
+async function getTrueFriendsFromToken(id) {
 
   const result = await User.findAll({
     where: { id: id },
@@ -49,6 +49,33 @@ async function getAllFriendsFromToken(id) {
         attributes: ["id", "name"],
         where: {co:true},
         through: { where: { State: true }, attributes: [] },
+        required: false,
+      },
+    ],
+  });
+
+  return format_all_friend(result[0]);
+}
+
+async function getAllFriendsFromToken(id) {
+
+  const result = await User.findAll({
+    where: { id: id },
+    include: [
+      {
+        model: User,
+        as: "Friends",
+        attributes: ["id", "name"],
+        where :{co : true},
+        through: { attributes: [] },
+        required: false,
+      },
+      {
+        model: User,
+        as: "FriendOf",
+        attributes: ["id", "name"],
+        where: {co:true},
+        through: {attributes: [] },
         required: false,
       },
     ],
@@ -105,7 +132,7 @@ export function initWebSFriend(server) {
           const nono = socket.userId;
           const na = chat.finduserId(nono);
           const ni = na.username;
-          const friend = await getAllFriendsFromToken(socket.userId);
+          const friend = await getTrueFriendsFromToken(socket.userId);
           const friendIds = new Set(friend.map(f => f.login));
           for (const session of chat.sessions.values()){
             if (session.socket.readyState === ws.OPEN && session.userId != nono && friendIds.has(session.userId))
@@ -150,10 +177,11 @@ export function initWebSFriend(server) {
         }
         if (data.type === 'add_frd'){
           console.log(data.login);
+          console.log(socket.username);
           const send = chat.findname(data.login)
           for (const session of chat.sessions.values()){
             if (send && session.socket.readyState === ws.OPEN && session.username === send.username)
-              session.socket.send(JSON.stringify({type: 'add', login: data.login}));
+              session.socket.send(JSON.stringify({type: 'add', login: socket.username}));
           }
         }
         if (data.type === "logout"){
@@ -189,7 +217,7 @@ export function initWebSFriend(server) {
         if (!id) return;
         const ni = socket.username;
         const notifyFriends = async () => {
-          const friends = await getAllFriendsFromToken(id);
+          const friends = await getTrueFriendsFromToken(id);
           const friendIds = new Set(friends.map(f => f.login));
           for (const session of chat.sessions.values()) {
             if (session.socket.readyState === ws.OPEN &&session.userId !== id &&friendIds.has(session.userId)) {

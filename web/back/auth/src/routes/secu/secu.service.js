@@ -11,13 +11,13 @@ const noreplyPass = process.env.NOREPLAY_PASS;
 
 class SecuService {
 
-    static async send_mail(mail, req, type, res) {
+    static async send_mail(mail, req, type, res, token) {
         try {
             console.log("API /api/secu/send_mail service");
             let user;
             if (mail == null) {
                 console.log("API /api/secu/send_mail get user from token");
-                user = await get_user_from_token(req.cookies.temp);
+                user = await get_user_from_token(req.cookies[token]);
                 if (!user.success) {
                     return ({ success: false, message: user.message, code: 400 });
                 }
@@ -32,8 +32,10 @@ class SecuService {
             let message;
             if (type === 1)
                 message = "Your code to finalize connection is : ";
-            else
+            else if (type === 2)
                 message = "Your code to finalize password recovery is : ";
+            else
+                message = "Your code to finalize password update is : ";
             const code = crypto.randomInt(100000, 999999).toString();
             console.log("API /api/secu/send_mail code generated " + code);
             const transporter = nodemailer.createTransport({
@@ -46,7 +48,7 @@ class SecuService {
             await transporter.sendMail({
                 from: noreplyUser,
                 to: user.mail,
-                subject: "Your connection code",
+                subject: "Verification Code",
                 text: message + code,
             });
             const CrypPass = await bcrypt.hash(code, 10);
