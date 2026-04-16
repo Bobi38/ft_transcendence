@@ -46,8 +46,12 @@ class FriendService {
             if (name_friend.id === decoded.id)
                 return ({success: false, message: "You can't add yourself as friend", code: 400});
             const relation = await Friend.findAll({where: {[Op.or]: [{Friend1: decoded.id, Friend2: name_friend.id}, {Friend1: name_friend.id, Friend2: decoded.id}]}})
-            if (relation.length > 0)
-                return ({success: false, message: "You are already friends", code: 409});
+            if (relation.length > 0){
+                if (relation[0].State == true)
+                    return ({success: false, message: "You are already friends", code: 409});
+                else
+                    return ({success: false, message: "You have a request", code: 409});
+            }                   
             await Friend.create({Friend1: decoded.id, Friend2: name_friend.id, State: false, WhoAsk: decoded.id});
             return ({success: true, message: "Friend request sent", code: 201});
         }catch(err){
