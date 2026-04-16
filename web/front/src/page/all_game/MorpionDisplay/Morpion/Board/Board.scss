@@ -12,5 +12,8 @@
     .square {
         @include mix.default_card;
         font-size: 2rem;
+        &.square--active {
+            background-color: rgb(158, 43, 43);
+        }
     }
 }

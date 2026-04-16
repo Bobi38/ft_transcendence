@@ -218,14 +218,14 @@ class MorpionRoom extends Room {
         if (!p || !o) return ;
 
         p.startTurnTimer(
-            () => this.turnMessage(p, "Time is running out"),
-            this.limitTime / 3 * 2);
-        o.startTurnTimer(
-            () => this.turnMessage(o, "Wait… or win. Your move."),
-            this.limitTime);
+            () => {
+                o.startTurnTimer(
+                    () => this.turnMessage(o, "Wait… or win. Your move."),
+                    this.limitTime / 3);
+                this.turnMessage(p, "Time is running out")},
+            this.limitTime * 2 / 3);
     }
         
-
     serializeBoard() {
         return this._board
         .map(cell => cell === " " ? "-" : cell)

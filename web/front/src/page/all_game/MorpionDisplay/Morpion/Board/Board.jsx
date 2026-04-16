@@ -4,7 +4,7 @@ import "./Board.scss";
 /* Components */
 import  SocketM  from "TOOL/SocketManag.js";
 
-export default function Board({ board , isGame }) {
+export default function Board({ board , isGame , isTurn}) {
 
     function handleClick(i) {
         
@@ -13,13 +13,14 @@ export default function Board({ board , isGame }) {
             message: i,
         })
     }
-
+        
     return (
         <div className={`Board-root`}>
 
             {isGame && board?.map((element, index) => (
 
-                <button key={index} className={`square`}
+                <button key={index}
+                        className={`square`}
                         onClick={() => handleClick(index)}>
                     {element}
                 </button>
