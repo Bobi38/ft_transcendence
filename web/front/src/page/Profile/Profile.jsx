@@ -82,7 +82,7 @@ export default function Profile() {
 
 
         const repjson = await useFetch(`${url}`, {
-            method: "PATCH",
+            method: "PUT",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
             body: JSON.stringify({new_psd: password})
@@ -93,6 +93,7 @@ export default function Profile() {
         }
         if (!repjson || (repjson &&  !repjson.success))
             return;
+        setShowPassword(false)
         showAlert("Password update with success", "success");
 
     }

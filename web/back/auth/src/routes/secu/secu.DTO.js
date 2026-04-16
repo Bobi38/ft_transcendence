@@ -41,7 +41,7 @@ class SecuDTO {
     if (!/[0-9]/.test(new_psd)) {
       return { valid: false, message: 'Password must contain at least one number character', code: 400 };
     }
-    const Cryp = bcrypt.hash(password, 10)
+    const Cryp = bcrypt.hash(new_psd, 10)
     if (Cryp.length > 128)
       return { valid: false, message: 'Password too long', code: 400 }; 
     return { valid: true };

@@ -105,7 +105,6 @@ export const SecuMiddleware = async (req, res, next) => {
       res.clearCookie('token');
       return res.status(401).json({ success: false, message: "cookie not valid" });
     }
-
     next();
   } catch (err) {
     console.log("middleware error:", err);
