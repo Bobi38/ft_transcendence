@@ -94,6 +94,7 @@ export default function Profile() {
         if (!repjson || (repjson &&  !repjson.success))
             return;
         setShowPassword(false)
+        setPass(false);
         showAlert("Password update with success", "success");
 
     }
