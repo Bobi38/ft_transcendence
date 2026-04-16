@@ -55,6 +55,7 @@ export default function PrivateMessage() {
             credentials: "include",
         })
         if (!repjson || (repjson &&  !repjson.success)){
+            setDisplayedMessages([])
             return;
         }
         setDisplayedMessages(repjson.message);

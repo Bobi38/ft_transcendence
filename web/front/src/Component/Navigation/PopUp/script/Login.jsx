@@ -1,7 +1,9 @@
 /* extern */
+import { useState }      from    "react";
 import { FaGithub }         from    "react-icons/fa";
 import { FcGoogle }         from    "react-icons/fc";
 import { useGoogleLogin }	from	'@react-oauth/google';
+import { VscEye, VscEyeClosed }     from    "react-icons/vsc";
 
 /* Css */
 import "../PopUp.scss";
@@ -14,6 +16,7 @@ import { AUTH, useAuth } 	from	"HOOKS/useAuth.jsx";
 
 export default function Login({ password_forget_mode, register_mode}) {
 
+    const [showPassword, setShowPassword] = useState(false);
     const {setShowLog} = useAuth();
 
     const login_submit = async (e) => {
@@ -127,12 +130,17 @@ export default function Login({ password_forget_mode, register_mode}) {
                 />
 
                 <label  htmlFor="password">Password</label>
-                <input  type={`password`}
-                        id={`password`}
-                        name={`password`}
-                        placeholder={`Password`}
-                        required
-                />
+                <div className="input-wrapper">
+                    <input  type={showPassword ? "text" : "password"}
+                            id={`password`}
+                            name={`password`}
+                            placeholder={`Password`}
+                            required
+                    />
+                    <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <VscEyeClosed /> : <VscEye />}
+                    </span>
+                </div>
                 <button type={`submit`}>Connect</button>
 
             </form>
