@@ -33,14 +33,14 @@ export default function Profile() {
             return;
         }
 
-        const url = `/api/profile/password`;
+        const url = `/api/secu/majPswd_profil`;
 
 
         const repjson = await useFetch(`${url}`, {
             method: "PATCH",
             headers : { "Content-Type" : "application/json" },
             credentials: "include",
-            body: JSON.stringify({Pass: password})
+            body: JSON.stringify({new_psd: password})
         });        
         if (repjson && !repjson.success && repjson.status < 500){
             showAlert(repjson.message, "danger");

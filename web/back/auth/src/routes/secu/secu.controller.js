@@ -140,7 +140,7 @@ router.post('/profil_check_code' , SecuMiddleware, async (req, res) => {
 })
 
 router.put('/majPswd_profil', SecuMiddleware, async(req,res) => {
-    const valid = SecuDTO.validateMaj_Password(req)
+    const valid = SecuDTO.validateMaj_Password(req, "token")
     if (!valid.valid){
         return errorHandler(valid.message, valid.code, res);
     }
@@ -158,7 +158,7 @@ router.put('/majPswd_profil', SecuMiddleware, async(req,res) => {
 })
 
 router.put('/majPswd', SecuMiddleware, async(req,res) => {
-    const valid = SecuDTO.validateMaj_Password(req)
+    const valid = SecuDTO.validateMaj_Password(req, "temp")
     if (!valid.valid){
         return errorHandler(valid.message, valid.code, res);
     }
