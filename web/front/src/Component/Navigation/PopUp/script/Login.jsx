@@ -47,7 +47,6 @@ export default function Login({ password_forget_mode, register_mode}) {
             showAlert(`Error : ${repjson.message}`, "danger");
             return ;
         }
-        sessionStorage.setItem('username', repjson.username);
 
         sessionStorage.setItem('username', repjson.username);
 

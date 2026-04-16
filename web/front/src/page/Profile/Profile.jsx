@@ -16,6 +16,7 @@ export default function Profile() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [user, setUser] = useState({ login: "", tel: "", });
+    const [pass, setPass] = useState(false);
 
     const handle_pass = async (e) => {
         e.preventDefault();
@@ -151,37 +152,56 @@ export default function Profile() {
 				<hr />
 
                 <div>
-                    <form className="password-form" onSubmit={handle_pass}>
+                    {pass?(
+                        <form className="password-form" onSubmit={handle_pass}>
 
-                        <label htmlFor="password">New password</label>
-                        <div className="input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password" name="password"
-                                className="password-field"
-                                placeholder="Password"
-                            />
-                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
-                            </span>
-                        </div>
+                            <label htmlFor="password">New password</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password" name="password"
+                                    className="password-field"
+                                    placeholder="Password"
+                                />
+                                <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <VscEyeClosed /> : <VscEye />}
+                                </span>
+                            </div>
 
-                        <label htmlFor="confirmePassword">Confirm password</label>
-                        <div className="input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="confirmePassword" name="confirmePassword"
-                                className="password-field"
-                                placeholder="Password"
-                            />
-                            <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <VscEyeClosed /> : <VscEye />}
-                            </span>
-                        </div>
+                            <label htmlFor="confirmePassword">Confirm password</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="confirmePassword" name="confirmePassword"
+                                    className="password-field"
+                                    placeholder="Password"
+                                />
+                                <span className="toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <VscEyeClosed /> : <VscEye />}
+                                </span>
+                            </div>
 
-                        <button type="submit" className="submit-btn">Update password</button>
+                            <button type="submit" className="submit-btn">Update password</button>
 
-                    </form>
+                        </form>
+                    ):(
+                        <>
+                            <form onSubmit={(e) => {
+                                setPass(true)
+                                // check_code(e)
+                                }}>
+                                <button onClick={() => {send_code()}}>Send mail verification</button>
+                                <p id={`alert-container`}></p>
+
+                                <input
+                                    type={`text`}
+                                    id={`code`} name={`code`}
+                                    placeholder={`Your Code`}
+                                    required/>
+                                <button type={`submit`}>Valid</button>
+                            </form>
+                        </>
+                    )}
 
                 </div>
             </div>

@@ -49,7 +49,8 @@ export default function NavBar() {
     return (
 		<nav className={`Navbar-root`}>
 
-			<Button path={`/`}> Home </Button>
+			<Button path={`/`}>Home</Button>
+
 			<div className={`Navbar-center`}>
 				<p>{time}</p>
 
@@ -58,7 +59,8 @@ export default function NavBar() {
 				</button>
 
 			</div>
-			<Button path={`/Profile`}>Profile</Button>
+
+			<Button path={`/Profile`}>{sessionStorage.getItem("username") ?? "Profil"}</Button>
 
 		</nav>
     );
