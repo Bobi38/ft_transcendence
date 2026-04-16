@@ -15,13 +15,14 @@ export default function Stats() {
 
     const [selected, setSelected] = useState(null);
 
-    const stats_handle = (game) => {
-        if (selected === game) {
-            setSelected(null);
-            return;
-        }
-        setSelected(game);
-    }
+	const stats_handle = (game) => {
+		if (selected === game) {
+			setSelected(null);
+			return;
+		}
+		setUsername(sessionStorage.getItem('username'))
+		setSelected(game);
+	}
 
 
     return (

@@ -10,6 +10,7 @@ import useFetch                     from "TOOL/useFetch.jsx";
 import Paging                       from "COMP/Paging/Paging.jsx";
 import StatsPongHistoryCard         from "./StatsPongHistoryCard/StatsPongHistoryCard";
 import { format_time }				from "./StatsPongHistoryCard/StatsPongHistoryCard"
+import { showAlert }                from  "TOOL/fonction_usefull"
 
 function cal_percentage(value, max)
 {
@@ -36,7 +37,11 @@ export default function StatsPong({ username, setUsername }) {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         })
-        if (!repjson || (repjson &&  !repjson.success)){
+
+		if (repjson && repjson.status < 500 && repjson.status >= 400){
+			showAlert(`${repjson.message}`, "danger");
+		}
+		if (!repjson || (repjson &&  !repjson.success)){
             setStatToDisplay(null);
             setHistoryUser([]);
             setNewPage(0);
@@ -76,6 +81,7 @@ export default function StatsPong({ username, setUsername }) {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         })
+
         if (!repjson)
             return;
 		if ((repjson && !repjson.success)){
@@ -98,7 +104,7 @@ export default function StatsPong({ username, setUsername }) {
 
             <div className={`history-container`}>
 
-				{historyUser?.length !== 0 ? (
+				{historyUser && historyUser?.length !== 0 ? (
 					<>
 						<div className={`history-card-container`}>
 
@@ -120,7 +126,8 @@ export default function StatsPong({ username, setUsername }) {
 
 				<form onSubmit={(e) => {e.preventDefault();
 					if (e.target.name.value.lenght === 0) return
-					setUsername(e.target.name.value); setNewPage(0);}}>
+					setUsername(e.target.name.value);e.target.name.value = ''; setNewPage(0);}}>
+					<p id={`alert-container`}></p>
 					<input type={`text`} id="name" name="name" placeholder="Username" required/>
 					<input type={`submit`} value={`Search`}/>
 				</form>
