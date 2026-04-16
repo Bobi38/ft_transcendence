@@ -60,9 +60,7 @@ export default function Morpion() {
         const handleSocket = ({ message, board, turn } = {}) => {
             if (message) setMsg(message);
             if (board) setBoard(board);
-            if (turn) setTurn(turn);
-            console.log("pour Morpion turn : ", turn);
-            
+            if (turn !== undefined) setTurn(turn);            
         };
 
         // const handleSocket = (data = {}) => {

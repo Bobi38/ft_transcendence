@@ -13,14 +13,14 @@ export default function Board({ board , isGame , isTurn}) {
             message: i,
         })
     }
-        
+
     return (
         <div className={`Board-root`}>
 
             {isGame && board?.map((element, index) => (
 
                 <button key={index}
-                        className={`square`}
+                        className={`square ${isTurn ? "active" : ""}`}
                         onClick={() => handleClick(index)}>
                     {element}
                 </button>
@@ -28,11 +28,14 @@ export default function Board({ board , isGame , isTurn}) {
 
             {!isGame && board?.map((element, index) => (
 
-                <button key={index} className={`square`}>
+                <button key={index}
+                        className={`square`}>
                     {element}
                 </button>
 
             ))}
+
+            <p className=""> {isTurn ? "test ok" : "pas ton turn"}</p>
         </div>
     );
 }
