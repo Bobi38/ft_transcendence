@@ -18,6 +18,51 @@ export default function Profile() {
     const [user, setUser] = useState({ login: "", tel: "", });
     const [pass, setPass] = useState(false);
 
+    async function send_code(e) {
+        e.preventDefault();
+
+        const url = `/api/secu/recovery_password`;
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+        });
+		if (repjson && repjson.status < 500 && repjson.status >= 400){
+            showAlert(`${repjson.message}`, "danger");
+            return ;
+        }
+        if (!repjson || (repjson &&  !repjson.success)){
+            return ;
+        }
+    }
+
+    async function check_code(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+            code: formData.get("code"),
+            host:  window.location.host
+        }
+        const url = `/api/secu/recoverypassword_check_code`;
+
+        const repjson = await useFetch(`${url}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credential: "include",
+            body: JSON.stringify(data),
+        }, null, null, true)
+
+        if (repjson && repjson.status < 500 && repjson.status >= 400){
+            showAlert(`${repjson.message}`, "danger");
+            return ;
+        }
+        if (!repjson || (repjson &&  !repjson.success)){
+            return ;
+        }
+        setPass(true)
+    }
+
     const handle_pass = async (e) => {
         e.preventDefault();
         const password = e.target.password.value;
@@ -187,10 +232,7 @@ export default function Profile() {
                         </form>
                     ):(
                         <>
-                            <form onSubmit={(e) => {
-                                setPass(true)
-                                // check_code(e)
-                                }}>
+                            <form onSubmit={(e) => {check_code(e)}}>
                                 <button onClick={() => {send_code()}}>Send mail verification</button>
                                 <p id={`alert-container`}></p>
 
