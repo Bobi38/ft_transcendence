@@ -20,7 +20,7 @@ export default function Board({ board , isGame , isTurn}) {
             {isGame && board?.map((element, index) => (
 
                 <button key={index}
-                        className={`square ${isTurn ? "active" : ""}`}
+                        className={`square ${isTurn ? "square_enable" : ""}`}
                         onClick={() => handleClick(index)}>
                     {element}
                 </button>
@@ -32,7 +32,6 @@ export default function Board({ board , isGame , isTurn}) {
                         className={`square`}>
                     {element}
                 </button>
-
             ))}
 
             <p className=""> {isTurn ? "test ok" : "pas ton turn"}</p>

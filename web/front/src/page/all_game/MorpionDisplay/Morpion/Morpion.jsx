@@ -43,25 +43,27 @@ export default function Morpion() {
 
       useEffect(() => {
 
-        // const handleSocket = (data) => {
-        //     if (data?.message){
-        //         setMsg(data.message);
-        //     }
-        //     if (data?.board){
-        //         setBoard(data.board);
-        //     }
-        //     if (data?.turn){
-        //         setTurn(data.turn);
-        //     }
-        // };
+        const handleSocket = (data) => {
+            if (data?.message){
+                setMsg(data.message);
+            }
+            if (data?.board){
+                setBoard(data.board);
+            }
+            if (data?.turn){
+                setTurn(data.turn);
+            }
+        };
 
         
 
-        const handleSocket = ({ message, board, turn } = {}) => {
-            if (message) setMsg(message);
-            if (board) setBoard(board);
-            if (turn !== undefined) setTurn(turn);            
-        };
+        // const handleSocket = ({ message, board, turn } = {}) => {
+        //     if (message) setMsg(message);
+        //     if (board) setBoard(board);
+        //     if (turn != undefined) setTurn(turn);
+        //     console.log("pour Morpion turn : ", turn);
+            
+        // };
 
         // const handleSocket = (data = {}) => {
         //     const map = {
