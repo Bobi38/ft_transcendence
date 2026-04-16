@@ -192,8 +192,23 @@ class MorpionRoom extends Room {
     turnMessage(player, alertMessage){
         player.send({
             message: alertMessage,
+            turn: true,
             board: this._board
         })
+    }
+
+    old_startTurnTimer() {
+        const p = this._turn;
+        const o = this.getOther(p)
+
+        if (!p || !o) return ;
+
+        p.startTurnTimer(
+            () => this.turnMessage(p, "Time is running out"),
+            this.limitTime / 3 * 2);
+        o.startTurnTimer(
+            () => this.turnMessage(o, "Wait… or win. Your move."),
+            this.limitTime);
     }
 
     startTurnTimer() {
