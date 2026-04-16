@@ -105,9 +105,8 @@ export default function PrivateMessage() {
 					<div className={`bloc-last-conv-friend`}>
 						{displayedInfoConv && displayedInfoConv.map((msg,index) => (
 							<div key={index} className={`bloc-left`} onClick={() => {setGoToAction(0); setGoToConv(msg.login);} }>
-								<div className={`header-last-conv`}>
-									<h2>{msg.login}</h2><p>{msg.isOnline ? "🟢" : "🔴"}{msg.time}</p>
-								</div>
+								<div><h2>{msg.login}</h2> {msg.isOnline ? "🟢" : "🔴"}</div>
+								<p>{new Date(msg.time).toLocaleTimeString('fr-FR', {month: '2-digit', day:'2-digit', hour: '2-digit',minute: '2-digit',second: '2-digit',hour12: false})}</p>
 								<p className={`truncate`}>{msg.lastMessage}</p>
 							</div>
 						))}

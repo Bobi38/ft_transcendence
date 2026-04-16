@@ -32,12 +32,24 @@ export default function HomeCardWeather() {
 
 				if (!data || !data.success)
 					return;
-				setWeather({
-					icon: data.message.current.condition.icon,
-					descript: `${data.message.current.condition.text}`,
-					title: `${data.message.location.name}`,
-					temp: `${data.message.current.temp_c}°C`,
-				});
+				console.log(data.message.error);
+				if (data.message.error)
+				{
+					setWeather({
+						icon: "",
+						descript: "",
+						title: "Sorry, an error append on the meteo",
+						temp: "",
+					});
+				}
+				else {
+					setWeather({
+						icon: data.message.current.condition.icon,
+						descript: `${data.message.current.condition.text}`,
+						title: `${data.message.location.name}`,
+						temp: `${data.message.current.temp_c}°C`,
+					});
+				}
 
 			} catch (err) {
 				console.error("weather error", err);

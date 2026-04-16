@@ -61,5 +61,13 @@
                 @include mix.default_card;
             }
         }
+		@media (width <= $phone)
+		{
+			flex-direction: column;
+
+			.div-btn {
+				flex-direction: column;
+			}
+		}
     }
 }
