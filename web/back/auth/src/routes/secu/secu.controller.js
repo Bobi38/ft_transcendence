@@ -38,7 +38,26 @@ router.post('/send_mail', async (req, res) => {
     }
     try{
         console.log("API /api/secu/send_mail try");
-        const result = await SecuService.send_mail(null, req, 1, res);
+        const result = await SecuService.send_mail(null, req, 1, res, "temp");
+        if (!result.success) {
+           return errorHandler(result.message, result.code, res);
+        }
+        console.log("API /api/secu/send_mail success");
+        return res.status(201).json({success: true, message: "message sent"});
+    }catch(err){
+        errorHandler("error catch send_mail controller " + err, 500, res);
+    }
+})
+
+router.post('/send_mail_profil', async (req, res) => {
+    console.log("API /api/secu/send_mail_profil");
+    const valid = SecuDTO.validateCookie(req, 'token');
+    if (!valid.valid) {
+        return errorHandler(valid.message, valid.code, res);
+    }
+    try{
+        console.log("API /api/secu/send_mail try");
+        const result = await SecuService.send_mail(null, req, 3, res, "token");
         if (!result.success) {
            return errorHandler(result.message, result.code, res);
         }
@@ -59,7 +78,7 @@ router.post('/recovery_password', async (req, res) => {
     console.log("API /api/secu/recovery_password valid");
     try{
         const {mail} = req.body;
-        const result = await SecuService.send_mail(mail, req, 2, res);
+        const result = await SecuService.send_mail(mail, req, 2, res, null);
         if (!result.success) {
             return errorHandler(result.message, result.code, res);
         }
@@ -101,6 +120,41 @@ router.post('/recoverypassword_check_code' , SecuMiddleware, async (req, res) =>
     }catch(err){
         return errorHandler("back check_code" + err, 500, res); 
     }
+})
+
+router.post('/profil_check_code' , SecuMiddleware, async (req, res) => {
+    const valid = SecuDTO.validateMail2FA_CheckCode(req.body);
+    if (!valid.valid) {
+        return errorHandler(valid.message, valid.code, res);
+    }
+    const {code, host} = req.body;
+    try{
+        const result = await SecuService.check_code(code, 'token', 3, host, req, res);
+        if (!result.success) {
+            return errorHandler(result.message, result.code, res);
+        }
+        return res.status(201).json({success: true, message: "good"});
+    }catch(err){
+        return errorHandler("back check_code" + err, 500, res); 
+    }
+})
+
+router.put('/majPswd_profil', SecuMiddleware, async(req,res) => {
+    const valid = SecuDTO.validateMaj_Password(req)
+    if (!valid.valid){
+        return errorHandler(valid.message, valid.code, res);
+    }
+    try{
+        const new_psd = req.body.new_psd;
+        const token = req.cookies.token;
+        const result = await SecuService.maj_password(new_psd, token, res);
+        if (!result.success)
+            return errorHandler(result.message, result.code, res)
+        return res.status(201).json({success: true, message:"good"});
+    }catch(err){
+        return errorHandler("back majPswd " + err, 500, res);
+    }
+        
 })
 
 router.put('/majPswd', SecuMiddleware, async(req,res) => {

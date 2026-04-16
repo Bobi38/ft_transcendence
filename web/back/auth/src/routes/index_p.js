@@ -94,12 +94,16 @@ async function checktok(tokenn) {
 export const SecuMiddleware = async (req, res, next) => {
   try {
     const token =  req.cookies.temp;
+    if (!token)
+      token = req.cookies.token;
+    if (!token)
+      return res.status(401).json({ success: false, message: "cookie not valid" });
 
     const valid = await checktok(token);
 
     if (valid === 1) {
       res.clearCookie('token');
-      return res.status(401).json({ success: false, message: "token TEMP not valid" });
+      return res.status(401).json({ success: false, message: "cookie not valid" });
     }
 
     next();

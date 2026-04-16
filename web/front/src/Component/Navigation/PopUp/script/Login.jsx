@@ -23,7 +23,7 @@ export default function Login({ password_forget_mode, register_mode}) {
         const data = {
             email: form.email.value,
             password: form.password.value,
-            host: window.location.host
+            host: window.location.origin
         };
 
         if (!data.email || !data.password) {
