@@ -50,7 +50,7 @@ export default function Morpion() {
             if (data?.board){
                 setBoard(data.board);
             }
-            if (data?.turn){
+            if (data?.turn || data.turn === false){
                 setTurn(data.turn);
             }
         };

@@ -33,8 +33,6 @@ export default function Board({ board , isGame , isTurn}) {
                     {element}
                 </button>
             ))}
-
-            <p className=""> {isTurn ? "test ok" : "pas ton turn"}</p>
         </div>
     );
 }
