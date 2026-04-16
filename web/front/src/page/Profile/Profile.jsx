@@ -152,6 +152,7 @@ export default function Profile() {
 				<hr />
 
                 <div>
+                    <h2>Change Password</h2>
                     {pass?(
                         <form className="password-form" onSubmit={handle_pass}>
 
