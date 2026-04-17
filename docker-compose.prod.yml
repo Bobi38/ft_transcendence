@@ -26,8 +26,12 @@ services:
       - home
     env_file: 
       - .env
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
+      MYSQL_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - data_pswd
+      - myAdmin_pswd
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -74,10 +78,13 @@ services:
       - .env
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_healthy    
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     restart: "no"
     networks:
       - home
@@ -92,9 +99,12 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     restart: "no"
     networks:
       - home
@@ -113,9 +123,12 @@ services:
         condition: service_healthy
     networks:
       - home
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
   
   auth:
@@ -131,9 +144,12 @@ services:
         condition: service_healthy
     networks:
       - home
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   chatp_service:
@@ -151,9 +167,12 @@ services:
       - home
     ports:
       - "9002:9002"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   chatg_service:
@@ -171,9 +190,12 @@ services:
       - home
     ports:
       - "9001:9001"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   user_service:
@@ -191,9 +213,12 @@ services:
       - home
     ports:
       - "9003:9003"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   pong3d:
@@ -211,9 +236,12 @@ services:
       - home
     ports:
       - "2567:2567"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     cap_add:
       - NET_ADMIN
     restart: always
@@ -233,9 +261,12 @@ services:
       - home
     ports:
       - "9004:9004"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     restart: always
 
 secrets:
@@ -245,6 +276,8 @@ secrets:
     file: ./conf/secrets/cle_chat
   cle_pswd:
     file: ./conf/secrets/cle_pswd
+  myAdmin_pswd:
+    file: ./conf/secrets/bobi_pswd
   nginx_cert:
     file: ./conf/secrets/nginx.crt
   nginx_key:

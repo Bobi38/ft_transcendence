@@ -10,8 +10,12 @@ services:
       - home
     env_file: 
       - .env_dev
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
+      MYSQL_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - data_pswd
+      - myAdmin_pswd
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -41,9 +45,12 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     restart: "no"
     networks:
       - home
@@ -58,9 +65,12 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     restart: "no"
     networks:
       - home
@@ -107,9 +117,12 @@ services:
       - ./web/back/gateway:/app
       - ./web/back/models:/app/src/models
       - /app/node_modules
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
   
   auth:
@@ -131,9 +144,12 @@ services:
       - ./web/back/auth:/app
       - ./web/back/models:/app/src/models
       - /app/node_modules
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   chatp_service:
@@ -155,9 +171,12 @@ services:
       - ./web/back/chat/chatP:/app
       - ./web/back/models:/app/src/models
       - /app/node_modules
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   chatg_service:
@@ -179,9 +198,12 @@ services:
       - ./web/back/chat/chatG:/app
       - ./web/back/models:/app/src/models
       - /app/node_modules
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   user_service:
@@ -203,9 +225,12 @@ services:
       - ./web/back/user:/app
       - ./web/back/models:/app/src/models
       - /app/node_modules
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
-    - cle_pswd
-    - cle_chat
+      - cle_pswd
+      - cle_chat
+      - myAdmin_pswd
     restart: always
 
   pong3d:
@@ -223,9 +248,12 @@ services:
       - home
     ports:
       - "2567:2567"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     volumes:
       - ./web/back/pong3D:/app
       - ./web/front/src/game/shared:/app/src/shared
@@ -250,9 +278,12 @@ services:
       - home
     ports:
       - "9004:9004"
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - cle_pswd
       - cle_chat
+      - myAdmin_pswd
     volumes:
       - ./web/back/morpion/src:/app/src
       - ./web/back/models:/app/src/models
@@ -267,6 +298,8 @@ secrets:
     file: ./conf/secrets/cle_chat
   cle_pswd:
     file: ./conf/secrets/cle_pswd
+  myAdmin_pswd:
+    file: ./conf/secrets/bobi_pswd
 
 networks:
   home:

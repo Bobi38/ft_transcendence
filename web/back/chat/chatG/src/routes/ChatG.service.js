@@ -13,13 +13,8 @@ class ChatGService {
             const conv = await ChatG.findAll({order:[['id', 'DESC']], limit: 30});
             const name = await User.findAll({attributes: ['id', 'name']});
             let ret = "";
-            console.log("conv ", conv.length);
-            console.log("name ", name.length);
-            console.log("result ", result.id);
-            console.log("name ", name);
             if (conv.length > 0)
                 ret = maj_conv(result.id, conv, name);
-            console.log("ret ", ret);
             return ({success: true, message: ret, code: 200});
             }catch (err) {
                 return ({ success: false, message: err, code: 500 });
