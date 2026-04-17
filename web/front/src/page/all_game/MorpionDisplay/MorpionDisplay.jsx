@@ -32,9 +32,9 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
     const [specSelect, setSpecSelect] = useState(Array(9).fill(" "));
 
     function addBot(nb){
-		if (nb > 100)
+		if (nb > 10)
 		{
-			console.log("the max is 100");
+			console.log("the max is 10");
 			return;
 		}
 		if (typeof nb !== "number" || isNaN(nb)) {
