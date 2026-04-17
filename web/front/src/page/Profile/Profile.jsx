@@ -174,6 +174,7 @@ export default function Profile() {
                             id={`login`} name={`login`}
                             value={user.login ?? ""}
                             onChange={(e) => setUser({ ...user, login: e.target.value }) }
+							required
                         />
 
 
@@ -183,6 +184,7 @@ export default function Profile() {
                             title={`Can't be changed`}
                             value={user.email ?? ""}
                             onChange={(e) => setUser({ ...user, email: e.target.value }) }
+							required
                             disabled/>
 
 
@@ -191,6 +193,7 @@ export default function Profile() {
                             id={`tel`} name={`tel`}
                             value={user.tel ?? ""}
                             onChange={(e) => setUser({ ...user, tel: e.target.value }) }
+							required
                             />
 
                     <button type={`submit`}>Update my informations</button>
