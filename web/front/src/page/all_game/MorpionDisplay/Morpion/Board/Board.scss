@@ -8,9 +8,13 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 10px;
+    transition: all 0.4s;
 
     .square {
         @include mix.default_card;
         font-size: 2rem;
+    }
+    .square_enable {
+        border-color: $grey-dark;
     }
 }

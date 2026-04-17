@@ -69,21 +69,18 @@
             gap: 1rem;
 
             .bloc-left {
-
+				padding: 1rem;
                 .truncate ,h2, p{
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     margin: 0;
                 }
-                .header-last-conv{
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                    h2 {
-                        width: 30%;
-                    }
-                }
+				div {
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+				}
             }
         }
     }

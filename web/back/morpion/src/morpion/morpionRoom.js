@@ -115,7 +115,7 @@ class MorpionRoom extends Room {
         }
 
         if (!this.isValidPlay(index)) {
-            currentPlayer.send({message: m.msgs.badMove, board: this._board});
+            currentPlayer.send({message: m.msgs.badMove, board: this._board, turn: true});
             return false;
         }
 
@@ -192,11 +192,12 @@ class MorpionRoom extends Room {
     turnMessage(player, alertMessage){
         player.send({
             message: alertMessage,
+            turn: true,
             board: this._board
         })
     }
 
-    startTurnTimer() {
+    old_startTurnTimer() {
         const p = this._turn;
         const o = this.getOther(p)
 
@@ -209,8 +210,22 @@ class MorpionRoom extends Room {
             () => this.turnMessage(o, "Wait… or win. Your move."),
             this.limitTime);
     }
-        
 
+    startTurnTimer() {
+        const p = this._turn;
+        const o = this.getOther(p)
+
+        if (!p || !o) return ;
+
+        p.startTurnTimer(
+            () => {
+                o.startTurnTimer(
+                    () => this.turnMessage(o, "Wait… or win. Your move."),
+                    this.limitTime / 3);
+                this.turnMessage(p, "Time is running out")},
+            this.limitTime * 2 / 3);
+    }
+        
     serializeBoard() {
         return this._board
         .map(cell => cell === " " ? "-" : cell)

@@ -8,7 +8,7 @@ import "./AddFriends.scss";
 import SocketM                  from    "TOOL/SocketManag.js";
 import useFetch                 from    "TOOL/useFetch.jsx";
 import Hr                       from    "FRONT/Component/Hr/Hr.jsx";
-import { showAlert }        from    "TOOL/fonction_usefull.js";
+import { showAlert }            from    "TOOL/fonction_usefull.js";
 
 export default function AddFriends() {
 

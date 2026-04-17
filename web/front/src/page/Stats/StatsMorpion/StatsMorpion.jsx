@@ -9,6 +9,7 @@ import "./StatsMorpion.scss";
 import useFetch                     from "TOOL/useFetch.jsx";
 import Paging                       from "COMP/Paging/Paging.jsx";
 import StatsMorpionHistoryCard      from "./StatsMorpionHistoryCard/StatsMorpionHistoryCard";
+import { showAlert }                from  "TOOL/fonction_usefull"
 
 function cal_percentage(value, max)
 {
@@ -36,6 +37,9 @@ export default function StatsMorpion({ username, setUsername }) {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         })
+		if (repjson && repjson.status < 500 && repjson.status >= 400){
+			showAlert(`${repjson.message}`, "danger");
+		}
         if (!repjson || (repjson &&  !repjson.success)){
             setStatToDisplay(null);
             setHistoryUser([]);
@@ -93,7 +97,6 @@ export default function StatsMorpion({ username, setUsername }) {
 
     async function fetch_history(page_nb) {
 
-        
         const url = username
             ? `/api/morpion/get_history/${page_nb}?limit=${limit}&name=${username}`
             : `/api/morpion/get_history/${page_nb}?limit=${limit}`;
@@ -126,7 +129,7 @@ export default function StatsMorpion({ username, setUsername }) {
 
             <div className={`history-container`}>
 
-				{historyUser?.length !== 0 ? (
+				{historyUser && historyUser?.length !== 0 ? (
 					<>
 						<div className={`history-card-container`}>
 
@@ -149,6 +152,7 @@ export default function StatsMorpion({ username, setUsername }) {
 				<form onSubmit={(e) => {e.preventDefault();
 					if (e.target.name.value.lenght === 0) return
 					setUsername(e.target.name.value); setNewPage(0);}}>
+					<p id={`alert-container`}></p>
 					<input type={`text`} id="name" name="name" placeholder="Username" required/>
 					<input type={`submit`} value={`Search`}/>
 				</form>

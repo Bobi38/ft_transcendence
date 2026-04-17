@@ -60,7 +60,7 @@ export default function NavBar() {
 
 			</div>
 
-			<Button path={`/Profile`}>{sessionStorage.getItem("username") ?? "Profil"}</Button>
+			<Button path={`/Profile`}>Profile</Button>
 
 		</nav>
     );

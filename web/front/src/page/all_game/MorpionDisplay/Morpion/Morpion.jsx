@@ -18,19 +18,19 @@ function sendMessage(s_message){
 function NewPartie() {
 
     return (
-        <div className="NewPartie">
-            <button
-                onClick={() => { sendMessage("player"); }}>
-
-                Search Game
-            </button>
-            <button  onClick={(e) => {
-                    e.preventDefault();
-                    sendMessage('bot');
-                }}>
-                Play Vs IA
-            </button>
+        <div>
+        <button
+            style={{ width: "180px" }}
+            onClick={() => { sendMessage("player"); }}>
+            Play vs Human
+        </button>
+        <button
+            style={{ width: "180px" }}
+            onClick={() => { sendMessage("bot"); }}>
+            Play vs Bot
+        </button>
         </div>
+
     );
 }
 
@@ -38,6 +38,7 @@ export default function Morpion() {
 
     const [msg, setMsg] = useState("Welcome");
     const [board, setBoard] = useState(Array(9).fill(""));
+    const [turn, setTurn] = useState(false);
     const [wait, setWait] = useState(0);
 
       useEffect(() => {
@@ -49,7 +50,32 @@ export default function Morpion() {
             if (data?.board){
                 setBoard(data.board);
             }
+            if (data?.turn || data.turn === false){
+                setTurn(data.turn);
+            }
         };
+
+        
+
+        // const handleSocket = ({ message, board, turn } = {}) => {
+        //     if (message) setMsg(message);
+        //     if (board) setBoard(board);
+        //     if (turn != undefined) setTurn(turn);
+        //     console.log("pour Morpion turn : ", turn);
+            
+        // };
+
+        // const handleSocket = (data = {}) => {
+        //     const map = {
+        //         message: setMsg,
+        //         board: setBoard,
+        //         turn: setTurn,
+        //     };
+
+        //     Object.entries(map).forEach(([key, setter]) => {
+        //         if (data[key]) setter(data[key]);
+        //     });
+        // };
 
         SocketM.on("morp",handleSocket, "un");
 
@@ -79,7 +105,7 @@ export default function Morpion() {
 				}
             </div>
 
-            <Board board={board} isGame={true}/>
+            <Board board={board} isGame={true} isTurn={turn}/>
 
             <NewPartie/>
 

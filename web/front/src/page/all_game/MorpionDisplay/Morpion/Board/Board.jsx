@@ -4,7 +4,7 @@ import "./Board.scss";
 /* Components */
 import  SocketM  from "TOOL/SocketManag.js";
 
-export default function Board({ board , isGame }) {
+export default function Board({ board , isGame , isTurn}) {
 
     function handleClick(i) {
         
@@ -19,7 +19,8 @@ export default function Board({ board , isGame }) {
 
             {isGame && board?.map((element, index) => (
 
-                <button key={index} className={`square`}
+                <button key={index}
+                        className={`square ${isTurn ? "square_enable" : ""}`}
                         onClick={() => handleClick(index)}>
                     {element}
                 </button>
@@ -27,10 +28,10 @@ export default function Board({ board , isGame }) {
 
             {!isGame && board?.map((element, index) => (
 
-                <button key={index} className={`square`}>
+                <button key={index}
+                        className={`square`}>
                     {element}
                 </button>
-
             ))}
         </div>
     );
