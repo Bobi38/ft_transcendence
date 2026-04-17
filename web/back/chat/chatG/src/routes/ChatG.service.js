@@ -28,7 +28,7 @@ class ChatGService {
                 return ({success: false, message: user.message, code: user.code})
             const result = user.user;
             const mess = encrypt(chat.message);
-            if (mess.length > 511)
+            if (mess.length > 1500)
                 return ({success: false, message: "Message too long", code: 413})
             const time = new Date()
             await ChatG.create({contenu: mess, SenderId: result.id, time: time });
@@ -42,3 +42,6 @@ class ChatGService {
 }
 
 export default ChatGService;
+
+
+111111111

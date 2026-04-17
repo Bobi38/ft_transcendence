@@ -49,7 +49,7 @@ class SecuService {
                 from: noreplyUser,
                 to: user.mail,
                 subject: "Verification Code",
-                text: message + code,
+                text: message + code + ". You have 10min to validate !!!",
             });
             const CrypPass = await bcrypt.hash(code, 10);
             const check = await PswEmail.findOne({ where: { idUser: user.id, type: type } });
@@ -71,7 +71,7 @@ class SecuService {
             const token = req.cookies[CookieName];
             const decoded = jwt.verify(token, secret);
             const result = await User.findOne({ where: { id: decoded.id }, include: {model: PswEmail, as: 'code' , where :{type: type}} });
-            const limit = new Date(result.code[0].DateCreate.getTime() + 60 * 1000);
+            const limit = new Date(result.code[0].DateCreate.getTime() + 10 * 60 * 1000);
             const isValid = await bcrypt.compare(code, result.code[0].Code);
             if (isValid == false)
                 return ({success: false, message:"Wrong code", code: 400});

@@ -13,6 +13,8 @@ class ChatGDTO {
     if (!message) {
       return { valid: false, message: 'Missing fields (post chat)', code : 400 };
     }
+    if (message.lenght > 511)
+      return { valid: false, message: 'Message too long', code : 400 };
     return { valid: true };
   }
 
