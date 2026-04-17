@@ -16,21 +16,19 @@ function sendMessage(s_message){
 }
 
 function NewPartie() {
-
     return (
-        <div>
-        <button
-            style={{ width: "180px" }}
-            onClick={() => { sendMessage("player"); }}>
-            Play vs Human
-        </button>
-        <button
-            style={{ width: "180px" }}
-            onClick={() => { sendMessage("bot"); }}>
-            Play vs Bot
-        </button>
+        <div className="button-container">
+			<div>
+				<button onClick={() => { sendMessage("player"); }}>
+					Play vs Human
+				</button>
+			</div>
+			<div>
+				<button onClick={() => { sendMessage("bot"); }}>
+					Play vs Bot
+				</button>
+			</div>
         </div>
-
     );
 }
 
@@ -55,14 +53,11 @@ export default function Morpion() {
             }
         };
 
-        
-
         // const handleSocket = ({ message, board, turn } = {}) => {
         //     if (message) setMsg(message);
         //     if (board) setBoard(board);
         //     if (turn != undefined) setTurn(turn);
         //     console.log("pour Morpion turn : ", turn);
-            
         // };
 
         // const handleSocket = (data = {}) => {
