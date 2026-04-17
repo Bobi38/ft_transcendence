@@ -64,8 +64,9 @@ export default function StatsMorpion({ username, setUsername }) {
         const type_O_lose = data.type_O_horizontal_winner + data.type_O_vertical_winner + data.type_O_diagonal_winner
 
         const win_abort = data.type_X_abort_winner + data.type_O_abort_winner
-        const draw = data.type_X_draw + data.type_O_draw
         const lose_abort = data.type_X_abort_loser + data.type_O_abort_loser
+		const total_abort = data.type_X_abort_loser + data.type_O_abort_loser + data.type_X_abort_winner + data.type_O_abort_winner
+        const draw = data.type_X_draw + data.type_O_draw
 
         const all_win_without_abort = win_horizontal + win_vertical + win_diagonal
         const all_lose_without_abort = lose_horizontal + lose_vertical + lose_diagonal
@@ -80,6 +81,7 @@ export default function StatsMorpion({ username, setUsername }) {
 
 			win_abort: win_abort,
 			lose_abort: lose_abort,
+			total_abort: total_abort,
 
 			winrate_total: cal_percentage(all_win_without_abort, (all_win_without_abort + all_lose_without_abort)),
 			winrate_X: cal_percentage(type_X_win, (type_X_lose + type_X_win)),
@@ -164,8 +166,7 @@ export default function StatsMorpion({ username, setUsername }) {
 					<p>Total win: { statToDisplay?.all_win_without_abort }</p>
 					<p>Total lose: { statToDisplay?.all_lose_without_abort }</p>
 					<p>Total draw: { statToDisplay?.draw }</p>
-					<p>Win by surrender: { statToDisplay?.win_abort }</p>
-					<p>Lose by surrender: { statToDisplay?.lose_abort }</p>
+					<p>Aborted games: { statToDisplay?.total_abort }</p>
 					<p>Winrate: { statToDisplay?.winrate_total }%</p>
 					<p>Winrate with X: { statToDisplay?.winrate_O }%</p>
 					<p>Winrate with O: { statToDisplay?.winrate_X }%</p>
