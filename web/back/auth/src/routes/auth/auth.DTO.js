@@ -24,7 +24,7 @@ class AuthDTO {
     if (!name || !email || !password) {
       return { valid: false, message: 'Missing fields (register)', code : 400 };
     }
-    if (name.length > 64) {
+    if (name.length > 32) {
       return { valid: false, message: 'Username too long', code: 400 };
     }
     if (password.length > 71) {
