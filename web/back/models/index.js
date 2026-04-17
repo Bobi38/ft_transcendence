@@ -1,10 +1,18 @@
 // models/index.js
+import fs from 'fs'
 import {Sequelize} from 'sequelize';
+
+const dbPassword = process.env.DB_PASSWORD_FILE
+  ? fs.readFileSync(process.env.DB_PASSWORD_FILE, 'utf8').trim()
+  : process.env.DB_PASSWORD;
+
+
+console.log("DB_PASSWORD =", dbPassword); 
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  dbPassword,
   {
     host: process.env.DB_HOST,
     dialect: 'mysql',

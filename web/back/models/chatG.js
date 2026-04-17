@@ -5,7 +5,7 @@ import User from './user.js';
 const chatG = sequelize.define('chat', {
 
   contenu: {
-    type: DataTypes.STRING(512),
+    type: DataTypes.TEXT('long'),
     Allownull: false,
   },
   time:{

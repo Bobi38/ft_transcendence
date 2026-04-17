@@ -13,7 +13,7 @@ const PrivMess = sequelize.define('PrivMess', {
     allowNull: false,
   },
   contenu:{
-    type: DataTypes.STRING(512),
+    type: DataTypes.TEXT('long'),
     allowNull: false,
   },
     time:{

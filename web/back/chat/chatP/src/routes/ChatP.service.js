@@ -34,7 +34,7 @@ class ChatPService {
             if (!user.success || !id2)
                 return ({success: false, message: "error user not found", code: 404})
             const crypt = encrypt(data.message);
-            if (crypt.length > 511) {
+            if (crypt.length > 1500) {
                 return ({ success: false, message: "Message too long", code: 413 });
             }
             const id1 = user.user;

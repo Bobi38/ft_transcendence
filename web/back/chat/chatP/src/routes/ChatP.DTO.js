@@ -10,6 +10,8 @@ class ChatPDTO {
         console.log("2")
         if (typeof req.body.id !== 'string' || typeof req.body.message !== 'string')
             return {valid: false, message: 'Name and message must be strings', code: 400};
+        if (req.body.message.length > 511)
+            return { valid: false, message: 'Message too long', code : 400 };
         return {valid: true};
     }
 

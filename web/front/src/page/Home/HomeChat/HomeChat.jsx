@@ -40,6 +40,10 @@ export default function HomeChat() {
             credentials: "include",
             body: JSON.stringify({ message: input }),
         });
+        if (repjson && !repjson.success && repjson.status < 500){
+            showAlert(repjson.message, "danger")
+            return false;
+        }
         if (!repjson || (repjson &&  !repjson.success))
             return false;
         return true

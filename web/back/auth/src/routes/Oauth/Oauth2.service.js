@@ -76,15 +76,14 @@ class Oauth2Service {
             const emailuse = await fetch ("https://api.github.com/user/emails", {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
-            user.name = user.name.replace(/[^a-zA-Z0-9_]/g, "");
+            user.login = user.login.replace(/[^a-zA-Z0-9_]/g, "");
             const email = await emailuse.json();
             const result = await User.findAll({ where: { mail: email[0].email } });
-            const name = await generateUniqueLogin(user.name)
+            const name = await generateUniqueLogin(user.login)
             let token = "";
             let MPFA
             if (result.length === 0) {
                 const newUser = await User.create({name: name, password: null, mail: email[0].email, OAuth:true, Hostlastco: frontendUrl, Datelastco: new Date(), MPFA: true});
-                console.log("New user created:", newUser);
                 token = jwt.sign({id: newUser.id}, secret, {expiresIn: '12h'});
                 const re = await Co.create({token: token, userId: newUser.id});
                 MPFA = newUser.MPFA;

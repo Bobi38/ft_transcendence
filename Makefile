@@ -83,7 +83,7 @@ secrets:
 	openssl rand -hex 2 > ./conf/secrets/data_pswd
 	openssl rand -hex 2 > ./conf/secrets/cle_pswd
 	openssl rand -hex 2 > ./conf/secrets/cle_chat
-# 	openssl rand -hex 4 > ./conf/secrets/wordpress_db_password
+	openssl rand -hex 2 > ./conf/secrets/bobi_pswd
 # 	openssl rand -hex 4 > ./conf/secrets/wordpress_admin_password
 # 	openssl rand -hex 4 > ./conf/secrets/wordpress_user_password
 	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./conf/secrets/nginx.key -out ./conf/secrets/nginx.crt -subj "/CN=tvoisin.42.fr"
