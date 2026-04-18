@@ -6,7 +6,7 @@ class ChatGService {
 
     static async getChatG(token) {
         try {
-            const user = await  get_user_from_token(token);
+            const user = await get_user_from_token(token);
             if (!user.success)
                 return ({success: false, message: user.message, code: user.code})
             const result = user.user;
@@ -43,5 +43,3 @@ class ChatGService {
 
 export default ChatGService;
 
-
-111111111

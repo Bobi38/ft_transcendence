@@ -10,9 +10,6 @@ services:
       - home
     env_file: 
       - .env_dev
-    environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/data_pswd
-      MYSQL_PASSWORD_FILE: /run/secrets/myAdmin_pswd 
     secrets:
       - data_pswd
       - myAdmin_pswd
