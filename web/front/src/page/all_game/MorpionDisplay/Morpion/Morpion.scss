@@ -11,13 +11,15 @@
 		display: flex;
 		flex-direction: row;
 		gap: 1.5rem;
-		button {
+		div {
 			width: 50%;
+			display: flex;
+			flex-direction: column;
 		}
-		button:first-child {
+		div:first-child {
 			align-items: end;
 		}
-		button:last-child {
+		div:last-child {
 			align-items: start;
 		}
 	}

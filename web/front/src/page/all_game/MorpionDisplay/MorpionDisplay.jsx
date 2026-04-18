@@ -101,7 +101,7 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
                             {specSelect?.players && (
                                 <>
                                     <span>Selected:</span>
-                                    <span>{specSelect.players.player_1} (X) vs {specSelect.players.player_1} (P)</span>
+                                    <span>{specSelect.players.player_1} (X) vs {specSelect.players.player_1} (O)</span>
                                 </>
                             )}
 							<h2>
@@ -112,10 +112,10 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 							<ul>
 								{Object.entries(list).map(([id, game]) => (
 									<SpecButton
-									key={id}
-									id={id}
-									player_1={game.player_1}
-									player_2={game.player_2}
+                                        key={id}
+                                        id={id}
+                                        player_1={game.player_1}
+                                        player_2={game.player_2}
 									/>
 								))} 
 							</ul>

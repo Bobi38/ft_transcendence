@@ -18,12 +18,16 @@ function sendMessage(s_message){
 function NewPartie() {
     return (
         <div className="button-container">
-            <button onClick={() => { sendMessage("player"); }}>
-                Play vs Human
-            </button>
-            <button onClick={() => { sendMessage("bot"); }}>
-                Play vs Bot
-            </button>
+			<div>
+				<button onClick={() => { sendMessage("player"); }}>
+					Play vs Human
+				</button>
+			</div>
+			<div>
+				<button onClick={() => { sendMessage("bot"); }}>
+					Play vs Bot
+				</button>
+			</div>
         </div>
     );
 }
