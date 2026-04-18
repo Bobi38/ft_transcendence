@@ -8,7 +8,6 @@ export default async function useFetch(url, type_request, callbacksucces = null,
         if (response.status >= 500){
             return repjson;
         }
-        console.log(response.username)
         repjson.status = response.status
         if (response.username)
             repjson.username = response.username

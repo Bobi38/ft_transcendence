@@ -54,10 +54,8 @@ export default function Navigation({ children }) {
             return ;
         } else if (!resCo.success && resCo.MPFA === true) {
             if (sho !== AUTH.MAILA2F) setShowLog(AUTH.MAILA2F);
-            // sessionStorage.clear();
             return ;
         } else{
-            console.log("innnnnnnnnn gooog " + resCo.username)
             //if (sessionStorage.getItem("type") === null)
                 sessionStorage.setItem('type', "success");
             //if (sessionStorage.getItem("message") === null)
