@@ -29,7 +29,9 @@ function SpecButton({ player_1, player_2, id }) {
 export default function MorpionDisplay({isGame}) { // mode  spec or game
 
     const [list, setList] = useState({});
-    const [specSelect, setSpecSelect] = useState(Array(9).fill(" "));
+    const [specSelect, setSpecSelect] = useState({
+        data: Array(9).fill(" ")
+    });
 
     function addBot(nb){
 		if (nb > 10)
@@ -62,7 +64,7 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 		SocketM.sendd("morp", {});
         const handleSpec = (data) => {
             if (data?.other_board){
-                setSpecSelect(data.other_board)
+                setSpecSelect(data)
             }
             if (data?.list){
                 setList(data.list);
@@ -94,8 +96,14 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 					<hr />
 
 					<div className="MorpionDisplay-content">
-						<Board board={specSelect} isGame={false}/>
+						<Board board={specSelect.other_board} isGame={false}/>
 						<aside>
+                            {specSelect?.players && (
+                                <>
+                                    <span>Selected:</span>
+                                    <span>{specSelect.players.player_1} (X) vs {specSelect.players.player_1} (P)</span>
+                                </>
+                            )}
 							<h2>
 								{Object.keys(list).length > 0
 									? "Game list" : "No games running"
@@ -109,7 +117,7 @@ export default function MorpionDisplay({isGame}) { // mode  spec or game
 									player_1={game.player_1}
 									player_2={game.player_2}
 									/>
-								))}
+								))} 
 							</ul>
 						</aside>
 					</div>
